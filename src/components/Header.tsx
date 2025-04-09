@@ -90,19 +90,11 @@ export const Header = () => {
             <div className="flex items-center justify-between py-4">
               <div className="flex items-center">
                 <a href="/" className="mr-8">
-                  {/* Replace with actual logo - using placeholder for now */}
                   <img 
-                    src="/bahola-logo.png" 
+                    src="/lovable-uploads/e10be5fd-868f-4ce3-8e97-f9c2aac6e207.png" 
                     alt="Bahola Labs" 
                     className="h-10" 
-                    onError={(e) => {
-                      // Fallback to text if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      target.nextSibling!.textContent = 'Bahola Labs';
-                    }} 
                   />
-                  <span className="text-2xl font-bold text-bahola-blue-500 hidden">Bahola Labs</span>
                 </a>
                 
                 {/* Live search bar */}

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -42,6 +43,11 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Bahola specific colors */
+    --bahola-blue-500: 205 100% 29%;
+    --bahola-blue-600: 205 100% 25%;
+    --bahola-blue-400: 205 100% 35%;
   }
 
   .dark {
@@ -118,3 +124,4 @@
     @apply bg-transparent backdrop-blur-md;
   }
 }
+
