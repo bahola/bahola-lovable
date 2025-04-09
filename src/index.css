@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -90,7 +89,7 @@
   }
 
   .mega-menu.mega-menu-full {
-    @apply w-3/5; /* 60% of screen width */
+    width: 60vw; /* 60% of viewport width - using vw units for viewport width */
   }
 
   .mega-menu-open {
