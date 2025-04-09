@@ -108,7 +108,7 @@ export const Header = () => {
         <div className={`w-full transition-all duration-300 ${isScrolled ? 'sticky-header' : 'navbar-transparent'}`}>
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between py-4">
-              <div className="flex items-center">
+              <div className="flex-shrink-0">
                 <a href="/" className="mr-8">
                   <img 
                     src="/lovable-uploads/e10be5fd-868f-4ce3-8e97-f9c2aac6e207.png" 
@@ -116,13 +116,15 @@ export const Header = () => {
                     className="h-10" 
                   />
                 </a>
-                
-                {/* Live search bar */}
-                <form onSubmit={handleSearch} className="relative hidden md:block">
+              </div>
+              
+              {/* Live search bar - centered and wider */}
+              <div className="flex-grow flex justify-center">
+                <form onSubmit={handleSearch} className="relative hidden md:block w-full max-w-md">
                   <Input
                     type="text"
                     placeholder="Search products..."
-                    className="w-72 pl-10 pr-4 py-2 rounded-full"
+                    className="w-full pl-10 pr-4 py-2 rounded-full"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -131,7 +133,7 @@ export const Header = () => {
               </div>
 
               {/* Cart Button */}
-              <div className="flex items-center">
+              <div className="flex items-center flex-shrink-0">
                 <a href="/cart" className="relative flex items-center mr-6">
                   <ShoppingCart size={24} className="text-bahola-blue-500" />
                   <span className="absolute -top-2 -right-2 bg-bahola-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
