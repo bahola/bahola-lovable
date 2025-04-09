@@ -85,8 +85,7 @@
 @layer components {
   .mega-menu {
     @apply invisible absolute left-0 top-full opacity-0 bg-white shadow-lg transition-all duration-300 transform translate-y-2 z-50;
-    width: 100%;
-    max-width: 400px; /* Fixed width for mega menus */
+    width: 400px; /* Fixed width for mega menus on desktop */
   }
 
   .mega-menu.mega-menu-full {
@@ -127,5 +126,30 @@
 
   .navbar-transparent {
     @apply bg-transparent backdrop-blur-md;
+  }
+
+  /* Mobile menu styles */
+  .mobile-menu {
+    @apply fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto;
+  }
+
+  .mobile-menu-open {
+    @apply translate-x-0;
+  }
+
+  .mobile-menu-closed {
+    @apply -translate-x-full;
+  }
+
+  .mobile-menu-item {
+    @apply py-4 px-6 border-b border-bahola-neutral-100 text-bahola-neutral-800 font-medium flex items-center justify-between;
+  }
+
+  .mobile-submenu {
+    @apply h-0 overflow-hidden transition-all duration-300 bg-bahola-blue-50/50;
+  }
+
+  .mobile-submenu-open {
+    @apply h-auto;
   }
 }
