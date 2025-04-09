@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
   BadgePlus, Flower, BugPlay, Dumbbell, 
   Brain, Apple, Pill, Stethoscope, Wind, 
-  Banana, Smile, Droplets
+  Banana, Smile, Droplets, ChevronRight
 } from 'lucide-react';
 
 interface MegaMenuProps {
