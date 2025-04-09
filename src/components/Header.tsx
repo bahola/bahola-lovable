@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Phone, Truck, Heart, Gift, Mail, Search, Menu, X, ChevronDown, ShoppingCart, ChevronRight, Package } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -212,7 +211,7 @@ export const Header = () => {
               </div>
               
               <a href="/homeopathy" className="main-menu-item">
-                <span>Homeopathy</span>
+                <span>Why Homeopathy</span>
               </a>
             </nav>
           </div>
@@ -336,9 +335,9 @@ export const Header = () => {
               <ChevronRight size={20} />
             </a>
             
-            {/* Homeopathy */}
+            {/* Homeopathy - Updated text here as well */}
             <a href="/homeopathy" className="mobile-menu-item block">
-              <span>Homeopathy</span>
+              <span>Why Homeopathy</span>
               <ChevronRight size={20} />
             </a>
             
