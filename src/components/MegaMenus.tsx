@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { 
-  Allergens, Heart, Baby, Ear, Eye, Wheat, 
-  BadgePlus, Flower, Bacteria, DumbbellIcon, 
-  Brain, Apple, Pill, Stethoscope, Lungs, 
-  Banana, Tooth, Droplets
+  Bug, Heart, Baby, Ear, Eye, Wheat, 
+  BadgePlus, Flower, BugPlay, Dumbbell, 
+  Brain, Apple, Pill, Stethoscope, Wind, 
+  Banana, Smile, Droplets
 } from 'lucide-react';
 
 interface MegaMenuProps {
@@ -14,7 +14,7 @@ interface MegaMenuProps {
 // Utility function for concern icons
 const getConcernIcon = (name: string) => {
   const iconMap: Record<string, React.ReactNode> = {
-    'Allergies': <Allergens size={24} />,
+    'Allergies': <Bug size={24} />,
     'Cancer': <Pill size={24} />,
     'Heart Health': <Heart size={24} />,
     'Child Care': <Baby size={24} />,
@@ -24,16 +24,16 @@ const getConcernIcon = (name: string) => {
     'Womens Care': <BadgePlus size={24} />,
     'Hair Care': <Flower size={24} />,
     'Immune boosters': <BadgePlus size={24} />,
-    'Infection': <Bacteria size={24} />,
+    'Infection': <BugPlay size={24} />,
     'Lifestyle': <BadgePlus size={24} />,
-    'Muscle & Joint Care': <DumbbellIcon size={24} />,
+    'Muscle & Joint Care': <Dumbbell size={24} />,
     'Mental health': <Brain size={24} />,
     'Nutritive': <Apple size={24} />,
     'Pain Care': <Pill size={24} />,
     'Reproductive care': <BadgePlus size={24} />,
-    'Respiratory Care': <Lungs size={24} />,
+    'Respiratory Care': <Wind size={24} />,
     'Skin Care': <Banana size={24} />,
-    'Tooth Care': <Tooth size={24} />,
+    'Tooth Care': <Smile size={24} />,
     'Urinary care': <Droplets size={24} />
   };
   
