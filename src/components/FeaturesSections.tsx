@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Video, Calendar, Pill, Stethoscope, Star } from 'lucide-react';
+import { Video, Calendar, Pill, Stethoscope, Star, Bug, Heart, Apple, Brain, Dumbbell, Eye, Wheat, Droplets, Baby } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { ProductCard } from './ProductCard';
 
@@ -43,14 +43,46 @@ export const ConsultSection = () => {
 
 export const DiscoverSection = () => {
   const concerns = [
-    { name: 'Allergies', icon: <Pill size={36} /> },
-    { name: 'Digestive Health', icon: <Pill size={36} /> },
-    { name: 'Stress & Anxiety', icon: <Pill size={36} /> },
-    { name: 'Sleep Issues', icon: <Pill size={36} /> },
-    { name: 'Skin Problems', icon: <Pill size={36} /> },
-    { name: 'Immune Support', icon: <Pill size={36} /> },
-    { name: 'Joint Pain', icon: <Pill size={36} /> },
-    { name: 'Women\'s Health', icon: <Pill size={36} /> },
+    { 
+      name: 'Allergies', 
+      icon: <Bug size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843"
+    },
+    { 
+      name: 'Digestive Health', 
+      icon: <Wheat size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027"
+    },
+    { 
+      name: 'Stress & Anxiety', 
+      icon: <Brain size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+    },
+    { 
+      name: 'Sleep Issues', 
+      icon: <Pill size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07"
+    },
+    { 
+      name: 'Skin Problems', 
+      icon: <Droplets size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843"
+    },
+    { 
+      name: 'Immune Support', 
+      icon: <Heart size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+    },
+    { 
+      name: 'Joint Pain', 
+      icon: <Dumbbell size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027"
+    },
+    { 
+      name: 'Women\'s Health', 
+      icon: <Baby size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07"
+    },
   ];
   
   return (
@@ -62,12 +94,22 @@ export const DiscoverSection = () => {
             <a 
               key={concern.name}
               href={`/concern/${concern.name.toLowerCase().replace(/[&\s]+/g, '-')}`}
-              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-center flex flex-col items-center justify-center"
+              className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all text-center flex flex-col h-64"
             >
-              <div className="text-bahola-blue-500 mb-4">
-                {concern.icon}
+              <div className="h-32 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 z-10"></div>
+                <img 
+                  src={concern.image} 
+                  alt={concern.name} 
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <h3 className="font-medium text-bahola-neutral-800">{concern.name}</h3>
+              <div className="flex flex-col items-center justify-center p-4 flex-grow">
+                <div className="text-bahola-blue-500">
+                  {concern.icon}
+                </div>
+                <h3 className="font-medium text-bahola-neutral-800">{concern.name}</h3>
+              </div>
             </a>
           ))}
         </div>
