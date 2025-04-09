@@ -210,6 +210,10 @@ export const Header = () => {
               <div className="main-menu-item">
                 <span>The Remedy Room</span>
               </div>
+              
+              <a href="/homeopathy" className="main-menu-item">
+                <span>Homeopathy</span>
+              </a>
             </nav>
           </div>
         </div>
@@ -329,6 +333,12 @@ export const Header = () => {
             {/* The Remedy Room */}
             <a href="/remedy-room" className="mobile-menu-item block">
               <span>The Remedy Room</span>
+              <ChevronRight size={20} />
+            </a>
+            
+            {/* Homeopathy */}
+            <a href="/homeopathy" className="mobile-menu-item block">
+              <span>Homeopathy</span>
               <ChevronRight size={20} />
             </a>
             
