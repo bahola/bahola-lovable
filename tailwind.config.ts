@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,33 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Bahola specific colors
+				bahola: {
+					blue: {
+						50: '#E6F7FF',
+						100: '#BAE3FF',
+						200: '#7CC4FA',
+						300: '#4DA9F6',
+						400: '#1E90FF', // Primary blue
+						500: '#0EA5E9', // Accent blue
+						600: '#0078D4',
+						700: '#005BA1',
+						800: '#003F73',
+						900: '#002851',
+					},
+					neutral: {
+						50: '#F8FAFC',
+						100: '#F1F5F9',
+						200: '#E2E8F0',
+						300: '#CBD5E1',
+						400: '#94A3B8',
+						500: '#64748B',
+						600: '#475569',
+						700: '#334155',
+						800: '#1E293B',
+						900: '#0F172A',
+					}
 				}
 			},
 			borderRadius: {
@@ -89,6 +117,9 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			backgroundImage: {
+				'cloud-pattern': "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJjbG91ZHMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHBhdGggZmlsbD0icmdiYSgyNDAsIDI0OSwgMjU1LCAwLjQpIiBkPSJNMTA5LjUgODcuNWMtMi41LTcuNS0xMC42LTEzLTE5LjUtMTNjLTExLjUgMC0yMC45IDkuNC0yMC45IDIwLjljMCAuNiAwIDEuMi4xIDEuN0M2NC45IDk5LjQgNjEgMTA0LjIgNjEgMTEwYzAgNy4yIDUuOCAxMyAxMyAxM2gzNmM3LjIgMCAxMy01LjggMTMtMTNDMTIzIDEwMi4yIDExNy40IDk1LjggMTA5LjUgODcuNXoiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjY2xvdWRzKSIvPjwvc3ZnPg==')",
 			}
 		}
 	},
