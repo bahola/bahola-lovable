@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
@@ -53,19 +52,21 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
 
   return (
     <div className={`mega-menu ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="container mx-auto p-8">
+      <div className="p-6">
         <h2 className="text-xl font-bold mb-6 text-bahola-neutral-800">Shop by Health Concern</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {concerns.map((concern) => (
             <a 
               key={concern} 
               href={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`}
-              className="flex items-center p-3 hover:bg-bahola-blue-50 rounded-lg transition-colors duration-200"
+              className="flex items-center p-2 hover:bg-bahola-blue-50 rounded-lg transition-colors duration-200"
             >
               <div className="mr-3 text-bahola-blue-500">
                 {getConcernIcon(concern)}
               </div>
-              <span className="text-bahola-neutral-700 hover:text-bahola-blue-600">{concern}</span>
+              <span className="text-bahola-neutral-700 hover:text-bahola-blue-600 text-sm">
+                {concern}
+              </span>
             </a>
           ))}
         </div>
@@ -79,8 +80,8 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
   
   return (
-    <div className={`mega-menu ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="container mx-auto p-8">
+    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
+      <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <a href="/category/mother-tinctures" className="block text-lg font-semibold mb-4 text-bahola-blue-600 hover:text-bahola-blue-800">
@@ -154,8 +155,8 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
 // For Doctors Mega Menu
 export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
   return (
-    <div className={`mega-menu ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="container mx-auto p-8">
+    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
+      <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h3 className="text-xl font-bold mb-4 text-bahola-neutral-800">Professional Account</h3>

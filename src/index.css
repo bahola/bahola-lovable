@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -85,7 +84,13 @@
 
 @layer components {
   .mega-menu {
-    @apply invisible absolute left-0 top-full w-full opacity-0 bg-white shadow-lg transition-all duration-300 transform translate-y-2 z-50;
+    @apply invisible absolute left-0 top-full opacity-0 bg-white shadow-lg transition-all duration-300 transform translate-y-2 z-50;
+    width: 100%;
+    max-width: 400px; /* Fixed width for mega menus */
+  }
+
+  .mega-menu.mega-menu-full {
+    @apply w-full max-w-none; /* For mega menus that need full width */
   }
 
   .mega-menu-open {
@@ -124,4 +129,3 @@
     @apply bg-transparent backdrop-blur-md;
   }
 }
-
