@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Phone, Truck, Heart, Gift, Mail, Search, Menu, X, ChevronDown, ShoppingCart, ChevronRight, Package } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -206,8 +207,10 @@ export const Header = () => {
                 <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
               </div>
 
-              <div className="main-menu-item">
-                <span>The Remedy Room</span>
+              <div className="main-menu-item flex items-center">
+                <span>I</span>
+                <Heart size={16} className="mx-1 text-red-500 fill-red-500" />
+                <span>HOMEOPATHY</span>
               </div>
               
               <a href="/homeopathy" className="main-menu-item">
@@ -329,13 +332,17 @@ export const Header = () => {
               </div>
             </div>
             
-            {/* The Remedy Room */}
-            <a href="/remedy-room" className="mobile-menu-item block">
-              <span>The Remedy Room</span>
+            {/* I ❤️ HOMEOPATHY */}
+            <a href="/i-love-homeopathy" className="mobile-menu-item block">
+              <div className="flex items-center">
+                <span>I</span>
+                <Heart size={16} className="mx-1 text-red-500 fill-red-500" />
+                <span>HOMEOPATHY</span>
+              </div>
               <ChevronRight size={20} />
             </a>
             
-            {/* Homeopathy - Updated text here as well */}
+            {/* Why Homeopathy */}
             <a href="/homeopathy" className="mobile-menu-item block">
               <span>Why Homeopathy</span>
               <ChevronRight size={20} />
