@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
@@ -51,7 +52,7 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
   ];
 
   return (
-    <div className={`mega-menu ${isOpen ? 'mega-menu-open' : ''}`}>
+    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
       <div className="p-6">
         <h2 className="text-xl font-bold mb-6 text-bahola-neutral-800">Shop by Health Concern</h2>
         <div className="grid grid-cols-2 gap-4">
