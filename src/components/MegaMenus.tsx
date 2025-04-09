@@ -55,7 +55,7 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
       <div className="p-6">
         <h2 className="text-xl font-bold mb-6 text-bahola-neutral-800">Shop by Health Concern</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {concerns.map((concern) => (
             <a 
               key={concern} 
