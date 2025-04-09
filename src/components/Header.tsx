@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Phone, Truck, Heart, Gift, Mail, Search, Menu, X, ChevronDown, ShoppingCart, ChevronRight } from 'lucide-react';
+import { Phone, Truck, Heart, Gift, Mail, Search, Menu, X, ChevronDown, ShoppingCart, ChevronRight, Package } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MegaMenuConcern, MegaMenuCategory, MegaMenuDoctor } from './MegaMenus';
+import { MegaMenuConcern, MegaMenuCategory, MegaMenuDoctor, MegaMenuBachFlower } from './MegaMenus';
 import { AuthModals } from './AuthModals';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
@@ -132,8 +132,15 @@ export const Header = () => {
                 </form>
               </div>
 
-              {/* Cart Button */}
+              {/* Cart Button and Track Order */}
               <div className="flex items-center flex-shrink-0">
+                {/* Track Order Link */}
+                <a href="/track-order" className="flex items-center mr-6 text-bahola-blue-500 hover:text-bahola-blue-700">
+                  <Package size={22} className="mr-1" />
+                  <span className="hidden md:inline">Track Order</span>
+                </a>
+                
+                {/* Cart Button */}
                 <a href="/cart" className="relative flex items-center mr-6">
                   <ShoppingCart size={24} className="text-bahola-blue-500" />
                   <span className="absolute -top-2 -right-2 bg-bahola-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -190,9 +197,14 @@ export const Header = () => {
                 <MegaMenuDoctor isOpen={activeMenu === 'doctors'} />
               </div>
 
-              <div className="main-menu-item flex items-center">
+              <div 
+                className="main-menu-item flex items-center"
+                onMouseEnter={() => handleMenuHover('bachflower')}
+                onMouseLeave={handleMenuLeave}
+              >
                 <span>Bach Flower</span>
                 <ChevronDown size={16} className="ml-1" />
+                <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
               </div>
 
               <div className="main-menu-item">
