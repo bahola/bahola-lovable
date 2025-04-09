@@ -195,7 +195,7 @@ const Homeopathy = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button className="px-8 py-3 bg-white text-bahola-blue-600 hover:bg-gray-100 text-lg font-semibold rounded-full">
-                Book a Free Assessment
+                Find a remedy for...
               </Button>
               <Button className="px-8 py-3 bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white text-lg font-semibold rounded-full border-2 border-white">
                 Talk to a Homeopath Now
