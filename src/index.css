@@ -1,155 +1,86 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 @layer base {
   :root {
-    --background: 210 33% 98%;
-    --foreground: 222.2 84% 4.9%;
-
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 203 88% 28%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 199 89% 48%;
-    --accent-foreground: 210 40% 98%;
-
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 220.9 39.3% 11%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
-
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
     
-    /* Bahola specific colors */
-    --bahola-blue-500: 205 100% 29%;
-    --bahola-blue-600: 205 100% 25%;
-    --bahola-blue-400: 205 100% 35%;
+    /* Sidebar colors */
+    --sidebar-background: 220 33% 98%;
+    --sidebar-foreground: 220 10% 22%;
+    --sidebar-primary: 220 10% 25%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 218 65% 93%;
+    --sidebar-accent-foreground: 217 100% 33%;
+    --sidebar-border: 217 15% 90%;
+    --sidebar-ring: 218 12% 72%;
   }
-
+ 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 220.9 39.3% 11%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-sans;
-  }
-}
-
-@layer components {
-  .mega-menu {
-    @apply invisible absolute left-0 top-full opacity-0 bg-white shadow-lg transition-all duration-300 transform translate-y-2 z-50;
-    width: 400px; /* Default width for smaller mega menus */
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 216 12.2% 83.9%;
+    
+    /* Sidebar colors */
+    --sidebar-background: 220 40% 13%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 218 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 40% 18%;
+    --sidebar-accent-foreground: 218 70% 50%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 218 40% 30%;
   }
 
-  .mega-menu.mega-menu-full {
-    width: 60vw; /* 60% of viewport width - using vw units for viewport width */
-  }
-
-  .mega-menu-open {
-    @apply visible opacity-100 translate-y-0;
-  }
-
-  .cloud-bg {
-    @apply bg-white bg-cloud-pattern bg-repeat;
-  }
-
+  /* Custom styles */
   .btn-bahola {
-    @apply px-6 py-2 bg-gradient-to-r from-bahola-blue-400 to-bahola-blue-500 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:from-bahola-blue-500 hover:to-bahola-blue-600;
+    @apply bg-bahola-blue-500 text-white hover:bg-bahola-blue-600 transition-colors;
   }
 
-  .section-title {
-    @apply text-3xl font-bold text-bahola-neutral-800 mb-6 text-center;
+  /* Hide scrollbar utility */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-
-  .top-menu-item {
-    @apply text-sm text-bahola-neutral-600 hover:text-bahola-blue-500 transition-colors duration-200;
-  }
-
-  .main-menu-item {
-    @apply text-base font-medium text-bahola-neutral-800 hover:text-bahola-blue-500 transition-colors duration-200 relative py-5 px-4;
-  }
-
-  .sticky-header {
-    @apply fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md shadow-sm z-50 transition-all duration-300;
-  }
-
-  .sticky-subheader {
-    @apply fixed top-[64px] left-0 right-0 bg-white/90 backdrop-blur-md shadow-sm z-40 transition-all duration-300;
-  }
-
-  .navbar-transparent {
-    @apply bg-transparent backdrop-blur-md;
-  }
-
-  /* Mobile menu styles */
-  .mobile-menu {
-    @apply fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto;
-  }
-
-  .mobile-menu-open {
-    @apply translate-x-0;
-  }
-
-  .mobile-menu-closed {
-    @apply -translate-x-full;
-  }
-
-  .mobile-menu-item {
-    @apply py-4 px-6 border-b border-bahola-neutral-100 text-bahola-neutral-800 font-medium flex items-center justify-between;
-  }
-
-  .mobile-submenu {
-    @apply h-0 overflow-hidden transition-all duration-300 bg-bahola-blue-50/50;
-  }
-
-  .mobile-submenu-open {
-    @apply h-auto;
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
