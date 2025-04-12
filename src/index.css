@@ -73,6 +73,60 @@
   .btn-bahola {
     @apply bg-bahola-blue-500 text-white hover:bg-bahola-blue-600 transition-colors;
   }
+  
+  /* Section title styles */
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold text-center text-bahola-neutral-800 mb-8;
+  }
+  
+  /* Mobile menu styles */
+  .mobile-menu {
+    @apply fixed top-0 left-0 w-full md:w-3/4 lg:w-1/2 h-full bg-white z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto;
+  }
+  
+  .mobile-menu-closed {
+    @apply -translate-x-full;
+  }
+  
+  .mobile-menu-open {
+    @apply translate-x-0;
+  }
+  
+  .mobile-menu-item {
+    @apply flex items-center justify-between py-3 px-4 border-b border-bahola-neutral-100 text-bahola-neutral-800;
+  }
+  
+  .mobile-submenu {
+    @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-bahola-neutral-50;
+  }
+  
+  .mobile-submenu-open {
+    @apply max-h-[500px];
+  }
+  
+  /* Top menu item styles */
+  .top-menu-item {
+    @apply text-sm text-bahola-neutral-600 hover:text-bahola-neutral-900 transition-colors;
+  }
+  
+  /* Main menu item styles */
+  .main-menu-item {
+    @apply relative px-4 py-3 text-bahola-neutral-800 hover:text-bahola-blue-500 transition-colors cursor-pointer;
+  }
+  
+  /* Sticky header styles */
+  .sticky-header {
+    @apply fixed top-0 left-0 right-0 z-40 bg-white shadow-md;
+  }
+  
+  .sticky-subheader {
+    @apply fixed top-[72px] left-0 right-0 z-30 bg-white shadow-sm;
+  }
+  
+  /* Cloud background */
+  .cloud-bg {
+    @apply bg-gradient-to-r from-bahola-blue-100 to-bahola-blue-200;
+  }
 
   /* Hide scrollbar utility */
   .hide-scrollbar {
@@ -83,4 +137,20 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
