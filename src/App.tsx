@@ -31,6 +31,15 @@ import ThankYou from "./pages/ThankYou";
 import ILoveHomeopathy from "./pages/ILoveHomeopathy";
 import ProductImport from "./pages/ProductImport";
 
+// Admin Dashboard Components
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminHome from "./pages/admin/AdminHome";
+import ProductsManagement from "./pages/admin/ProductsManagement";
+import OrdersManagement from "./pages/admin/OrdersManagement";
+import CustomersManagement from "./pages/admin/CustomersManagement";
+import DiscountsManagement from "./pages/admin/DiscountsManagement";
+import SalesAnalytics from "./pages/admin/SalesAnalytics";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -75,6 +84,16 @@ const App = () => (
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/stores" element={<StoreLocator />} />
           <Route path="/thank-you" element={<ThankYou />} />
+          
+          {/* Admin Dashboard Routes */}
+          <Route path="/admin" element={<AdminDashboard />}>
+            <Route index element={<AdminHome />} />
+            <Route path="products" element={<ProductsManagement />} />
+            <Route path="orders" element={<OrdersManagement />} />
+            <Route path="customers" element={<CustomersManagement />} />
+            <Route path="discounts" element={<DiscountsManagement />} />
+            <Route path="analytics" element={<SalesAnalytics />} />
+          </Route>
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
