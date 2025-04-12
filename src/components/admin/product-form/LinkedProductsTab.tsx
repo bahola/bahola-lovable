@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link, ArrowUp, ArrowRight } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
+import { initialCategories } from '../CategorySelect';
 
 interface LinkedProductsTabProps {
   form: UseFormReturn<any>;
@@ -17,6 +18,47 @@ const LinkedProductsTab = ({ form }: LinkedProductsTabProps) => {
     { id: "3", name: "Nux Vomica 200C" },
     { id: "4", name: "Bryonia Alba 30C" },
   ];
+
+  // Set up the form fields for linked products if they don't exist
+  useEffect(() => {
+    const currentUpsells = form.getValues("upsellProducts") || [];
+    const currentCrossSells = form.getValues("crossSellProducts") || [];
+    
+    if (!currentUpsells.length) {
+      form.setValue("upsellProducts", []);
+    }
+    
+    if (!currentCrossSells.length) {
+      form.setValue("crossSellProducts", []);
+    }
+  }, [form]);
+
+  const handleUpsellChange = (checked: boolean | string, productId: string) => {
+    const currentUpsells = form.getValues("upsellProducts") || [];
+    
+    if (checked) {
+      if (!currentUpsells.includes(productId)) {
+        form.setValue("upsellProducts", [...currentUpsells, productId]);
+      }
+    } else {
+      form.setValue("upsellProducts", currentUpsells.filter(id => id !== productId));
+    }
+  };
+
+  const handleCrossSellChange = (checked: boolean | string, productId: string) => {
+    const currentCrossSells = form.getValues("crossSellProducts") || [];
+    
+    if (checked) {
+      if (!currentCrossSells.includes(productId)) {
+        form.setValue("crossSellProducts", [...currentCrossSells, productId]);
+      }
+    } else {
+      form.setValue("crossSellProducts", currentCrossSells.filter(id => id !== productId));
+    }
+  };
+
+  const upsellProducts = form.getValues("upsellProducts") || [];
+  const crossSellProducts = form.getValues("crossSellProducts") || [];
 
   return (
     <Card>
@@ -44,7 +86,11 @@ const LinkedProductsTab = ({ form }: LinkedProductsTabProps) => {
           <div className="border rounded-md p-4">
             {mockProducts.map(product => (
               <div key={product.id} className="flex items-center space-x-2 mb-2">
-                <Checkbox id={`upsell-${product.id}`} />
+                <Checkbox 
+                  id={`upsell-${product.id}`} 
+                  checked={upsellProducts.includes(product.id)}
+                  onCheckedChange={(checked) => handleUpsellChange(checked, product.id)}
+                />
                 <label 
                   htmlFor={`upsell-${product.id}`}
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -68,7 +114,11 @@ const LinkedProductsTab = ({ form }: LinkedProductsTabProps) => {
           <div className="border rounded-md p-4">
             {mockProducts.map(product => (
               <div key={product.id} className="flex items-center space-x-2 mb-2">
-                <Checkbox id={`cross-sell-${product.id}`} />
+                <Checkbox 
+                  id={`cross-sell-${product.id}`} 
+                  checked={crossSellProducts.includes(product.id)}
+                  onCheckedChange={(checked) => handleCrossSellChange(checked, product.id)}
+                />
                 <label 
                   htmlFor={`cross-sell-${product.id}`}
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
