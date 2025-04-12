@@ -1,0 +1,29 @@
+
+import React from 'react';
+import { Search } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+
+interface SearchBarProps {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  onSearch: (e: React.FormEvent) => void;
+}
+
+export const SearchBar: React.FC<SearchBarProps> = ({ 
+  searchQuery, 
+  setSearchQuery, 
+  onSearch 
+}) => {
+  return (
+    <form onSubmit={onSearch} className="relative w-full max-w-md">
+      <Input
+        type="text"
+        placeholder="Search products..."
+        className="w-full pl-10 pr-4 py-2 rounded-full"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
+    </form>
+  );
+};
