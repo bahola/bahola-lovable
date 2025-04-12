@@ -17,6 +17,7 @@ export interface Product {
   weight: number;    // in grams
   dimensions: string;  // Length/Width/Height in cm
   image?: string;
+  category?: string;  // Add category property
   packSizes?: string[];
   potencies?: string[];
   variations?: ProductVariation[];

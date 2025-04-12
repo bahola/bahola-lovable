@@ -16,7 +16,8 @@ import {
   Image as ImageIcon,
   Plus,
   X,
-  PencilLine
+  PencilLine,
+  Layers
 } from 'lucide-react';
 
 import {
@@ -38,6 +39,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Product, ProductVariation } from "@/types/product";
+import CategorySelect from './CategorySelect';
 
 const formSchema = z.object({
   name: z.string().min(3, "Product name must be at least 3 characters"),
@@ -46,6 +48,7 @@ const formSchema = z.object({
   shortDescription: z.string(),
   hsnCode: z.string(),
   price: z.number().min(0),
+  category: z.string().optional(),
   weight: z.number().min(0),
   dimensions: z.object({
     length: z.number().min(0),
@@ -82,6 +85,7 @@ const ProductForm = () => {
     shortDescription: "",
     hsnCode: "",
     price: 0,
+    category: "",
     weight: 0,
     dimensions: {
       length: 0,
@@ -255,6 +259,32 @@ const ProductForm = () => {
                       <FormControl>
                         <Input placeholder="Enter product name" {...field} />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Category Selection */}
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        <span className="flex items-center">
+                          <Layers className="h-4 w-4 mr-1" /> 
+                          Category
+                        </span>
+                      </FormLabel>
+                      <FormControl>
+                        <CategorySelect 
+                          selectedCategory={field.value || ""}
+                          onCategoryChange={(categoryId) => field.onChange(categoryId)}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Select a category for your product or create a new one. Categories help organize products and improve SEO.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
