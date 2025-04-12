@@ -71,14 +71,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       <Link to="/homeopathy" className="main-menu-item">
         <span>Why Homeopathy</span>
       </Link>
-
-      <Link to="/faq" className="main-menu-item">
-        <span>FAQ</span>
-      </Link>
-      
-      <Link to="/help-center" className="main-menu-item">
-        <span>Help Center</span>
-      </Link>
     </nav>
   );
 };
