@@ -69,13 +69,6 @@
     --sidebar-ring: 218 40% 30%;
   }
 
-  /* Base global styles */
-  html, body, #root {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
   /* Custom styles */
   .btn-bahola {
     @apply bg-bahola-blue-500 text-white hover:bg-bahola-blue-600 transition-colors;
