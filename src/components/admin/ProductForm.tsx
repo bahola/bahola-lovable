@@ -103,10 +103,8 @@ const ProductForm = () => {
       form.setValue("potencies", updatedPotencies);
       setNewPotency("");
       
-      // Generate variations if both potencies and packSizes exist
-      if (packSizeValues.length > 0) {
-        generateVariations(updatedPotencies, packSizeValues);
-      }
+      // Generate variations with the updated potencies
+      generateVariations(updatedPotencies, packSizeValues);
     }
   };
 
@@ -117,21 +115,42 @@ const ProductForm = () => {
       form.setValue("packSizes", updatedPackSizes);
       setNewPackSize("");
       
-      // Generate variations if both potencies and packSizes exist
-      if (potencyValues.length > 0) {
-        generateVariations(potencyValues, updatedPackSizes);
-      }
+      // Generate variations with the updated pack sizes
+      generateVariations(potencyValues, updatedPackSizes);
     }
   };
 
   const generateVariations = (potencies: string[], packSizes: string[]) => {
     const newVariations: ProductVariation[] = [];
     
-    potencies.forEach(potency => {
-      packSizes.forEach(packSize => {
+    // If both attributes exist, create combination variations
+    if (potencies.length > 0 && packSizes.length > 0) {
+      potencies.forEach(potency => {
+        packSizes.forEach(packSize => {
+          // Check if variation already exists
+          const existingVariation = variations.find(
+            v => v.potency === potency && v.packSize === packSize
+          );
+          
+          if (existingVariation) {
+            newVariations.push(existingVariation);
+          } else {
+            newVariations.push({
+              potency,
+              packSize,
+              price: form.getValues("price") || 0,
+              stock: 0
+            });
+          }
+        });
+      });
+    } 
+    // If only potencies exist
+    else if (potencies.length > 0) {
+      potencies.forEach(potency => {
         // Check if variation already exists
         const existingVariation = variations.find(
-          v => v.potency === potency && v.packSize === packSize
+          v => v.potency === potency && v.packSize === ""
         );
         
         if (existingVariation) {
@@ -139,13 +158,33 @@ const ProductForm = () => {
         } else {
           newVariations.push({
             potency,
+            packSize: "",
+            price: form.getValues("price") || 0,
+            stock: 0
+          });
+        }
+      });
+    } 
+    // If only pack sizes exist
+    else if (packSizes.length > 0) {
+      packSizes.forEach(packSize => {
+        // Check if variation already exists
+        const existingVariation = variations.find(
+          v => v.potency === "" && v.packSize === packSize
+        );
+        
+        if (existingVariation) {
+          newVariations.push(existingVariation);
+        } else {
+          newVariations.push({
+            potency: "",
             packSize,
             price: form.getValues("price") || 0,
             stock: 0
           });
         }
       });
-    });
+    }
     
     setVariations(newVariations);
     form.setValue("variations", newVariations);
@@ -156,7 +195,14 @@ const ProductForm = () => {
     setPotencyValues(updatedPotencies);
     form.setValue("potencies", updatedPotencies);
     
-    // Remove variations that contain this potency
+    // If we're removing the last potency and there are no pack sizes, clear all variations
+    if (updatedPotencies.length === 0 && packSizeValues.length === 0) {
+      setVariations([]);
+      form.setValue("variations", []);
+      return;
+    }
+    
+    // Update variations to remove ones that contain this potency
     const updatedVariations = variations.filter(v => v.potency !== value);
     setVariations(updatedVariations);
     form.setValue("variations", updatedVariations);
@@ -167,7 +213,14 @@ const ProductForm = () => {
     setPackSizeValues(updatedPackSizes);
     form.setValue("packSizes", updatedPackSizes);
     
-    // Remove variations that contain this pack size
+    // If we're removing the last pack size and there are no potencies, clear all variations
+    if (updatedPackSizes.length === 0 && potencyValues.length === 0) {
+      setVariations([]);
+      form.setValue("variations", []);
+      return;
+    }
+    
+    // Update variations to remove ones that contain this pack size
     const updatedVariations = variations.filter(v => v.packSize !== value);
     setVariations(updatedVariations);
     form.setValue("variations", updatedVariations);

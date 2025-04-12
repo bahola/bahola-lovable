@@ -35,10 +35,10 @@ const VariationsTab = ({
               Change the product type to "Variable" in the General tab.
             </p>
           </div>
-        ) : potencyValues.length === 0 || packSizeValues.length === 0 ? (
+        ) : potencyValues.length === 0 && packSizeValues.length === 0 ? (
           <div className="text-center py-6">
             <p className="text-muted-foreground">
-              Please add at least one potency and one pack size in the Attributes tab 
+              Please add at least one attribute (potency or pack size) in the Attributes tab 
               to generate variations.
             </p>
           </div>
@@ -47,12 +47,16 @@ const VariationsTab = ({
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-muted">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Potency
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Pack Size
-                  </th>
+                  {potencyValues.length > 0 && (
+                    <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Potency
+                    </th>
+                  )}
+                  {packSizeValues.length > 0 && (
+                    <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Pack Size
+                    </th>
+                  )}
                   <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Price (₹)
                   </th>
@@ -64,12 +68,16 @@ const VariationsTab = ({
               <tbody className="bg-white divide-y divide-gray-200">
                 {variations.map((variation, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                      {variation.potency}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm">
-                      {variation.packSize}
-                    </td>
+                    {potencyValues.length > 0 && (
+                      <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
+                        {variation.potency}
+                      </td>
+                    )}
+                    {packSizeValues.length > 0 && (
+                      <td className="px-4 py-2 whitespace-nowrap text-sm">
+                        {variation.packSize}
+                      </td>
+                    )}
                     <td className="px-4 py-2 whitespace-nowrap text-sm">
                       <Input 
                         type="number"

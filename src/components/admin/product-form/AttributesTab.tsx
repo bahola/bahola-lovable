@@ -45,6 +45,7 @@ const AttributesTab = ({
         </CardTitle>
         <CardDescription>
           Define attributes like potency and pack size to create product variations.
+          You can add either one or both attributes.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
