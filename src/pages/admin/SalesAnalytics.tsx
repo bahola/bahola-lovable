@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Chart as ChartComponent,
+  BarChart as RechartsBarChart,
+  LineChart as RechartsLineChart,
+  AreaChart as RechartsAreaChart,
+  PieChart as RechartsPieChart,
   Line,
   Bar, 
   Area,
@@ -16,8 +19,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
-  PieChart
+  ResponsiveContainer
 } from 'recharts';
 
 // Sample data
@@ -175,7 +177,7 @@ const SalesAnalytics = () => {
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <ChartComponent
+              <RechartsBarChart
                 data={monthlySalesData}
                 margin={{
                   top: 5,
@@ -192,7 +194,7 @@ const SalesAnalytics = () => {
                 <Legend />
                 <Bar yAxisId="left" dataKey="sales" name="Sales (₹)" fill="#8884d8" />
                 <Line yAxisId="right" type="monotone" dataKey="orders" name="Orders" stroke="#82ca9d" />
-              </ChartComponent>
+              </RechartsBarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -204,7 +206,7 @@ const SalesAnalytics = () => {
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <RechartsPieChart>
                 <Pie
                   data={categorySalesData}
                   cx="50%"
@@ -223,7 +225,7 @@ const SalesAnalytics = () => {
                   formatter={(value) => [`₹${value.toLocaleString()}`, 'Sales']}
                 />
                 <Legend />
-              </PieChart>
+              </RechartsPieChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -235,7 +237,7 @@ const SalesAnalytics = () => {
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <ChartComponent
+              <RechartsBarChart
                 data={customerCategoryData}
                 margin={{
                   top: 5,
@@ -252,7 +254,7 @@ const SalesAnalytics = () => {
                 />
                 <Legend />
                 <Bar dataKey="value" name="Sales (₹)" fill="#82ca9d" />
-              </ChartComponent>
+              </RechartsBarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>

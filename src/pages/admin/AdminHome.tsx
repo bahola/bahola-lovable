@@ -3,16 +3,18 @@ import React from 'react';
 import { ArrowUpRight, DollarSign, Package, ShoppingBag, Users } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  Chart as ChartComponent,
-  Line,
-  Bar, 
-  Area,
+  BarChart as RechartsBarChart,
+  LineChart as RechartsLineChart,
+  AreaChart as RechartsAreaChart,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer 
+  ResponsiveContainer,
+  Line,
+  Bar,
+  Area
 } from 'recharts';
 
 // Sample data - would be fetched from API in a real app
@@ -110,7 +112,7 @@ const AdminHome = () => {
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <ChartComponent
+              <RechartsAreaChart
                 data={salesData}
                 margin={{
                   top: 5,
@@ -124,7 +126,7 @@ const AdminHome = () => {
                 <YAxis />
                 <Tooltip />
                 <Area type="monotone" dataKey="total" stroke="#3b82f6" fill="#93c5fd" />
-              </ChartComponent>
+              </RechartsAreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -136,7 +138,7 @@ const AdminHome = () => {
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <ChartComponent
+              <RechartsBarChart
                 data={[
                   { name: 'Homeopathy', value: 4000 },
                   { name: 'Ayurveda', value: 3000 },
@@ -156,7 +158,7 @@ const AdminHome = () => {
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="value" fill="#3b82f6" />
-              </ChartComponent>
+              </RechartsBarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
