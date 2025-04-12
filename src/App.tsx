@@ -29,6 +29,7 @@ import Reviews from "./pages/Reviews";
 import StoreLocator from "./pages/StoreLocator";
 import ThankYou from "./pages/ThankYou";
 import ILoveHomeopathy from "./pages/ILoveHomeopathy";
+import ProductImport from "./pages/ProductImport";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/product-import" element={<ProductImport />} />
           
           {/* Shopping and Checkout Pages */}
           <Route path="/cart" element={<Cart />} />
