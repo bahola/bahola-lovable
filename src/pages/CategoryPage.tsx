@@ -1,44 +1,113 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
-import { useParams } from 'react-router-dom';
-import { ProductCard } from '@/components/ProductCard';
-import { Filter, SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { useParams } from 'react-router-dom';
+import { ProductCard } from '@/components/ProductCard';
+import { 
+  Filter, 
+  SlidersHorizontal, 
+  ChevronRight, 
+  Grid3X3, 
+  List, 
+  Search, 
+  X 
+} from 'lucide-react';
 
 const CategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState('popularity');
+  const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
+  const [priceRange, setPriceRange] = React.useState([100, 5000]);
+  const [showFilters, setShowFilters] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   
-  // This would come from an API in a real implementation
-  const getCategoryName = (id: string) => {
-    const categoryMap: {[key: string]: string} = {
-      'mother-tinctures': 'Mother Tinctures',
-      'dilutions': 'Dilutions',
-      'biochemics': 'Biochemics',
-      'lm-potencies': 'LM Potencies',
-      'bach-flower': 'Bach Flower Remedies',
-      'combinations': 'Combination Remedies'
-    };
-    return categoryMap[id] || 'Products';
+  // Mock category data
+  const categoryInfo = {
+    name: categoryId?.replace(/-/g, ' ').replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) || 'Category',
+    description: 'Explore our range of high-quality homeopathic remedies designed to support your health naturally.',
+    productCount: 36
   };
   
-  // Dummy products for display purposes - would come from an API
-  const products = Array(12).fill(null).map((_, index) => ({
-    id: `product-${index}`,
-    name: `${getCategoryName(categoryId || '')} Product ${index + 1}`,
-    description: 'A high-quality homeopathic remedy for natural healing',
-    price: Math.floor(Math.random() * 500) + 100,
-    image: '/placeholder.svg',
-    discountPercentage: index % 3 === 0 ? 10 : 0,
-    rating: (Math.random() * 2 + 3).toFixed(1),
-    reviewCount: Math.floor(Math.random() * 100)
-  }));
+  // Mock product data
+  const products = [
+    {
+      id: 'arnica-montana-30c',
+      title: 'Arnica Montana 30C',
+      description: 'For bruises, injuries and muscle soreness',
+      price: 450,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Arnica+Montana',
+      discountPercentage: 10,
+      rating: 4.8,
+      reviewCount: 124,
+      url: '/product/arnica-montana-30c'
+    },
+    {
+      id: 'belladonna-200c',
+      title: 'Belladonna 200C',
+      description: 'For fever, inflammation and acute conditions',
+      price: 550,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Belladonna',
+      discountPercentage: 0,
+      rating: 4.7,
+      reviewCount: 89,
+      url: '/product/belladonna-200c'
+    },
+    {
+      id: 'nux-vomica-30c',
+      title: 'Nux Vomica 30C',
+      description: 'For digestive issues and hangover',
+      price: 380,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Nux+Vomica',
+      discountPercentage: 5,
+      rating: 4.9,
+      reviewCount: 102,
+      url: '/product/nux-vomica-30c'
+    },
+    {
+      id: 'bryonia-alba-200c',
+      title: 'Bryonia Alba 200C',
+      description: 'For dry cough and joint pain',
+      price: 490,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Bryonia+Alba',
+      discountPercentage: 0,
+      rating: 4.6,
+      reviewCount: 78,
+      url: '/product/bryonia-alba-200c'
+    },
+    {
+      id: 'allium-cepa-30c',
+      title: 'Allium Cepa 30C',
+      description: 'For cold, hay fever and watery eyes',
+      price: 420,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Allium+Cepa',
+      discountPercentage: 0,
+      rating: 4.5,
+      reviewCount: 65,
+      url: '/product/allium-cepa-30c'
+    },
+    {
+      id: 'chamomilla-30c',
+      title: 'Chamomilla 30C',
+      description: 'For teething pain and irritability',
+      price: 390,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Chamomilla',
+      discountPercentage: 0,
+      rating: 4.7,
+      reviewCount: 92,
+      url: '/product/chamomilla-30c'
+    }
+  ];
   
   const toggleFilter = (filter: string) => {
     setActiveFilters(prev => 
@@ -50,314 +119,276 @@ const CategoryPage = () => {
   
   const clearFilters = () => {
     setActiveFilters([]);
+    setPriceRange([100, 5000]);
+    setSearchQuery('');
   };
   
+  const filteredProducts = products.filter(product => 
+    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <PageLayout 
-      title={getCategoryName(categoryId || '')} 
-      description={`Browse our collection of ${getCategoryName(categoryId || '').toLowerCase()} and find the perfect remedy for your needs`}
+      title={categoryInfo.name} 
+      description={categoryInfo.description}
     >
-      <div className="lg:grid lg:grid-cols-4 gap-8">
-        {/* Mobile Filters Toggle */}
-        <div className="lg:hidden mb-4 flex justify-between items-center">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Mobile filters button */}
+        <div className="md:hidden mb-4">
           <Button 
             variant="outline" 
-            className="flex items-center" 
-            onClick={() => setFiltersOpen(!filtersOpen)}
+            className="w-full flex items-center justify-between"
+            onClick={() => setShowFilters(!showFilters)}
           >
-            <Filter className="mr-2 h-4 w-4" />
-            Filters
-            {activeFilters.length > 0 && (
-              <span className="ml-2 bg-bahola-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {activeFilters.length}
-              </span>
-            )}
+            <span className="flex items-center">
+              <Filter className="mr-2 h-4 w-4" />
+              Filters
+            </span>
+            <span>{showFilters ? <X size={16} /> : <SlidersHorizontal size={16} />}</span>
           </Button>
           
-          <div className="flex items-center">
-            <label htmlFor="mobile-sort" className="mr-2 text-sm">Sort:</label>
-            <select 
-              id="mobile-sort"
-              className="border rounded-md px-2 py-1"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="popularity">Popularity</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="newest">Newest</option>
-            </select>
-          </div>
-        </div>
-        
-        {/* Mobile Filters (Slide in) */}
-        <div className={`fixed inset-0 z-50 bg-white transform transition-transform ${filtersOpen ? 'translate-x-0' : '-translate-x-full'} lg:hidden`}>
-          <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-lg font-bold">Filters</h2>
-            <Button variant="ghost" size="icon" onClick={() => setFiltersOpen(false)}>
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          <div className="p-4 overflow-y-auto h-[calc(100vh-60px)]">
-            {/* Filter Content - Same as desktop */}
-            <div className="space-y-6">
-              {/* Price Range */}
-              <div>
-                <h3 className="font-semibold mb-3">Price Range</h3>
-                <div className="flex items-center">
-                  <Input 
-                    type="number" 
-                    placeholder="Min" 
-                    className="w-24"
-                  />
-                  <span className="mx-2">-</span>
-                  <Input 
-                    type="number" 
-                    placeholder="Max" 
-                    className="w-24"
-                  />
-                  <Button size="sm" variant="outline" className="ml-2">Set</Button>
-                </div>
-              </div>
-              
-              {/* Potency */}
-              <div>
-                <h3 className="font-semibold mb-3">Potency</h3>
-                <div className="space-y-2">
-                  {['6C', '30C', '200C', '1M', 'Mother Tincture'].map(potency => (
-                    <div key={potency} className="flex items-center">
-                      <Checkbox 
-                        id={`potency-${potency}`} 
-                        checked={activeFilters.includes(`potency-${potency}`)}
-                        onCheckedChange={() => toggleFilter(`potency-${potency}`)}
-                      />
-                      <Label htmlFor={`potency-${potency}`} className="ml-2">{potency}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Brand */}
-              <div>
-                <h3 className="font-semibold mb-3">Brand</h3>
-                <div className="space-y-2">
-                  {['Bahola', 'SBL', 'Willmar Schwabe', 'Boiron'].map(brand => (
-                    <div key={brand} className="flex items-center">
-                      <Checkbox 
-                        id={`brand-${brand}`} 
-                        checked={activeFilters.includes(`brand-${brand}`)}
-                        onCheckedChange={() => toggleFilter(`brand-${brand}`)}
-                      />
-                      <Label htmlFor={`brand-${brand}`} className="ml-2">{brand}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Concerns */}
-              <div>
-                <h3 className="font-semibold mb-3">Health Concerns</h3>
-                <div className="space-y-2">
-                  {['Digestive', 'Respiratory', 'Skin', 'Immunity', 'Pain Relief'].map(concern => (
-                    <div key={concern} className="flex items-center">
-                      <Checkbox 
-                        id={`concern-${concern}`} 
-                        checked={activeFilters.includes(`concern-${concern}`)}
-                        onCheckedChange={() => toggleFilter(`concern-${concern}`)}
-                      />
-                      <Label htmlFor={`concern-${concern}`} className="ml-2">{concern}</Label>
-                    </div>
-                  ))}
-                </div>
+          {activeFilters.length > 0 && (
+            <div className="mt-2 flex items-center">
+              <span className="text-sm text-gray-500 mr-2">Applied filters:</span>
+              <div className="flex flex-wrap gap-1">
+                {activeFilters.map(filter => (
+                  <span 
+                    key={filter} 
+                    className="bg-bahola-blue-100 text-bahola-blue-700 px-2 py-1 rounded-full text-xs flex items-center"
+                  >
+                    {filter}
+                    <button 
+                      onClick={() => toggleFilter(filter)}
+                      className="ml-1 hover:text-bahola-blue-900"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                ))}
+                <button 
+                  onClick={clearFilters}
+                  className="text-xs text-bahola-blue-600 hover:text-bahola-blue-800 underline"
+                >
+                  Clear all
+                </button>
               </div>
             </div>
-            
-            <div className="mt-8 flex space-x-4">
-              <Button className="flex-1" onClick={() => setFiltersOpen(false)}>
-                Apply Filters
-              </Button>
-              <Button variant="outline" className="flex-1" onClick={clearFilters}>
-                Clear All
-              </Button>
-            </div>
-          </div>
+          )}
         </div>
         
-        {/* Desktop Filters (Sidebar) */}
-        <div className="hidden lg:block col-span-1">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">Filters</h2>
+        {/* Desktop sidebar filters */}
+        <aside className={`w-full md:w-64 flex-shrink-0 ${showFilters ? 'block' : 'hidden md:block'}`}>
+          <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-medium">Filters</h3>
               {activeFilters.length > 0 && (
-                <Button variant="ghost" className="text-sm h-auto p-0" onClick={clearFilters}>
-                  Clear All
-                </Button>
+                <button 
+                  onClick={clearFilters}
+                  className="text-xs text-bahola-blue-600 hover:text-bahola-blue-800"
+                >
+                  Clear all
+                </button>
               )}
             </div>
             
-            <div className="space-y-6">
-              {/* Price Range */}
-              <div>
-                <h3 className="font-semibold mb-3">Price Range</h3>
-                <div className="flex items-center">
-                  <Input 
-                    type="number" 
-                    placeholder="Min" 
-                    className="w-20 text-sm"
-                  />
-                  <span className="mx-2">-</span>
-                  <Input 
-                    type="number" 
-                    placeholder="Max" 
-                    className="w-20 text-sm"
-                  />
-                  <Button size="sm" variant="outline" className="ml-2 text-sm">Set</Button>
-                </div>
-              </div>
-              
-              {/* Potency */}
-              <div>
-                <h3 className="font-semibold mb-3">Potency</h3>
-                <div className="space-y-2">
-                  {['6C', '30C', '200C', '1M', 'Mother Tincture'].map(potency => (
-                    <div key={potency} className="flex items-center">
-                      <Checkbox 
-                        id={`potency-desktop-${potency}`} 
-                        checked={activeFilters.includes(`potency-${potency}`)}
-                        onCheckedChange={() => toggleFilter(`potency-${potency}`)}
-                      />
-                      <Label htmlFor={`potency-desktop-${potency}`} className="ml-2 text-sm">{potency}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Brand */}
-              <div>
-                <h3 className="font-semibold mb-3">Brand</h3>
-                <div className="space-y-2">
-                  {['Bahola', 'SBL', 'Willmar Schwabe', 'Boiron'].map(brand => (
-                    <div key={brand} className="flex items-center">
-                      <Checkbox 
-                        id={`brand-desktop-${brand}`} 
-                        checked={activeFilters.includes(`brand-${brand}`)}
-                        onCheckedChange={() => toggleFilter(`brand-${brand}`)}
-                      />
-                      <Label htmlFor={`brand-desktop-${brand}`} className="ml-2 text-sm">{brand}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Concerns */}
-              <div>
-                <h3 className="font-semibold mb-3">Health Concerns</h3>
-                <div className="space-y-2">
-                  {['Digestive', 'Respiratory', 'Skin', 'Immunity', 'Pain Relief'].map(concern => (
-                    <div key={concern} className="flex items-center">
-                      <Checkbox 
-                        id={`concern-desktop-${concern}`} 
-                        checked={activeFilters.includes(`concern-${concern}`)}
-                        onCheckedChange={() => toggleFilter(`concern-${concern}`)}
-                      />
-                      <Label htmlFor={`concern-desktop-${concern}`} className="ml-2 text-sm">{concern}</Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Products Section */}
-        <div className="lg:col-span-3">
-          {/* Sort & Filter Bar */}
-          <div className="hidden lg:flex justify-between items-center mb-6">
-            <div className="flex items-center">
-              <span className="text-bahola-neutral-600">Showing {products.length} products</span>
+            <div className="mb-4">
+              <Input
+                placeholder="Search in category"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full"
+              />
             </div>
             
-            <div className="flex items-center space-x-3">
-              <label htmlFor="desktop-sort" className="text-sm">Sort by:</label>
-              <select 
-                id="desktop-sort"
-                className="border rounded-md px-3 py-1"
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-              >
-                <option value="popularity">Popularity</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="newest">Newest</option>
-              </select>
-            </div>
+            <Accordion type="multiple" className="w-full">
+              <AccordionItem value="potency">
+                <AccordionTrigger className="text-sm font-medium">Potency</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {['6C', '12C', '30C', '200C', '1M', '10M', 'LM1', 'LM2', 'LM3'].map(potency => (
+                      <div key={potency} className="flex items-center">
+                        <Checkbox 
+                          id={`potency-${potency}`} 
+                          checked={activeFilters.includes(`Potency: ${potency}`)}
+                          onCheckedChange={() => toggleFilter(`Potency: ${potency}`)}
+                        />
+                        <Label 
+                          htmlFor={`potency-${potency}`}
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          {potency}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="type">
+                <AccordionTrigger className="text-sm font-medium">Type</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {['Pills', 'Liquid', 'Mother Tincture', 'Trituration'].map(type => (
+                      <div key={type} className="flex items-center">
+                        <Checkbox 
+                          id={`type-${type}`} 
+                          checked={activeFilters.includes(`Type: ${type}`)}
+                          onCheckedChange={() => toggleFilter(`Type: ${type}`)}
+                        />
+                        <Label 
+                          htmlFor={`type-${type}`}
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          {type}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="condition">
+                <AccordionTrigger className="text-sm font-medium">Health Condition</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {['Allergies', 'Digestive', 'Pain', 'Respiratory', 'Skin', 'Sleep', 'Stress'].map(condition => (
+                      <div key={condition} className="flex items-center">
+                        <Checkbox 
+                          id={`condition-${condition}`} 
+                          checked={activeFilters.includes(`Condition: ${condition}`)}
+                          onCheckedChange={() => toggleFilter(`Condition: ${condition}`)}
+                        />
+                        <Label 
+                          htmlFor={`condition-${condition}`}
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          {condition}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="price">
+                <AccordionTrigger className="text-sm font-medium">Price Range</AccordionTrigger>
+                <AccordionContent>
+                  <div className="px-2 pt-2">
+                    <Slider
+                      defaultValue={[100, 5000]}
+                      max={5000}
+                      min={100}
+                      step={50}
+                      value={priceRange}
+                      onValueChange={setPriceRange}
+                    />
+                    <div className="flex justify-between mt-2 text-sm">
+                      <span>₹{priceRange[0]}</span>
+                      <span>₹{priceRange[1]}</span>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="brand">
+                <AccordionTrigger className="text-sm font-medium">Brand</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {['Bahola Labs', 'SBL', 'Dr. Reckeweg', 'Schwabe', 'Boiron'].map(brand => (
+                      <div key={brand} className="flex items-center">
+                        <Checkbox 
+                          id={`brand-${brand}`} 
+                          checked={activeFilters.includes(`Brand: ${brand}`)}
+                          onCheckedChange={() => toggleFilter(`Brand: ${brand}`)}
+                        />
+                        <Label 
+                          htmlFor={`brand-${brand}`}
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          {brand}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
-          
-          {/* Active Filters Pills */}
-          {activeFilters.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {activeFilters.map(filter => (
-                <div 
-                  key={filter} 
-                  className="bg-bahola-blue-100 text-bahola-blue-700 px-3 py-1 rounded-full text-sm flex items-center"
-                >
-                  {filter.split('-')[1]}
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-5 w-5 ml-1 p-0"
-                    onClick={() => toggleFilter(filter)}
+        </aside>
+        
+        {/* Main content - product grid */}
+        <div className="flex-1">
+          <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center text-sm text-gray-500 mb-2">
+                  <a href="/" className="hover:text-bahola-blue-600">Home</a>
+                  <ChevronRight size={14} className="mx-1" />
+                  <a href="/categories" className="hover:text-bahola-blue-600">Categories</a>
+                  <ChevronRight size={14} className="mx-1" />
+                  <span className="text-bahola-neutral-900">{categoryInfo.name}</span>
+                </div>
+                <p className="text-sm text-gray-600">{categoryInfo.productCount} products found</p>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <div className="hidden md:flex items-center space-x-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={viewMode === 'grid' ? 'bg-bahola-blue-50 text-bahola-blue-700' : ''}
+                    onClick={() => setViewMode('grid')}
                   >
-                    <X className="h-3 w-3" />
+                    <Grid3X3 size={18} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={viewMode === 'list' ? 'bg-bahola-blue-50 text-bahola-blue-700' : ''}
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List size={18} />
                   </Button>
                 </div>
+                
+                <select className="p-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-bahola-blue-500">
+                  <option>Sort by: Featured</option>
+                  <option>Price: Low to High</option>
+                  <option>Price: High to Low</option>
+                  <option>Newest first</option>
+                  <option>Highest rated</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          {filteredProducts.length === 0 ? (
+            <div className="bg-white p-8 rounded-lg shadow-sm text-center">
+              <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No products found</h3>
+              <p className="text-gray-600 mb-4">
+                Try adjusting your search or filter criteria to find what you're looking for.
+              </p>
+              <Button onClick={clearFilters}>Clear All Filters</Button>
+            </div>
+          ) : (
+            <div className={`grid gap-4 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  title={product.title}
+                  description={product.description}
+                  price={product.price}
+                  imageSrc={product.imageSrc}
+                  discountPercentage={product.discountPercentage}
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                  url={product.url}
+                />
               ))}
-              <Button 
-                variant="ghost" 
-                className="text-sm h-auto py-1 px-3" 
-                onClick={clearFilters}
-              >
-                Clear All
-              </Button>
             </div>
           )}
-          
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map(product => (
-              <ProductCard
-                key={product.id}
-                name={product.name}
-                description={product.description}
-                price={product.price}
-                image={product.image}
-                discountPercentage={product.discountPercentage}
-                rating={parseFloat(product.rating)}
-                reviewCount={product.reviewCount}
-                link={`/product/${product.id}`}
-              />
-            ))}
-          </div>
-          
-          {/* Pagination */}
-          <div className="mt-10 flex justify-center">
-            <nav className="flex items-center space-x-1">
-              <Button variant="outline" size="icon" disabled>
-                <span className="sr-only">Previous page</span>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" className="h-9 w-9">1</Button>
-              <Button variant="outline" className="h-9 w-9">2</Button>
-              <Button variant="outline" className="h-9 w-9">3</Button>
-              <span className="px-2">...</span>
-              <Button variant="outline" className="h-9 w-9">8</Button>
-              <Button variant="outline" size="icon">
-                <span className="sr-only">Next page</span>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </nav>
-          </div>
         </div>
       </div>
     </PageLayout>

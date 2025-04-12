@@ -1,152 +1,241 @@
 
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useLocation } from 'react-router-dom';
 import { ProductCard } from '@/components/ProductCard';
-import { Search, Filter, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Search as SearchIcon, X, Filter } from 'lucide-react';
 
 const SearchResults = () => {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const searchQuery = queryParams.get('q') || '';
-  const searchConcern = queryParams.get('concern') || '';
+  const params = new URLSearchParams(location.search);
+  const queryParam = params.get('q') || '';
   
-  const [query, setQuery] = React.useState(searchQuery || searchConcern);
+  const [searchValue, setSearchValue] = React.useState(queryParam);
+  const [filters, setFilters] = React.useState({
+    categories: [] as string[],
+    priceRange: [0, 5000] as [number, number],
+    rating: 0,
+  });
   
-  // This would typically be fetched from an API based on the search query
-  const results = Array(8).fill(null).map((_, index) => ({
-    id: `result-${index}`,
-    name: `Product Result ${index + 1}`,
-    description: 'A high-quality homeopathic remedy for natural healing',
-    price: Math.floor(Math.random() * 500) + 100,
-    image: '/placeholder.svg',
-    discountPercentage: index % 4 === 0 ? 15 : 0,
-    rating: (Math.random() * 2 + 3).toFixed(1),
-    reviewCount: Math.floor(Math.random() * 100)
-  }));
+  // Mock search results
+  const searchResults = [
+    {
+      id: 'arnica-montana-30c',
+      title: 'Arnica Montana 30C',
+      description: 'For bruises, injuries and muscle soreness',
+      price: 450,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Arnica+Montana',
+      discountPercentage: 10,
+      rating: 4.8,
+      reviewCount: 124,
+      url: '/product/arnica-montana-30c'
+    },
+    {
+      id: 'belladonna-200c',
+      title: 'Belladonna 200C',
+      description: 'For fever, inflammation and acute conditions',
+      price: 550,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Belladonna',
+      discountPercentage: 0,
+      rating: 4.7,
+      reviewCount: 89,
+      url: '/product/belladonna-200c'
+    },
+    {
+      id: 'nux-vomica-30c',
+      title: 'Nux Vomica 30C',
+      description: 'For digestive issues and hangover',
+      price: 380,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Nux+Vomica',
+      discountPercentage: 5,
+      rating: 4.9,
+      reviewCount: 102,
+      url: '/product/nux-vomica-30c'
+    },
+    {
+      id: 'bach-rescue-remedy',
+      title: 'Bach Flower Rescue Remedy',
+      description: 'For stress, anxiety and emotional balance',
+      price: 850,
+      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Rescue+Remedy',
+      discountPercentage: 0,
+      rating: 4.9,
+      reviewCount: 156,
+      url: '/product/bach-rescue-remedy'
+    }
+  ];
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // This would typically update the URL and trigger a new search
-    console.log('Searching for:', query);
+    // In a real application, this would update the URL and trigger a new search
+    console.log(`Searching for: ${searchValue}`);
   };
-  
+
   return (
     <PageLayout 
-      title={searchConcern ? `${searchConcern} Remedies` : "Search Results"} 
-      description={searchQuery ? `Results for "${searchQuery}"` : (searchConcern ? `Browse our homeopathic remedies for ${searchConcern}` : "Find the perfect homeopathic remedy")}
+      title="Search Results" 
+      description={queryParam ? `Search results for "${queryParam}"` : 'Browse our products'}
     >
-      {/* Search Bar */}
-      <div className="mb-8">
-        <form onSubmit={handleSearch} className="flex w-full max-w-2xl mx-auto">
-          <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search for remedies, symptoms, or health concerns..."
-              className="pl-10 py-6"
-            />
-          </div>
-          <Button type="submit" className="ml-2">
+      <div className="mb-6">
+        <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto">
+          <Input
+            type="text"
+            placeholder="Search for remedies, conditions, or brands..."
+            className="pl-10 pr-4 py-3 w-full"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <SearchIcon
+            size={20}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          />
+          <Button 
+            type="submit" 
+            className="absolute right-0 top-0 rounded-l-none h-full"
+          >
             Search
           </Button>
         </form>
       </div>
       
-      {/* Filter Tags (if searching by concern) */}
-      {searchConcern && (
-        <div className="mb-6">
-          <div className="flex items-center mb-2">
-            <h2 className="text-lg font-semibold mr-2">Filters:</h2>
-            <div className="bg-bahola-blue-100 text-bahola-blue-700 px-3 py-1 rounded-full text-sm flex items-center">
-              {searchConcern}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Filters sidebar */}
+        <aside className="w-full md:w-64 flex-shrink-0">
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-medium flex items-center">
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+              </h3>
               <Button 
                 variant="ghost" 
-                size="icon" 
-                className="h-5 w-5 ml-1 p-0"
+                size="sm" 
+                className="text-bahola-blue-600 hover:text-bahola-blue-800 h-auto p-0"
               >
-                <X className="h-3 w-3" />
+                Reset
               </Button>
             </div>
+            
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-sm font-medium mb-3">Category</h4>
+                <div className="space-y-2">
+                  {['Mother Tinctures', 'Dilutions', 'Biochemics', 'Bach Flower', 'Combination Formulas'].map(
+                    (category) => (
+                      <div key={category} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={`category-${category}`}
+                          className="h-4 w-4 text-bahola-blue-600 focus:ring-bahola-blue-500 border-gray-300 rounded"
+                        />
+                        <label
+                          htmlFor={`category-${category}`}
+                          className="ml-2 text-sm text-gray-700"
+                        >
+                          {category}
+                        </label>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-3">Price Range</h4>
+                <div className="px-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      className="w-full p-2 text-sm border rounded"
+                    />
+                    <span>-</span>
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      className="w-full p-2 text-sm border rounded"
+                    />
+                  </div>
+                  <Button 
+                    size="sm" 
+                    className="w-full mt-2"
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-3">Customer Rating</h4>
+                <div className="space-y-2">
+                  {[4, 3, 2, 1].map((rating) => (
+                    <div key={rating} className="flex items-center">
+                      <input
+                        type="radio"
+                        id={`rating-${rating}`}
+                        name="rating"
+                        className="h-4 w-4 text-bahola-blue-600 focus:ring-bahola-blue-500 border-gray-300"
+                      />
+                      <label
+                        htmlFor={`rating-${rating}`}
+                        className="ml-2 text-sm text-gray-700 flex items-center"
+                      >
+                        {rating}+ Stars
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-bahola-neutral-600">
-            Showing homeopathic remedies commonly used for {searchConcern.toLowerCase()} concerns.
-          </p>
-        </div>
-      )}
-      
-      {/* Results Count */}
-      <div className="mb-6 flex justify-between items-center">
-        <p className="text-bahola-neutral-600">
-          {results.length} results found
-        </p>
+        </aside>
         
-        <div className="flex items-center">
-          <span className="mr-2">Sort by:</span>
-          <select className="border rounded-md px-3 py-1">
-            <option value="relevance">Relevance</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="popularity">Popularity</option>
-          </select>
-        </div>
-      </div>
-      
-      {/* Results Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {results.map(product => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
-            description={product.description}
-            price={product.price}
-            image={product.image}
-            discountPercentage={product.discountPercentage}
-            rating={parseFloat(product.rating)}
-            reviewCount={product.reviewCount}
-            link={`/product/${product.id}`}
-          />
-        ))}
-      </div>
-      
-      {/* No Results */}
-      {results.length === 0 && (
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold mb-2">No Results Found</h2>
-          <p className="text-bahola-neutral-600 mb-6">
-            We couldn't find any products that match your search.
-          </p>
-          <div className="space-y-4">
-            <p className="font-medium">Suggestions:</p>
-            <ul className="list-disc text-left max-w-md mx-auto">
-              <li>Check your spelling</li>
-              <li>Try using more general keywords</li>
-              <li>Try browsing by category instead</li>
-              <li>Contact our experts for personalized recommendations</li>
-            </ul>
+        {/* Search results */}
+        <div className="flex-1">
+          <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-600">
+                {searchResults.length} results found for "{queryParam}"
+              </p>
+              <select className="p-2 text-sm border rounded-md">
+                <option>Sort by: Relevance</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Most Popular</option>
+                <option>Highest Rated</option>
+              </select>
+            </div>
           </div>
-          <Button className="mt-8" asChild>
-            <a href="/categories">Browse All Categories</a>
-          </Button>
-        </div>
-      )}
-      
-      {/* Related Searches */}
-      <div className="mt-12 bg-bahola-blue-50 p-6 rounded-lg">
-        <h2 className="text-xl font-bold mb-4">Related Searches</h2>
-        <div className="flex flex-wrap gap-3">
-          {['Allergies', 'Respiratory Support', 'Digestion', 'Sleep Aid', 'Stress Relief', 'Immunity Boosters'].map(term => (
-            <a 
-              key={term} 
-              href={`/search?q=${encodeURIComponent(term)}`}
-              className="bg-white hover:bg-bahola-blue-100 border border-bahola-blue-200 px-4 py-2 rounded-full transition-colors"
-            >
-              {term}
-            </a>
-          ))}
+          
+          {searchResults.length === 0 ? (
+            <div className="bg-white p-8 rounded-lg shadow-sm text-center">
+              <SearchIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No results found</h3>
+              <p className="text-gray-600 mb-4">
+                We couldn't find any products matching "{queryParam}". 
+                Try different keywords or browse our categories.
+              </p>
+              <Button>Browse Categories</Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {searchResults.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  title={product.title}
+                  description={product.description}
+                  price={product.price}
+                  imageSrc={product.imageSrc}
+                  discountPercentage={product.discountPercentage}
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                  url={product.url}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </PageLayout>
