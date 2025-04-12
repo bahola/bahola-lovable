@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useToast } from "@/hooks/use-toast";
 
 import {
   Form,
@@ -48,6 +48,8 @@ const formSchema = z.object({
 });
 
 const ProductForm = () => {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
   const [potencyValues, setPotencyValues] = useState<string[]>([]);
   const [packSizeValues, setPackSizeValues] = useState<string[]>([]);
@@ -86,14 +88,52 @@ const ProductForm = () => {
 
   const productType = form.watch("type");
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // Add variations if product type is variable
-    if (values.type === "variable") {
-      values.variations = variations;
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Add variations if product type is variable
+      if (values.type === "variable") {
+        values.variations = variations;
+      }
+      
+      console.log("Saving product with data:", values);
+      
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // In a real application, you would send this data to your API
+      // const response = await fetch('/api/products', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(values),
+      // });
+      // const data = await response.json();
+      
+      // Display success message
+      toast({
+        title: "Product saved successfully",
+        description: `The product "${values.name}" has been added to your inventory.`,
+      });
+      
+      // Reset form
+      form.reset(defaultValues);
+      setVariations([]);
+      setPotencyValues([]);
+      setPackSizeValues([]);
+      setImageUrls([]);
+      setActiveTab("general");
+      
+    } catch (error) {
+      console.error("Error saving product:", error);
+      toast({
+        title: "Failed to save product",
+        description: "There was an error saving your product. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    console.log("Form values:", values);
-    // This is where you'd typically send the data to an API
   };
 
   const handleAddPotency = () => {
@@ -318,8 +358,10 @@ const ProductForm = () => {
         </Tabs>
 
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline">Cancel</Button>
-          <Button type="submit">Save Product</Button>
+          <Button type="button" variant="outline" onClick={() => form.reset()}>Cancel</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Save Product"}
+          </Button>
         </div>
       </form>
     </Form>

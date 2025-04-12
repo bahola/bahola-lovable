@@ -6,10 +6,12 @@ import SearchAndFilterBar from '@/components/admin/SearchAndFilterBar';
 import ProductList from '@/components/admin/ProductList';
 import { sampleProducts, ProductListItem } from '@/data/sampleProducts';
 import { initialCategories } from '@/components/admin/CategorySelect';
+import { useToast } from "@/hooks/use-toast";
 
 const ProductsManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<ProductListItem[]>(sampleProducts);
+  const { toast } = useToast();
   
   // Ensure categories are loaded
   console.log("Available categories:", initialCategories);
@@ -39,7 +41,12 @@ const ProductsManagement = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          <AddProductSheet />
+          <AddProductSheet onProductAdded={(product) => {
+            toast({
+              title: "Product added",
+              description: `${product?.name || 'New product'} has been added to your inventory.`,
+            });
+          }} />
           <ImportProductDialog />
         </div>
       </div>

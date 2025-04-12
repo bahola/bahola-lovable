@@ -8,13 +8,27 @@ import {
   SheetDescription, 
   SheetHeader, 
   SheetTitle, 
-  SheetTrigger 
+  SheetTrigger,
+  SheetClose
 } from "@/components/ui/sheet";
 import ProductForm from "@/components/admin/ProductForm";
 
-const AddProductSheet = () => {
+interface AddProductSheetProps {
+  onProductAdded?: (product?: any) => void;
+}
+
+const AddProductSheet = ({ onProductAdded }: AddProductSheetProps) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleProductAdded = (product?: any) => {
+    if (onProductAdded) {
+      onProductAdded(product);
+    }
+    setOpen(false);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
@@ -28,6 +42,7 @@ const AddProductSheet = () => {
         </SheetHeader>
         <div className="py-4">
           <ProductForm />
+          <SheetClose className="hidden" />
         </div>
       </SheetContent>
     </Sheet>
