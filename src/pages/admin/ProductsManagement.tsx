@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AddProductSheet from '@/components/admin/AddProductSheet';
 import ImportProductDialog from '@/components/admin/ImportProductDialog';
 import SearchAndFilterBar from '@/components/admin/SearchAndFilterBar';
@@ -10,12 +10,9 @@ import { initialCategories } from '@/components/admin/CategorySelect';
 const ProductsManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<ProductListItem[]>(sampleProducts);
-  const [categories, setCategories] = useState(initialCategories);
   
   // Ensure categories are loaded
-  useEffect(() => {
-    console.log("Available categories:", categories);
-  }, [categories]);
+  console.log("Available categories:", initialCategories);
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;

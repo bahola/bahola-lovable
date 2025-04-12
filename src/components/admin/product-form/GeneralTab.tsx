@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Hash, Layers } from 'lucide-react';
-import CategorySelect from '../CategorySelect';
+import { initialCategories } from '../CategorySelect';
 import { UseFormReturn } from 'react-hook-form';
 
 interface GeneralTabProps {
@@ -37,7 +37,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           )}
         />
 
-        {/* Category Selection */}
+        {/* Category Selection as Dropdown */}
         <FormField
           control={form.control}
           name="category"
@@ -49,14 +49,25 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   Category
                 </span>
               </FormLabel>
-              <FormControl>
-                <CategorySelect 
-                  selectedCategory={field.value || ""}
-                  onCategoryChange={(categoryId) => field.onChange(categoryId)}
-                />
-              </FormControl>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {initialCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormDescription>
-                Select a category for your product or create a new one. Categories help organize products and improve SEO.
+                Select a category for your product. Categories help organize products and improve SEO.
               </FormDescription>
               <FormMessage />
             </FormItem>
