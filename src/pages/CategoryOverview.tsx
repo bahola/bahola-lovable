@@ -50,6 +50,22 @@ const CategoryOverview = () => {
       count: 45
     }
   ];
+  
+  // Health concerns for the "Shop by Concern" section
+  const concerns = [
+    'Allergies', 
+    'Digestive Health', 
+    'Respiratory Care', 
+    'Skin Care', 
+    'Sleep & Stress', 
+    'Immunity Support', 
+    'Joint & Muscle', 
+    'Children\'s Health',
+    'Mental Health',
+    'Heart Health',
+    'Eye Care',
+    'Ear Nose Throat'
+  ];
 
   return (
     <PageLayout title="Product Categories" description="Browse our complete range of homeopathic products">
@@ -84,12 +100,12 @@ const CategoryOverview = () => {
       </div>
 
       <div className="mt-16">
-        <h2 className="text-2xl font-bold mb-6">Shop by Concern</h2>
+        <h2 className="text-2xl font-bold mb-6">Shop by Health Concern</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {['Allergies', 'Digestive Health', 'Respiratory Care', 'Skin Care', 'Sleep & Stress', 'Immunity Support', 'Joint & Muscle', 'Children\'s Health'].map((concern) => (
+          {concerns.map((concern) => (
             <Link 
               key={concern} 
-              to={`/search?concern=${encodeURIComponent(concern)}`}
+              to={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`}
               className="bg-bahola-blue-50 hover:bg-bahola-blue-100 p-4 rounded-lg text-center transition-colors"
             >
               <span className="font-medium">{concern}</span>

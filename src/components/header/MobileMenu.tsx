@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { X, Search, ChevronRight, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   activeSubmenu,
   onSubmenuToggle
 }) => {
+  // Common health concerns for mobile menu
+  const commonConcerns = ['Allergies', 'Cancer', 'Heart Health', 'Child Care', 'Eye Care'];
+  
   return (
     <div 
       className={`mobile-menu ${isOpen ? 'mobile-menu-open' : 'mobile-menu-closed'}`}
@@ -69,12 +71,16 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </button>
           <div className={`mobile-submenu ${activeSubmenu === 'concern' ? 'mobile-submenu-open' : ''}`}>
             <div className="p-4 grid grid-cols-1 gap-2">
-              {['Allergies', 'Cancer', 'Heart Health', 'Child Care', 'Eye Care'].map(item => (
-                <a key={item} href={`/concern/${item.toLowerCase().replace(/\s+/g, '-')}`} className="py-2 px-4 hover:bg-bahola-blue-100 rounded">
-                  {item}
+              {commonConcerns.map(concern => (
+                <a 
+                  key={concern} 
+                  href={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`} 
+                  className="py-2 px-4 hover:bg-bahola-blue-100 rounded"
+                >
+                  {concern}
                 </a>
               ))}
-              <a href="/concerns" className="py-2 px-4 text-bahola-blue-500 font-semibold">View all concerns →</a>
+              <a href="/categories" className="py-2 px-4 text-bahola-blue-500 font-semibold">View all concerns →</a>
             </div>
           </div>
         </div>

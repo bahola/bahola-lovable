@@ -60,6 +60,9 @@ const App = () => (
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product-import" element={<ProductImport />} />
           
+          {/* Health Concern Category Pages */}
+          <Route path="/concern/:concernId" element={<CategoryPage />} />
+          
           {/* Shopping and Checkout Pages */}
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />

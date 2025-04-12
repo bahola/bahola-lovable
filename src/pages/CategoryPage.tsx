@@ -12,7 +12,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { ProductCard } from '@/components/ProductCard';
 import { 
   Filter, 
@@ -25,21 +25,33 @@ import {
 } from 'lucide-react';
 
 const CategoryPage = () => {
-  const { categoryId } = useParams<{ categoryId: string }>();
+  const { categoryId, concernId } = useParams<{ categoryId: string; concernId: string }>();
+  const location = useLocation();
   const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
   const [priceRange, setPriceRange] = React.useState([100, 5000]);
   const [showFilters, setShowFilters] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   
-  // Mock category data
-  const categoryInfo = {
-    name: categoryId?.replace(/-/g, ' ').replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) || 'Category',
-    description: 'Explore our range of high-quality homeopathic remedies designed to support your health naturally.',
+  // Determine if we're viewing a category or concern page
+  const isConcernPage = location.pathname.includes('/concern/');
+  const id = isConcernPage ? concernId : categoryId;
+  
+  // Format the name for display (convert kebab-case to Title Case)
+  const formatName = (str: string = '') => {
+    return str.replace(/-/g, ' ').replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+  };
+  
+  // Mock data
+  const pageInfo = {
+    name: formatName(id),
+    description: isConcernPage 
+      ? `Browse our homeopathic remedies for ${formatName(id)}.`
+      : 'Explore our range of high-quality homeopathic remedies designed to support your health naturally.',
     productCount: 36
   };
   
-  // Mock product data
+  // Mock product data - this would ideally come from an API
   const products = [
     {
       id: 'arnica-montana-30c',
@@ -109,6 +121,7 @@ const CategoryPage = () => {
     }
   ];
   
+  // Filter toggle function
   const toggleFilter = (filter: string) => {
     setActiveFilters(prev => 
       prev.includes(filter) 
@@ -117,12 +130,14 @@ const CategoryPage = () => {
     );
   };
   
+  // Clear all filters
   const clearFilters = () => {
     setActiveFilters([]);
     setPriceRange([100, 5000]);
     setSearchQuery('');
   };
   
+  // Apply search filter
   const filteredProducts = products.filter(product => 
     product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     product.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -130,8 +145,8 @@ const CategoryPage = () => {
 
   return (
     <PageLayout 
-      title={categoryInfo.name} 
-      description={categoryInfo.description}
+      title={pageInfo.name} 
+      description={pageInfo.description}
     >
       <div className="flex flex-col md:flex-row gap-8">
         {/* Mobile filters button */}
@@ -325,11 +340,20 @@ const CategoryPage = () => {
                 <div className="flex items-center text-sm text-gray-500 mb-2">
                   <a href="/" className="hover:text-bahola-blue-600">Home</a>
                   <ChevronRight size={14} className="mx-1" />
-                  <a href="/categories" className="hover:text-bahola-blue-600">Categories</a>
-                  <ChevronRight size={14} className="mx-1" />
-                  <span className="text-bahola-neutral-900">{categoryInfo.name}</span>
+                  {isConcernPage ? (
+                    <>
+                      <a href="/categories" className="hover:text-bahola-blue-600">Health Concerns</a>
+                      <ChevronRight size={14} className="mx-1" />
+                    </>
+                  ) : (
+                    <>
+                      <a href="/categories" className="hover:text-bahola-blue-600">Categories</a>
+                      <ChevronRight size={14} className="mx-1" />
+                    </>
+                  )}
+                  <span className="text-bahola-neutral-900">{pageInfo.name}</span>
                 </div>
-                <p className="text-sm text-gray-600">{categoryInfo.productCount} products found</p>
+                <p className="text-sm text-gray-600">{pageInfo.productCount} products found</p>
               </div>
               
               <div className="flex items-center space-x-2">
