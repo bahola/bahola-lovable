@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import ProductForm from "@/components/admin/ProductForm";
 
 // Sample data
 const sampleProducts = [
@@ -108,35 +109,13 @@ const ProductsManagement = () => {
                 Add Product
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="sm:max-w-md">
+            <SheetContent side="right" className="w-[900px] sm:max-w-[900px] overflow-y-auto">
               <SheetHeader>
                 <SheetTitle>Add New Product</SheetTitle>
                 <SheetDescription>Create a new product in your inventory.</SheetDescription>
               </SheetHeader>
               <div className="py-4">
-                {/* Form would go here - simplified for demo */}
-                <p className="text-sm text-muted-foreground mb-4">Complete the form below to add a new product.</p>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Product Name</label>
-                    <Input placeholder="Enter product name" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Product Type</label>
-                      <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                        <option value="simple">Simple</option>
-                        <option value="variable">Variable</option>
-                      </select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">HSN Code</label>
-                      <Input placeholder="Enter HSN code" />
-                    </div>
-                  </div>
-                  {/* More fields would be added here */}
-                  <Button className="w-full mt-4">Save Product</Button>
-                </div>
+                <ProductForm />
               </div>
             </SheetContent>
           </Sheet>
