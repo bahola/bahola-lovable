@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -44,26 +45,27 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Shop By Concern</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-bahola-blue-300">Allergies</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Digestive Health</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Respiratory Care</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Skin Care</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Sleep & Stress</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Immunity Support</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">View All Concerns</a></li>
+              <li><Link to="/search?concern=Allergies" className="hover:text-bahola-blue-300">Allergies</Link></li>
+              <li><Link to="/search?concern=Digestive%20Health" className="hover:text-bahola-blue-300">Digestive Health</Link></li>
+              <li><Link to="/search?concern=Respiratory%20Care" className="hover:text-bahola-blue-300">Respiratory Care</Link></li>
+              <li><Link to="/search?concern=Skin%20Care" className="hover:text-bahola-blue-300">Skin Care</Link></li>
+              <li><Link to="/search?concern=Sleep%20%26%20Stress" className="hover:text-bahola-blue-300">Sleep & Stress</Link></li>
+              <li><Link to="/search?concern=Immunity%20Support" className="hover:text-bahola-blue-300">Immunity Support</Link></li>
+              <li><Link to="/categories" className="hover:text-bahola-blue-300">View All Concerns</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="text-lg font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-bahola-blue-300">About Us</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Consult a Homeopath</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">For Doctors</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">The Remedy Room</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Shipping Policy</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Refund Policy</a></li>
-              <li><a href="#" className="hover:text-bahola-blue-300">Terms & Conditions</a></li>
+              <li><Link to="/about" className="hover:text-bahola-blue-300">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-bahola-blue-300">Consult a Homeopath</Link></li>
+              <li><Link to="/i-love-homeopathy" className="hover:text-bahola-blue-300">I ❤️ HOMEOPATHY</Link></li>
+              <li><Link to="/reviews" className="hover:text-bahola-blue-300">Customer Reviews</Link></li>
+              <li><Link to="/shipping" className="hover:text-bahola-blue-300">Shipping Policy</Link></li>
+              <li><Link to="/return-policy" className="hover:text-bahola-blue-300">Refund Policy</Link></li>
+              <li><Link to="/terms" className="hover:text-bahola-blue-300">Terms & Conditions</Link></li>
+              <li><Link to="/privacy" className="hover:text-bahola-blue-300">Privacy Policy</Link></li>
             </ul>
           </div>
           
@@ -80,7 +82,14 @@ export const Footer = () => {
                 Subscribe
               </Button>
             </div>
-            <p className="text-sm text-bahola-neutral-400">By subscribing, you agree to our Privacy Policy and consent to receive updates from Bahola Labs.</p>
+            <p className="text-sm text-bahola-neutral-400">By subscribing, you agree to our <Link to="/privacy" className="underline hover:text-bahola-blue-300">Privacy Policy</Link> and consent to receive updates from Bahola Labs.</p>
+            
+            <div className="mt-6">
+              <h3 className="text-lg font-bold mb-2">Find Us</h3>
+              <Link to="/stores" className="flex items-center text-bahola-blue-300 hover:underline">
+                <MapPin size={16} className="mr-1" /> Store Locations
+              </Link>
+            </div>
           </div>
         </div>
         
@@ -88,9 +97,9 @@ export const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p>© 2025 Bahola Labs. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="hover:text-bahola-blue-300">Privacy Policy</a>
-              <a href="#" className="hover:text-bahola-blue-300">Terms of Service</a>
-              <a href="#" className="hover:text-bahola-blue-300">Cookie Policy</a>
+              <Link to="/privacy" className="hover:text-bahola-blue-300">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-bahola-blue-300">Terms of Service</Link>
+              <Link to="/contact" className="hover:text-bahola-blue-300">Contact Us</Link>
             </div>
           </div>
         </div>
