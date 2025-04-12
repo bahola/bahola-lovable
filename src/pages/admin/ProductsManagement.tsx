@@ -4,11 +4,11 @@ import AddProductSheet from '@/components/admin/AddProductSheet';
 import ImportProductDialog from '@/components/admin/ImportProductDialog';
 import SearchAndFilterBar from '@/components/admin/SearchAndFilterBar';
 import ProductList from '@/components/admin/ProductList';
-import { sampleProducts } from '@/data/sampleProducts';
+import { sampleProducts, ProductListItem } from '@/data/sampleProducts';
 
 const ProductsManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredProducts, setFilteredProducts] = useState(sampleProducts);
+  const [filteredProducts, setFilteredProducts] = useState<ProductListItem[]>(sampleProducts);
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;

@@ -11,10 +11,10 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Product } from "@/types/product";
+import { ProductListItem } from "@/data/sampleProducts";
 
 interface ProductListProps {
-  products: Product[];
+  products: ProductListItem[];
 }
 
 const ProductList = ({ products }: ProductListProps) => {
