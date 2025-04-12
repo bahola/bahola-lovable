@@ -6,7 +6,7 @@ import {
   MegaMenuCategory, 
   MegaMenuDoctor, 
   MegaMenuBachFlower 
-} from '@/components/MegaMenus';
+} from '@/components/mega-menus';
 
 interface MainMenuProps {
   activeMenu: string | null;
