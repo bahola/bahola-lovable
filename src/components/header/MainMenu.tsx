@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronDown, Heart } from 'lucide-react';
 import { 
   MegaMenuConcern, 
@@ -67,9 +68,17 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         <span>HOMEOPATHY</span>
       </div>
       
-      <a href="/homeopathy" className="main-menu-item">
+      <Link to="/homeopathy" className="main-menu-item">
         <span>Why Homeopathy</span>
-      </a>
+      </Link>
+
+      <Link to="/faq" className="main-menu-item">
+        <span>FAQ</span>
+      </Link>
+      
+      <Link to="/help-center" className="main-menu-item">
+        <span>Help Center</span>
+      </Link>
     </nav>
   );
 };

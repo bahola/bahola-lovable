@@ -30,6 +30,8 @@ import StoreLocator from "./pages/StoreLocator";
 import ThankYou from "./pages/ThankYou";
 import ILoveHomeopathy from "./pages/ILoveHomeopathy";
 import ProductImport from "./pages/ProductImport";
+import FAQ from "./pages/FAQ";
+import HelpCenter from "./pages/HelpCenter";
 
 // Admin Dashboard Components
 import AdminDashboard from "./pages/AdminDashboard";
@@ -82,6 +84,8 @@ const App = () => (
           <Route path="/shipping" element={<ShippingInfo />} />
           <Route path="/terms" element={<TermsConditions />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/help-center" element={<HelpCenter />} />
           
           {/* Additional Pages */}
           <Route path="/reviews" element={<Reviews />} />

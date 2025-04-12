@@ -62,6 +62,8 @@ export const Footer = () => {
               <li><Link to="/contact" className="hover:text-bahola-blue-300">Consult a Homeopath</Link></li>
               <li><Link to="/i-love-homeopathy" className="hover:text-bahola-blue-300">I ❤️ HOMEOPATHY</Link></li>
               <li><Link to="/reviews" className="hover:text-bahola-blue-300">Customer Reviews</Link></li>
+              <li><Link to="/faq" className="hover:text-bahola-blue-300">FAQs</Link></li>
+              <li><Link to="/help-center" className="hover:text-bahola-blue-300">Help Center</Link></li>
               <li><Link to="/shipping" className="hover:text-bahola-blue-300">Shipping Policy</Link></li>
               <li><Link to="/return-policy" className="hover:text-bahola-blue-300">Refund Policy</Link></li>
               <li><Link to="/terms" className="hover:text-bahola-blue-300">Terms & Conditions</Link></li>
