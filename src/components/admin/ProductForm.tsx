@@ -295,26 +295,16 @@ const ProductForm = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-6 mb-6">
             <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="shipping">Shipping</TabsTrigger>
-            <TabsTrigger value="linked">Linked Products</TabsTrigger>
             <TabsTrigger value="attributes">Attributes</TabsTrigger>
             <TabsTrigger value="variations">Variations</TabsTrigger>
+            <TabsTrigger value="shipping">Shipping</TabsTrigger>
+            <TabsTrigger value="linked">Linked Products</TabsTrigger>
             <TabsTrigger value="descriptions">Descriptions</TabsTrigger>
           </TabsList>
 
           {/* General Tab */}
           <TabsContent value="general">
             <GeneralTab form={form} />
-          </TabsContent>
-
-          {/* Shipping Tab */}
-          <TabsContent value="shipping">
-            <ShippingTab form={form} />
-          </TabsContent>
-
-          {/* Linked Products Tab */}
-          <TabsContent value="linked">
-            <LinkedProductsTab form={form} />
           </TabsContent>
 
           {/* Attributes Tab */}
@@ -333,7 +323,7 @@ const ProductForm = () => {
               handleRemovePackSize={handleRemovePackSize}
             />
           </TabsContent>
-
+          
           {/* Variations Tab */}
           <TabsContent value="variations">
             <VariationsTab 
@@ -343,6 +333,16 @@ const ProductForm = () => {
               variations={variations}
               handleUpdateVariation={handleUpdateVariation}
             />
+          </TabsContent>
+
+          {/* Shipping Tab - moved after Variations */}
+          <TabsContent value="shipping">
+            <ShippingTab form={form} />
+          </TabsContent>
+
+          {/* Linked Products Tab */}
+          <TabsContent value="linked">
+            <LinkedProductsTab form={form} />
           </TabsContent>
 
           {/* Descriptions Tab */}
