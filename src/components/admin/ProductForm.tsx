@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -42,6 +43,7 @@ const formSchema = z.object({
     packSize: z.string(),
     price: z.number().min(0),
     stock: z.number().min(0),
+    weight: z.number().min(0), // Added weight validation in schema
   })).optional(),
   upsellProducts: z.array(z.string()).optional(),
   crossSellProducts: z.array(z.string()).optional(),
@@ -162,6 +164,7 @@ const ProductForm = () => {
 
   const generateVariations = (potencies: string[], packSizes: string[]) => {
     const newVariations: ProductVariation[] = [];
+    const baseWeight = form.getValues("weight") || 0;
     
     // If both attributes exist, create combination variations
     if (potencies.length > 0 && packSizes.length > 0) {
@@ -179,7 +182,8 @@ const ProductForm = () => {
               potency,
               packSize,
               price: form.getValues("price") || 0,
-              stock: 0
+              stock: 0,
+              weight: baseWeight // Add weight to new variations
             });
           }
         });
@@ -200,7 +204,8 @@ const ProductForm = () => {
             potency,
             packSize: "",
             price: form.getValues("price") || 0,
-            stock: 0
+            stock: 0,
+            weight: baseWeight // Add weight to new variations
           });
         }
       });
@@ -220,7 +225,8 @@ const ProductForm = () => {
             potency: "",
             packSize,
             price: form.getValues("price") || 0,
-            stock: 0
+            stock: 0,
+            weight: baseWeight // Add weight to new variations
           });
         }
       });
