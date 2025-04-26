@@ -4,6 +4,7 @@ export interface ProductVariation {
   packSize: string;
   price: number;
   stock: number;
+  weight: number;  // Added weight field for variations
 }
 
 export interface Product {
@@ -14,7 +15,7 @@ export interface Product {
   hsnCode: string;  // HSN (Harmonized System Nomenclature) code
   price: number;
   stock?: number;    // Adding stock property to match ProductListItem
-  weight: number;    // in grams
+  weight: number;    // Base weight in grams
   dimensions: string;  // Length/Width/Height in cm
   image?: string;
   category?: string;  // Add category property

@@ -14,11 +14,11 @@ export const TemplateDownloader: React.FC = () => {
         description: 'Product description',
         hsnCode: 'HSN Code',
         price: 'Sale Price',
-        weight: 'Weight in grams',
+        weight: 'Base Weight in grams',
         dimensions: 'L/W/H in cm',
         packSizes: 'Pack sizes (comma-separated, for variable products)',
         potencies: 'Potencies (comma-separated, for variable products)',
-        variations: 'Variations in format: potency/packSize/price/stock (comma-separated)'
+        variations: 'Variations in format: potency/packSize/price/stock/weight (comma-separated)'
       },
       {
         name: 'Arnica Montana',
@@ -30,7 +30,7 @@ export const TemplateDownloader: React.FC = () => {
         dimensions: '5/2/2',
         packSizes: '10g, 20g',
         potencies: '30C, 200C, 1M',
-        variations: '30C/10g/185/24, 30C/20g/300/18, 200C/10g/195/15, 200C/20g/320/12, 1M/10g/220/10, 1M/20g/350/8'
+        variations: '30C/10g/185/24/25, 30C/20g/300/18/45, 200C/10g/195/15/25, 200C/20g/320/12/45, 1M/10g/220/10/25, 1M/20g/350/8/45'
       },
       {
         name: 'Bryonia Alba',
