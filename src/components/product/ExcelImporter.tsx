@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, Loader2 } from 'lucide-react';
@@ -18,8 +17,8 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
       // Process the raw Excel data into the format we need
       const processedData = data.map(row => {
         // Basic validation
-        if (!row.name || !row.type || !row.hsnCode) {
-          throw new Error('Missing required fields: name, type, or hsnCode');
+        if (!row.name || !row.type || !row.hsnCode || !row.category) {
+          throw new Error('Missing required fields: name, type, category, or hsnCode');
         }
         
         // Process variable product data if applicable
@@ -39,12 +38,13 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
           // Process variations
           if (row.variations) {
             processedRow.variations = row.variations.split(',').map((variation: string) => {
-              const [potency, packSize, price, stock] = variation.trim().split('/');
+              const [potency, packSize, price, stock, weight] = variation.trim().split('/');
               return {
                 potency,
                 packSize,
                 price: Number(price),
-                stock: Number(stock)
+                stock: Number(stock),
+                weight: Number(weight)
               };
             });
           }

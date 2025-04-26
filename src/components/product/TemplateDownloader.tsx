@@ -11,6 +11,8 @@ export const TemplateDownloader: React.FC = () => {
       {
         name: 'Product Name',
         type: 'simple/variable',
+        category: 'Mother Tinctures/Dilutions/Specialty Products',
+        subcategory: 'A-Z for Mother Tinctures & Dilutions, or Health Condition for Specialty',
         description: 'Product description',
         hsnCode: 'HSN Code',
         price: 'Sale Price',
@@ -23,6 +25,8 @@ export const TemplateDownloader: React.FC = () => {
       {
         name: 'Arnica Montana',
         type: 'variable',
+        category: 'Mother Tinctures',
+        subcategory: 'A',
         description: 'Homeopathic remedy for bruising',
         hsnCode: '30049011',
         price: '185',
@@ -33,9 +37,11 @@ export const TemplateDownloader: React.FC = () => {
         variations: '30C/10g/185/24/25, 30C/20g/300/18/45, 200C/10g/195/15/25, 200C/20g/320/12/45, 1M/10g/220/10/25, 1M/20g/350/8/45'
       },
       {
-        name: 'Bryonia Alba',
+        name: 'Stress Relief Complex',
         type: 'simple',
-        description: 'Homeopathic remedy for dry cough',
+        category: 'Specialty Products',
+        subcategory: 'Stress & Sleep',
+        description: 'Natural homeopathic remedy for stress relief',
         hsnCode: '30049011',
         price: '175',
         weight: '25',
