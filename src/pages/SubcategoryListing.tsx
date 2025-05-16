@@ -11,6 +11,7 @@ interface CategoryWithSubcategories {
   id: string;
   name: string;
   slug: string;
+  type: string; // Add the type property to the interface
   subcategories: {
     id: string;
     name: string;
