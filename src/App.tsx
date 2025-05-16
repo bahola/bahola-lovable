@@ -42,6 +42,11 @@ import CustomersManagement from "./pages/admin/CustomersManagement";
 import DiscountsManagement from "./pages/admin/DiscountsManagement";
 import SalesAnalytics from "./pages/admin/SalesAnalytics";
 
+// Professional Resources Pages
+import MateriaMedica from "./pages/professional/MateriaMedica";
+import RemedyDeepDive from "./pages/professional/RemedyDeepDive";
+import CaseStudies from "./pages/professional/CaseStudies";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -77,6 +82,11 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/account" element={<UserAccount />} />
           <Route path="/orders" element={<OrderHistory />} />
+          
+          {/* Professional Resources Pages */}
+          <Route path="/professional/materia-medica" element={<MateriaMedica />} />
+          <Route path="/professional/remedy-deep-dive" element={<RemedyDeepDive />} />
+          <Route path="/professional/case-studies" element={<CaseStudies />} />
           
           {/* Informational Pages */}
           <Route path="/about" element={<About />} />

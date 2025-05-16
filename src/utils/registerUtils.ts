@@ -1,11 +1,13 @@
 
 import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CustomerFormData, DoctorFormData, UserType } from '@/schemas/registerSchema';
 
 export const useRegisterSubmit = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl');
   
   const handleSubmit = async (values: CustomerFormData | DoctorFormData, userType: UserType) => {
     try {
@@ -36,8 +38,8 @@ export const useRegisterSubmit = () => {
       //   }
       // });
       
-      // Redirect to login page
-      navigate('/login');
+      // Redirect to the return URL if available, otherwise to login page
+      navigate(returnUrl || '/login');
     } catch (error) {
       console.error('Registration error:', error);
       toast({

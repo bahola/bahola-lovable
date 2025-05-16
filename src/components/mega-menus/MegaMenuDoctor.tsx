@@ -42,7 +42,7 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
           <div>
             <h3 className="text-xl font-bold mb-4 text-bahola-neutral-800">Professional Resources</h3>
             <div className="space-y-4">
-              <a href="/professional/materia-medica" className="block p-4 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors">
+              <Link to="/professional/materia-medica" className="block p-4 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors">
                 <div className="flex items-center">
                   <div className="mr-4 text-bahola-blue-500">
                     <Stethoscope size={28} />
@@ -52,9 +52,9 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
                     <p className="text-sm text-bahola-neutral-600">Access detailed comparative studies of homeopathic remedies</p>
                   </div>
                 </div>
-              </a>
+              </Link>
               
-              <a href="/professional/remedy-deep-dive" className="block p-4 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors">
+              <Link to="/professional/remedy-deep-dive" className="block p-4 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors">
                 <div className="flex items-center">
                   <div className="mr-4 text-bahola-blue-500">
                     <Pill size={28} />
@@ -64,9 +64,9 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
                     <p className="text-sm text-bahola-neutral-600">Explore in-depth analysis of specific remedies</p>
                   </div>
                 </div>
-              </a>
+              </Link>
               
-              <a href="/professional/case-studies" className="block p-4 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors">
+              <Link to="/professional/case-studies" className="block p-4 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors">
                 <div className="flex items-center">
                   <div className="mr-4 text-bahola-blue-500">
                     <BadgePlus size={28} />
@@ -76,7 +76,7 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
                     <p className="text-sm text-bahola-neutral-600">Review real-world clinical cases and treatment approaches</p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
