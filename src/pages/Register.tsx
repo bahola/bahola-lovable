@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,7 +65,9 @@ const doctorFormSchema = doctorFieldSchema.refine((data) => data.password === da
 type UserType = 'customer' | 'doctor';
 
 const Register = () => {
-  const [userType, setUserType] = useState<UserType>('customer');
+  const [searchParams] = useSearchParams();
+  const initialUserType = searchParams.get('type') === 'doctor' ? 'doctor' : 'customer';
+  const [userType, setUserType] = useState<UserType>(initialUserType);
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -89,6 +91,26 @@ const Register = () => {
       } : {}),
     },
   });
+
+  // Reset the form when user type changes
+  useEffect(() => {
+    form.reset({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      terms: false,
+      newsletter: false,
+      ...(userType === 'doctor' ? {
+        medicalLicense: '',
+        specialization: '',
+        clinic: '',
+        yearsOfPractice: '',
+      } : {}),
+    });
+  }, [userType, form]);
   
   const handleSubmit = async (values: z.infer<typeof baseFormSchema> | z.infer<typeof doctorFormSchema>) => {
     try {
@@ -137,7 +159,8 @@ const Register = () => {
     <PageLayout title="Create an Account" description="Join Bahola Labs for a better shopping experience">
       <div className="max-w-3xl mx-auto mb-10">
         <Tabs 
-          defaultValue="customer" 
+          defaultValue={initialUserType}
+          value={userType} 
           onValueChange={(value) => setUserType(value as UserType)}
           className="w-full"
         >

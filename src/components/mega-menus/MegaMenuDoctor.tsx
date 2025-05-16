@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { BadgePlus, Pill, Stethoscope } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface MegaMenuProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
                   <span>Exclusive webinars and conference discounts</span>
                 </li>
               </ul>
-              <button className="btn-bahola w-full">Sign Up Now</button>
+              <Link to="/register?type=doctor" className="btn-bahola w-full block text-center">Sign Up Now</Link>
             </div>
           </div>
           
