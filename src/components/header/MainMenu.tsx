@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Heart } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { 
   MegaMenuConcern, 
   MegaMenuCategory, 
@@ -63,9 +63,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       </div>
 
       <div className="main-menu-item flex items-center">
-        <span>I</span>
-        <Heart size={16} className="mx-1 text-red-500 fill-red-500" />
-        <span>HOMEOPATHY</span>
+        <span className="whitespace-nowrap">I</span>
+        <div className="mx-1 text-red-500">❤️</div>
+        <span className="whitespace-nowrap">HOMEOPATHY</span>
       </div>
       
       <Link to="/homeopathy" className="main-menu-item">

@@ -25,7 +25,11 @@ import {
 } from 'lucide-react';
 
 const CategoryPage = () => {
-  const { categoryId, concernId } = useParams<{ categoryId: string; concernId: string }>();
+  const { categoryId, concernId, subcategoryId } = useParams<{ 
+    categoryId: string; 
+    concernId: string;
+    subcategoryId: string;
+  }>();
   const location = useLocation();
   const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
   const [priceRange, setPriceRange] = React.useState([100, 5000]);
@@ -42,84 +46,64 @@ const CategoryPage = () => {
     return str.replace(/-/g, ' ').replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
   };
   
-  // Mock data
-  const pageInfo = {
-    name: formatName(id),
-    description: isConcernPage 
-      ? `Browse our homeopathic remedies for ${formatName(id)}.`
-      : 'Explore our range of high-quality homeopathic remedies designed to support your health naturally.',
-    productCount: 36
+  // Get page info based on if we're viewing a category, subcategory, or concern
+  const getPageInfo = () => {
+    const baseName = formatName(id);
+    
+    if (subcategoryId) {
+      return {
+        name: `${baseName} - ${subcategoryId.toUpperCase()}`,
+        description: `Browse our ${baseName} remedies that start with ${subcategoryId.toUpperCase()}.`,
+        productCount: 8 + Math.floor(Math.random() * 30) // Random number for demo
+      };
+    }
+    
+    return {
+      name: baseName,
+      description: isConcernPage 
+        ? `Browse our homeopathic remedies for ${baseName}.`
+        : `Explore our range of high-quality ${baseName} designed to support your health naturally.`,
+      productCount: 10 + Math.floor(Math.random() * 30) // Random number for demo
+    };
   };
   
-  // Mock product data - this would ideally come from an API
-  const products = [
-    {
-      id: 'arnica-montana-30c',
-      title: 'Arnica Montana 30C',
-      description: 'For bruises, injuries and muscle soreness',
-      price: 450,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Arnica+Montana',
-      discountPercentage: 10,
-      rating: 4.8,
-      reviewCount: 124,
-      url: '/product/arnica-montana-30c'
-    },
-    {
-      id: 'belladonna-200c',
-      title: 'Belladonna 200C',
-      description: 'For fever, inflammation and acute conditions',
-      price: 550,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Belladonna',
-      discountPercentage: 0,
-      rating: 4.7,
-      reviewCount: 89,
-      url: '/product/belladonna-200c'
-    },
-    {
-      id: 'nux-vomica-30c',
-      title: 'Nux Vomica 30C',
-      description: 'For digestive issues and hangover',
-      price: 380,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Nux+Vomica',
-      discountPercentage: 5,
-      rating: 4.9,
-      reviewCount: 102,
-      url: '/product/nux-vomica-30c'
-    },
-    {
-      id: 'bryonia-alba-200c',
-      title: 'Bryonia Alba 200C',
-      description: 'For dry cough and joint pain',
-      price: 490,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Bryonia+Alba',
-      discountPercentage: 0,
-      rating: 4.6,
-      reviewCount: 78,
-      url: '/product/bryonia-alba-200c'
-    },
-    {
-      id: 'allium-cepa-30c',
-      title: 'Allium Cepa 30C',
-      description: 'For cold, hay fever and watery eyes',
-      price: 420,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Allium+Cepa',
-      discountPercentage: 0,
-      rating: 4.5,
-      reviewCount: 65,
-      url: '/product/allium-cepa-30c'
-    },
-    {
-      id: 'chamomilla-30c',
-      title: 'Chamomilla 30C',
-      description: 'For teething pain and irritability',
-      price: 390,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Chamomilla',
-      discountPercentage: 0,
-      rating: 4.7,
-      reviewCount: 92,
-      url: '/product/chamomilla-30c'
-    }
-  ];
+  const pageInfo = getPageInfo();
+  
+  // Mock product data generator - simulate products for any category/subcategory
+  const generateMockProducts = () => {
+    const productTypes = [
+      'Arnica', 'Belladonna', 'Nux Vomica', 'Bryonia', 'Allium Cepa', 'Chamomilla',
+      'Arsenicum Album', 'Pulsatilla', 'Rhus Tox', 'Apis Mel', 'Aconite', 'Sepia'
+    ];
+    
+    const filteredProducts = productTypes
+      // If we have a subcategory, filter to only show products starting with that letter
+      .filter(product => !subcategoryId || product.charAt(0).toLowerCase() === subcategoryId.toLowerCase())
+      // Create product objects
+      .map(product => {
+        const potency = ['6C', '30C', '200C', '1M'][Math.floor(Math.random() * 4)];
+        const id = `${product.toLowerCase().replace(/\s+/g, '-')}-${potency.toLowerCase()}`;
+        const price = 300 + Math.floor(Math.random() * 500);
+        const discount = Math.random() > 0.7 ? Math.floor(Math.random() * 15) + 5 : 0;
+        
+        return {
+          id,
+          title: `${product} ${potency}`,
+          description: `For various health conditions and symptoms.`,
+          price,
+          imageSrc: `https://placehold.co/300x300/bahola-blue/white?text=${encodeURIComponent(product)}`,
+          discountPercentage: discount,
+          rating: 4 + (Math.random() * 1),
+          reviewCount: 10 + Math.floor(Math.random() * 100),
+          url: `/product/${id}`
+        };
+      });
+    
+    return filteredProducts;
+  };
+  
+  // Generate products based on current category/subcategory
+  const products = generateMockProducts();
   
   // Filter toggle function
   const toggleFilter = (filter: string) => {
@@ -349,9 +333,17 @@ const CategoryPage = () => {
                     <>
                       <a href="/categories" className="hover:text-bahola-blue-600">Categories</a>
                       <ChevronRight size={14} className="mx-1" />
+                      {subcategoryId && (
+                        <>
+                          <a href={`/category/${categoryId}`} className="hover:text-bahola-blue-600">{formatName(categoryId)}</a>
+                          <ChevronRight size={14} className="mx-1" />
+                        </>
+                      )}
                     </>
                   )}
-                  <span className="text-bahola-neutral-900">{pageInfo.name}</span>
+                  <span className="text-bahola-neutral-900">
+                    {subcategoryId ? `${subcategoryId.toUpperCase()} Products` : pageInfo.name}
+                  </span>
                 </div>
                 <p className="text-sm text-gray-600">{pageInfo.productCount} products found</p>
               </div>

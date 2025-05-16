@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Separator } from '@/components/ui/separator';
 
 interface MegaMenuProps {
   isOpen: boolean;
@@ -9,73 +11,106 @@ interface MegaMenuProps {
 export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
   
+  const categories = [
+    {
+      id: "mother-tinctures",
+      name: "Mother Tinctures",
+      subcategories: alphabet.map(letter => ({ id: letter.toLowerCase(), name: letter }))
+    },
+    {
+      id: "dilutions",
+      name: "Dilutions",
+      subcategories: alphabet.map(letter => ({ id: letter.toLowerCase(), name: letter }))
+    },
+    {
+      id: "lm-potencies",
+      name: "LM Potencies",
+      subcategories: alphabet.map(letter => ({ id: letter.toLowerCase(), name: letter }))
+    },
+    { id: "bio-chemics", name: "Bio Chemics", subcategories: [] },
+    { id: "bio-combinations", name: "Bio Combinations", subcategories: [] },
+    { id: "triturations", name: "Triturations", subcategories: [] },
+    { id: "single-remedies", name: "Single Remedies", subcategories: [] }
+  ];
+  
   return (
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
       <div className="container mx-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <a href="/category/mother-tinctures" className="block text-lg font-semibold mb-4 text-bahola-blue-600 hover:text-bahola-blue-800">
-              Mother tinctures
-            </a>
-            <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-              {alphabet.map((letter) => (
-                <a 
-                  key={letter} 
-                  href={`/category/mother-tinctures/${letter.toLowerCase()}`}
-                  className="px-2 py-1 text-center border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200"
+            {categories.slice(0, 2).map((category, index) => (
+              <div key={category.id} className={index > 0 ? "mt-6" : ""}>
+                <Link 
+                  to={`/category/${category.id}`} 
+                  className="block text-lg font-semibold mb-4 text-bahola-blue-600 hover:text-bahola-blue-800"
                 >
-                  {letter}
-                </a>
-              ))}
-            </div>
-            
-            <a href="/category/dilutions" className="block text-lg font-semibold mt-6 mb-4 text-bahola-blue-600 hover:text-bahola-blue-800">
-              Dilutions
-            </a>
-            <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-              {alphabet.map((letter) => (
-                <a 
-                  key={letter} 
-                  href={`/category/dilutions/${letter.toLowerCase()}`}
-                  className="px-2 py-1 text-center border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200"
-                >
-                  {letter}
-                </a>
-              ))}
-            </div>
+                  {category.name}
+                </Link>
+                {category.subcategories.length > 0 && (
+                  <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                    {category.subcategories.map((subcategory) => (
+                      <Link
+                        key={subcategory.id}
+                        to={`/category/${category.id}/${subcategory.id}`}
+                        className="px-2 py-1 text-center border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200"
+                      >
+                        {subcategory.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
           
           <div>
-            <a href="/category/lm-potencies" className="block text-lg font-semibold mb-4 text-bahola-blue-600 hover:text-bahola-blue-800">
-              LM Potencies
-            </a>
-            <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-              {alphabet.map((letter) => (
-                <a 
-                  key={letter} 
-                  href={`/category/lm-potencies/${letter.toLowerCase()}`}
-                  className="px-2 py-1 text-center border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200"
+            {categories.slice(2, 3).map((category, index) => (
+              <div key={category.id} className={index > 0 ? "mt-6" : ""}>
+                <Link 
+                  to={`/category/${category.id}`} 
+                  className="block text-lg font-semibold mb-4 text-bahola-blue-600 hover:text-bahola-blue-800"
                 >
-                  {letter}
-                </a>
-              ))}
-            </div>
+                  {category.name}
+                </Link>
+                {category.subcategories.length > 0 && (
+                  <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                    {category.subcategories.map((subcategory) => (
+                      <Link
+                        key={subcategory.id}
+                        to={`/category/${category.id}/${subcategory.id}`}
+                        className="px-2 py-1 text-center border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200"
+                      >
+                        {subcategory.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
             
             <div className="mt-6 grid grid-cols-1 gap-3">
-              <a href="/category/bio-chemics" className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800">
-                Bio Chemics
-              </a>
-              <a href="/category/bio-combinations" className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800">
-                Bio Combinations
-              </a>
-              <a href="/category/triturations" className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800">
-                Triturations
-              </a>
-              <a href="/category/single-remedies" className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800">
-                Single Remedies
-              </a>
+              {categories.slice(3).map((category) => (
+                <Link 
+                  key={category.id}
+                  to={`/category/${category.id}`}
+                  className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800"
+                >
+                  {category.name}
+                </Link>
+              ))}
             </div>
           </div>
+        </div>
+
+        <Separator className="my-4" />
+        
+        <div className="text-center">
+          <Link
+            to="/categories"
+            className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-800 font-medium"
+          >
+            View All Categories
+          </Link>
         </div>
       </div>
     </div>

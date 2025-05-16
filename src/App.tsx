@@ -58,6 +58,7 @@ const App = () => (
           {/* Core Pages */}
           <Route path="/categories" element={<CategoryOverview />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/category/:categoryId/:subcategoryId" element={<CategoryPage />} />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product-import" element={<ProductImport />} />
