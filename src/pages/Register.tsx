@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,8 +14,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
-// Define the base schema for registration
-const baseFormSchema = z.object({
+// Define the base schema for registration without refine
+const baseFieldSchema = z.object({
   firstName: z.string().min(2, { message: 'First name must be at least 2 characters.' }),
   lastName: z.string().min(2, { message: 'Last name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -40,17 +39,25 @@ const baseFormSchema = z.object({
     errorMap: () => ({ message: 'You must agree to the terms and conditions.' }),
   }),
   newsletter: z.boolean().optional(),
-}).refine((data) => data.password === data.confirmPassword, {
+});
+
+// Define the base schema for registration with password confirmation check
+const baseFormSchema = baseFieldSchema.refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
 });
 
 // Additional fields for doctors
-const doctorFormSchema = baseFormSchema.extend({
+const doctorFieldSchema = baseFieldSchema.extend({
   medicalLicense: z.string().min(5, { message: 'Medical license number is required.' }),
   specialization: z.string().min(2, { message: 'Specialization is required.' }),
   clinic: z.string().optional(),
   yearsOfPractice: z.string().optional(),
+});
+
+const doctorFormSchema = doctorFieldSchema.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 // User type enum
