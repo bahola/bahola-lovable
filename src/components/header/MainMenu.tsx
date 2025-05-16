@@ -42,7 +42,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         <MegaMenuCategory isOpen={activeMenu === 'category'} />
       </div>
 
-      <Link to="/subcategories" className="main-menu-item">
+      <Link to="/subcategories" className="main-menu-item font-medium text-bahola-blue-600 hover:text-bahola-blue-800">
         <span>All Categories</span>
       </Link>
 

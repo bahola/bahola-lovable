@@ -58,8 +58,9 @@ const App = () => (
           
           {/* Core Pages */}
           <Route path="/categories" element={<CategoryOverview />} />
-          <Route path="/subcategories" element={<SubcategoryListing />} /> {/* Add new route */}
-          <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/subcategories" element={<SubcategoryListing />} />
+          <Route path="/category/:categorySlug" element={<CategoryPage />} /> {/* Updated to use slug */}
+          <Route path="/subcategory/:subcategorySlug" element={<CategoryPage />} /> {/* New route for subcategories */}
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product-import" element={<ProductImport />} />

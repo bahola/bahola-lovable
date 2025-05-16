@@ -79,7 +79,7 @@ const SubcategoryListing = () => {
         {subcategories.map((subcategory) => (
           <Link 
             key={subcategory.id} 
-            to={`/category/${subcategory.slug}`}
+            to={`/subcategory/${subcategory.slug}`}
             className="flex items-center justify-center p-3 border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200 transition-colors"
           >
             {subcategory.name}
@@ -96,7 +96,7 @@ const SubcategoryListing = () => {
         {subcategories.map((subcategory) => (
           <Link 
             key={subcategory.id} 
-            to={`/category/${subcategory.slug}`}
+            to={`/subcategory/${subcategory.slug}`}
             className="p-3 border border-bahola-neutral-200 rounded hover:bg-bahola-blue-50 hover:border-bahola-blue-200 transition-colors"
           >
             {subcategory.name}
@@ -142,7 +142,14 @@ const SubcategoryListing = () => {
           {categories.map((category) => (
             <Card key={category.id} className="mb-8">
               <CardContent className="pt-6">
-                <h2 className="text-xl font-semibold mb-4">{category.name}</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  <Link 
+                    to={`/category/${category.slug}`} 
+                    className="hover:text-bahola-blue-500 transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                </h2>
                 <Separator className="mb-4" />
                 {category.type === 'alphabetical'
                   ? renderAlphabeticalSubcategories(category.subcategories)
@@ -157,7 +164,14 @@ const SubcategoryListing = () => {
           <TabsContent key={category.id} value={category.slug}>
             <Card>
               <CardContent className="pt-6">
-                <h2 className="text-xl font-semibold mb-4">{category.name}</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  <Link 
+                    to={`/category/${category.slug}`}
+                    className="hover:text-bahola-blue-500 transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                </h2>
                 <Separator className="mb-4" />
                 {category.type === 'alphabetical'
                   ? renderAlphabeticalSubcategories(category.subcategories)
