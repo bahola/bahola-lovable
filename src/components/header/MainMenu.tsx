@@ -42,10 +42,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         <MegaMenuCategory isOpen={activeMenu === 'category'} />
       </div>
 
-      <Link to="/subcategories" className="main-menu-item font-medium text-bahola-blue-600 hover:text-bahola-blue-800">
-        <span>All Categories</span>
-      </Link>
-
       <div
         className="main-menu-item flex items-center"
         onMouseEnter={() => onMenuHover('doctors')}
@@ -67,11 +63,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       </div>
 
       <div className="main-menu-item flex items-center">
-        <Link to="/i-love-homeopathy" className="flex items-center whitespace-nowrap">
-          <span>I</span>
-          <Heart size={16} className="mx-1 text-red-500 fill-red-500" />
-          <span>HOMEOPATHY</span>
-        </Link>
+        <span>I</span>
+        <Heart size={16} className="mx-1 text-red-500 fill-red-500" />
+        <span>HOMEOPATHY</span>
       </div>
       
       <Link to="/homeopathy" className="main-menu-item">

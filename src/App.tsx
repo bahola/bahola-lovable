@@ -32,7 +32,6 @@ import ILoveHomeopathy from "./pages/ILoveHomeopathy";
 import ProductImport from "./pages/ProductImport";
 import FAQ from "./pages/FAQ";
 import HelpCenter from "./pages/HelpCenter";
-import SubcategoryListing from "./pages/SubcategoryListing"; // Add import
 
 // Admin Dashboard Components
 import AdminDashboard from "./pages/AdminDashboard";
@@ -58,9 +57,7 @@ const App = () => (
           
           {/* Core Pages */}
           <Route path="/categories" element={<CategoryOverview />} />
-          <Route path="/subcategories" element={<SubcategoryListing />} />
-          <Route path="/category/:categorySlug" element={<CategoryPage />} /> {/* Updated to use slug */}
-          <Route path="/subcategory/:subcategorySlug" element={<CategoryPage />} /> {/* New route for subcategories */}
+          <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/product/:productId" element={<ProductPage />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/product-import" element={<ProductImport />} />
