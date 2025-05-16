@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link, useNavigate } from 'react-router-dom';
@@ -35,8 +36,8 @@ const baseFieldSchema = z.object({
       { message: 'Password must contain at least one number.' }
     ),
   confirmPassword: z.string(),
-  terms: z.literal(true, {
-    errorMap: () => ({ message: 'You must agree to the terms and conditions.' }),
+  terms: z.boolean().refine(val => val === true, {
+    message: 'You must agree to the terms and conditions.',
   }),
   newsletter: z.boolean().optional(),
 });
