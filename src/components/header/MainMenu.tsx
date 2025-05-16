@@ -67,7 +67,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       </div>
 
       <div className="main-menu-item flex items-center">
-        <Link to="/i-love-homeopathy">
+        <Link to="/i-love-homeopathy" className="flex items-center whitespace-nowrap">
           <span>I</span>
           <Heart size={16} className="mx-1 text-red-500 fill-red-500" />
           <span>HOMEOPATHY</span>
