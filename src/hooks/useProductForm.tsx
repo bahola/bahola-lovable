@@ -92,8 +92,8 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
       // Format dimensions as a string for storage
       const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
       
-      // Check if category exists, if not, handle it
-      let categoryId = values.category || null;
+      // Set category to null if empty
+      const categoryId = values.category && values.category !== "" ? values.category : null;
       
       // Prepare the product data for insertion
       const productData = {

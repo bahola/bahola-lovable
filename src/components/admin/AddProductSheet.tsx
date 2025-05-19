@@ -41,7 +41,7 @@ const AddProductSheet = ({ onProductAdded }: AddProductSheetProps) => {
           <SheetDescription>Create a new product in your inventory.</SheetDescription>
         </SheetHeader>
         <div className="py-4">
-          <ProductForm />
+          <ProductForm onProductAdded={handleProductAdded} />
           <SheetClose className="hidden" />
         </div>
       </SheetContent>
