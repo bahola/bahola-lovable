@@ -1,39 +1,45 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { List, Plus, X } from 'lucide-react';
-import { ProductVariation } from "@/types/product";
 
 interface AttributesTabProps {
   productType: "simple" | "variable";
   potencyValues: string[];
   packSizeValues: string[];
-  newPotency: string;
-  newPackSize: string;
-  setNewPotency: (value: string) => void;
-  setNewPackSize: (value: string) => void;
-  handleAddPotency: () => void;
-  handleAddPackSize: () => void;
-  handleRemovePotency: (value: string) => void;
-  handleRemovePackSize: (value: string) => void;
+  onAddPotency: (value: string) => boolean;
+  onAddPackSize: (value: string) => boolean;
+  onRemovePotency: (value: string) => void;
+  onRemovePackSize: (value: string) => void;
 }
 
 const AttributesTab = ({
   productType,
   potencyValues,
   packSizeValues,
-  newPotency,
-  newPackSize,
-  setNewPotency,
-  setNewPackSize,
-  handleAddPotency,
-  handleAddPackSize,
-  handleRemovePotency,
-  handleRemovePackSize
+  onAddPotency,
+  onAddPackSize,
+  onRemovePotency,
+  onRemovePackSize
 }: AttributesTabProps) => {
+  const [newPotency, setNewPotency] = useState("");
+  const [newPackSize, setNewPackSize] = useState("");
+
+  const handleAddPotency = () => {
+    if (onAddPotency(newPotency)) {
+      setNewPotency("");
+    }
+  };
+
+  const handleAddPackSize = () => {
+    if (onAddPackSize(newPackSize)) {
+      setNewPackSize("");
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -95,7 +101,7 @@ const AttributesTab = ({
                     variant="ghost" 
                     size="sm" 
                     className="h-5 w-5 p-0"
-                    onClick={() => handleRemovePotency(potency)}
+                    onClick={() => onRemovePotency(potency)}
                   >
                     <X className="h-3 w-3" />
                   </Button>
@@ -132,7 +138,7 @@ const AttributesTab = ({
                     variant="ghost" 
                     size="sm" 
                     className="h-5 w-5 p-0"
-                    onClick={() => handleRemovePackSize(packSize)}
+                    onClick={() => onRemovePackSize(packSize)}
                   >
                     <X className="h-3 w-3" />
                   </Button>

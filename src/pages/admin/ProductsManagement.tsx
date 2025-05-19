@@ -100,11 +100,7 @@ const ProductsManagement = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          <AddProductSheet onProductAdded={(product) => {
-            toast({
-              title: "Product added",
-              description: `${product?.name || 'New product'} has been added to your inventory.`,
-            });
+          <AddProductSheet onProductAdded={() => {
             // Refresh product list after adding a product
             fetchProducts();
           }} />
