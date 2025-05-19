@@ -10,8 +10,12 @@ import {
   DialogTitle, 
   DialogTrigger 
 } from "@/components/ui/dialog";
+import { TemplateDownloader } from '@/components/product/TemplateDownloader';
+import { useNavigate } from 'react-router-dom';
 
 const ImportProductDialog = () => {
+  const navigate = useNavigate();
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -29,16 +33,13 @@ const ImportProductDialog = () => {
         </DialogHeader>
         <div className="py-4">
           <div className="flex justify-center mb-4">
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Download Template
-            </Button>
+            <TemplateDownloader />
           </div>
           <div className="border-2 border-dashed rounded-md p-6 text-center">
             <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-            <p className="text-sm font-medium">Drag & drop your file here</p>
-            <p className="text-xs text-muted-foreground">or</p>
-            <Button variant="outline" size="sm" className="mt-2">Browse Files</Button>
+            <p className="text-sm font-medium">Need to import multiple products?</p>
+            <p className="text-xs text-muted-foreground mb-4">Use our dedicated import page</p>
+            <Button onClick={() => navigate('/product-import')}>Go to Import Page</Button>
           </div>
         </div>
       </DialogContent>

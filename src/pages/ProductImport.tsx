@@ -21,6 +21,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { Product } from '@/types/product';
 
 const ProductImport = () => {
   const [importedData, setImportedData] = useState<any[]>([]);
@@ -92,7 +93,7 @@ const ProductImport = () => {
                     <AlertCircle className="h-4 w-4 text-green-600" />
                     <AlertTitle>Import Successful</AlertTitle>
                     <AlertDescription>
-                      {importedData.length} products were successfully imported. You can now view them in your product catalog.
+                      {importedData.length} products were successfully imported to the database. You can now view them in your product catalog.
                     </AlertDescription>
                   </Alert>
                   
@@ -114,10 +115,10 @@ const ProductImport = () => {
                           <tr key={index} className="border-t">
                             <td className="p-2">{product.name}</td>
                             <td className="p-2">{product.type}</td>
-                            <td className="p-2">{product.hsnCode}</td>
+                            <td className="p-2">{product.hsn_code}</td>
                             <td className="p-2">₹{product.price}</td>
-                            <td className="p-2">{product.packSizes?.join(', ') || '-'}</td>
-                            <td className="p-2">{product.potencies?.join(', ') || '-'}</td>
+                            <td className="p-2">{Array.isArray(product.packSizes) ? product.packSizes.join(', ') : (product.packSizes || '-')}</td>
+                            <td className="p-2">{Array.isArray(product.potencies) ? product.potencies.join(', ') : (product.potencies || '-')}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -154,9 +155,20 @@ const ProductImport = () => {
                     <li><strong>description</strong> - Product description</li>
                     <li><strong>hsnCode</strong> - HSN (Harmonized System Nomenclature) code</li>
                     <li><strong>price</strong> - Sale price</li>
+                    <li><strong>stock</strong> - Stock quantity (for simple products)</li>
                     <li><strong>weight</strong> - Weight in grams</li>
                     <li><strong>dimensions</strong> - Product dimensions (Length/Width/Height in cm)</li>
                   </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Categories and Subcategories</h3>
+                  <p className="mb-2">Specify both category and subcategory:</p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li><strong>category</strong> - Main product category (e.g., "Mother Tinctures")</li>
+                    <li><strong>subcategory</strong> - Subcategory (e.g., "A" for products starting with A)</li>
+                  </ul>
+                  <p className="mt-2 text-sm text-muted-foreground">If a category or subcategory doesn't exist, it will be created automatically.</p>
                 </div>
                 
                 <div>
@@ -165,7 +177,7 @@ const ProductImport = () => {
                   <ul className="list-disc pl-5 space-y-2">
                     <li><strong>packSizes</strong> - Comma-separated list of available pack sizes</li>
                     <li><strong>potencies</strong> - Comma-separated list of available potencies</li>
-                    <li><strong>variations</strong> - Each variation should specify: potency, packSize, price, stock</li>
+                    <li><strong>variations</strong> - Each variation should specify: potency, packSize, price, stock, weight</li>
                   </ul>
                 </div>
                 
@@ -173,10 +185,10 @@ const ProductImport = () => {
                   <h3 className="text-lg font-medium mb-2">Example</h3>
                   <p>Here's an example of how to structure your Excel file:</p>
                   <div className="bg-gray-50 p-4 rounded-md text-sm">
-                    <p><strong>Row 1:</strong> Arnica Montana, variable, Homeopathic remedy for bruising, 30049011, 185, 50, 5/2/2</p>
+                    <p><strong>Row 1:</strong> Arnica Montana, variable, Mother Tinctures, A, Homeopathic remedy for bruising, 30049011, 185, , 50, 5/2/2</p>
                     <p><strong>packSizes:</strong> 10g, 20g</p>
                     <p><strong>potencies:</strong> 30C, 200C, 1M</p>
-                    <p><strong>variations:</strong> 30C/10g/185/24, 30C/20g/300/18, 200C/10g/195/15, 200C/20g/320/12, 1M/10g/220/10, 1M/20g/350/8</p>
+                    <p><strong>variations:</strong> 30C/10g/185/24/25, 30C/20g/300/18/45, 200C/10g/195/15/25, 200C/20g/320/12/45, 1M/10g/220/10/25, 1M/20g/350/8/45</p>
                   </div>
                 </div>
               </div>

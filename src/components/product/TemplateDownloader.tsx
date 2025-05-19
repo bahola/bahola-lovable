@@ -16,11 +16,12 @@ export const TemplateDownloader: React.FC = () => {
         description: 'Product description',
         hsnCode: 'HSN Code',
         price: 'Sale Price',
+        stock: 'Stock Quantity (for simple products)',
         weight: 'Base Weight in grams',
-        dimensions: 'L/W/H in cm',
+        dimensions: 'L/W/H in cm (separated by /)',
         packSizes: 'Pack sizes (comma-separated, for variable products)',
         potencies: 'Potencies (comma-separated, for variable products)',
-        variations: 'Variations in format: potency/packSize/price/stock/weight (comma-separated)'
+        variations: 'Format: potency/packSize/price/stock/weight (comma-separated)'
       },
       {
         name: 'Arnica Montana',
@@ -30,6 +31,7 @@ export const TemplateDownloader: React.FC = () => {
         description: 'Homeopathic remedy for bruising',
         hsnCode: '30049011',
         price: '185',
+        stock: '',
         weight: '50',
         dimensions: '5/2/2',
         packSizes: '10g, 20g',
@@ -44,6 +46,7 @@ export const TemplateDownloader: React.FC = () => {
         description: 'Natural homeopathic remedy for stress relief',
         hsnCode: '30049011',
         price: '175',
+        stock: '45',
         weight: '25',
         dimensions: '4/2/2',
         packSizes: '',
@@ -58,10 +61,8 @@ export const TemplateDownloader: React.FC = () => {
     // Convert JSON to worksheet
     const ws = XLSX.utils.json_to_sheet(templateData);
     
-    // Add the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Products Template');
-    
     // Generate Excel file
+    XLSX.utils.book_append_sheet(wb, ws, 'Products Template');
     XLSX.writeFile(wb, 'bahola_products_import_template.xlsx');
   };
   
