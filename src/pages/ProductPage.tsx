@@ -1,59 +1,89 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Heart, Share2, Star, MinusCircle, PlusCircle, ShoppingCart, TruckIcon } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProductPage = () => {
   const { productId } = useParams<{ productId: string }>();
-  const [quantity, setQuantity] = React.useState(1);
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
   
-  // This would be fetched from an API in a real implementation
-  const product = {
-    id: productId,
-    name: 'Arnica Montana 30C',
-    description: 'A highly recommended remedy for injuries, bruises, and trauma. Helps reduce pain, swelling, and promotes healing.',
-    price: 185,
-    originalPrice: 215,
-    discountPercentage: 14,
-    image: '/placeholder.svg',
-    images: ['/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
-    rating: 4.8,
-    reviewCount: 142,
-    stock: 24,
-    potency: '30C',
-    brand: 'Bahola Labs',
-    benefits: [
-      'Relieves pain and swelling from injuries',
-      'Helps heal bruises and muscle soreness',
-      'Useful for post-surgical recovery',
-      'Reduces shock after trauma or accidents'
-    ],
-    usage: 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.',
-    ingredients: 'Arnica montana 30C, Sucrose (inactive)',
-    precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
-    shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
-    reviews: [
-      {
-        id: 'rev1',
-        user: 'Raj Sharma',
-        rating: 5,
-        date: '2023-12-15',
-        comment: 'Excellent product! Helped with my knee pain after a fall during hiking.'
-      },
-      {
-        id: 'rev2',
-        user: 'Priya Mehta',
-        rating: 4,
-        date: '2023-11-28',
-        comment: 'Very effective for bruises. I keep this in my first aid kit.'
+  // Fetch product data from Supabase
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) return;
+      
+      try {
+        setLoading(true);
+        
+        const { data, error } = await supabase
+          .from('products')
+          .select(`
+            *,
+            product_categories(name),
+            product_variations(*)
+          `)
+          .eq('id', productId)
+          .single();
+          
+        if (error) {
+          throw error;
+        }
+        
+        if (data) {
+          // Transform the data into the shape we need for the UI
+          setProduct({
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            originalPrice: data.price * 1.15, // Example: calculate original price before discount
+            discountPercentage: 14, // Example: hardcoded discount
+            image: data.image || '/placeholder.svg',
+            images: [data.image || '/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
+            rating: 4.8, // Example: hardcoded rating
+            reviewCount: 142, // Example: hardcoded review count
+            stock: data.stock || 0,
+            potency: data.product_variations?.[0]?.potency || '30C',
+            brand: 'Bahola Labs', // Example: hardcoded brand
+            benefits: [
+              'Relieves pain and swelling from injuries',
+              'Helps heal bruises and muscle soreness',
+              'Useful for post-surgical recovery',
+              'Reduces shock after trauma or accidents'
+            ],
+            usage: 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.',
+            ingredients: `${data.name} ${data.product_variations?.[0]?.potency || ''}, Sucrose (inactive)`,
+            precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
+            shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
+            category: data.product_categories?.name || 'Uncategorized',
+            variations: data.product_variations || []
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        toast({
+          title: "Failed to load product",
+          description: "There was an error loading the product information.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
       }
-    ]
-  };
+    };
+    
+    fetchProduct();
+  }, [productId, toast]);
   
   const increaseQuantity = () => {
-    if (quantity < product.stock) {
+    if (product && quantity < product.stock) {
       setQuantity(quantity + 1);
     }
   };
@@ -65,12 +95,57 @@ const ProductPage = () => {
   };
   
   const handleAddToCart = () => {
-    console.log(`Adding ${quantity} of ${product.name} to cart`);
+    console.log(`Adding ${quantity} of ${product?.name} to cart`);
+    toast({
+      title: "Added to cart",
+      description: `${quantity} x ${product?.name} added to your cart`,
+    });
     // In a real app, this would dispatch to a cart context/store
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <PageLayout title="Loading Product..." description="Please wait while we load the product details">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <Skeleton className="w-full h-[400px] rounded-lg" />
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              {[1, 2, 3].map(i => (
+                <Skeleton key={i} className="w-full h-24 rounded-lg" />
+              ))}
+            </div>
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-3/4" />
+            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="h-6 w-1/4" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+  
+  // If product not found
+  if (!product) {
+    return (
+      <PageLayout title="Product Not Found" description="We couldn't find the product you're looking for">
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
+          <p className="mb-6">The product you're looking for may have been removed or is temporarily unavailable.</p>
+          <Button asChild>
+            <a href="/categories">Browse All Products</a>
+          </Button>
+        </div>
+      </PageLayout>
+    );
+  }
   
   return (
-    <PageLayout title="" description="">
+    <PageLayout title={product.name} description={product.description}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Images */}
         <div>
@@ -108,7 +183,9 @@ const ProductPage = () => {
               ))}
               <span className="ml-2 text-bahola-neutral-600">{product.rating} ({product.reviewCount} reviews)</span>
             </div>
-            <span className="text-green-600">In Stock ({product.stock})</span>
+            <span className={product.stock > 0 ? "text-green-600" : "text-red-600"}>
+              {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
+            </span>
           </div>
           
           <div className="mb-6">
@@ -144,6 +221,25 @@ const ProductPage = () => {
             </div>
           </div>
           
+          {/* Display variations if they exist */}
+          {product.variations.length > 0 && (
+            <div className="mb-6">
+              <h2 className="font-semibold mb-2">Available Variations</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {product.variations.map((variation) => (
+                  <div 
+                    key={variation.id}
+                    className="border border-bahola-neutral-200 rounded p-2 text-center hover:bg-bahola-blue-50 cursor-pointer"
+                  >
+                    <div className="font-medium">{variation.potency}</div>
+                    <div className="text-sm">{variation.pack_size}</div>
+                    <div className="text-bahola-blue-600">₹{variation.price}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div className="mb-8">
             <h2 className="font-semibold mb-2">Quantity</h2>
             <div className="flex items-center">
@@ -168,7 +264,11 @@ const ProductPage = () => {
           </div>
           
           <div className="flex flex-wrap gap-4 mb-8">
-            <Button className="flex-1 bg-bahola-blue-500 hover:bg-bahola-blue-600" onClick={handleAddToCart}>
+            <Button 
+              className="flex-1 bg-bahola-blue-500 hover:bg-bahola-blue-600" 
+              onClick={handleAddToCart}
+              disabled={product.stock <= 0}
+            >
               <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
             </Button>
             <Button variant="outline" className="min-w-[48px]">
