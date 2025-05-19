@@ -17,57 +17,58 @@ const ProductsManagement = () => {
   const { toast } = useToast();
   
   // Fetch products from Supabase
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        const { data, error } = await supabase
-          .from('products')
-          .select(`
-            id, 
-            name, 
-            type, 
-            hsn_code, 
-            price, 
-            stock,
-            weight,
-            dimensions,
-            image,
-            product_categories(name),
-            product_variations(id)
-          `);
-        
-        if (error) {
-          throw error;
-        }
-        
-        // Transform the data to match our ProductListItem interface
-        const transformedProducts: ProductListItem[] = data.map(product => ({
-          id: product.id,
-          name: product.name,
-          // Ensure type is either 'simple' or 'variable'
-          type: product.type === 'variable' ? 'variable' : 'simple',
-          hsnCode: product.hsn_code,
-          price: product.price,
-          stock: product.stock || 0,
-          variations: product.product_variations?.length || 0,
-          category: product.product_categories?.name || 'Uncategorized',
-        }));
-        
-        setProducts(transformedProducts);
-        setFilteredProducts(transformedProducts);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        toast({
-          title: "Failed to load products",
-          description: "There was an error loading the product data.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          id, 
+          name, 
+          type, 
+          hsn_code, 
+          price, 
+          stock,
+          weight,
+          dimensions,
+          image,
+          product_categories(name),
+          product_variations(id)
+        `);
+      
+      if (error) {
+        throw error;
       }
-    };
+      
+      // Transform the data to match our ProductListItem interface
+      const transformedProducts: ProductListItem[] = data.map(product => ({
+        id: product.id,
+        name: product.name,
+        // Ensure type is either 'simple' or 'variable'
+        type: product.type === 'variable' ? 'variable' : 'simple',
+        hsnCode: product.hsn_code,
+        price: product.price,
+        stock: product.stock || 0,
+        variations: product.product_variations?.length || 0,
+        category: product.product_categories?.name || 'Uncategorized',
+      }));
+      
+      setProducts(transformedProducts);
+      setFilteredProducts(transformedProducts);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast({
+        title: "Failed to load products",
+        description: "There was an error loading the product data.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // Initial fetch
+  useEffect(() => {
     fetchProducts();
   }, [toast]);
   
@@ -104,6 +105,8 @@ const ProductsManagement = () => {
               title: "Product added",
               description: `${product?.name || 'New product'} has been added to your inventory.`,
             });
+            // Refresh product list after adding a product
+            fetchProducts();
           }} />
           <ImportProductDialog />
         </div>

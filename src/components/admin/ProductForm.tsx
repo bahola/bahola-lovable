@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from '@/integrations/supabase/client';
 
 import {
   Form,
@@ -101,16 +102,62 @@ const ProductForm = () => {
       
       console.log("Saving product with data:", values);
       
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Format dimensions as a string for storage
+      const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
       
-      // In a real application, you would send this data to your API
-      // const response = await fetch('/api/products', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(values),
-      // });
-      // const data = await response.json();
+      // Check if category exists, if not, handle it
+      let categoryId = values.category || null;
+      
+      // Prepare the product data for insertion
+      const productData = {
+        name: values.name,
+        type: values.type,
+        description: values.description,
+        hsn_code: values.hsnCode,
+        price: values.price,
+        stock: values.type === 'simple' ? 0 : null, // Default stock for simple products
+        weight: values.weight,
+        dimensions: dimensionsFormatted,
+        category_id: categoryId,
+        pack_sizes: values.type === 'variable' ? values.packSizes : null,
+        potencies: values.type === 'variable' ? values.potencies : null
+      };
+      
+      // Insert the product into Supabase
+      const { data: newProduct, error } = await supabase
+        .from('products')
+        .insert(productData)
+        .select()
+        .single();
+        
+      if (error) {
+        throw error;
+      }
+      
+      // If it's a variable product, insert the variations
+      if (values.type === 'variable' && values.variations && newProduct) {
+        const variationsData = values.variations.map(variation => ({
+          product_id: newProduct.id,
+          potency: variation.potency,
+          pack_size: variation.packSize,
+          price: variation.price,
+          stock: variation.stock,
+          weight: variation.weight
+        }));
+        
+        const { error: variationError } = await supabase
+          .from('product_variations')
+          .insert(variationsData);
+          
+        if (variationError) {
+          console.error('Error creating variations:', variationError);
+          toast({
+            title: "Warning",
+            description: `Product saved but there was an issue with variations: ${variationError.message}`,
+            variant: "destructive",
+          });
+        }
+      }
       
       // Display success message
       toast({
@@ -130,7 +177,7 @@ const ProductForm = () => {
       console.error("Error saving product:", error);
       toast({
         title: "Failed to save product",
-        description: "There was an error saving your product. Please try again.",
+        description: error instanceof Error ? error.message : "There was an error saving your product. Please try again.",
         variant: "destructive",
       });
     } finally {
