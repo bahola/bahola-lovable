@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Input } from '@/components/ui/input';
@@ -160,6 +161,18 @@ const knowledgeBaseData: Article[] = [
   }
 ];
 
+// Group articles by category
+const groupArticlesByCategory = (articles: Article[]): Record<string, Article[]> => {
+  return articles.reduce((acc, article) => {
+    const category = article.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(article);
+    return acc;
+  }, {} as Record<string, Article[]>);
+};
+
 const HelpCenter: React.FC = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -181,6 +194,9 @@ const HelpCenter: React.FC = () => {
     
     return matchesSearch && matchesCategory;
   });
+
+  // Group articles by category for the browse section
+  const articlesByCategory = groupArticlesByCategory(knowledgeBaseData);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
