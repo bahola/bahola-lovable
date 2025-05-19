@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,8 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/tabs';
-import { Search, HelpCircle } from 'lucide-react';
+import { Search, HelpCircle, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 // FAQ data organized by topics
 const faqData = {
@@ -117,7 +117,11 @@ const allFaqs = Object.entries(faqData).flatMap(([category, questions]) =>
 );
 
 const FAQ: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialQuery = queryParams.get('q') || '';
+  
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [activeTab, setActiveTab] = useState('Products and Usage');
   
   // Filter FAQs based on search query
@@ -133,6 +137,17 @@ const FAQ: React.FC = () => {
     // Search is already handled by the state change
   };
 
+  const clearSearch = () => setSearchQuery('');
+
+  // Update search if query parameter changes
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const query = queryParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [location.search]);
+
   return (
     <PageLayout title="Frequently Asked Questions" description="Find answers to common questions about our products and services">
       <div className="max-w-4xl mx-auto">
@@ -144,10 +159,21 @@ const FAQ: React.FC = () => {
               <Input
                 type="text"
                 placeholder="Search FAQ..."
-                className="pl-10 w-full"
+                className="pl-10 pr-10 w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <Button 
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                  onClick={clearSearch}
+                >
+                  <X size={16} />
+                </Button>
+              )}
             </div>
             <Button type="submit">Search</Button>
           </form>

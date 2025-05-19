@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -24,13 +23,15 @@ import {
   Video, 
   AlertCircle, 
   ExternalLink,
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-react';
 import { 
   Alert,
   AlertTitle,
   AlertDescription
 } from '@/components/ui/alert';
+import { useLocation } from 'react-router-dom';
 
 // Knowledge Base data structure
 interface Article {
@@ -160,7 +161,11 @@ const knowledgeBaseData: Article[] = [
 ];
 
 const HelpCenter: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialQuery = queryParams.get('q') || '';
+  
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [activeTab, setActiveTab] = useState('All');
   
   // Get unique categories for tabs
@@ -182,13 +187,16 @@ const HelpCenter: React.FC = () => {
     // Search is already handled by the state change
   };
 
-  // Group articles by category for the initial view
-  const articlesByCategory = categories.reduce((acc, category) => {
-    if (category === 'All') return acc;
-    
-    acc[category] = knowledgeBaseData.filter(article => article.category === category).slice(0, 3);
-    return acc;
-  }, {} as Record<string, Article[]>);
+  const clearSearch = () => setSearchQuery('');
+
+  // Update search if query parameter changes
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const query = queryParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [location.search]);
 
   return (
     <PageLayout 
@@ -204,10 +212,21 @@ const HelpCenter: React.FC = () => {
               <Input
                 type="text"
                 placeholder="Search for guides, tutorials, or documentation..."
-                className="pl-10 w-full"
+                className="pl-10 pr-10 w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <Button 
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                  onClick={clearSearch}
+                >
+                  <X size={16} />
+                </Button>
+              )}
             </div>
             <Button type="submit">Search</Button>
           </form>

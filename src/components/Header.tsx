@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSearch } from '@/hooks/useSearch';
 import { AuthModals } from '@/components/AuthModals';
 import { TopBar } from '@/components/header/TopBar';
 import { MainHeader } from '@/components/header/MainHeader';
@@ -13,9 +14,9 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState<'signin' | 'signup' | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const { searchQuery, setSearchQuery, handleSearch, clearSearch } = useSearch();
   
   // Mock cart data - this would be replaced with actual cart state
   const cartItems = 3;
@@ -48,12 +49,6 @@ export const Header = () => {
     setActiveSubmenu(prev => prev === submenu ? null : submenu);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Searching for:', searchQuery);
-    // Implement search functionality here
-  };
-
   return (
     <>
       <header className="w-full">
@@ -66,6 +61,7 @@ export const Header = () => {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onSearch={handleSearch}
+          onClearSearch={clearSearch}
           cartItems={cartItems}
           cartTotal={cartTotal}
           isMobileMenuOpen={isMobileMenuOpen}
@@ -90,6 +86,7 @@ export const Header = () => {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onSearch={handleSearch}
+          onClearSearch={clearSearch}
           activeSubmenu={activeSubmenu}
           onSubmenuToggle={handleSubmenuToggle}
         />

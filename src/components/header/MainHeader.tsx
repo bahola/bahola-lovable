@@ -10,6 +10,7 @@ interface MainHeaderProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onSearch: (e: React.FormEvent) => void;
+  onClearSearch?: () => void;
   cartItems: number;
   cartTotal: number;
   isMobileMenuOpen: boolean;
@@ -21,6 +22,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   searchQuery,
   setSearchQuery,
   onSearch,
+  onClearSearch,
   cartItems,
   cartTotal,
   isMobileMenuOpen,
@@ -47,6 +49,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 onSearch={onSearch}
+                onClear={onClearSearch}
               />
             </div>
           </div>

@@ -1,9 +1,13 @@
 
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
+import { useSearch } from '@/hooks/useSearch';
 
 export const HeroSection = () => {
+  const { searchQuery, setSearchQuery, handleSearch, clearSearch } = useSearch();
+  
   return (
     <div className="relative overflow-hidden cloud-bg">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -15,17 +19,37 @@ export const HeroSection = () => {
             Discover the perfect remedy for your health concerns at Bahola Labs
           </p>
           
-          <div className="max-w-md mx-auto mb-10 relative">
-            <input 
-              type="text" 
-              placeholder="Search for remedies..." 
-              className="w-full pl-12 pr-4 py-4 rounded-full shadow-lg border-none focus:ring-2 focus:ring-bahola-blue-400 focus:outline-none text-lg"
-            />
-            <Search size={20} className="absolute left-5 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-bahola">
-              Search
-            </button>
-          </div>
+          <form onSubmit={handleSearch} className="max-w-md mx-auto mb-10 relative">
+            <div className="relative">
+              <input 
+                type="text" 
+                placeholder="Search for remedies..." 
+                className="w-full pl-12 pr-24 py-4 rounded-full shadow-lg border-none focus:ring-2 focus:ring-bahola-blue-400 focus:outline-none text-lg"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search size={20} className="absolute left-5 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
+              
+              {searchQuery && (
+                <Button 
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-20 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                  onClick={clearSearch}
+                >
+                  <X size={18} />
+                </Button>
+              )}
+              
+              <button 
+                type="submit" 
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-bahola"
+              >
+                Search
+              </button>
+            </div>
+          </form>
           
           <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
             <Button className="px-8 py-6 rounded-lg btn-bahola text-lg font-medium">

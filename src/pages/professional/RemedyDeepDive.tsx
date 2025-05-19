@@ -1,11 +1,10 @@
-
 import { PageLayout } from '@/components/PageLayout';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useState } from 'react';
 
 const remedies = [
@@ -43,6 +42,10 @@ const RemedyDeepDive = () => {
     remedy.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
+
   return (
     <ProtectedDoctorRoute>
       <PageLayout 
@@ -59,10 +62,21 @@ const RemedyDeepDive = () => {
                 <Input 
                   type="text"
                   placeholder="Search remedies by name..."
-                  className="pl-10"
+                  className="pl-10 pr-10"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                {searchTerm && (
+                  <Button 
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
+                    onClick={clearSearch}
+                  >
+                    <X size={16} />
+                  </Button>
+                )}
               </div>
             </div>
             
