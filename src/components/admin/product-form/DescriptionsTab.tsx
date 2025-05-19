@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { FileText, ImageIcon, X } from 'lucide-react';
+import { ImagePlus, TrashIcon } from "lucide-react";
 import { UseFormReturn } from 'react-hook-form';
 
 interface DescriptionsTabProps {
@@ -16,106 +16,87 @@ interface DescriptionsTabProps {
   handleRemoveImage: (index: number) => void;
 }
 
-const DescriptionsTab = ({
-  form,
-  imageUrls,
-  handleAddImage,
-  handleChangeImage,
-  handleRemoveImage
+const DescriptionsTab = ({ 
+  form, 
+  imageUrls, 
+  handleAddImage, 
+  handleChangeImage, 
+  handleRemoveImage 
 }: DescriptionsTabProps) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <span className="flex items-center">
-            <FileText className="h-5 w-5 mr-2" /> 
-            Product Descriptions
-          </span>
-        </CardTitle>
-        <CardDescription>
-          Add detailed descriptions and images for your product.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Short Description */}
-        <div className="space-y-3">
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Detailed Description</CardTitle>
+          <CardDescription>
+            Complete product description with formatting, details, and benefits.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <FormField
             control={form.control}
-            name="shortDescription"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Short Description</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder="Brief product description (displayed in product lists)" 
-                    className="resize-none min-h-[100px]"
+                  <Textarea
+                    placeholder="Enter detailed product description"
+                    className="min-h-[200px]"
                     {...field}
                   />
                 </FormControl>
+                <FormDescription>
+                  This description will appear on the product detail page. You can include detailed information, 
+                  usage instructions, and benefits.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Add Images to Short Description</p>
-              <Button 
-                type="button" 
-                size="sm" 
-                variant="outline"
-                onClick={handleAddImage}
-              >
-                <ImageIcon className="h-4 w-4 mr-1" /> Add Image
-              </Button>
-            </div>
-            
-            <div className="space-y-2">
-              {imageUrls.map((url, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Input
-                    placeholder="Image URL"
-                    value={url}
-                    onChange={(e) => handleChangeImage(index, e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button 
-                    type="button" 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => handleRemoveImage(index)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Full Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Description</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Detailed product description (displayed on product page)" 
-                  className="resize-none min-h-[200px]"
-                  {...field}
+      <Card>
+        <CardHeader>
+          <CardTitle>Product Images</CardTitle>
+          <CardDescription>
+            Add images to showcase your product. The first image will be used as the main product image.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {imageUrls.map((url, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <Input
+                  type="text"
+                  value={url}
+                  onChange={(e) => handleChangeImage(index, e.target.value)}
+                  placeholder="Image URL"
+                  className="flex-1"
                 />
-              </FormControl>
-              <FormDescription>
-                Include all relevant details about the product, such as benefits, instructions, and other important information.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </CardContent>
-    </Card>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="icon"
+                  onClick={() => handleRemoveImage(index)}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleAddImage} 
+              className="w-full"
+            >
+              <ImagePlus className="h-4 w-4 mr-2" />
+              Add Image
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -13,6 +13,7 @@ const formSchema = z.object({
   type: z.enum(["simple", "variable"]),
   description: z.string(),
   shortDescription: z.string(),
+  stock: z.number().optional(),
   hsnCode: z.string(),
   price: z.number().min(0),
   category: z.string().optional(),
@@ -44,6 +45,7 @@ const defaultValues = {
   type: "simple" as const,
   description: "",
   shortDescription: "",
+  stock: 0,
   hsnCode: "",
   price: 0,
   category: "",
@@ -102,7 +104,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
         description: values.description,
         hsn_code: values.hsnCode,
         price: values.price,
-        stock: values.type === 'simple' ? 0 : null, // Default stock for simple products
+        stock: values.type === 'simple' ? values.stock : null, // Stock for simple products
         weight: values.weight,
         dimensions: dimensionsFormatted,
         category_id: categoryId,

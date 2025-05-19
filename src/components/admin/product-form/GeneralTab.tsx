@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Hash, Layers } from 'lucide-react';
+import { Hash, Layers, FileText } from 'lucide-react';
 import { initialCategories } from '../CategorySelect';
 import { UseFormReturn } from 'react-hook-form';
+import { Textarea } from "@/components/ui/textarea";
 
 interface GeneralTabProps {
   form: UseFormReturn<any>;
@@ -32,6 +33,34 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
               <FormControl>
                 <Input placeholder="Enter product name" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Short Description Field */}
+        <FormField
+          control={form.control}
+          name="shortDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <span className="flex items-center">
+                  <FileText className="h-4 w-4 mr-1" /> 
+                  Short Description
+                </span>
+              </FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Enter a brief description" 
+                  className="resize-none" 
+                  rows={2}
+                  {...field} 
+                />
+              </FormControl>
+              <FormDescription>
+                A brief summary of the product for product listings and search results.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -120,6 +149,27 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
             </FormItem>
           )}
         />
+
+        {form.watch("type") === "simple" && (
+          <FormField
+            control={form.control}
+            name="stock"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Stock Quantity</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    placeholder="0" 
+                    {...field}
+                    onChange={e => field.onChange(parseInt(e.target.value) || 0)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
