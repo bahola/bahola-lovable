@@ -11,11 +11,34 @@ interface ExcelImporterProps {
   onImportError: (error: string) => void;
 }
 
+// Define an interface for the processed product data
+interface ProcessedProductData {
+  name: string;
+  type: string;
+  description: string;
+  hsn_code: string;
+  price: number;
+  stock: number | null;
+  weight: number;
+  dimensions: string | null;
+  category: string | null;
+  subcategory: string | null;
+  pack_sizes?: string[];
+  potencies?: string[];
+  variations?: Array<{
+    potency: string;
+    pack_size: string;
+    price: number;
+    stock: number;
+    weight: number;
+  }>;
+}
+
 export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, onImportError }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   
-  const processExcelData = async (data: any[]) => {
+  const processExcelData = async (data: any[]): Promise<ProcessedProductData[]> => {
     try {
       // Process the raw Excel data into the format we need
       const processedData = data.map(row => {
@@ -24,8 +47,8 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
           throw new Error('Missing required fields: name, type, or hsnCode');
         }
         
-        // Process variable product data if applicable
-        let processedRow = { 
+        // Initialize the processed row with required fields
+        let processedRow: ProcessedProductData = { 
           name: row.name,
           type: row.type.toLowerCase(),
           description: row.description || '',
@@ -74,7 +97,7 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
     }
   };
   
-  const importProductsToSupabase = async (products: any[]) => {
+  const importProductsToSupabase = async (products: ProcessedProductData[]) => {
     const importedProducts = [];
     
     try {
@@ -164,7 +187,7 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
         
         // Insert variations for variable products
         if (product.type === 'variable' && product.variations && newProduct) {
-          const variations = product.variations.map((variation: any) => ({
+          const variations = product.variations.map((variation) => ({
             product_id: newProduct.id,
             potency: variation.potency,
             pack_size: variation.pack_size,
