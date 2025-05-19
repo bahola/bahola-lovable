@@ -45,7 +45,8 @@ const ProductsManagement = () => {
         const transformedProducts: ProductListItem[] = data.map(product => ({
           id: product.id,
           name: product.name,
-          type: product.type,
+          // Ensure type is either 'simple' or 'variable'
+          type: product.type === 'variable' ? 'variable' : 'simple',
           hsnCode: product.hsn_code,
           price: product.price,
           stock: product.stock || 0,
