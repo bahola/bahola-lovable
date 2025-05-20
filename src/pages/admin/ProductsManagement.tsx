@@ -1,11 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AddProductSheet from '@/components/admin/AddProductSheet';
 import ImportProductDialog from '@/components/admin/ImportProductDialog';
 import SearchAndFilterBar from '@/components/admin/SearchAndFilterBar';
 import ProductList from '@/components/admin/ProductList';
 import { ProductListItem } from '@/data/sampleProducts';
-import { initialCategories } from '@/components/admin/CategorySelect';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,7 +16,7 @@ const ProductsManagement = () => {
   const { toast } = useToast();
   
   // Fetch products from Supabase with category and subcategory info
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
@@ -68,12 +67,12 @@ const ProductsManagement = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   // Initial fetch
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
   
   // Handle product deletion
   const handleDeleteProduct = async (productId: string) => {
@@ -115,7 +114,7 @@ const ProductsManagement = () => {
     }
   };
   
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
     
@@ -130,7 +129,13 @@ const ProductsManagement = () => {
       );
       setFilteredProducts(filtered);
     }
-  };
+  }, [products]);
+
+  // Provide a clear search function
+  const handleClearSearch = useCallback(() => {
+    setSearchTerm('');
+    setFilteredProducts(products);
+  }, [products]);
   
   return (
     <div className="space-y-6">
@@ -153,6 +158,7 @@ const ProductsManagement = () => {
       <SearchAndFilterBar 
         searchTerm={searchTerm}
         onSearchChange={handleSearch}
+        onClearSearch={handleClearSearch}
       />
       
       {/* Products Table */}
