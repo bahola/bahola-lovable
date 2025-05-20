@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Upload, FileText, Loader2 } from 'lucide-react';
@@ -34,17 +33,79 @@ interface ProcessedProductData {
   }>;
 }
 
+// Field mapping between Excel headers and our database fields
+const fieldMappings: Record<string, string> = {
+  'product name': 'name',
+  'name': 'name',
+  'type': 'type',
+  'description': 'description',
+  'hsn code': 'hsnCode',
+  'hsncode': 'hsnCode',
+  'hsnCode': 'hsnCode',
+  'price': 'price',
+  'sale price': 'price',
+  'stock': 'stock',
+  'stock quantity': 'stock',
+  'weight': 'weight',
+  'base weight in grams': 'weight',
+  'dimensions': 'dimensions',
+  'category': 'category',
+  'subcategory': 'subcategory',
+  'packsizes': 'packSizes',
+  'pack sizes': 'packSizes',
+  'potencies': 'potencies',
+  'variations': 'variations'
+};
+
 export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, onImportError }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   
+  // Normalize field names to handle case-insensitive and space variations
+  const normalizeFieldName = (fieldName: string): string => {
+    const normalizedName = fieldName.toLowerCase().trim();
+    return fieldMappings[normalizedName] || normalizedName;
+  };
+  
   const processExcelData = async (data: any[]): Promise<ProcessedProductData[]> => {
     try {
-      // Process the raw Excel data into the format we need
-      const processedData = data.map(row => {
-        // Basic validation
-        if (!row.name || !row.type || !row.hsnCode) {
-          throw new Error('Missing required fields: name, type, or hsnCode');
+      // Skip empty rows and normalize field names
+      const normalizedData = data
+        .filter(row => {
+          // Skip completely empty rows
+          return Object.values(row).some(value => value !== undefined && value !== null && value !== '');
+        })
+        .map(row => {
+          const normalizedRow: Record<string, any> = {};
+          
+          Object.entries(row).forEach(([key, value]) => {
+            const normalizedKey = normalizeFieldName(key);
+            normalizedRow[normalizedKey] = value;
+          });
+          
+          return normalizedRow;
+        });
+      
+      if (normalizedData.length === 0) {
+        throw new Error('Excel file contains no valid data rows.');
+      }
+      
+      // Log the normalized data for debugging
+      console.log('Normalized data:', normalizedData);
+      
+      // Process the normalized Excel data into the format we need
+      const processedData = normalizedData.map(row => {
+        // Basic validation with better error messages
+        if (!row.name) {
+          throw new Error('Missing product name in one or more rows. The "name" column is required.');
+        }
+        
+        if (!row.type) {
+          throw new Error(`Missing product type for "${row.name}". The "type" column is required.`);
+        }
+        
+        if (!row.hsnCode) {
+          throw new Error(`Missing HSN Code for "${row.name}". The "hsnCode" column is required.`);
         }
         
         // Initialize the processed row with required fields
@@ -93,7 +154,7 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
       return processedData;
     } catch (error) {
       console.error('Error processing Excel data:', error);
-      throw new Error('Failed to process Excel data. Please check the format.');
+      throw error;
     }
   };
   
@@ -237,7 +298,13 @@ export const ExcelImporter: React.FC<ExcelImporterProps> = ({ onImportSuccess, o
           const workbook = XLSX.read(data, { type: 'binary' });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+          
+          console.log('Raw Excel data:', jsonData);
+          
+          if (jsonData.length === 0) {
+            throw new Error('Excel file appears to be empty or has no valid data.');
+          }
           
           // Process the data
           const processedData = await processExcelData(jsonData);

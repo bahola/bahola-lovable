@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 
 export const TemplateDownloader: React.FC = () => {
   const generateExcelTemplate = () => {
-    // Create template data
+    // Create template data with consistent column headers
     const templateData = [
       {
         name: 'Product Name',

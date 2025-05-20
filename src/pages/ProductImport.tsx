@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, Download, AlertCircle } from 'lucide-react';
+import { Upload, FileText, Download, AlertCircle, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { ExcelImporter } from '@/components/product/ExcelImporter';
 import { TemplateDownloader } from '@/components/product/TemplateDownloader';
@@ -59,6 +59,7 @@ const ProductImport = () => {
             <TabsList className="mb-4">
               <TabsTrigger value="import">Import Products</TabsTrigger>
               <TabsTrigger value="guide">Import Guide</TabsTrigger>
+              <TabsTrigger value="troubleshooting">Troubleshooting</TabsTrigger>
             </TabsList>
             
             <TabsContent value="import">
@@ -138,7 +139,7 @@ const ProductImport = () => {
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Import Failed</AlertTitle>
                     <AlertDescription>
-                      There was an error importing your products. Please check your file format and try again.
+                      There was an error importing your products. Please check the troubleshooting tab for common issues.
                     </AlertDescription>
                   </Alert>
                 </div>
@@ -177,7 +178,7 @@ const ProductImport = () => {
                   <ul className="list-disc pl-5 space-y-2">
                     <li><strong>packSizes</strong> - Comma-separated list of available pack sizes</li>
                     <li><strong>potencies</strong> - Comma-separated list of available potencies</li>
-                    <li><strong>variations</strong> - Each variation should specify: potency, packSize, price, stock, weight</li>
+                    <li><strong>variations</strong> - Each variation should specify: potency/packSize/price/stock/weight</li>
                   </ul>
                 </div>
                 
@@ -189,6 +190,72 @@ const ProductImport = () => {
                     <p><strong>packSizes:</strong> 10g, 20g</p>
                     <p><strong>potencies:</strong> 30C, 200C, 1M</p>
                     <p><strong>variations:</strong> 30C/10g/185/24/25, 30C/20g/300/18/45, 200C/10g/195/15/25, 200C/20g/320/12/45, 1M/10g/220/10/25, 1M/20g/350/8/45</p>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="troubleshooting">
+              <div className="space-y-6">
+                <Alert className="bg-blue-50 border-blue-200 mb-6">
+                  <Info className="h-4 w-4 text-blue-600" />
+                  <AlertTitle>Import Tips</AlertTitle>
+                  <AlertDescription className="text-blue-800">
+                    If you're having issues with your import, here are some common solutions.
+                  </AlertDescription>
+                </Alert>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Common Issues</h3>
+                  <ul className="list-disc pl-5 space-y-4">
+                    <li>
+                      <strong>Missing required fields error</strong>
+                      <p className="text-sm text-gray-600 mt-1">Make sure your Excel file includes columns for: name, type, and hsnCode. These fields are required for every product.</p>
+                    </li>
+                    <li>
+                      <strong>Column header naming</strong>
+                      <p className="text-sm text-gray-600 mt-1">The importer recognizes various column name formats (case-insensitive): "name"/"Product Name", "hsn code"/"hsnCode"/"hsncode", etc. For best results, use the template.</p>
+                    </li>
+                    <li>
+                      <strong>Excel formatting issues</strong>
+                      <p className="text-sm text-gray-600 mt-1">Make sure there are no hidden characters or formatting issues in your Excel file. Try saving as a fresh Excel file if problems persist.</p>
+                    </li>
+                    <li>
+                      <strong>Empty rows</strong>
+                      <p className="text-sm text-gray-600 mt-1">Empty rows are automatically skipped, but make sure your data rows have all required fields filled in.</p>
+                    </li>
+                    <li>
+                      <strong>Variable product format</strong>
+                      <p className="text-sm text-gray-600 mt-1">For variable products, make sure variations follow the correct format: "potency/packSize/price/stock/weight" with each variation separated by commas.</p>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Data Format Examples</h3>
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <p className="font-medium">Simple Product Example:</p>
+                    <p className="text-sm mt-2 mb-4">
+                      name: Belladonna 30C<br />
+                      type: simple<br />
+                      hsnCode: 30049011<br />
+                      price: 150<br />
+                      stock: 25<br />
+                      weight: 30<br />
+                      dimensions: 4/2/2<br />
+                    </p>
+                    
+                    <p className="font-medium">Variable Product Example:</p>
+                    <p className="text-sm mt-2">
+                      name: Arnica Montana<br />
+                      type: variable<br />
+                      hsnCode: 30049011<br />
+                      price: 185<br />
+                      weight: 50<br />
+                      packSizes: 10g, 20g<br />
+                      potencies: 30C, 200C<br />
+                      variations: 30C/10g/185/24/25, 30C/20g/300/18/45, 200C/10g/195/15/25, 200C/20g/320/12/45<br />
+                    </p>
                   </div>
                 </div>
               </div>
