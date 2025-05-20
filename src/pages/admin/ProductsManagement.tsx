@@ -126,7 +126,7 @@ const ProductsManagement = () => {
         product.name.toLowerCase().includes(term.toLowerCase()) ||
         product.hsnCode.includes(term) ||
         product.id.toLowerCase().includes(term.toLowerCase()) ||
-        product.category?.toLowerCase().includes(term.toLowerCase())
+        (product.category && product.category.toLowerCase().includes(term.toLowerCase()))
       );
       setFilteredProducts(filtered);
     }

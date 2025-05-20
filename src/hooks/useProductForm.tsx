@@ -101,8 +101,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       }
       
       // Set variations if available
+      let formattedVariations: ProductVariation[] = [];
       if (initialProduct.variations) {
-        const formattedVariations = initialProduct.variations.map((v: any) => ({
+        formattedVariations = initialProduct.variations.map((v: any) => ({
           potency: v.potency,
           packSize: v.pack_size,
           price: v.price,

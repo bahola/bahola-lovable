@@ -1,4 +1,5 @@
 
+// src/data/sampleProducts.ts - Adding just the interface definition
 export interface ProductListItem {
   id: string;
   name: string;
@@ -7,6 +8,7 @@ export interface ProductListItem {
   price: number;
   stock: number;
   variations: number;
+  category?: string; // Add this property to fix TypeScript error
 }
 
 // Sample data
