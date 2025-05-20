@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -73,9 +73,10 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
   const [variations, setVariations] = useState<ProductVariation[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [productId, setProductId] = useState<string | null>(null);
+  const [initialized, setInitialized] = useState(false);
 
   // Initialize form with values from initialProduct if editing
-  const getInitialValues = () => {
+  const getInitialValues = useCallback(() => {
     if (!initialProduct) return defaultValues;
     
     try {
@@ -84,57 +85,53 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Parse dimensions string if exists
       let dimensionsObj = { length: 0, width: 0, height: 0 };
       if (initialProduct.dimensions) {
-        const [length, width, height] = initialProduct.dimensions.split('/').map(Number);
-        dimensionsObj = { length, width, height };
+        try {
+          const [length, width, height] = initialProduct.dimensions.split('/').map(Number);
+          dimensionsObj = { length: isNaN(length) ? 0 : length, width: isNaN(width) ? 0 : width, height: isNaN(height) ? 0 : height };
+        } catch (e) {
+          console.error('Error parsing dimensions:', e);
+        }
       }
       
       // Set product ID for editing
       setProductId(initialProduct.id);
       
-      // Set potencies and pack sizes
-      if (initialProduct.potencies) {
-        setPotencyValues(initialProduct.potencies);
-      }
-      
-      if (initialProduct.pack_sizes) {
-        setPackSizeValues(initialProduct.pack_sizes);
-      }
+      // Set potencies and pack sizes if they exist
+      const potencies = initialProduct.potencies || [];
+      const packSizes = initialProduct.pack_sizes || [];
       
       // Set variations if available
       let formattedVariations: ProductVariation[] = [];
-      if (initialProduct.variations) {
-        formattedVariations = initialProduct.variations.map((v: any) => ({
-          potency: v.potency,
-          packSize: v.pack_size,
-          price: v.price,
+      if (initialProduct.product_variations && initialProduct.product_variations.length > 0) {
+        formattedVariations = initialProduct.product_variations.map((v: any) => ({
+          potency: v.potency || '',
+          packSize: v.pack_size || '',
+          price: v.price || 0,
           stock: v.stock || 0,
           weight: v.weight || 0,
         }));
-        setVariations(formattedVariations);
       }
       
       // Set image URLs if available
-      if (initialProduct.image) {
-        setImageUrls([initialProduct.image]);
-      }
+      const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
       
       // Return formatted initial values
       return {
-        name: initialProduct.name,
-        type: initialProduct.type,
+        name: initialProduct.name || "",
+        type: initialProduct.type || "simple",
         description: initialProduct.description || "",
         shortDescription: initialProduct.short_description || "",
         stock: initialProduct.stock || 0,
-        hsnCode: initialProduct.hsn_code,
-        price: initialProduct.price,
+        hsnCode: initialProduct.hsn_code || "",
+        price: initialProduct.price || 0,
         category: initialProduct.category_id || "",
-        weight: initialProduct.weight,
+        weight: initialProduct.weight || 0,
         dimensions: dimensionsObj,
         taxStatus: initialProduct.tax_status || "taxable",
         taxClass: initialProduct.tax_class || "5",
-        potencies: initialProduct.potencies || [],
-        packSizes: initialProduct.pack_sizes || [],
-        variations: formattedVariations || [],
+        potencies: potencies,
+        packSizes: packSizes,
+        variations: formattedVariations,
         upsellProducts: initialProduct.upsell_products || [],
         crossSellProducts: initialProduct.cross_sell_products || [],
       };
@@ -142,20 +139,49 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       console.error('Error initializing form with product data:', error);
       return defaultValues;
     }
-  };
+  }, [initialProduct]);
 
   const form = useForm<ProductFormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: getInitialValues(),
   });
 
+  // Initialize state values from initialProduct
+  useEffect(() => {
+    if (!initialized && initialProduct) {
+      const potencies = initialProduct.potencies || [];
+      const packSizes = initialProduct.pack_sizes || [];
+      
+      setPotencyValues(potencies);
+      setPackSizeValues(packSizes);
+      
+      let formattedVariations: ProductVariation[] = [];
+      if (initialProduct.product_variations && initialProduct.product_variations.length > 0) {
+        formattedVariations = initialProduct.product_variations.map((v: any) => ({
+          potency: v.potency || '',
+          packSize: v.pack_size || '',
+          price: v.price || 0,
+          stock: v.stock || 0,
+          weight: v.weight || 0,
+        }));
+      }
+      setVariations(formattedVariations);
+      
+      const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
+      setImageUrls(imageUrlsValue);
+      
+      setInitialized(true);
+    }
+  }, [initialProduct, initialized]);
+
   // Update form when initialProduct changes (in case it loads after component mount)
   useEffect(() => {
-    if (initialProduct && isEditing) {
+    if (initialProduct && isEditing && !initialized) {
       const values = getInitialValues();
       form.reset(values);
+      setInitialized(true);
     }
-  }, [initialProduct, isEditing]);
+  }, [initialProduct, isEditing, form, getInitialValues, initialized]);
 
   const productType = form.watch("type");
 
@@ -317,7 +343,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     }
   };
 
-  const handleAddPotency = (newPotency: string) => {
+  const handleAddPotency = useCallback((newPotency: string) => {
     if (newPotency && !potencyValues.includes(newPotency)) {
       const updatedPotencies = [...potencyValues, newPotency];
       setPotencyValues(updatedPotencies);
@@ -328,9 +354,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       return true;
     }
     return false;
-  };
+  }, [potencyValues, packSizeValues, form]);
 
-  const handleAddPackSize = (newPackSize: string) => {
+  const handleAddPackSize = useCallback((newPackSize: string) => {
     if (newPackSize && !packSizeValues.includes(newPackSize)) {
       const updatedPackSizes = [...packSizeValues, newPackSize];
       setPackSizeValues(updatedPackSizes);
@@ -341,9 +367,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       return true;
     }
     return false;
-  };
+  }, [potencyValues, packSizeValues, form]);
 
-  const generateVariations = (potencies: string[], packSizes: string[]) => {
+  const generateVariations = useCallback((potencies: string[], packSizes: string[]) => {
     const newVariations: ProductVariation[] = [];
     const baseWeight = form.getValues("weight") || 0;
     
@@ -415,9 +441,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     
     setVariations(newVariations);
     form.setValue("variations", newVariations);
-  };
+  }, [form, variations]);
 
-  const handleRemovePotency = (value: string) => {
+  const handleRemovePotency = useCallback((value: string) => {
     const updatedPotencies = potencyValues.filter(p => p !== value);
     setPotencyValues(updatedPotencies);
     form.setValue("potencies", updatedPotencies);
@@ -433,9 +459,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     const updatedVariations = variations.filter(v => v.potency !== value);
     setVariations(updatedVariations);
     form.setValue("variations", updatedVariations);
-  };
+  }, [potencyValues, packSizeValues, variations, form]);
 
-  const handleRemovePackSize = (value: string) => {
+  const handleRemovePackSize = useCallback((value: string) => {
     const updatedPackSizes = packSizeValues.filter(p => p !== value);
     setPackSizeValues(updatedPackSizes);
     form.setValue("packSizes", updatedPackSizes);
@@ -451,30 +477,30 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     const updatedVariations = variations.filter(v => v.packSize !== value);
     setVariations(updatedVariations);
     form.setValue("variations", updatedVariations);
-  };
+  }, [packSizeValues, potencyValues, variations, form]);
 
-  const handleUpdateVariation = (index: number, field: keyof ProductVariation, value: number) => {
+  const handleUpdateVariation = useCallback((index: number, field: keyof ProductVariation, value: number) => {
     const updatedVariations = [...variations];
     updatedVariations[index] = { ...updatedVariations[index], [field]: value };
     setVariations(updatedVariations);
     form.setValue("variations", updatedVariations);
-  };
+  }, [variations, form]);
 
-  const handleAddImage = () => {
+  const handleAddImage = useCallback(() => {
     setImageUrls([...imageUrls, ""]);
-  };
+  }, [imageUrls]);
 
-  const handleChangeImage = (index: number, url: string) => {
+  const handleChangeImage = useCallback((index: number, url: string) => {
     const newUrls = [...imageUrls];
     newUrls[index] = url;
     setImageUrls(newUrls);
-  };
+  }, [imageUrls]);
 
-  const handleRemoveImage = (index: number) => {
+  const handleRemoveImage = useCallback((index: number) => {
     const newUrls = [...imageUrls];
     newUrls.splice(index, 1);
     setImageUrls(newUrls);
-  };
+  }, [imageUrls]);
 
   return {
     form,
@@ -486,7 +512,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     packSizeValues,
     variations,
     imageUrls,
-    onSubmit: form.handleSubmit(onSubmit),
+    onSubmit: onSubmit,
     handleAddPotency,
     handleAddPackSize,
     handleRemovePotency,

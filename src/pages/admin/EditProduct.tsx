@@ -26,7 +26,7 @@ const EditProduct = () => {
             *,
             category:category_id(*),
             subcategory:subcategory_id(*),
-            variations:product_variations(*)
+            product_variations(*)
           `)
           .eq('id', productId)
           .single();
@@ -95,12 +95,14 @@ const EditProduct = () => {
         </Button>
       </div>
       
-      {/* Product Form with existing product data */}
-      <ProductForm 
-        initialProduct={product} 
-        onProductAdded={handleProductUpdated} 
-        isEditing={true}
-      />
+      {/* Only render ProductForm once product data is available */}
+      {product && (
+        <ProductForm 
+          initialProduct={product} 
+          onProductAdded={handleProductUpdated} 
+          isEditing={true}
+        />
+      )}
     </div>
   );
 };

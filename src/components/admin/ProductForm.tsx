@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +21,8 @@ interface ProductFormProps {
   isEditing?: boolean;
 }
 
-const ProductForm = ({ onProductAdded, initialProduct, isEditing = false }: ProductFormProps) => {
+// Use memo to prevent unnecessary re-renders
+const ProductForm = memo(({ onProductAdded, initialProduct, isEditing = false }: ProductFormProps) => {
   const {
     form,
     activeTab,
@@ -45,7 +46,7 @@ const ProductForm = ({ onProductAdded, initialProduct, isEditing = false }: Prod
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-6 mb-6">
             <TabsTrigger value="general">General</TabsTrigger>
@@ -116,6 +117,8 @@ const ProductForm = ({ onProductAdded, initialProduct, isEditing = false }: Prod
       </form>
     </Form>
   );
-};
+});
+
+ProductForm.displayName = 'ProductForm';
 
 export default ProductForm;
