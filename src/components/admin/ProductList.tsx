@@ -13,13 +13,27 @@ import {
 import { Card } from "@/components/ui/card";
 import { ProductListItem } from "@/data/sampleProducts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useNavigate } from 'react-router-dom';
 
 interface ProductListProps {
   products: ProductListItem[];
   isLoading?: boolean;
+  onDelete?: (productId: string) => void;
 }
 
-const ProductList = ({ products, isLoading = false }: ProductListProps) => {
+const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps) => {
+  const navigate = useNavigate();
+  
+  const handleEdit = (productId: string) => {
+    navigate(`/admin/products/edit/${productId}`);
+  };
+  
+  const handleDelete = (productId: string) => {
+    if (onDelete) {
+      onDelete(productId);
+    }
+  };
+
   // Show skeletons while loading
   if (isLoading) {
     return (
@@ -105,10 +119,10 @@ const ProductList = ({ products, isLoading = false }: ProductListProps) => {
               <TableCell>{product.variations}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={() => handleEdit(product.id)}>
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)}>
                     <Trash2 className="h-4 w-4 text-red-500" />
                   </Button>
                 </div>

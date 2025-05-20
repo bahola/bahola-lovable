@@ -16,7 +16,7 @@ const ProductsManagement = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   
-  // Fetch products from Supabase
+  // Fetch products from Supabase with category and subcategory info
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
@@ -32,13 +32,16 @@ const ProductsManagement = () => {
           weight,
           dimensions,
           image,
-          product_categories(name),
+          category:category_id(id, name),
+          subcategory:subcategory_id(id, name),
           product_variations(id)
         `);
       
       if (error) {
         throw error;
       }
+      
+      console.log('Fetched products with categories:', data);
       
       // Transform the data to match our ProductListItem interface
       const transformedProducts: ProductListItem[] = data.map(product => ({
@@ -50,7 +53,7 @@ const ProductsManagement = () => {
         price: product.price,
         stock: product.stock || 0,
         variations: product.product_variations?.length || 0,
-        category: product.product_categories?.name || 'Uncategorized',
+        category: product.category?.name || 'Uncategorized',
       }));
       
       setProducts(transformedProducts);
@@ -70,10 +73,47 @@ const ProductsManagement = () => {
   // Initial fetch
   useEffect(() => {
     fetchProducts();
-  }, [toast]);
+  }, []);
   
-  // Ensure categories are loaded
-  console.log("Available categories:", initialCategories);
+  // Handle product deletion
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      // First delete variations
+      const { error: variationsError } = await supabase
+        .from('product_variations')
+        .delete()
+        .eq('product_id', productId);
+      
+      if (variationsError) {
+        throw variationsError;
+      }
+      
+      // Then delete the product
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId);
+        
+      if (error) {
+        throw error;
+      }
+      
+      toast({
+        title: "Product deleted",
+        description: "The product has been successfully deleted."
+      });
+      
+      // Refresh product list
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast({
+        title: "Delete failed",
+        description: "There was an error deleting the product.",
+        variant: "destructive"
+      });
+    }
+  };
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
@@ -85,7 +125,8 @@ const ProductsManagement = () => {
       const filtered = products.filter(product => 
         product.name.toLowerCase().includes(term.toLowerCase()) ||
         product.hsnCode.includes(term) ||
-        product.id.toLowerCase().includes(term.toLowerCase())
+        product.id.toLowerCase().includes(term.toLowerCase()) ||
+        product.category?.toLowerCase().includes(term.toLowerCase())
       );
       setFilteredProducts(filtered);
     }
@@ -115,7 +156,11 @@ const ProductsManagement = () => {
       />
       
       {/* Products Table */}
-      <ProductList products={filteredProducts} isLoading={isLoading} />
+      <ProductList 
+        products={filteredProducts} 
+        isLoading={isLoading} 
+        onDelete={handleDeleteProduct}
+      />
     </div>
   );
 };

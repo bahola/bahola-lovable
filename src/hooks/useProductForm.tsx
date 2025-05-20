@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -64,7 +64,7 @@ const defaultValues = {
   crossSellProducts: [],
 };
 
-export const useProductForm = (onProductAdded?: (product?: any) => void) => {
+export const useProductForm = (onProductAdded?: (product?: any) => void, initialProduct?: any, isEditing = false) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
@@ -72,11 +72,89 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
   const [packSizeValues, setPackSizeValues] = useState<string[]>([]);
   const [variations, setVariations] = useState<ProductVariation[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [productId, setProductId] = useState<string | null>(null);
+
+  // Initialize form with values from initialProduct if editing
+  const getInitialValues = () => {
+    if (!initialProduct) return defaultValues;
+    
+    try {
+      console.log('Setting up form with initial product:', initialProduct);
+      
+      // Parse dimensions string if exists
+      let dimensionsObj = { length: 0, width: 0, height: 0 };
+      if (initialProduct.dimensions) {
+        const [length, width, height] = initialProduct.dimensions.split('/').map(Number);
+        dimensionsObj = { length, width, height };
+      }
+      
+      // Set product ID for editing
+      setProductId(initialProduct.id);
+      
+      // Set potencies and pack sizes
+      if (initialProduct.potencies) {
+        setPotencyValues(initialProduct.potencies);
+      }
+      
+      if (initialProduct.pack_sizes) {
+        setPackSizeValues(initialProduct.pack_sizes);
+      }
+      
+      // Set variations if available
+      if (initialProduct.variations) {
+        const formattedVariations = initialProduct.variations.map((v: any) => ({
+          potency: v.potency,
+          packSize: v.pack_size,
+          price: v.price,
+          stock: v.stock || 0,
+          weight: v.weight || 0,
+        }));
+        setVariations(formattedVariations);
+      }
+      
+      // Set image URLs if available
+      if (initialProduct.image) {
+        setImageUrls([initialProduct.image]);
+      }
+      
+      // Return formatted initial values
+      return {
+        name: initialProduct.name,
+        type: initialProduct.type,
+        description: initialProduct.description || "",
+        shortDescription: initialProduct.short_description || "",
+        stock: initialProduct.stock || 0,
+        hsnCode: initialProduct.hsn_code,
+        price: initialProduct.price,
+        category: initialProduct.category_id || "",
+        weight: initialProduct.weight,
+        dimensions: dimensionsObj,
+        taxStatus: initialProduct.tax_status || "taxable",
+        taxClass: initialProduct.tax_class || "5",
+        potencies: initialProduct.potencies || [],
+        packSizes: initialProduct.pack_sizes || [],
+        variations: formattedVariations || [],
+        upsellProducts: initialProduct.upsell_products || [],
+        crossSellProducts: initialProduct.cross_sell_products || [],
+      };
+    } catch (error) {
+      console.error('Error initializing form with product data:', error);
+      return defaultValues;
+    }
+  };
 
   const form = useForm<ProductFormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: getInitialValues(),
   });
+
+  // Update form when initialProduct changes (in case it loads after component mount)
+  useEffect(() => {
+    if (initialProduct && isEditing) {
+      const values = getInitialValues();
+      form.reset(values);
+    }
+  }, [initialProduct, isEditing]);
 
   const productType = form.watch("type");
 
@@ -89,7 +167,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
         values.variations = variations;
       }
       
-      console.log("Saving product with data:", values);
+      console.log(`${isEditing ? 'Updating' : 'Saving'} product with data:`, values);
       
       // Format dimensions as a string for storage
       const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
@@ -97,7 +175,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
       // Set category to null if empty
       const categoryId = values.category && values.category !== "" ? values.category : null;
       
-      // Prepare the product data for insertion
+      // Prepare the product data
       const productData = {
         name: values.name,
         type: values.type,
@@ -112,46 +190,103 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
         potencies: values.type === 'variable' ? values.potencies : null
       };
       
-      // Insert the product into Supabase
-      const { data: newProduct, error } = await supabase
-        .from('products')
-        .insert(productData)
-        .select()
-        .single();
-        
-      if (error) {
-        throw error;
-      }
+      let newProduct;
       
-      // If it's a variable product, insert the variations
-      if (values.type === 'variable' && values.variations && newProduct) {
-        const variationsData = values.variations.map(variation => ({
-          product_id: newProduct.id,
-          potency: variation.potency,
-          pack_size: variation.packSize,
-          price: variation.price,
-          stock: variation.stock,
-          weight: variation.weight
-        }));
-        
-        const { error: variationError } = await supabase
-          .from('product_variations')
-          .insert(variationsData);
+      if (isEditing && productId) {
+        // Update the product in Supabase
+        const { data: updatedProduct, error } = await supabase
+          .from('products')
+          .update(productData)
+          .eq('id', productId)
+          .select()
+          .single();
           
-        if (variationError) {
-          console.error('Error creating variations:', variationError);
-          toast({
-            title: "Warning",
-            description: `Product saved but there was an issue with variations: ${variationError.message}`,
-            variant: "destructive",
-          });
+        if (error) {
+          throw error;
+        }
+        
+        newProduct = updatedProduct;
+        
+        // If it's a variable product, first delete existing variations then insert new ones
+        if (values.type === 'variable' && values.variations) {
+          // Delete existing variations
+          const { error: deleteError } = await supabase
+            .from('product_variations')
+            .delete()
+            .eq('product_id', productId);
+            
+          if (deleteError) {
+            console.error('Error deleting existing variations:', deleteError);
+            // Continue anyway to try to insert new variations
+          }
+          
+          // Insert new variations
+          const variationsData = values.variations.map(variation => ({
+            product_id: productId,
+            potency: variation.potency,
+            pack_size: variation.packSize,
+            price: variation.price,
+            stock: variation.stock,
+            weight: variation.weight
+          }));
+          
+          const { error: variationError } = await supabase
+            .from('product_variations')
+            .insert(variationsData);
+            
+          if (variationError) {
+            console.error('Error updating variations:', variationError);
+            toast({
+              title: "Warning",
+              description: `Product updated but there was an issue with variations: ${variationError.message}`,
+              variant: "destructive",
+            });
+          }
+        }
+      } else {
+        // Insert the new product into Supabase
+        const { data: insertedProduct, error } = await supabase
+          .from('products')
+          .insert(productData)
+          .select()
+          .single();
+          
+        if (error) {
+          throw error;
+        }
+        
+        newProduct = insertedProduct;
+        
+        // If it's a variable product, insert the variations
+        if (values.type === 'variable' && values.variations && newProduct) {
+          const variationsData = values.variations.map(variation => ({
+            product_id: newProduct.id,
+            potency: variation.potency,
+            pack_size: variation.packSize,
+            price: variation.price,
+            stock: variation.stock,
+            weight: variation.weight
+          }));
+          
+          const { error: variationError } = await supabase
+            .from('product_variations')
+            .insert(variationsData);
+            
+          if (variationError) {
+            console.error('Error creating variations:', variationError);
+            toast({
+              title: "Warning",
+              description: `Product saved but there was an issue with variations: ${variationError.message}`,
+              variant: "destructive",
+            });
+          }
         }
       }
       
       // Display success message
       toast({
-        title: "Product saved successfully",
-        description: `The product "${values.name}" has been added to your inventory.`,
+        title: isEditing ? "Product updated successfully" : "Product saved successfully",
+        description: `The product "${values.name}" has been ${isEditing ? 'updated' : 'added'} to your inventory.`,
       });
       
       // Call the callback if provided
@@ -159,19 +294,21 @@ export const useProductForm = (onProductAdded?: (product?: any) => void) => {
         onProductAdded(newProduct);
       }
       
-      // Reset form
-      form.reset(defaultValues);
-      setVariations([]);
-      setPotencyValues([]);
-      setPackSizeValues([]);
-      setImageUrls([]);
-      setActiveTab("general");
+      if (!isEditing) {
+        // Reset form only for new products
+        form.reset(defaultValues);
+        setVariations([]);
+        setPotencyValues([]);
+        setPackSizeValues([]);
+        setImageUrls([]);
+        setActiveTab("general");
+      }
       
     } catch (error) {
-      console.error("Error saving product:", error);
+      console.error(`Error ${isEditing ? 'updating' : 'saving'} product:`, error);
       toast({
-        title: "Failed to save product",
-        description: error instanceof Error ? error.message : "There was an error saving your product. Please try again.",
+        title: `Failed to ${isEditing ? 'update' : 'save'} product`,
+        description: error instanceof Error ? error.message : `There was an error ${isEditing ? 'updating' : 'saving'} your product. Please try again.`,
         variant: "destructive",
       });
     } finally {

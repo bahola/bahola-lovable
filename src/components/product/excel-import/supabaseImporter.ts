@@ -21,9 +21,10 @@ export const importProductsToSupabase = async (products: ProcessedProductData[])
           
         if (categoryData) {
           categoryId = categoryData.id;
+          console.log(`Found existing category: ${product.category}, ID: ${categoryId}`);
         } else {
           const categorySlug = product.category.toLowerCase().replace(/\s+/g, '-');
-          const { data: newCategory } = await supabase
+          const { data: newCategory, error } = await supabase
             .from('product_categories')
             .insert({
               name: product.category,
@@ -33,7 +34,12 @@ export const importProductsToSupabase = async (products: ProcessedProductData[])
             .select('id')
             .single();
             
-          if (newCategory) categoryId = newCategory.id;
+          if (error) {
+            console.error('Error creating category:', error);
+          } else if (newCategory) {
+            categoryId = newCategory.id;
+            console.log(`Created new category: ${product.category}, ID: ${categoryId}`);
+          }
         }
       }
       
@@ -49,9 +55,10 @@ export const importProductsToSupabase = async (products: ProcessedProductData[])
           
         if (subcategoryData) {
           subcategoryId = subcategoryData.id;
+          console.log(`Found existing subcategory: ${product.subcategory}, ID: ${subcategoryId}`);
         } else {
           const subcategorySlug = product.subcategory.toLowerCase().replace(/\s+/g, '-');
-          const { data: newSubcategory } = await supabase
+          const { data: newSubcategory, error } = await supabase
             .from('product_subcategories')
             .insert({
               name: product.subcategory,
@@ -61,27 +68,36 @@ export const importProductsToSupabase = async (products: ProcessedProductData[])
             .select('id')
             .single();
             
-          if (newSubcategory) subcategoryId = newSubcategory.id;
+          if (error) {
+            console.error('Error creating subcategory:', error);
+          } else if (newSubcategory) {
+            subcategoryId = newSubcategory.id;
+            console.log(`Created new subcategory: ${product.subcategory}, ID: ${subcategoryId}`);
+          }
         }
       }
       
       // Insert the product
+      const productData = {
+        name: product.name,
+        type: product.type,
+        description: product.description,
+        hsn_code: product.hsn_code,
+        price: product.price,
+        stock: product.stock,
+        weight: product.weight,
+        dimensions: product.dimensions,
+        category_id: categoryId,
+        subcategory_id: subcategoryId,
+        pack_sizes: product.pack_sizes || null,
+        potencies: product.potencies || null
+      };
+      
+      console.log('Inserting product with data:', productData);
+      
       const { data: newProduct, error: productError } = await supabase
         .from('products')
-        .insert({
-          name: product.name,
-          type: product.type,
-          description: product.description,
-          hsn_code: product.hsn_code,
-          price: product.price,
-          stock: product.stock,
-          weight: product.weight,
-          dimensions: product.dimensions,
-          category_id: categoryId,
-          subcategory_id: subcategoryId,
-          pack_sizes: product.pack_sizes || null,
-          potencies: product.potencies || null
-        })
+        .insert(productData)
         .select()
         .single();
         

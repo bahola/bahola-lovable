@@ -17,9 +17,11 @@ import DescriptionsTab from './product-form/DescriptionsTab';
 
 interface ProductFormProps {
   onProductAdded?: (product?: any) => void;
+  initialProduct?: any;
+  isEditing?: boolean;
 }
 
-const ProductForm = ({ onProductAdded }: ProductFormProps) => {
+const ProductForm = ({ onProductAdded, initialProduct, isEditing = false }: ProductFormProps) => {
   const {
     form,
     activeTab,
@@ -39,7 +41,7 @@ const ProductForm = ({ onProductAdded }: ProductFormProps) => {
     handleAddImage,
     handleChangeImage,
     handleRemoveImage,
-  } = useProductForm(onProductAdded);
+  } = useProductForm(onProductAdded, initialProduct, isEditing);
 
   return (
     <Form {...form}>
@@ -108,7 +110,7 @@ const ProductForm = ({ onProductAdded }: ProductFormProps) => {
         <div className="flex justify-end space-x-2">
           <Button type="button" variant="outline" onClick={() => form.reset()}>Cancel</Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save Product"}
+            {isSubmitting ? "Saving..." : isEditing ? "Update Product" : "Save Product"}
           </Button>
         </div>
       </form>
