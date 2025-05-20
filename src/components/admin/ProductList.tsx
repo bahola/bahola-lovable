@@ -44,6 +44,8 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableHead>ID</TableHead>
               <TableHead>Product Name</TableHead>
               <TableHead>Type</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Subcategory</TableHead>
               <TableHead>HSN Code</TableHead>
               <TableHead>Base Price</TableHead>
               <TableHead>Stock</TableHead>
@@ -57,6 +59,8 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-40" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-12" /></TableCell>
@@ -92,6 +96,8 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
             <TableHead>ID</TableHead>
             <TableHead>Product Name</TableHead>
             <TableHead>Type</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Subcategory</TableHead>
             <TableHead>HSN Code</TableHead>
             <TableHead>Base Price</TableHead>
             <TableHead>Stock</TableHead>
@@ -113,6 +119,8 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
                   {product.type}
                 </span>
               </TableCell>
+              <TableCell>{product.category}</TableCell>
+              <TableCell>{product.subcategory || '-'}</TableCell>
               <TableCell>{product.hsnCode}</TableCell>
               <TableCell>₹{product.price}</TableCell>
               <TableCell>{product.stock}</TableCell>

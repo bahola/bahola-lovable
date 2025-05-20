@@ -53,6 +53,7 @@ const ProductsManagement = () => {
         stock: product.stock || 0,
         variations: product.product_variations?.length || 0,
         category: product.category?.name || 'Uncategorized',
+        subcategory: product.subcategory?.name || '',
       }));
       
       setProducts(transformedProducts);
@@ -125,7 +126,8 @@ const ProductsManagement = () => {
         product.name.toLowerCase().includes(term.toLowerCase()) ||
         product.hsnCode.includes(term) ||
         product.id.toLowerCase().includes(term.toLowerCase()) ||
-        (product.category && product.category.toLowerCase().includes(term.toLowerCase()))
+        (product.category && product.category.toLowerCase().includes(term.toLowerCase())) ||
+        (product.subcategory && product.subcategory.toLowerCase().includes(term.toLowerCase()))
       );
       setFilteredProducts(filtered);
     }
