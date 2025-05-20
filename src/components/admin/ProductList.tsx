@@ -119,8 +119,15 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
                   {product.type}
                 </span>
               </TableCell>
-              <TableCell>{product.category}</TableCell>
-              <TableCell>{product.subcategory || '-'}</TableCell>
+              <TableCell>
+                <span className="font-medium">{product.category}</span>
+              </TableCell>
+              <TableCell>
+                {product.subcategory ? 
+                  <span className="text-sm bg-gray-100 px-2 py-1 rounded">{product.subcategory}</span> : 
+                  <span className="text-gray-400">-</span>
+                }
+              </TableCell>
               <TableCell>{product.hsnCode}</TableCell>
               <TableCell>₹{product.price}</TableCell>
               <TableCell>{product.stock}</TableCell>
