@@ -45,7 +45,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableHead>Product Name</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead>Subcategory</TableHead>
+              <TableHead className="bg-blue-50">Subcategory</TableHead>
               <TableHead>HSN Code</TableHead>
               <TableHead>Base Price</TableHead>
               <TableHead>Stock</TableHead>
@@ -88,6 +88,9 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
     );
   }
 
+  // Debug: Check what data is being passed to the component
+  console.log('Products data in ProductList:', products);
+
   return (
     <Card>
       <Table>
@@ -97,7 +100,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
             <TableHead>Product Name</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead>Subcategory</TableHead>
+            <TableHead className="bg-blue-50 font-bold">Subcategory</TableHead>
             <TableHead>HSN Code</TableHead>
             <TableHead>Base Price</TableHead>
             <TableHead>Stock</TableHead>
@@ -122,9 +125,9 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableCell>
                 <span className="font-medium">{product.category}</span>
               </TableCell>
-              <TableCell>
+              <TableCell className="bg-blue-50">
                 {product.subcategory ? 
-                  <span className="text-sm bg-gray-100 px-2 py-1 rounded">{product.subcategory}</span> : 
+                  <span className="text-sm bg-blue-100 px-2 py-1 rounded font-medium">{product.subcategory}</span> : 
                   <span className="text-gray-400">-</span>
                 }
               </TableCell>
