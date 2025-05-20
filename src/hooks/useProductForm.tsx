@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -141,51 +141,45 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     }
   }, [initialProduct]);
 
+  // Create form instance with initial values
+  const initialValues = useMemo(() => getInitialValues(), [getInitialValues]);
+  
   const form = useForm<ProductFormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: getInitialValues(),
+    defaultValues: initialValues,
   });
 
-  // Initialize state values from initialProduct
+  // Initialize state values from initialProduct only once
   useEffect(() => {
-    if (!initialized && initialProduct) {
+    if (!initialized && initialProduct && isEditing) {
+      // Initialize state values
       const potencies = initialProduct.potencies || [];
       const packSizes = initialProduct.pack_sizes || [];
+      const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
       
       setPotencyValues(potencies);
       setPackSizeValues(packSizes);
+      setImageUrls(imageUrlsValue);
       
-      let formattedVariations: ProductVariation[] = [];
       if (initialProduct.product_variations && initialProduct.product_variations.length > 0) {
-        formattedVariations = initialProduct.product_variations.map((v: any) => ({
+        const formattedVariations = initialProduct.product_variations.map((v: any) => ({
           potency: v.potency || '',
           packSize: v.pack_size || '',
           price: v.price || 0,
           stock: v.stock || 0,
           weight: v.weight || 0,
         }));
+        setVariations(formattedVariations);
       }
-      setVariations(formattedVariations);
-      
-      const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
-      setImageUrls(imageUrlsValue);
       
       setInitialized(true);
     }
-  }, [initialProduct, initialized]);
+  }, [initialProduct, isEditing, initialized]);
 
-  // Update form when initialProduct changes (in case it loads after component mount)
-  useEffect(() => {
-    if (initialProduct && isEditing && !initialized) {
-      const values = getInitialValues();
-      form.reset(values);
-      setInitialized(true);
-    }
-  }, [initialProduct, isEditing, form, getInitialValues, initialized]);
-
+  // Watch for product type changes
   const productType = form.watch("type");
 
-  const onSubmit = async (values: ProductFormSchema) => {
+  const onSubmit = useCallback(async (values: ProductFormSchema) => {
     try {
       setIsSubmitting(true);
       
@@ -341,8 +335,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [form, isEditing, onProductAdded, productId, toast, variations]);
 
+  // Prevent recreation on each render with useCallback
   const handleAddPotency = useCallback((newPotency: string) => {
     if (newPotency && !potencyValues.includes(newPotency)) {
       const updatedPotencies = [...potencyValues, newPotency];
@@ -512,7 +507,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     packSizeValues,
     variations,
     imageUrls,
-    onSubmit: onSubmit,
+    onSubmit,
     handleAddPotency,
     handleAddPackSize,
     handleRemovePotency,

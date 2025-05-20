@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -55,13 +55,13 @@ const EditProduct = () => {
     }
   }, [productId, navigate, toast]);
   
-  const handleProductUpdated = () => {
+  const handleProductUpdated = useCallback(() => {
     toast({
       title: "Product updated",
       description: "The product has been successfully updated."
     });
     navigate('/admin/products');
-  };
+  }, [navigate, toast]);
   
   if (isLoading) {
     return (
@@ -95,11 +95,10 @@ const EditProduct = () => {
         </Button>
       </div>
       
-      {/* Only render ProductForm once product data is available */}
       {product && (
         <ProductForm 
           initialProduct={product} 
-          onProductAdded={handleProductUpdated} 
+          onProductAdded={handleProductUpdated}
           isEditing={true}
         />
       )}
