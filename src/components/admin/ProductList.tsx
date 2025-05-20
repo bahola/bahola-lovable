@@ -45,7 +45,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableHead>Product Name</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead className="bg-blue-50">Subcategory</TableHead>
+              <TableHead className="bg-blue-50 font-bold">Subcategory</TableHead>
               <TableHead>HSN Code</TableHead>
               <TableHead>Base Price</TableHead>
               <TableHead>Stock</TableHead>
@@ -60,7 +60,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
                 <TableCell><Skeleton className="h-4 w-40" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                <TableCell className="bg-blue-50"><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-12" /></TableCell>
