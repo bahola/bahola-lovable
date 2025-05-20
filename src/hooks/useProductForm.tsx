@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -17,6 +16,7 @@ const formSchema = z.object({
   hsnCode: z.string(),
   price: z.number().min(0),
   category: z.string().optional(),
+  subcategory: z.string().optional(), // Added subcategory field
   weight: z.number().min(0),
   dimensions: z.object({
     length: z.number().min(0),
@@ -49,6 +49,7 @@ const defaultValues = {
   hsnCode: "",
   price: 0,
   category: "",
+  subcategory: "", // Added default value
   weight: 0,
   dimensions: {
     length: 0,
@@ -125,6 +126,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
         hsnCode: initialProduct.hsn_code || "",
         price: initialProduct.price || 0,
         category: initialProduct.category_id || "",
+        subcategory: initialProduct.subcategory_id || "", // Added subcategory field
         weight: initialProduct.weight || 0,
         dimensions: dimensionsObj,
         taxStatus: initialProduct.tax_status || "taxable",
@@ -193,20 +195,23 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Format dimensions as a string for storage
       const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
       
-      // Set category to null if empty
+      // Set category and subcategory to null if empty
       const categoryId = values.category && values.category !== "" ? values.category : null;
+      const subcategoryId = values.subcategory && values.subcategory !== "" ? values.subcategory : null;
       
       // Prepare the product data
       const productData = {
         name: values.name,
         type: values.type,
         description: values.description,
+        short_description: values.shortDescription, // Added short_description
         hsn_code: values.hsnCode,
         price: values.price,
         stock: values.type === 'simple' ? values.stock : null, // Stock for simple products
         weight: values.weight,
         dimensions: dimensionsFormatted,
         category_id: categoryId,
+        subcategory_id: subcategoryId, // Added subcategory_id
         pack_sizes: values.type === 'variable' ? values.packSizes : null,
         potencies: values.type === 'variable' ? values.potencies : null
       };

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,12 +8,47 @@ import { Hash, Layers, FileText } from 'lucide-react';
 import { initialCategories } from '../CategorySelect';
 import { UseFormReturn } from 'react-hook-form';
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from '@/integrations/supabase/client';
 
 interface GeneralTabProps {
   form: UseFormReturn<any>;
 }
 
 const GeneralTab = ({ form }: GeneralTabProps) => {
+  const [subcategories, setSubcategories] = useState<{ id: string; name: string }[]>([]);
+  const [loading, setLoading] = useState(false);
+  const selectedCategory = form.watch("category");
+  
+  // Fetch subcategories when category changes
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      if (!selectedCategory) {
+        setSubcategories([]);
+        return;
+      }
+      
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('product_subcategories')
+          .select('id, name')
+          .eq('category_id', selectedCategory);
+          
+        if (error) {
+          throw error;
+        }
+        
+        setSubcategories(data || []);
+      } catch (error) {
+        console.error('Error fetching subcategories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchSubcategories();
+  }, [selectedCategory]);
+
   return (
     <Card>
       <CardHeader>
@@ -79,7 +113,11 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                 </span>
               </FormLabel>
               <Select 
-                onValueChange={field.onChange} 
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  // Reset subcategory when category changes
+                  form.setValue("subcategory", "");
+                }} 
                 defaultValue={field.value}
               >
                 <FormControl>
@@ -102,7 +140,46 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
             </FormItem>
           )}
         />
+        
+        {/* Subcategory Selection Dropdown - New Field */}
+        <FormField
+          control={form.control}
+          name="subcategory"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <span className="flex items-center">
+                  <Layers className="h-4 w-4 mr-1" /> 
+                  Subcategory
+                </span>
+              </FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={!selectedCategory || loading || subcategories.length === 0}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={loading ? "Loading..." : subcategories.length === 0 ? "No subcategories available" : "Select a subcategory"} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {subcategories.map((subcategory) => (
+                    <SelectItem key={subcategory.id} value={subcategory.id}>
+                      {subcategory.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Select a subcategory to further classify your product.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
+        {/* Rest of the form fields */}
         <FormField
           control={form.control}
           name="type"

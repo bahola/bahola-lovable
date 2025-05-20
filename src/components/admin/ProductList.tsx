@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { 
   Table, 
@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { ProductListItem } from "@/data/sampleProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface ProductListProps {
   products: ProductListItem[];
@@ -112,7 +113,18 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
           {products.map((product) => (
             <TableRow key={product.id}>
               <TableCell className="font-medium">{product.id.substring(0, 8)}...</TableCell>
-              <TableCell>{product.name}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  {product.name}
+                  <Link 
+                    to={`/product/${product.id}`} 
+                    className="text-blue-500 hover:text-blue-700"
+                    target="_blank"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </Link>
+                </div>
+              </TableCell>
               <TableCell>
                 <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                   product.type === 'variable' 
