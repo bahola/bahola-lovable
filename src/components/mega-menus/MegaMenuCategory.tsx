@@ -15,7 +15,11 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
     {
       id: "mother-tinctures",
       name: "Mother Tinctures",
-      subcategories: alphabet.map(letter => ({ id: letter.toLowerCase(), name: letter })),
+      subcategories: alphabet.map(letter => ({ 
+        id: letter.toLowerCase(), 
+        name: letter,
+        textColor: "text-green-700" // Green text color for the letters
+      })),
       colorClass: "text-green-600 hover:text-green-800", // Light green color
       subColorClass: "hover:bg-green-50 hover:border-green-200" // Light green highlight
     },
@@ -58,7 +62,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
                       <Link
                         key={subcategory.id}
                         to={`/category/${category.id}/${subcategory.id}`}
-                        className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"}`}
+                        className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""}`}
                       >
                         {subcategory.name}
                       </Link>
@@ -84,7 +88,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
                       <Link
                         key={subcategory.id}
                         to={`/category/${category.id}/${subcategory.id}`}
-                        className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"}`}
+                        className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""}`}
                       >
                         {subcategory.name}
                       </Link>
