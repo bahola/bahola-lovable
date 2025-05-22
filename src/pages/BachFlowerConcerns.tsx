@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { 
   Heart, 
   Angry, 
-  Grief, 
+  Frown, // Replaced Grief with Frown which is available in lucide-react
   Flower,
   Brain,
   Star,
@@ -53,7 +53,7 @@ const BachFlowerConcerns = () => {
     },
     {
       id: 'grief-sadness',
-      icon: <Grief className="h-8 w-8 text-blue-500" />,
+      icon: <Frown className="h-8 w-8 text-blue-500" />, // Changed from Grief to Frown
       emoji: '😢',
       title: 'Grief & Sadness',
       description: 'Gently ease sorrow and heal emotional wounds.',
