@@ -3,6 +3,7 @@ import React from 'react';
 import { Video, Calendar, Pill, Stethoscope, Star, Bug, Heart, Apple, Brain, Dumbbell, Eye, Wheat, Droplets, Baby } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { ProductCard } from './ProductCard';
+import { Link } from 'react-router-dom';
 
 export const ConsultSection = () => {
   return (
@@ -18,8 +19,10 @@ export const ConsultSection = () => {
             <p className="text-bahola-neutral-600 text-center mb-6">
               Meet with our expert homeopaths for a personalized consultation in our Chennai clinic.
             </p>
-            <Button className="w-full btn-bahola">
-              Book Appointment
+            <Button className="w-full btn-bahola" asChild>
+              <Link to="/book-appointment">
+                Book Appointment
+              </Link>
             </Button>
           </div>
           
