@@ -57,16 +57,18 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         onMouseEnter={() => onMenuHover('bachflower')}
         onMouseLeave={onMenuLeave}
       >
-        <span>Bach Flower</span>
+        <Link to="/bach-flower">
+          <span>Bach Flower</span>
+        </Link>
         <ChevronDown size={16} className="ml-1" />
         <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
       </div>
 
-      <div className="main-menu-item flex items-center">
+      <Link to="/i-love-homeopathy" className="main-menu-item flex items-center">
         <span className="whitespace-nowrap">I</span>
         <div className="mx-1 text-red-500">❤️</div>
         <span className="whitespace-nowrap">HOMEOPATHY</span>
-      </div>
+      </Link>
       
       <Link to="/homeopathy" className="main-menu-item">
         <span>Why Homeopathy</span>

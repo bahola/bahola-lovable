@@ -38,6 +38,7 @@ import ERPNextIntegration from './pages/ERPNextIntegration';
 import ProductImport from './pages/ProductImport';
 import ThankYou from './pages/ThankYou';
 import EditProduct from './pages/admin/EditProduct';
+import BachFlowerConcerns from './pages/BachFlowerConcerns';
 
 function App() {
   return (
@@ -54,6 +55,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/homeopathy" element={<Homeopathy />} />
+        <Route path="/bach-flower" element={<BachFlowerConcerns />} />
+        <Route path="/bach-flower/:concernId" element={<CategoryPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />

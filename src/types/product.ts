@@ -19,6 +19,7 @@ export interface Product {
   dimensions: string;  // Length/Width/Height in cm
   image?: string;
   category?: string;  // Add category property
+  subcategory?: string; // Added subcategory field
   packSizes?: string[];
   potencies?: string[];
   variations?: ProductVariation[];
