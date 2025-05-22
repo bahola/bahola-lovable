@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -78,7 +78,7 @@ export function useProductForm(
   // Form initialization with validation
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
-    defaultValues: getInitialValues(),
+    defaultValues: initialProduct ? getInitialValues(initialProduct) : defaultValues,
   });
 
   const { toast } = useToast();
@@ -94,9 +94,7 @@ export function useProductForm(
   const variations = form.watch('variations') || [];
 
   // Initialize form with product data if editing
-  function getInitialValues() {
-    if (!initialProduct) return defaultValues;
-    
+  function getInitialValues(initialProduct: any) {
     try {
       console.log('Setting up form with initial product:', initialProduct);
       
@@ -166,12 +164,12 @@ export function useProductForm(
   // Reset form when initialProduct changes
   useEffect(() => {
     if (initialProduct) {
-      form.reset(getInitialValues());
+      form.reset(getInitialValues(initialProduct));
     }
   }, [initialProduct]);
 
   // Handle form submission
-  const onSubmit = form.handleSubmit(async (data: ProductFormValues) => {
+  const onSubmit = async (data: ProductFormValues) => {
     console.log('Submitting product data:', data);
     setIsSubmitting(true);
     
@@ -277,7 +275,7 @@ export function useProductForm(
     } finally {
       setIsSubmitting(false);
     }
-  });
+  };
 
   // Handle potency and pack size operations
   const handleAddPotency = (value: string) => {
@@ -337,8 +335,8 @@ export function useProductForm(
     imageUrls,
     onSubmit,
     handleAddPotency,
-    handleRemovePotency,
     handleAddPackSize,
+    handleRemovePotency,
     handleRemovePackSize,
     handleUpdateVariation,
     handleAddImage,

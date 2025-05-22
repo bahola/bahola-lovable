@@ -9,7 +9,7 @@ interface VariationsTabProps {
   potencyValues: string[];
   packSizeValues: string[];
   variations: ProductVariation[];
-  handleUpdateVariation: (index: number, field: keyof ProductVariation, value: number) => void;
+  handleUpdateVariation: (index: number, field: keyof ProductVariation, value: any) => void;
 }
 
 const VariationsTab = ({

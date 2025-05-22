@@ -10,8 +10,8 @@ interface AttributesTabProps {
   productType: "simple" | "variable";
   potencyValues: string[];
   packSizeValues: string[];
-  onAddPotency: (value: string) => boolean;
-  onAddPackSize: (value: string) => boolean;
+  onAddPotency: (value: string) => void;
+  onAddPackSize: (value: string) => void;
   onRemovePotency: (value: string) => void;
   onRemovePackSize: (value: string) => void;
 }
@@ -29,13 +29,15 @@ const AttributesTab = ({
   const [newPackSize, setNewPackSize] = useState("");
 
   const handleAddPotency = () => {
-    if (onAddPotency(newPotency)) {
+    if (newPotency.trim()) {
+      onAddPotency(newPotency.trim());
       setNewPotency("");
     }
   };
 
   const handleAddPackSize = () => {
-    if (onAddPackSize(newPackSize)) {
+    if (newPackSize.trim()) {
+      onAddPackSize(newPackSize.trim());
       setNewPackSize("");
     }
   };
