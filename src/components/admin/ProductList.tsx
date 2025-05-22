@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, Trash2, ExternalLink } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { 
   Table, 
@@ -14,8 +14,6 @@ import { Card } from "@/components/ui/card";
 import { ProductListItem } from "@/data/sampleProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ProductListProps {
   products: ProductListItem[];
@@ -47,7 +45,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableHead>Product Name</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead className="bg-blue-50 font-bold">Subcategory</TableHead>
+              <TableHead>Subcategory</TableHead>
               <TableHead>HSN Code</TableHead>
               <TableHead>Base Price</TableHead>
               <TableHead>Stock</TableHead>
@@ -62,7 +60,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
                 <TableCell><Skeleton className="h-4 w-40" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                <TableCell className="bg-blue-50"><Skeleton className="h-4 w-20" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                 <TableCell><Skeleton className="h-4 w-12" /></TableCell>
@@ -90,9 +88,6 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
     );
   }
 
-  // Debug: Check what data is being passed to the component
-  console.log('Products data in ProductList:', products);
-
   return (
     <Card>
       <Table>
@@ -102,7 +97,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
             <TableHead>Product Name</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Category</TableHead>
-            <TableHead className="bg-blue-50 font-bold">Subcategory</TableHead>
+            <TableHead>Subcategory</TableHead>
             <TableHead>HSN Code</TableHead>
             <TableHead>Base Price</TableHead>
             <TableHead>Stock</TableHead>
@@ -114,27 +109,7 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
           {products.map((product) => (
             <TableRow key={product.id}>
               <TableCell className="font-medium">{product.id.substring(0, 8)}...</TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  {product.name}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Link 
-                          to={`/product/${product.id}`} 
-                          className="text-blue-500 hover:text-blue-700"
-                          target="_blank"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>View product on website</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </TableCell>
+              <TableCell>{product.name}</TableCell>
               <TableCell>
                 <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                   product.type === 'variable' 
@@ -144,46 +119,20 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
                   {product.type}
                 </span>
               </TableCell>
-              <TableCell>
-                <span className="font-medium">{product.category}</span>
-              </TableCell>
-              <TableCell className="bg-blue-50">
-                {product.subcategory ? 
-                  <span className="text-sm bg-blue-100 px-2 py-1 rounded font-medium">{product.subcategory}</span> : 
-                  <span className="text-gray-400">-</span>
-                }
-              </TableCell>
+              <TableCell>{product.category}</TableCell>
+              <TableCell>{product.subcategory || '-'}</TableCell>
               <TableCell>{product.hsnCode}</TableCell>
               <TableCell>₹{product.price}</TableCell>
               <TableCell>{product.stock}</TableCell>
               <TableCell>{product.variations}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(product.id)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Edit product</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)}>
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Delete product</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Button variant="ghost" size="sm" onClick={() => handleEdit(product.id)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)}>
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>

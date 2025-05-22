@@ -56,7 +56,6 @@ const ProductsManagement = () => {
         subcategory: product.subcategory?.name || '',
       }));
       
-      console.log('Transformed products:', transformedProducts);
       setProducts(transformedProducts);
       setFilteredProducts(transformedProducts);
     } catch (error) {

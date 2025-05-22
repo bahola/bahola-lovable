@@ -4,7 +4,7 @@ export interface ProductVariation {
   packSize: string;
   price: number;
   stock: number;
-  weight: number;
+  weight: number;  // Added weight field for variations
 }
 
 export interface Product {

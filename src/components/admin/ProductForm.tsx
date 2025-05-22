@@ -101,9 +101,9 @@ const ProductForm = memo(({ onProductAdded, initialProduct, isEditing = false }:
             <DescriptionsTab 
               form={form}
               imageUrls={imageUrls}
-              onAddImage={handleAddImage}
-              onChangeImage={handleChangeImage}
-              onRemoveImage={handleRemoveImage}
+              handleAddImage={handleAddImage}
+              handleChangeImage={handleChangeImage}
+              handleRemoveImage={handleRemoveImage}
             />
           </TabsContent>
         </Tabs>
