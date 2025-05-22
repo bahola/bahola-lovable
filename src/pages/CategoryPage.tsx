@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams, useLocation } from 'react-router-dom';
 import { CategoryPageHeader } from '@/components/category/CategoryPageHeader';
@@ -19,7 +19,17 @@ const CategoryPage = () => {
   const [priceRange, setPriceRange] = React.useState([100, 5000]);
   const [showFilters, setShowFilters] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
+  
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   
   // Determine if we're viewing a category or concern page
   const isConcernPage = location.pathname.includes('/concern/');
@@ -49,8 +59,9 @@ const CategoryPage = () => {
   
   // Apply search filter
   const filteredProducts = products.filter(product => 
-    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+    !debouncedSearchQuery || 
+    product.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    product.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
   );
 
   return (

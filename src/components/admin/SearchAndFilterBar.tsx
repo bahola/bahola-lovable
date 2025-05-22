@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Filter, X } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,18 +9,52 @@ interface SearchAndFilterBarProps {
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearchSubmit?: (e: React.FormEvent) => void;
   onClearSearch?: () => void;
+  liveDebouncedSearch?: boolean;
 }
 
 const SearchAndFilterBar = ({ 
   searchTerm, 
   onSearchChange,
   onSearchSubmit,
-  onClearSearch
+  onClearSearch,
+  liveDebouncedSearch = true
 }: SearchAndFilterBarProps) => {
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+  
+  // Sync with parent state
+  useEffect(() => {
+    setLocalSearchTerm(searchTerm);
+  }, [searchTerm]);
+  
+  // Debounce search if live search is enabled
+  useEffect(() => {
+    if (!liveDebouncedSearch) return;
+    
+    const timer = setTimeout(() => {
+      if (localSearchTerm !== searchTerm) {
+        const event = {
+          target: { value: localSearchTerm }
+        } as React.ChangeEvent<HTMLInputElement>;
+        onSearchChange(event);
+      }
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [localSearchTerm, searchTerm, onSearchChange, liveDebouncedSearch]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSearchSubmit) {
       onSearchSubmit(e);
+    }
+  };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearchTerm(e.target.value);
+    
+    // If live search is not enabled, pass changes directly to parent
+    if (!liveDebouncedSearch) {
+      onSearchChange(e);
     }
   };
 
@@ -31,16 +65,19 @@ const SearchAndFilterBar = ({
         <Input 
           placeholder="Search products..." 
           className="pl-10 pr-8"
-          value={searchTerm}
-          onChange={onSearchChange}
+          value={localSearchTerm}
+          onChange={handleInputChange}
         />
-        {searchTerm && onClearSearch && (
+        {localSearchTerm && onClearSearch && (
           <Button 
             type="button"
             variant="ghost"
             size="icon"
             className="absolute right-2 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
-            onClick={onClearSearch}
+            onClick={() => {
+              setLocalSearchTerm('');
+              onClearSearch();
+            }}
           >
             <X size={16} />
           </Button>

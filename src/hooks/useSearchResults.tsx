@@ -28,6 +28,7 @@ export const useSearchResults = () => {
   const queryParam = params.get('q') || '';
   
   const [searchValue, setSearchValue] = useState(queryParam);
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState(queryParam);
   const [sortOption, setSortOption] = useState('relevance');
   const [filters, setFilters] = useState<SearchFilters>({
     categories: [],
@@ -83,6 +84,24 @@ export const useSearchResults = () => {
     }
   ];
   
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [searchValue]);
+  
+  // Update URL when debounced search value changes
+  useEffect(() => {
+    if (debouncedSearchValue.trim() !== queryParam) {
+      if (debouncedSearchValue.trim()) {
+        navigate(`/search?q=${encodeURIComponent(debouncedSearchValue.trim())}`, { replace: true });
+      }
+    }
+  }, [debouncedSearchValue, navigate, queryParam]);
+  
   // This would be replaced with a real search function in a production app
   const [filteredResults, setFilteredResults] = useState<Product[]>(mockSearchResults);
   
@@ -97,6 +116,14 @@ export const useSearchResults = () => {
   // Apply filters and sorting
   useEffect(() => {
     let results = [...mockSearchResults];
+    
+    // Filter by search term
+    if (debouncedSearchValue.trim()) {
+      results = results.filter(product => 
+        product.title.toLowerCase().includes(debouncedSearchValue.toLowerCase()) ||
+        product.description.toLowerCase().includes(debouncedSearchValue.toLowerCase())
+      );
+    }
     
     // Apply category filters
     if (filters.categories.length > 0) {
@@ -133,7 +160,7 @@ export const useSearchResults = () => {
     }
     
     setFilteredResults(results);
-  }, [filters, sortOption]);
+  }, [debouncedSearchValue, filters, sortOption, mockSearchResults]);
 
   return {
     queryParam,

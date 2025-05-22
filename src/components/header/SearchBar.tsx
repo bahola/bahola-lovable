@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -17,6 +18,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   onClear
 }) => {
+  const navigate = useNavigate();
+  const [inputFocused, setInputFocused] = useState(false);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+  
   return (
     <form onSubmit={onSearch} className="relative w-full max-w-md">
       <div className="relative">
@@ -25,7 +33,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           placeholder="Search products..."
           className="w-full pl-10 pr-10 py-2 rounded-full"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleChange}
+          onFocus={() => setInputFocused(true)}
+          onBlur={() => setTimeout(() => setInputFocused(false), 200)}
         />
         <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
         

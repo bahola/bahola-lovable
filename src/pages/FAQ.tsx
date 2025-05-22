@@ -15,7 +15,7 @@ import {
   TabsTrigger
 } from '@/components/ui/tabs';
 import { Search, HelpCircle, X } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // FAQ data organized by topics
 const faqData = {
@@ -118,17 +118,45 @@ const allFaqs = Object.entries(faqData).flatMap(([category, questions]) =>
 
 const FAQ: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const initialQuery = queryParams.get('q') || '';
   
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(initialQuery);
   const [activeTab, setActiveTab] = useState('Products and Usage');
   
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+  
+  // Update URL when debounced search value changes
+  useEffect(() => {
+    if (debouncedSearchQuery.trim() !== initialQuery) {
+      const newParams = new URLSearchParams(location.search);
+      
+      if (debouncedSearchQuery.trim()) {
+        newParams.set('q', debouncedSearchQuery);
+      } else {
+        newParams.delete('q');
+      }
+      
+      const newSearch = newParams.toString();
+      const queryString = newSearch ? `?${newSearch}` : '';
+      navigate(`${location.pathname}${queryString}`, { replace: true });
+    }
+  }, [debouncedSearchQuery, navigate, location.pathname, location.search, initialQuery]);
+  
   // Filter FAQs based on search query
-  const filteredFaqs = searchQuery 
+  const filteredFaqs = debouncedSearchQuery 
     ? allFaqs.filter(faq => 
-        faq.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+        faq.question.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) || 
+        faq.answer.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
       )
     : [];
   
@@ -145,6 +173,7 @@ const FAQ: React.FC = () => {
     const query = queryParams.get('q');
     if (query) {
       setSearchQuery(query);
+      setDebouncedSearchQuery(query);
     }
   }, [location.search]);
 
@@ -180,7 +209,7 @@ const FAQ: React.FC = () => {
         </div>
 
         {/* Show search results if searching */}
-        {searchQuery && (
+        {debouncedSearchQuery && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Search Results ({filteredFaqs.length})</h2>
             {filteredFaqs.length > 0 ? (
@@ -212,7 +241,7 @@ const FAQ: React.FC = () => {
         )}
 
         {/* FAQ Categories and Questions */}
-        {!searchQuery && (
+        {!debouncedSearchQuery && (
           <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-6 flex flex-wrap justify-start gap-2">
               {Object.keys(faqData).map((category) => (
