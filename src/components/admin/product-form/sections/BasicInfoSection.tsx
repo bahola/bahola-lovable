@@ -43,7 +43,11 @@ const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
                 placeholder="Enter a brief description" 
                 className="resize-none" 
                 rows={2}
-                {...field} 
+                value={field.value || ''}  // Handle null/undefined value
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
               />
             </FormControl>
             <FormDescription>
