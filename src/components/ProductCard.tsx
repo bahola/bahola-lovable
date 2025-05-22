@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 interface ProductProps {
   product: {
-    id: number | string;
+    id: number | string; // Updated to accept both string and number types
     name: string;
     price: number;
     rating: number;

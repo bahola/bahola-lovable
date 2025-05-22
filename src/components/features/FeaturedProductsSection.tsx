@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Product {
-  id: number;
+  id: string | number; // Updated to accept both string and number types
   name: string;
   price: number;
   rating: number;
