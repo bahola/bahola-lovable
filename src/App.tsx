@@ -39,6 +39,8 @@ import ProductImport from './pages/ProductImport';
 import ThankYou from './pages/ThankYou';
 import EditProduct from './pages/admin/EditProduct';
 import BachFlowerConcerns from './pages/BachFlowerConcerns';
+import AppointmentBooking from './pages/AppointmentBooking';
+import AppointmentConfirmation from './pages/AppointmentConfirmation';
 
 function App() {
   return (
@@ -72,6 +74,8 @@ function App() {
         <Route path="/orders" element={<OrderHistory />} />
         <Route path="/stores" element={<StoreLocator />} />
         <Route path="/payment-methods" element={<PaymentMethods />} />
+        <Route path="/book-appointment" element={<AppointmentBooking />} />
+        <Route path="/appointment-confirmation" element={<AppointmentConfirmation />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/erp-integration" element={<ERPNextIntegration />} />
         <Route path="/product-import" element={<ProductImport />} />
