@@ -44,6 +44,7 @@ const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
                 className="resize-none" 
                 rows={2}
                 {...field}
+                value={field.value || ''}
               />
             </FormControl>
             <FormDescription>

@@ -46,7 +46,7 @@ const ProductForm = memo(({ onProductAdded, initialProduct, isEditing = false }:
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-6 mb-6">
             <TabsTrigger value="general">General</TabsTrigger>
@@ -101,9 +101,9 @@ const ProductForm = memo(({ onProductAdded, initialProduct, isEditing = false }:
             <DescriptionsTab 
               form={form}
               imageUrls={imageUrls}
-              handleAddImage={handleAddImage}
-              handleChangeImage={handleChangeImage}
-              handleRemoveImage={handleRemoveImage}
+              onAddImage={handleAddImage}
+              onChangeImage={handleChangeImage}
+              onRemoveImage={handleRemoveImage}
             />
           </TabsContent>
         </Tabs>

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -42,7 +42,7 @@ const productFormSchema = z.object({
 });
 
 // Type definition inferred from the schema
-type ProductFormValues = z.infer<typeof productFormSchema>;
+export type ProductFormValues = z.infer<typeof productFormSchema>;
 
 // Default form values
 const defaultValues: ProductFormValues = {
@@ -112,7 +112,9 @@ export function useProductForm(
       }
       
       // Set product ID for editing
-      setProductId(initialProduct.id);
+      if (initialProduct.id) {
+        setProductId(initialProduct.id);
+      }
       
       // Set potencies and pack sizes if they exist
       const potencies = initialProduct.potencies || [];
@@ -169,7 +171,7 @@ export function useProductForm(
   }, [initialProduct]);
 
   // Handle form submission
-  const onSubmit = async (data: ProductFormValues) => {
+  const onSubmit = form.handleSubmit(async (data: ProductFormValues) => {
     console.log('Submitting product data:', data);
     setIsSubmitting(true);
     
@@ -275,7 +277,7 @@ export function useProductForm(
     } finally {
       setIsSubmitting(false);
     }
-  };
+  });
 
   // Handle potency and pack size operations
   const handleAddPotency = (value: string) => {
@@ -333,7 +335,7 @@ export function useProductForm(
     packSizeValues,
     variations,
     imageUrls,
-    onSubmit: form.handleSubmit(onSubmit),
+    onSubmit,
     handleAddPotency,
     handleRemovePotency,
     handleAddPackSize,
