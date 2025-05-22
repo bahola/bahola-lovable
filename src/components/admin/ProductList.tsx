@@ -15,6 +15,7 @@ import { ProductListItem } from "@/data/sampleProducts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ProductListProps {
   products: ProductListItem[];
@@ -116,13 +117,22 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableCell>
                 <div className="flex items-center gap-2">
                   {product.name}
-                  <Link 
-                    to={`/product/${product.id}`} 
-                    className="text-blue-500 hover:text-blue-700"
-                    target="_blank"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </Link>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link 
+                          to={`/product/${product.id}`} 
+                          className="text-blue-500 hover:text-blue-700"
+                          target="_blank"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>View product on website</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </TableCell>
               <TableCell>
@@ -149,12 +159,31 @@ const ProductList = ({ products, isLoading = false, onDelete }: ProductListProps
               <TableCell>{product.variations}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => handleEdit(product.id)}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)}>
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(product.id)}>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Edit product</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm" onClick={() => handleDelete(product.id)}>
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Delete product</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </TableCell>
             </TableRow>

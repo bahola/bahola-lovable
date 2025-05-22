@@ -4,11 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Hash, Layers, FileText } from 'lucide-react';
+import { Hash, Layers, FileText, Plus } from 'lucide-react';
 import { initialCategories } from '../CategorySelect';
 import { UseFormReturn } from 'react-hook-form';
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from '@/integrations/supabase/client';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface GeneralTabProps {
   form: UseFormReturn<any>;
@@ -18,6 +21,36 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
   const [subcategories, setSubcategories] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const selectedCategory = form.watch("category");
+  
+  // States for dialogs
+  const [newCategoryDialogOpen, setNewCategoryDialogOpen] = useState(false);
+  const [newSubcategoryDialogOpen, setNewSubcategoryDialogOpen] = useState(false);
+  
+  // States for form inputs
+  const [newCategory, setNewCategory] = useState({ name: '', slug: '' });
+  const [newSubcategory, setNewSubcategory] = useState({ name: '', slug: '' });
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  
+  // Fetch all categories when component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('product_categories')
+          .select('id, name');
+          
+        if (error) {
+          throw error;
+        }
+        
+        setCategories(data || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
   
   // Fetch subcategories when category changes
   useEffect(() => {
@@ -48,6 +81,125 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
     
     fetchSubcategories();
   }, [selectedCategory]);
+
+  // Function to create a slug from a name
+  const createSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  // Handle new category creation
+  const handleAddCategory = async () => {
+    if (newCategory.name.trim() === '') {
+      toast.error("Category name is required");
+      return;
+    }
+
+    const slug = newCategory.slug || createSlug(newCategory.name);
+    
+    try {
+      const { data, error } = await supabase
+        .from('product_categories')
+        .insert([
+          { 
+            name: newCategory.name.trim(),
+            slug: slug,
+            type: 'product' // Default type
+          }
+        ])
+        .select();
+        
+      if (error) {
+        throw error;
+      }
+      
+      if (data && data[0]) {
+        toast.success(`Category "${newCategory.name}" added successfully`);
+        
+        // Update categories list
+        setCategories([...categories, { id: data[0].id, name: data[0].name }]);
+        
+        // Select the new category
+        form.setValue("category", data[0].id);
+        
+        // Reset form and close dialog
+        setNewCategory({ name: '', slug: '' });
+        setNewCategoryDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error adding category:', error);
+      toast.error(`Failed to add category: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  // Handle new subcategory creation
+  const handleAddSubcategory = async () => {
+    if (!selectedCategory) {
+      toast.error("Please select a category first");
+      return;
+    }
+    
+    if (newSubcategory.name.trim() === '') {
+      toast.error("Subcategory name is required");
+      return;
+    }
+
+    const slug = newSubcategory.slug || createSlug(newSubcategory.name);
+    
+    try {
+      const { data, error } = await supabase
+        .from('product_subcategories')
+        .insert([
+          { 
+            name: newSubcategory.name.trim(),
+            slug: slug,
+            category_id: selectedCategory
+          }
+        ])
+        .select();
+        
+      if (error) {
+        throw error;
+      }
+      
+      if (data && data[0]) {
+        toast.success(`Subcategory "${newSubcategory.name}" added successfully`);
+        
+        // Update subcategories list
+        setSubcategories([...subcategories, { id: data[0].id, name: data[0].name }]);
+        
+        // Select the new subcategory
+        form.setValue("subcategory", data[0].id);
+        
+        // Reset form and close dialog
+        setNewSubcategory({ name: '', slug: '' });
+        setNewSubcategoryDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error adding subcategory:', error);
+      toast.error(`Failed to add subcategory: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  // Handle slug generation on category name change
+  const handleCategoryNameChange = (name: string) => {
+    setNewCategory({
+      ...newCategory,
+      name,
+      slug: createSlug(name)
+    });
+  };
+
+  // Handle slug generation on subcategory name change
+  const handleSubcategoryNameChange = (name: string) => {
+    setNewSubcategory({
+      ...newSubcategory,
+      name,
+      slug: createSlug(name)
+    });
+  };
 
   return (
     <Card>
@@ -100,7 +252,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           )}
         />
 
-        {/* Category Selection as Dropdown */}
+        {/* Category Selection with Add New Button */}
         <FormField
           control={form.control}
           name="category"
@@ -112,36 +264,47 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   Category
                 </span>
               </FormLabel>
-              <Select 
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  // Reset subcategory when category changes
-                  form.setValue("subcategory", "");
-                }} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {initialCategories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select 
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    // Reset subcategory when category changes
+                    form.setValue("subcategory", "");
+                  }} 
+                  value={field.value || ""}
+                  className="flex-1"
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={() => setNewCategoryDialogOpen(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
               <FormDescription>
-                Select a category for your product. Categories help organize products and improve SEO.
+                Select a category for your product or create a new one.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         
-        {/* Subcategory Selection Dropdown - New Field */}
+        {/* Subcategory Selection with Add New Button */}
         <FormField
           control={form.control}
           name="subcategory"
@@ -153,26 +316,38 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   Subcategory
                 </span>
               </FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-                disabled={!selectedCategory || loading || subcategories.length === 0}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={loading ? "Loading..." : subcategories.length === 0 ? "No subcategories available" : "Select a subcategory"} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {subcategories.map((subcategory) => (
-                    <SelectItem key={subcategory.id} value={subcategory.id}>
-                      {subcategory.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select 
+                  onValueChange={field.onChange} 
+                  value={field.value || ""}
+                  disabled={!selectedCategory || loading}
+                  className="flex-1"
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder={loading ? "Loading..." : !selectedCategory ? "Select a category first" : "Select a subcategory"} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {subcategories.map((subcategory) => (
+                      <SelectItem key={subcategory.id} value={subcategory.id}>
+                        {subcategory.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={() => setNewSubcategoryDialogOpen(true)}
+                  disabled={!selectedCategory}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
               <FormDescription>
-                Select a subcategory to further classify your product.
+                Select a subcategory for your product or create a new one.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -334,6 +509,102 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           />
         </div>
       </CardContent>
+      
+      {/* Add New Category Dialog */}
+      <Dialog open={newCategoryDialogOpen} onOpenChange={setNewCategoryDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Category</DialogTitle>
+            <DialogDescription>
+              Create a new product category. Categories help organize products and improve SEO.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <FormLabel>Category Name</FormLabel>
+              <Input 
+                value={newCategory.name} 
+                onChange={(e) => handleCategoryNameChange(e.target.value)}
+                placeholder="e.g., Homeopathic Kits" 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <FormLabel>Slug (URL-friendly name)</FormLabel>
+              <Input 
+                value={newCategory.slug} 
+                onChange={(e) => setNewCategory({...newCategory, slug: e.target.value})}
+                placeholder="e.g., homeopathic-kits"
+              />
+              <p className="text-xs text-muted-foreground">
+                Auto-generated from name, but you can customize it.
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNewCategoryDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddCategory}>
+              Add Category
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Add New Subcategory Dialog */}
+      <Dialog open={newSubcategoryDialogOpen} onOpenChange={setNewSubcategoryDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Subcategory</DialogTitle>
+            <DialogDescription>
+              Create a new subcategory within the selected category.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <FormLabel>Parent Category</FormLabel>
+              <Input 
+                value={categories.find(c => c.id === selectedCategory)?.name || ''}
+                disabled
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <FormLabel>Subcategory Name</FormLabel>
+              <Input 
+                value={newSubcategory.name} 
+                onChange={(e) => handleSubcategoryNameChange(e.target.value)}
+                placeholder="e.g., Travel Kits" 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <FormLabel>Slug (URL-friendly name)</FormLabel>
+              <Input 
+                value={newSubcategory.slug} 
+                onChange={(e) => setNewSubcategory({...newSubcategory, slug: e.target.value})}
+                placeholder="e.g., travel-kits"
+              />
+              <p className="text-xs text-muted-foreground">
+                Auto-generated from name, but you can customize it.
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNewSubcategoryDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddSubcategory}>
+              Add Subcategory
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
