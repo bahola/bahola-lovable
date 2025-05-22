@@ -47,13 +47,15 @@ export function useProductFormInitialization(initialProduct?: any) {
         taxClass: initialProduct.tax_class || "5",
         potencies: initialProduct.potencies || [],
         packSizes: initialProduct.pack_sizes || [],
-        variations: initialProduct.product_variations?.map((v: any) => ({
-          potency: v.potency || '',
-          packSize: v.pack_size || '',
-          price: v.price || 0,
-          stock: v.stock || 0,
-          weight: v.weight || 0,
-        })) || [],
+        variations: Array.isArray(initialProduct.product_variations) 
+          ? initialProduct.product_variations.map((v: any) => ({
+              potency: v.potency || '',
+              packSize: v.pack_size || '',
+              price: v.price || 0,
+              stock: v.stock || 0,
+              weight: v.weight || 0,
+            }))
+          : [],
         upsellProducts: initialProduct.upsell_products || [],
         crossSellProducts: initialProduct.cross_sell_products || [],
       };

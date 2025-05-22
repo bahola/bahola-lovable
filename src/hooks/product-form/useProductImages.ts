@@ -1,22 +1,25 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export function useProductImages(initialImages: string[] = []) {
   const [imageUrls, setImageUrls] = useState<string[]>(initialImages);
 
-  const handleAddImage = (url: string) => {
-    setImageUrls([...imageUrls, url]);
-  };
+  // Use useCallback to prevent unnecessary re-renders
+  const handleAddImage = useCallback((url: string) => {
+    setImageUrls(prev => [...prev, url]);
+  }, []);
 
-  const handleChangeImage = (index: number, url: string) => {
-    const updatedUrls = [...imageUrls];
-    updatedUrls[index] = url;
-    setImageUrls(updatedUrls);
-  };
+  const handleChangeImage = useCallback((index: number, url: string) => {
+    setImageUrls(prev => {
+      const updatedUrls = [...prev];
+      updatedUrls[index] = url;
+      return updatedUrls;
+    });
+  }, []);
 
-  const handleRemoveImage = (index: number) => {
-    setImageUrls(imageUrls.filter((_, i) => i !== index));
-  };
+  const handleRemoveImage = useCallback((index: number) => {
+    setImageUrls(prev => prev.filter((_, i) => i !== index));
+  }, []);
 
   return {
     imageUrls,

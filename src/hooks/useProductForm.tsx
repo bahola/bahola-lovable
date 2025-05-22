@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductFormValues, productFormSchema, defaultValues } from './product-form/productFormSchema';
@@ -66,10 +66,17 @@ export function useProductForm(
     onSubmit
   } = useProductSubmission(form, productId, imageUrls, setActiveTab, onProductAdded, isEditing);
 
-  // Sync imageUrls between hooks
+  // Sync imageUrls between hooks only when initialImageUrls changes
   useEffect(() => {
-    setImageUrls(initialImageUrls);
-  }, [initialImageUrls, setImageUrls]);
+    // Only update if initial images have changed and are different 
+    // from the current imageUrls to prevent infinite loops
+    const initialUrlsString = JSON.stringify(initialImageUrls);
+    const currentUrlsString = JSON.stringify(imageUrls);
+    
+    if (initialUrlsString !== currentUrlsString && initialImageUrls.length > 0) {
+      setImageUrls(initialImageUrls);
+    }
+  }, [initialImageUrls]);
 
   return {
     form,

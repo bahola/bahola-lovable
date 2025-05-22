@@ -1,5 +1,6 @@
 
 import * as z from 'zod';
+import { ProductVariation } from '@/types/product';
 
 // Define the schema for product form validation
 const productFormSchema = z.object({
