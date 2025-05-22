@@ -32,6 +32,13 @@ export function useProductForm(
     getInitialValues
   } = useProductFormInitialization(initialProduct);
 
+  // Reset form when initialProduct changes
+  useEffect(() => {
+    if (initialProduct) {
+      form.reset(getInitialValues(initialProduct));
+    }
+  }, [initialProduct, form]);
+
   const {
     imageUrls,
     setImageUrls,
@@ -58,13 +65,6 @@ export function useProductForm(
     isSubmitting,
     onSubmit
   } = useProductSubmission(form, productId, imageUrls, setActiveTab, onProductAdded, isEditing);
-
-  // Reset form when initialProduct changes
-  useEffect(() => {
-    if (initialProduct) {
-      form.reset(getInitialValues(initialProduct));
-    }
-  }, [initialProduct, form]);
 
   // Sync imageUrls between hooks
   useEffect(() => {
