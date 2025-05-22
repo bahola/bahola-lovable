@@ -7,6 +7,7 @@ import { SearchFilters } from '@/components/search/SearchFilters';
 import { SearchSorting } from '@/components/search/SearchSorting';
 import { NoResults } from '@/components/search/NoResults';
 import { useSearchResults } from '@/hooks/useSearchResults';
+import { Loader2 } from 'lucide-react';
 
 const SearchResults = () => {
   const {
@@ -18,6 +19,7 @@ const SearchResults = () => {
     sortOption,
     setSortOption,
     searchResults,
+    isLoading,
     handleSearch
   } = useSearchResults();
 
@@ -52,7 +54,11 @@ const SearchResults = () => {
             sortOption={sortOption}
           />
           
-          {searchResults.length === 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Loader2 className="h-12 w-12 animate-spin text-bahola-blue-500" />
+            </div>
+          ) : searchResults.length === 0 ? (
             <NoResults queryParam={queryParam} />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

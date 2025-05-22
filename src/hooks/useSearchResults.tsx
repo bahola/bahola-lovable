@@ -1,6 +1,7 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 // Define types for our search results
 interface Product {
@@ -35,55 +36,62 @@ export const useSearchResults = () => {
     priceRange: [0, 5000],
     rating: 0,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
-  // Mock search results - in a real app this would come from an API
-  const mockSearchResults: Product[] = [
-    {
-      id: 'arnica-montana-30c',
-      title: 'Arnica Montana 30C',
-      description: 'For bruises, injuries and muscle soreness',
-      price: 450,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Arnica+Montana',
-      discountPercentage: 10,
-      rating: 4.8,
-      reviewCount: 124,
-      url: '/product/arnica-montana-30c'
-    },
-    {
-      id: 'belladonna-200c',
-      title: 'Belladonna 200C',
-      description: 'For fever, inflammation and acute conditions',
-      price: 550,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Belladonna',
-      discountPercentage: 0,
-      rating: 4.7,
-      reviewCount: 89,
-      url: '/product/belladonna-200c'
-    },
-    {
-      id: 'nux-vomica-30c',
-      title: 'Nux Vomica 30C',
-      description: 'For digestive issues and hangover',
-      price: 380,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Nux+Vomica',
-      discountPercentage: 5,
-      rating: 4.9,
-      reviewCount: 102,
-      url: '/product/nux-vomica-30c'
-    },
-    {
-      id: 'bach-rescue-remedy',
-      title: 'Bach Flower Rescue Remedy',
-      description: 'For stress, anxiety and emotional balance',
-      price: 850,
-      imageSrc: 'https://placehold.co/300x300/bahola-blue/white?text=Rescue+Remedy',
-      discountPercentage: 0,
-      rating: 4.9,
-      reviewCount: 156,
-      url: '/product/bach-rescue-remedy'
+  // Fetch products from Supabase
+  const fetchProducts = useCallback(async (searchTerm: string) => {
+    setIsLoading(true);
+
+    try {
+      let query = supabase
+        .from('products')
+        .select(`
+          id, 
+          name,
+          description,
+          price,
+          image,
+          category:category_id(name),
+          subcategory:subcategory_id(name)
+        `);
+
+      // Apply search filter if we have a search term
+      if (searchTerm.trim()) {
+        query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+      }
+
+      const { data, error } = await query;
+      
+      if (error) {
+        console.error('Error fetching products:', error);
+        setSearchResults([]);
+      } else {
+        console.log('Fetched products:', data);
+        
+        // Transform the data to match our Product interface
+        const transformedProducts: Product[] = data.map(product => ({
+          id: product.id,
+          title: product.name,
+          description: product.description || 'No description available',
+          price: product.price,
+          imageSrc: product.image || '/placeholder.svg',
+          discountPercentage: 0, // Default value
+          rating: 4.5, // Default value
+          reviewCount: 10, // Default value
+          url: `/product/${product.id}`
+        }));
+        
+        setSearchResults(transformedProducts);
+      }
+    } catch (error) {
+      console.error('Error in fetch products:', error);
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
     }
-  ];
-  
+  }, []);
+
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -102,9 +110,17 @@ export const useSearchResults = () => {
     }
   }, [debouncedSearchValue, navigate, queryParam]);
   
-  // This would be replaced with a real search function in a production app
-  const [filteredResults, setFilteredResults] = useState<Product[]>(mockSearchResults);
-  
+  // Fetch products when debounced search value changes
+  useEffect(() => {
+    fetchProducts(debouncedSearchValue);
+  }, [debouncedSearchValue, fetchProducts]);
+
+  // Apply filters and sorting
+  useEffect(() => {
+    // Apply additional filters and sorting here if needed
+    // This would modify the searchResults further based on filters and sort options
+  }, [filters, sortOption]);
+
   // Handle search submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,55 +128,6 @@ export const useSearchResults = () => {
       navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
     }
   };
-
-  // Apply filters and sorting
-  useEffect(() => {
-    let results = [...mockSearchResults];
-    
-    // Filter by search term
-    if (debouncedSearchValue.trim()) {
-      results = results.filter(product => 
-        product.title.toLowerCase().includes(debouncedSearchValue.toLowerCase()) ||
-        product.description.toLowerCase().includes(debouncedSearchValue.toLowerCase())
-      );
-    }
-    
-    // Apply category filters
-    if (filters.categories.length > 0) {
-      // In a real app, this would filter by actual categories
-      // This is just a mock implementation
-      results = results.slice(0, 2);
-    }
-    
-    // Apply price range filter
-    results = results.filter(
-      product => product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1]
-    );
-    
-    // Apply rating filter
-    if (filters.rating > 0) {
-      results = results.filter(product => product.rating >= filters.rating);
-    }
-    
-    // Apply sorting
-    switch (sortOption) {
-      case 'price-low':
-        results.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        results.sort((a, b) => b.price - a.price);
-        break;
-      case 'popular':
-        results.sort((a, b) => b.reviewCount - a.reviewCount);
-        break;
-      case 'rating':
-        results.sort((a, b) => b.rating - a.rating);
-        break;
-      // 'relevance' is the default, no sorting needed
-    }
-    
-    setFilteredResults(results);
-  }, [debouncedSearchValue, filters, sortOption, mockSearchResults]);
 
   return {
     queryParam,
@@ -170,7 +137,8 @@ export const useSearchResults = () => {
     setFilters,
     sortOption,
     setSortOption,
-    searchResults: filteredResults,
+    searchResults,
+    isLoading,
     handleSearch
   };
 };
