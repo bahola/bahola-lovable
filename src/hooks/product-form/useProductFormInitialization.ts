@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { ProductFormValues } from './productFormSchema';
+import { ProductVariation } from '@/types/product';
 
 export function useProductFormInitialization(initialProduct?: any) {
   const [productId, setProductId] = useState<string | null>(null);
@@ -30,6 +31,18 @@ export function useProductFormInitialization(initialProduct?: any) {
       const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
       setImageUrls(imageUrlsValue);
       
+      // Format variations to ensure they match the ProductVariation type
+      let formattedVariations: ProductVariation[] = [];
+      if (Array.isArray(initialProduct.product_variations)) {
+        formattedVariations = initialProduct.product_variations.map((v: any) => ({
+          potency: v.potency || '',
+          packSize: v.pack_size || '',
+          price: Number(v.price) || 0,
+          stock: Number(v.stock) || 0,
+          weight: Number(v.weight) || 0,
+        }));
+      }
+      
       // Return formatted initial values
       return {
         name: initialProduct.name || "",
@@ -47,15 +60,7 @@ export function useProductFormInitialization(initialProduct?: any) {
         taxClass: initialProduct.tax_class || "5",
         potencies: initialProduct.potencies || [],
         packSizes: initialProduct.pack_sizes || [],
-        variations: Array.isArray(initialProduct.product_variations) 
-          ? initialProduct.product_variations.map((v: any) => ({
-              potency: v.potency || '',
-              packSize: v.pack_size || '',
-              price: v.price || 0,
-              stock: v.stock || 0,
-              weight: v.weight || 0,
-            }))
-          : [],
+        variations: formattedVariations,
         upsellProducts: initialProduct.upsell_products || [],
         crossSellProducts: initialProduct.cross_sell_products || [],
       };

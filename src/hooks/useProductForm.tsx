@@ -70,13 +70,15 @@ export function useProductForm(
   useEffect(() => {
     // Only update if initial images have changed and are different 
     // from the current imageUrls to prevent infinite loops
-    const initialUrlsString = JSON.stringify(initialImageUrls);
-    const currentUrlsString = JSON.stringify(imageUrls);
-    
-    if (initialUrlsString !== currentUrlsString && initialImageUrls.length > 0) {
-      setImageUrls(initialImageUrls);
+    if (initialImageUrls && initialImageUrls.length > 0) {
+      const initialUrlsString = JSON.stringify(initialImageUrls);
+      const currentUrlsString = JSON.stringify(imageUrls);
+      
+      if (initialUrlsString !== currentUrlsString) {
+        setImageUrls(initialImageUrls);
+      }
     }
-  }, [initialImageUrls]);
+  }, [initialImageUrls, imageUrls, setImageUrls]);
 
   return {
     form,
