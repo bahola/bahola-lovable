@@ -8,7 +8,7 @@ import {
   FeaturedProductsSection, 
   AboutSection,
   TestimonialsSection 
-} from '@/components/FeaturesSections';
+} from '@/components/features';
 import { Footer } from '@/components/Footer';
 
 const Index = () => {
