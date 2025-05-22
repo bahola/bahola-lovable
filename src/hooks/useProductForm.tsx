@@ -14,6 +14,15 @@ export function useProductForm(
   initialProduct?: any,
   isEditing = false
 ) {
+  // Get initial values first
+  const {
+    productId,
+    setProductId,
+    imageUrls: initialImageUrls,
+    setImageUrls: setInitialImageUrls,
+    getInitialValues
+  } = useProductFormInitialization(initialProduct);
+
   // Form initialization with validation
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -23,21 +32,12 @@ export function useProductForm(
   const [activeTab, setActiveTab] = useState('general');
   const productType = form.watch('type');
 
-  // Initialize form components
-  const {
-    productId,
-    setProductId,
-    imageUrls: initialImageUrls,
-    setImageUrls: setInitialImageUrls,
-    getInitialValues
-  } = useProductFormInitialization(initialProduct);
-
   // Reset form when initialProduct changes
   useEffect(() => {
     if (initialProduct) {
       form.reset(getInitialValues(initialProduct));
     }
-  }, [initialProduct, form]);
+  }, [initialProduct, form, getInitialValues]);
 
   const {
     imageUrls,
@@ -69,7 +69,7 @@ export function useProductForm(
   // Sync imageUrls between hooks
   useEffect(() => {
     setImageUrls(initialImageUrls);
-  }, [initialImageUrls]);
+  }, [initialImageUrls, setImageUrls]);
 
   return {
     form,
