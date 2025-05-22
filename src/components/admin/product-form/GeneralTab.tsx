@@ -252,7 +252,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           )}
         />
 
-        {/* Category Selection with Add New Button */}
+        {/* Category Selection with Add New Button - FIX HERE: MOVED className to SelectTrigger */}
         <FormField
           control={form.control}
           name="category"
@@ -272,10 +272,9 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                     form.setValue("subcategory", "");
                   }} 
                   value={field.value || ""}
-                  className="flex-1"
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="flex-1">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                   </FormControl>
@@ -304,7 +303,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           )}
         />
         
-        {/* Subcategory Selection with Add New Button */}
+        {/* Subcategory Selection with Add New Button - FIX HERE: MOVED className to SelectTrigger */}
         <FormField
           control={form.control}
           name="subcategory"
@@ -321,10 +320,9 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   onValueChange={field.onChange} 
                   value={field.value || ""}
                   disabled={!selectedCategory || loading}
-                  className="flex-1"
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="flex-1">
                       <SelectValue placeholder={loading ? "Loading..." : !selectedCategory ? "Select a category first" : "Select a subcategory"} />
                     </SelectTrigger>
                   </FormControl>
@@ -354,7 +352,6 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           )}
         />
 
-        {/* Rest of the form fields */}
         <FormField
           control={form.control}
           name="type"
