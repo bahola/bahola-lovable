@@ -61,10 +61,10 @@ const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVar
             }`}
             onClick={() => handleVariationClick(variation)}
           >
-            {hasPotencyVariations && variation.potency && variation.potency.trim() !== '' && variation.potency !== 'undefined' && (
+            {variation.potency && variation.potency.trim() !== '' && variation.potency !== 'undefined' && (
               <div className="font-medium">{variation.potency}</div>
             )}
-            {hasPackSizeVariations && variation.pack_size && variation.pack_size.trim() !== '' && variation.pack_size !== 'undefined' && (
+            {variation.pack_size && variation.pack_size.trim() !== '' && variation.pack_size !== 'undefined' && (
               <div className="text-sm">{variation.pack_size}</div>
             )}
             <div className="text-bahola-blue-600">₹{variation.price}</div>
