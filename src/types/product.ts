@@ -23,4 +23,6 @@ export interface Product {
   packSizes?: string[];
   potencies?: string[];
   variations?: ProductVariation[];
+  tax_status?: 'taxable' | 'non-taxable';
+  tax_class?: '0' | '5' | '12';
 }

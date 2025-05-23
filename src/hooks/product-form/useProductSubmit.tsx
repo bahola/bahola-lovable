@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,7 @@ interface UseProductSubmitProps {
   onProductAdded?: (product?: any) => void;
   isEditing: boolean;
   productId: string | null;
+  imageUrls: string[];
 }
 
 export const useProductSubmit = ({
@@ -17,7 +19,8 @@ export const useProductSubmit = ({
   variations,
   onProductAdded,
   isEditing,
-  productId
+  productId,
+  imageUrls
 }: UseProductSubmitProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -25,12 +28,17 @@ export const useProductSubmit = ({
   const onSubmit = async (values: any) => {
     setIsSubmitting(true);
     console.log('Submitting product form with values:', values);
+    console.log('Current image URLs:', imageUrls);
     
     try {
       let product;
       
       // Format dimensions string (length/width/height)
       const dimensions = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
+      
+      // Get the main image URL from imageUrls if available
+      const mainImage = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
+      console.log('Using main image for product:', mainImage);
       
       // Prepare product data
       const productData = {
@@ -43,14 +51,18 @@ export const useProductSubmit = ({
         stock: values.type === 'simple' ? values.stock : null,
         weight: values.weight,
         dimensions,
-        image: form.getValues('image') || null,
+        // Use the first image URL as the main product image
+        image: mainImage,
         category_id: values.category || null,
         subcategory_id: values.subcategory || null,
         potencies: values.type === 'variable' ? values.potencies : null,
         pack_sizes: values.type === 'variable' ? values.packSizes : null,
         benefits: values.benefits || [],
         usage_instructions: values.usage_instructions || null,
-        ingredients: values.ingredients || null
+        ingredients: values.ingredients || null,
+        // Add tax fields
+        tax_status: values.taxStatus || 'taxable',
+        tax_class: values.taxClass || '5'
       };
       
       console.log('Submitting product data:', productData);

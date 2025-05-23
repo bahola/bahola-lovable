@@ -139,14 +139,22 @@ const DescriptionsTab = ({ form, imageUrls, handleAddImage, handleChangeImage, h
               <div key={index} className="flex items-center gap-2">
                 <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
                   {url ? (
-                    <img src={url} alt={`Product ${index}`} className="w-full h-full object-cover" />
+                    <img 
+                      src={url} 
+                      alt={`Product ${index}`} 
+                      className="w-full h-full object-cover" 
+                      onError={() => console.log(`Failed to load preview for image URL: ${url}`)}
+                    />
                   ) : (
                     <Image className="h-6 w-6 text-gray-400" />
                   )}
                 </div>
                 <Input
                   value={url}
-                  onChange={(e) => handleChangeImage(index, e.target.value)}
+                  onChange={(e) => {
+                    console.log(`Changing image URL at index ${index} to: ${e.target.value}`);
+                    handleChangeImage(index, e.target.value);
+                  }}
                   placeholder="Image URL"
                   className="flex-1"
                 />
@@ -163,7 +171,10 @@ const DescriptionsTab = ({ form, imageUrls, handleAddImage, handleChangeImage, h
             <Button
               type="button"
               variant="outline"
-              onClick={handleAddImage}
+              onClick={() => {
+                console.log('Adding new image URL');
+                handleAddImage();
+              }}
             >
               <Plus className="h-4 w-4 mr-2" /> Add Image
             </Button>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -97,7 +98,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Set product ID for editing
       setProductId(initialProduct.id);
       
-      // Return formatted initial values with subcategory
+      // Return formatted initial values with subcategory and tax fields
       return {
         name: initialProduct.name || "",
         type: initialProduct.type || "simple",
@@ -173,7 +174,8 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     variations,
     onProductAdded,
     isEditing,
-    productId
+    productId,
+    imageUrls // Pass imageUrls to useProductSubmit
   });
 
   // Initialize state values from initialProduct only once
@@ -182,7 +184,10 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Initialize state values
       const potencies = initialProduct.potencies || [];
       const packSizes = initialProduct.pack_sizes || [];
+      
+      // Initialize image URLs with the product's main image
       const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
+      console.log('Setting initial image URLs:', imageUrlsValue);
       
       setInitialVariations(
         potencies, 
@@ -203,6 +208,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
 
   // Wrap submitHandler to handle form reset
   const onSubmit = useCallback(async (values: ProductFormSchema) => {
+    console.log('Submitting with image URLs:', imageUrls);
     const result = await submitHandler(values);
     
     if (result && !isEditing) {
@@ -212,7 +218,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       setInitialImages([]);
       setActiveTab("general");
     }
-  }, [submitHandler, isEditing, form, setInitialVariations, setInitialImages]);
+  }, [submitHandler, isEditing, form, setInitialVariations, setInitialImages, imageUrls]);
 
   return {
     form,
