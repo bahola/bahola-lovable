@@ -55,7 +55,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
     const fetchReviews = async () => {
       setIsLoading(true);
       try {
-        // First, fetch the reviews
+        // Fetch the reviews
         const { data: reviewsData, error: reviewsError } = await supabase
           .from('product_reviews')
           .select(`
@@ -72,25 +72,10 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
           throw reviewsError;
         }
         
-        // Next, get user emails for each review if available
-        const reviewsWithUserData = await Promise.all((reviewsData || []).map(async (review) => {
-          if (!review.user_id) return { ...review, user_email: 'Unknown User' };
-          
-          const { data: userData, error: userError } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', review.user_id)
-            .single();
-          
-          // If we can't get the user email, use the first part of the ID as a placeholder
-          const userEmail = userError ? 
-            `User ${review.user_id.substring(0, 6)}` : 
-            (userData?.email || `User ${review.user_id.substring(0, 6)}`);
-          
-          return {
-            ...review,
-            user_email: userEmail
-          };
+        // Since we can't easily access user emails, we'll use placeholder names
+        const reviewsWithUserData = (reviewsData || []).map((review) => ({
+          ...review,
+          user_email: `User ${review.user_id.substring(0, 8)}`
         }));
         
         setReviews(reviewsWithUserData || []);
@@ -165,7 +150,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
         // Add user email to the new review
         const newReviewWithUser: Review = {
           ...data[0],
-          user_email: user.email || `User ${user.id.substring(0, 6)}`
+          user_email: user.email || `User ${user.id.substring(0, 8)}`
         };
         
         setReviews([newReviewWithUser, ...reviews]);
