@@ -38,9 +38,25 @@ export const useProductSubmit = ({
       // Format dimensions as a string for storage
       const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
       
-      // Set category and subcategory to null if empty
+      // Handle category and subcategory IDs
       const categoryId = values.category && values.category !== "" ? values.category : null;
-      const subcategoryId = values.subcategory && values.subcategory !== "" ? values.subcategory : null;
+      
+      // For subcategory, we need to handle special cases where it might not be a UUID
+      let subcategoryId = null;
+      if (values.subcategory && values.subcategory !== "") {
+        // Check if it looks like a UUID (has dashes) or is a special identifier
+        if (values.subcategory.includes('-') && values.subcategory.length > 20) {
+          // It's likely a UUID from the database
+          subcategoryId = values.subcategory;
+        } else {
+          // It's a special identifier like "nutritive" or "a", store as-is
+          // For now, we'll store these as null since the database expects UUIDs
+          // This needs to be handled differently - either create entries in subcategories table
+          // or modify the database schema to allow text subcategories
+          console.log('Non-UUID subcategory detected:', values.subcategory);
+          subcategoryId = null; // For now, set to null to avoid UUID error
+        }
+      }
       
       console.log('Category ID:', categoryId, 'Subcategory ID:', subcategoryId);
       
@@ -160,7 +176,7 @@ export const useProductSubmit = ({
       // Display success message
       toast({
         title: isEditing ? "Product updated successfully" : "Product saved successfully",
-        description: `The product "${values.name}" has been ${isEditing ? 'updated' : 'added'} to your inventory.`,
+        description: `The product "${values.name}" has been ${isEditing ? 'updated' : 'added'} to your inventory.${subcategoryId === null && values.subcategory ? ' Note: Subcategory was not saved due to system limitations.' : ''}`,
       });
       
       // Call the callback if provided

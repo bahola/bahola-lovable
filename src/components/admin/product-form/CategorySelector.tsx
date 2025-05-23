@@ -2,17 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Layers } from 'lucide-react';
-import { initialCategories } from '../CategorySelect';
 import { UseFormReturn } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
 
-// Define subcategory type
+// Define interfaces
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface Subcategory {
   id: string;
   name: string;
 }
 
-// Health concerns from Shop by Concern mega menu
+// Health concerns for Specialty Combinations
 const healthConcerns = [
   'Allergies', 'Cancer', 'Heart Health', 'Child Care', 
   'Ear Nose Throat', 'Eye Care', 'Gut Health', 'Womens Care',
@@ -33,15 +37,40 @@ interface CategorySelectorProps {
 }
 
 const CategorySelector = ({ form }: CategorySelectorProps) => {
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
   const selectedCategory = form.watch("category");
 
-  // Find specific categories
+  // Fetch categories from database
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('product_categories')
+          .select('id, name')
+          .order('name');
+
+        if (error) {
+          console.error('Error fetching categories:', error);
+          return;
+        }
+
+        setCategories(data || []);
+      } catch (error) {
+        console.error('Error in fetchCategories:', error);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Find specific categories by name
   const specialtyCombinationsCategory = categories.find(cat => 
-    cat.name.toLowerCase().includes('specialty') || 
-    cat.name.toLowerCase().includes('combination')
+    cat.name.toLowerCase().includes('specialty') && cat.name.toLowerCase().includes('combination')
   );
 
   const motherTincturesCategory = categories.find(cat => 
@@ -66,7 +95,7 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
 
       // If it's the Specialty Combinations category, use health concerns
       if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
-        const concernSubcategories = healthConcerns.map((concern, index) => ({
+        const concernSubcategories = healthConcerns.map((concern) => ({
           id: concern.toLowerCase().replace(/\s+/g, '-'),
           name: concern
         }));
@@ -82,13 +111,14 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
         return;
       }
 
-      // Otherwise, fetch from database as before
+      // Otherwise, fetch from database
       setIsLoadingSubcategories(true);
       try {
         const { data, error } = await supabase
           .from('product_subcategories')
           .select('id, name')
-          .eq('category_id', selectedCategory);
+          .eq('category_id', selectedCategory)
+          .order('name');
 
         if (error) {
           console.error('Error fetching subcategories:', error);
@@ -106,7 +136,7 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
     fetchSubcategories();
   }, [selectedCategory, specialtyCombinationsCategory, motherTincturesCategory, dilutionsCategory, lmPotenciesCategory]);
 
-  // Helper function to get subcategory label
+  // Helper functions for UI text
   const getSubcategoryLabel = () => {
     if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
       return "(Health Concerns)";
@@ -119,7 +149,6 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
     return "";
   };
 
-  // Helper function to get placeholder text
   const getPlaceholderText = () => {
     if (isLoadingSubcategories) return "Loading subcategories...";
     if (subcategories.length === 0) return "No subcategories available";
@@ -135,7 +164,6 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
     return "Select a subcategory";
   };
 
-  // Helper function to get description text
   const getDescriptionText = () => {
     if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
       return "Select a health concern for your specialty combination product.";
@@ -150,7 +178,7 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
 
   return (
     <>
-      {/* Category Selection as Dropdown */}
+      {/* Category Selection */}
       <FormField
         control={form.control}
         name="category"
@@ -168,11 +196,12 @@ const CategorySelector = ({ form }: CategorySelectorProps) => {
                 // Reset subcategory when category changes
                 form.setValue("subcategory", "");
               }}
-              defaultValue={field.value}
+              value={field.value || ""}
+              disabled={isLoadingCategories}
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder={isLoadingCategories ? "Loading categories..." : "Select a category"} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
