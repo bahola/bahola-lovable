@@ -34,8 +34,6 @@ const SearchResults = () => {
         
         <main className="flex-1">
           <SearchResultsBar 
-            query={queryParam}
-            resultCount={searchResults.length}
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             onSearch={handleSearch}
@@ -46,6 +44,8 @@ const SearchResults = () => {
               {isLoading ? 'Searching...' : `${searchResults.length} products found`}
             </div>
             <SearchSorting 
+              resultsCount={searchResults.length}
+              queryParam={queryParam}
               sortOption={sortOption}
               onSortChange={setSortOption}
             />
@@ -57,7 +57,7 @@ const SearchResults = () => {
               <p className="mt-4 text-gray-600">Searching for products...</p>
             </div>
           ) : searchResults.length === 0 ? (
-            <NoResults searchTerm={queryParam} />
+            <NoResults queryParam={queryParam} />
           ) : (
             <ProductGrid 
               products={searchResults}
