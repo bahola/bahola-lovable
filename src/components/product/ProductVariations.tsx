@@ -47,6 +47,16 @@ const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVar
     }
   };
 
+  // Helper function to check if a variation has a valid potency
+  const hasValidPotency = (variation: Variation) => {
+    return variation.potency && variation.potency.trim() !== '' && variation.potency !== 'undefined';
+  };
+
+  // Helper function to check if a variation has a valid pack size
+  const hasValidPackSize = (variation: Variation) => {
+    return variation.pack_size && variation.pack_size.trim() !== '' && variation.pack_size !== 'undefined';
+  };
+
   return (
     <div className="mb-6">
       <h2 className="font-semibold mb-2">Available Variations</h2>
@@ -61,10 +71,10 @@ const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVar
             }`}
             onClick={() => handleVariationClick(variation)}
           >
-            {variation.potency && variation.potency.trim() !== '' && variation.potency !== 'undefined' && (
+            {hasValidPotency(variation) && (
               <div className="font-medium">{variation.potency}</div>
             )}
-            {variation.pack_size && variation.pack_size.trim() !== '' && variation.pack_size !== 'undefined' && (
+            {hasValidPackSize(variation) && (
               <div className="text-sm">{variation.pack_size}</div>
             )}
             <div className="text-bahola-blue-600">₹{variation.price}</div>
