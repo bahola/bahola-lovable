@@ -23,7 +23,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   return (
     <nav className="hidden lg:flex items-center space-x-2">
       <div
-        className="main-menu-item flex items-center relative"
+        className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('concern')}
         onMouseLeave={onMenuLeave}
       >
@@ -33,7 +33,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       </div>
 
       <div
-        className="main-menu-item flex items-center relative"
+        className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('category')}
         onMouseLeave={onMenuLeave}
       >
@@ -43,7 +43,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       </div>
 
       <div
-        className="main-menu-item flex items-center relative"
+        className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('doctors')}
         onMouseLeave={onMenuLeave}
       >
@@ -53,13 +53,11 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       </div>
 
       <div 
-        className="main-menu-item flex items-center relative"
+        className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('bachflower')}
         onMouseLeave={onMenuLeave}
       >
-        <Link to="/bach-flower" className="flex items-center">
-          <span className="text-gray-800 font-medium">Bach Flower</span>
-        </Link>
+        <span className="text-gray-800 font-medium">Bach Flower</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
         <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
       </div>

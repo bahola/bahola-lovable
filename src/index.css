@@ -48,6 +48,12 @@
     --bahola-blue-500: 205 100% 29%;
     --bahola-blue-600: 205 100% 25%;
     --bahola-blue-400: 205 100% 35%;
+    --bahola-neutral-100: 0 0% 96%;
+    --bahola-neutral-200: 0 0% 91%;
+    --bahola-neutral-400: 0 0% 74%;
+    --bahola-neutral-600: 0 0% 46%;
+    --bahola-neutral-700: 0 0% 38%;
+    --bahola-neutral-800: 0 0% 25%;
   }
 
   .dark {
@@ -91,10 +97,18 @@
 
   .mega-menu.mega-menu-full {
     width: 60vw; /* 60% of viewport width - using vw units for viewport width */
+    max-width: 1200px;
+    left: 50%;
+    transform: translateX(-50%) translateY(2px);
   }
 
   .mega-menu-open {
-    @apply visible opacity-100 translate-y-0;
+    @apply visible opacity-100;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .mega-menu-open:not(.mega-menu-full) {
+    transform: translateY(0);
   }
 
   .cloud-bg {

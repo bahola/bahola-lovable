@@ -10,6 +10,10 @@ import Register from './pages/Register';
 import ProductsManagement from './pages/admin/ProductsManagement';
 import EditProduct from './pages/admin/EditProduct';
 import Wishlist from './pages/Wishlist';
+import AdminDashboard from './pages/AdminDashboard';
+import NotFound from './pages/NotFound';
+import Homeopathy from './pages/Homeopathy';
+import ILoveHomeopathy from './pages/ILoveHomeopathy';
 
 function App() {
   return (
@@ -21,9 +25,31 @@ function App() {
         <Route path="/search" element={<SearchResults />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/homeopathy" element={<Homeopathy />} />
+        <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
+        <Route path="/bach-flower" element={<CategoryPage />} />
+        <Route path="/bach-flower/:subcategory" element={<CategoryPage />} />
+        <Route path="/concern/:concernId" element={<CategoryPage />} />
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/products" element={<ProductsManagement />} />
         <Route path="/admin/products/edit/:productId" element={<EditProduct />} />
-        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/admin/orders" element={<AdminDashboard />} />
+        <Route path="/admin/customers" element={<AdminDashboard />} />
+        <Route path="/admin/discounts" element={<AdminDashboard />} />
+        <Route path="/admin/analytics" element={<AdminDashboard />} />
+        <Route path="/admin/settings" element={<AdminDashboard />} />
+        
+        {/* Professional routes */}
+        <Route path="/professional/materia-medica" element={<NotFound />} />
+        <Route path="/professional/remedy-deep-dive" element={<NotFound />} />
+        <Route path="/professional/case-studies" element={<NotFound />} />
+        <Route path="/professional/signup" element={<Register />} />
+        
+        {/* Catch all route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
