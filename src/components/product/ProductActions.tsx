@@ -15,26 +15,28 @@ interface ProductActionsProps {
   };
   quantity: number;
   setQuantity: (quantity: number) => void;
+  handleAddToCart?: () => void;
+  isOutOfStock?: boolean;
 }
 
-const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) => {
+const ProductActions: React.FC<ProductActionsProps> = ({ 
+  product, 
+  quantity, 
+  handleAddToCart, 
+  isOutOfStock = false 
+}) => {
   const { toast } = useToast();
   const [isAddingToWishlist, setIsAddingToWishlist] = React.useState(false);
 
-  const handleAddToCart = () => {
+  const defaultAddToCart = () => {
     if (!product) return;
     
-    // Get current cart from localStorage or initialize an empty array
     const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
-    
-    // Check if product already exists in cart
     const existingItemIndex = currentCart.findIndex((item: any) => item.id === product.id);
     
     if (existingItemIndex >= 0) {
-      // Update quantity if product already in cart
       currentCart[existingItemIndex].quantity += quantity;
     } else {
-      // Add new product with specified quantity
       currentCart.push({
         id: product.id,
         name: product.name,
@@ -44,7 +46,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) =>
       });
     }
     
-    // Save updated cart to localStorage
     localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
     
     toast({
@@ -57,7 +58,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) =>
     try {
       setIsAddingToWishlist(true);
       
-      // Check if user is logged in
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData?.session?.user;
       
@@ -69,7 +69,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) =>
         return;
       }
       
-      // Check if product is already in wishlist
       const { data: existingItems } = await supabase
         .from('wishlist')
         .select('*')
@@ -84,7 +83,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) =>
         return;
       }
       
-      // Add to wishlist
       const { error } = await supabase
         .from('wishlist')
         .insert({
@@ -118,7 +116,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) =>
         console.error('Error sharing:', err);
       });
     } else {
-      // Fallback for browsers that don't support navigator.share
       navigator.clipboard.writeText(window.location.href).then(() => {
         toast({
           title: "Link copied",
@@ -128,18 +125,18 @@ const ProductActions: React.FC<ProductActionsProps> = ({ product, quantity }) =>
     }
   };
 
-  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
+  const finalIsOutOfStock = isOutOfStock || (product.stock !== undefined && product.stock <= 0);
 
   return (
     <div className="flex flex-col gap-3 mt-6">
       <Button 
         size="lg" 
         className="w-full flex items-center gap-2" 
-        disabled={isOutOfStock}
-        onClick={handleAddToCart}
+        disabled={finalIsOutOfStock}
+        onClick={handleAddToCart || defaultAddToCart}
       >
         <ShoppingCart className="h-5 w-5" />
-        {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+        {finalIsOutOfStock ? "Out of Stock" : "Add to Cart"}
       </Button>
       
       <div className="grid grid-cols-2 gap-3">

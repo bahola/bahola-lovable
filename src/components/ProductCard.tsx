@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface ProductProps {
   product: {
-    id: number | string; // Updated to accept both string and number types
+    id: number | string;
     name: string;
     price: number;
     rating: number;
@@ -16,7 +16,6 @@ interface ProductProps {
   }
 }
 
-// Create a different interface that matches what's being used in CategoryPage and SearchResults
 interface ProductCardProps {
   title: string;
   description: string;
@@ -28,26 +27,20 @@ interface ProductCardProps {
   url: string;
 }
 
-// Original ProductCard component
 export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) => {
   const { toast } = useToast();
   const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
   
-  const handleAddToCart = async (e: React.MouseEvent, productId: string | number, productName: string, productPrice: number, productImage: string) => {
+  const handleAddToCart = async (e: React.MouseEvent, productId: string, productName: string, productPrice: number, productImage: string) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // Get current cart from localStorage or initialize an empty array
     const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
-    
-    // Check if product already exists in cart
     const existingItem = currentCart.find((item: any) => item.id === productId);
     
     if (existingItem) {
-      // Increment quantity if product already in cart
       existingItem.quantity += 1;
     } else {
-      // Add new product with quantity 1
       currentCart.push({
         id: productId,
         name: productName,
@@ -57,24 +50,21 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
       });
     }
     
-    // Save updated cart to localStorage
     localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
     
-    // Notify user
     toast({
       title: "Added to cart",
       description: `${productName} has been added to your cart.`
     });
   };
 
-  const handleAddToWishlist = async (e: React.MouseEvent, productId: string | number) => {
+  const handleAddToWishlist = async (e: React.MouseEvent, productId: string) => {
     e.preventDefault();
     e.stopPropagation();
     
     try {
       setIsAddingToWishlist(true);
       
-      // Check if user is logged in
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData?.session?.user;
       
@@ -86,7 +76,6 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
         return;
       }
       
-      // Check if product is already in wishlist
       const { data: existingItems } = await supabase
         .from('wishlist')
         .select('*')
@@ -101,7 +90,6 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
         return;
       }
       
-      // Add item to wishlist
       const { error } = await supabase
         .from('wishlist')
         .insert({
@@ -127,11 +115,10 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
     }
   };
   
-  // Check which type of props we received
   if ('product' in props) {
-    // Handle the original ProductProps format
     const { product } = props;
     const imageUrl = product.image && product.image !== '' ? product.image : '/placeholder.svg';
+    const productIdString = String(product.id);
     
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
@@ -148,7 +135,7 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
             />
             <button 
               className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors"
-              onClick={(e) => handleAddToWishlist(e, product.id)}
+              onClick={(e) => handleAddToWishlist(e, productIdString)}
               disabled={isAddingToWishlist}
             >
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />
@@ -173,7 +160,7 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
             <Button 
               size="sm" 
               className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2"
-              onClick={(e) => handleAddToCart(e, product.id, product.name, product.price, product.image)}
+              onClick={(e) => handleAddToCart(e, productIdString, product.name, product.price, product.image)}
             >
               <ShoppingCart size={18} />
             </Button>
@@ -182,7 +169,6 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
       </div>
     );
   } else {
-    // Handle the CategoryPage/SearchResults format
     const { title, description, price, imageSrc, discountPercentage, rating, reviewCount, url } = props;
     const imageUrl = imageSrc && imageSrc !== '' ? imageSrc : '/placeholder.svg';
     const productId = url.split('/').pop() || '';

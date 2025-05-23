@@ -14,7 +14,6 @@ const WishlistPage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
 
-  // Check if user is authenticated
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -28,7 +27,6 @@ const WishlistPage = () => {
     checkUser();
   }, [navigate]);
 
-  // Fetch wishlist items
   useEffect(() => {
     const fetchWishlist = async () => {
       if (!user) return;
@@ -80,7 +78,6 @@ const WishlistPage = () => {
         
       if (error) throw error;
       
-      // Update the local state
       setWishlistItems(wishlistItems.filter(item => item.product_id !== productId));
       
       toast({
@@ -98,17 +95,12 @@ const WishlistPage = () => {
   };
 
   const handleAddToCart = (product: any) => {
-    // Get current cart from localStorage or initialize an empty array
     const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
-    
-    // Check if product already exists in cart
     const existingItem = currentCart.find((item: any) => item.id === product.id);
     
     if (existingItem) {
-      // Increment quantity if product already in cart
       existingItem.quantity += 1;
     } else {
-      // Add new product with quantity 1
       currentCart.push({
         id: product.id,
         name: product.name,
@@ -118,10 +110,8 @@ const WishlistPage = () => {
       });
     }
     
-    // Save updated cart to localStorage
     localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
     
-    // Notify user
     toast({
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`
@@ -150,7 +140,7 @@ const WishlistPage = () => {
   }
 
   if (!user) {
-    return null; // Will redirect to login in useEffect
+    return null;
   }
 
   return (
@@ -160,7 +150,7 @@ const WishlistPage = () => {
       {wishlistItems.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-lg text-muted-foreground mb-4">Your wishlist is empty</p>
-          <Button onClick={() => navigate('/products')}>Continue Shopping</Button>
+          <Button onClick={() => navigate('/')}>Continue Shopping</Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
