@@ -80,9 +80,11 @@ export const useProductData = (productId: string | undefined) => {
             }
           }
           
-          // Create array of images from the main image
-          const mainImage = data.image || '/placeholder.svg';
-          const imageArray = mainImage ? [mainImage] : ['/placeholder.svg'];
+          // Handle the main image - use the image from database if available, otherwise empty
+          const mainImage = data.image || '';
+          
+          // Create array of images - only include valid image URLs
+          const imageArray = mainImage ? [mainImage] : [];
           
           // Transform the data into the shape we need for the UI
           setProduct({
