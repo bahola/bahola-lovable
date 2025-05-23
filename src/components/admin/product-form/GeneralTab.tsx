@@ -30,16 +30,34 @@ const healthConcerns = [
   'Urinary care'
 ];
 
+// Alphabet subcategories for category-based products
+const alphabetSubcategories = Array.from({ length: 26 }, (_, i) => ({
+  id: String.fromCharCode(65 + i).toLowerCase(),
+  name: String.fromCharCode(65 + i)
+}));
+
 const GeneralTab = ({ form }: GeneralTabProps) => {
   const [categories, setCategories] = useState(initialCategories);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
   const selectedCategory = form.watch("category");
 
-  // Find the "Specialty Combinations" category
+  // Find specific categories
   const specialtyCombinationsCategory = categories.find(cat => 
     cat.name.toLowerCase().includes('specialty') || 
     cat.name.toLowerCase().includes('combination')
+  );
+
+  const motherTincturesCategory = categories.find(cat => 
+    cat.name.toLowerCase().includes('mother') && cat.name.toLowerCase().includes('tincture')
+  );
+
+  const dilutionsCategory = categories.find(cat => 
+    cat.name.toLowerCase().includes('dilution')
+  );
+
+  const lmPotenciesCategory = categories.find(cat => 
+    cat.name.toLowerCase().includes('lm') && cat.name.toLowerCase().includes('potenc')
   );
 
   // Fetch subcategories when category changes
@@ -57,6 +75,14 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           name: concern
         }));
         setSubcategories(concernSubcategories);
+        return;
+      }
+
+      // If it's Mother Tinctures, Dilutions, or LM Potencies, use alphabet
+      if ((motherTincturesCategory && selectedCategory === motherTincturesCategory.id) ||
+          (dilutionsCategory && selectedCategory === dilutionsCategory.id) ||
+          (lmPotenciesCategory && selectedCategory === lmPotenciesCategory.id)) {
+        setSubcategories(alphabetSubcategories);
         return;
       }
 
@@ -82,7 +108,49 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
     };
 
     fetchSubcategories();
-  }, [selectedCategory, specialtyCombinationsCategory]);
+  }, [selectedCategory, specialtyCombinationsCategory, motherTincturesCategory, dilutionsCategory, lmPotenciesCategory]);
+
+  // Helper function to get subcategory label
+  const getSubcategoryLabel = () => {
+    if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
+      return "(Health Concerns)";
+    }
+    if ((motherTincturesCategory && selectedCategory === motherTincturesCategory.id) ||
+        (dilutionsCategory && selectedCategory === dilutionsCategory.id) ||
+        (lmPotenciesCategory && selectedCategory === lmPotenciesCategory.id)) {
+      return "(Alphabetical)";
+    }
+    return "";
+  };
+
+  // Helper function to get placeholder text
+  const getPlaceholderText = () => {
+    if (isLoadingSubcategories) return "Loading subcategories...";
+    if (subcategories.length === 0) return "No subcategories available";
+    
+    if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
+      return "Select a health concern";
+    }
+    if ((motherTincturesCategory && selectedCategory === motherTincturesCategory.id) ||
+        (dilutionsCategory && selectedCategory === dilutionsCategory.id) ||
+        (lmPotenciesCategory && selectedCategory === lmPotenciesCategory.id)) {
+      return "Select a letter";
+    }
+    return "Select a subcategory";
+  };
+
+  // Helper function to get description text
+  const getDescriptionText = () => {
+    if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
+      return "Select a health concern for your specialty combination product.";
+    }
+    if ((motherTincturesCategory && selectedCategory === motherTincturesCategory.id) ||
+        (dilutionsCategory && selectedCategory === dilutionsCategory.id) ||
+        (lmPotenciesCategory && selectedCategory === lmPotenciesCategory.id)) {
+      return "Select the first letter of your product name for alphabetical organization.";
+    }
+    return "Select a subcategory to further classify your product.";
+  };
 
   return (
     <Card>
@@ -187,8 +255,8 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   <span className="flex items-center">
                     <Layers className="h-4 w-4 mr-1" /> 
                     Subcategory
-                    {specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id && (
-                      <span className="ml-2 text-sm text-muted-foreground">(Health Concerns)</span>
+                    {getSubcategoryLabel() && (
+                      <span className="ml-2 text-sm text-muted-foreground">{getSubcategoryLabel()}</span>
                     )}
                   </span>
                 </FormLabel>
@@ -199,15 +267,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder={
-                        isLoadingSubcategories 
-                          ? "Loading subcategories..." 
-                          : subcategories.length === 0 
-                            ? "No subcategories available" 
-                            : specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id
-                              ? "Select a health concern"
-                              : "Select a subcategory"
-                      } />
+                      <SelectValue placeholder={getPlaceholderText()} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -219,10 +279,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  {specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id 
-                    ? "Select a health concern for your specialty combination product."
-                    : "Select a subcategory to further classify your product."
-                  }
+                  {getDescriptionText()}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
