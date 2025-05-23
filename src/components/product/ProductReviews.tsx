@@ -7,15 +7,14 @@ import { Star, ThumbsUp, MessageCircle, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { supabase } from '@/integrations/supabase/client';
 
+// Updated interface to handle possible missing user info
 interface Review {
   id: string;
   rating: number;
   comment: string;
   created_at: string;
-  user: {
-    id: string;
-    email: string;
-  };
+  user_id: string;
+  user_email?: string;
 }
 
 interface ProductReviewsProps {
@@ -56,24 +55,45 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
     const fetchReviews = async () => {
       setIsLoading(true);
       try {
-        const { data, error } = await supabase
+        // First, fetch the reviews
+        const { data: reviewsData, error: reviewsError } = await supabase
           .from('product_reviews')
           .select(`
             id,
             rating,
             comment,
             created_at,
-            user_id,
-            user:user_id(id, email)
+            user_id
           `)
           .eq('product_id', productId)
           .order('created_at', { ascending: false });
           
-        if (error) {
-          throw error;
+        if (reviewsError) {
+          throw reviewsError;
         }
         
-        setReviews(data || []);
+        // Next, get user emails for each review if available
+        const reviewsWithUserData = await Promise.all((reviewsData || []).map(async (review) => {
+          if (!review.user_id) return { ...review, user_email: 'Unknown User' };
+          
+          const { data: userData, error: userError } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('id', review.user_id)
+            .single();
+          
+          // If we can't get the user email, use the first part of the ID as a placeholder
+          const userEmail = userError ? 
+            `User ${review.user_id.substring(0, 6)}` : 
+            (userData?.email || `User ${review.user_id.substring(0, 6)}`);
+          
+          return {
+            ...review,
+            user_email: userEmail
+          };
+        }));
+        
+        setReviews(reviewsWithUserData || []);
       } catch (error) {
         console.error('Error fetching reviews:', error);
         toast({
@@ -127,8 +147,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
           rating,
           comment,
           created_at,
-          user_id,
-          user:user_id(id, email)
+          user_id
         `);
         
       if (error) {
@@ -143,7 +162,13 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
           throw error;
         }
       } else if (data) {
-        setReviews([data[0], ...reviews]);
+        // Add user email to the new review
+        const newReviewWithUser: Review = {
+          ...data[0],
+          user_email: user.email || `User ${user.id.substring(0, 6)}`
+        };
+        
+        setReviews([newReviewWithUser, ...reviews]);
         setNewReview('');
         setRating(5);
         toast({
@@ -215,10 +240,12 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, reviewCount:
               <div className="flex justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarFallback>{review.user.email.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback>
+                      {review.user_email ? review.user_email.charAt(0).toUpperCase() : '?'}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{review.user.email}</p>
+                    <p className="font-medium">{review.user_email || 'Anonymous User'}</p>
                     <p className="text-sm text-bahola-neutral-500">
                       {new Date(review.created_at).toLocaleDateString()}
                     </p>
