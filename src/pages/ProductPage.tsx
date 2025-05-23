@@ -91,7 +91,10 @@ const ProductPage = () => {
             <p className="text-bahola-neutral-700">{product.description}</p>
           </div>
           
-          <ProductSpecs potency={product.potency} brand={product.brand} />
+          {/* Only show ProductSpecs if there are variations (variable product) */}
+          {product.variations && product.variations.length > 0 && (
+            <ProductSpecs potency={product.potency} brand={product.brand} />
+          )}
           
           <ProductVariations variations={product.variations} />
           
