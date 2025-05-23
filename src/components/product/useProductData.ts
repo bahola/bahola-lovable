@@ -7,6 +7,7 @@ interface ProductData {
   id: string;
   name: string;
   description: string;
+  shortDescription: string;
   price: number;
   originalPrice: number;
   discountPercentage: number;
@@ -38,6 +39,7 @@ export const useProductData = (productId: string | undefined) => {
       try {
         setLoading(true);
         
+        // Fetch product data
         const { data, error } = await supabase
           .from('products')
           .select(`
@@ -52,30 +54,56 @@ export const useProductData = (productId: string | undefined) => {
           throw error;
         }
         
+        // Fetch review count
+        const { count, error: reviewError } = await supabase
+          .from('product_reviews')
+          .select('id', { count: 'exact', head: true })
+          .eq('product_id', productId);
+          
+        if (reviewError) {
+          console.error('Error fetching review count:', reviewError);
+        }
+        
         if (data) {
+          // Calculate average rating if there are reviews
+          let avgRating = 4.8; // Default value
+          
+          if (count && count > 0) {
+            const { data: reviewData, error: ratingError } = await supabase
+              .from('product_reviews')
+              .select('rating')
+              .eq('product_id', productId);
+              
+            if (!ratingError && reviewData && reviewData.length > 0) {
+              const sum = reviewData.reduce((acc, review) => acc + review.rating, 0);
+              avgRating = parseFloat((sum / reviewData.length).toFixed(1));
+            }
+          }
+          
           // Transform the data into the shape we need for the UI
           setProduct({
             id: data.id,
             name: data.name,
-            description: data.description,
+            description: data.description || '',
+            shortDescription: data.short_description || '',
             price: data.price,
             originalPrice: data.price * 1.15, // Example: calculate original price before discount
             discountPercentage: 14, // Example: hardcoded discount
             image: data.image || '/placeholder.svg',
             images: [data.image || '/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
-            rating: 4.8, // Example: hardcoded rating
-            reviewCount: 142, // Example: hardcoded review count
+            rating: avgRating,
+            reviewCount: count || 0,
             stock: data.stock || 0,
             potency: data.product_variations?.[0]?.potency || '30C',
             brand: 'Bahola Labs', // Example: hardcoded brand
-            benefits: [
+            benefits: data.benefits || [
               'Relieves pain and swelling from injuries',
               'Helps heal bruises and muscle soreness',
               'Useful for post-surgical recovery',
               'Reduces shock after trauma or accidents'
             ],
-            usage: 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.',
-            ingredients: `${data.name} ${data.product_variations?.[0]?.potency || ''}, Sucrose (inactive)`,
+            usage: data.usage_instructions || 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.',
+            ingredients: data.ingredients || `${data.name} ${data.product_variations?.[0]?.potency || ''}, Sucrose (inactive)`,
             precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
             shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
             category: data.product_categories?.name || 'Uncategorized',

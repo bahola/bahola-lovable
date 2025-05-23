@@ -1,16 +1,18 @@
 
 import React, { useState } from 'react';
+import ProductReviews from './ProductReviews';
 
 interface ProductTabsProps {
   benefits: string[];
   usage: string;
   ingredients: string;
   reviewCount: number;
+  productId: string;
 }
 
 type TabType = 'benefits' | 'usage' | 'ingredients' | 'reviews';
 
-const ProductTabs: React.FC<ProductTabsProps> = ({ benefits, usage, ingredients, reviewCount }) => {
+const ProductTabs: React.FC<ProductTabsProps> = ({ benefits, usage, ingredients, reviewCount, productId }) => {
   const [activeTab, setActiveTab] = useState<TabType>('benefits');
   
   const renderTabContent = () => {
@@ -42,10 +44,7 @@ const ProductTabs: React.FC<ProductTabsProps> = ({ benefits, usage, ingredients,
         );
       case 'reviews':
         return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Reviews ({reviewCount})</h2>
-            <p className="text-bahola-neutral-700">No reviews yet. Be the first to review this product!</p>
-          </div>
+          <ProductReviews productId={productId} reviewCount={reviewCount} />
         );
       default:
         return null;

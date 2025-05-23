@@ -18,6 +18,7 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import ProductNotFound from '@/components/product/ProductNotFound';
 import { useProductData } from '@/components/product/useProductData';
 import { Skeleton } from '@/components/ui/skeleton';
+import ProductReviews from '@/components/product/ProductReviews';
 
 const ProductPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -86,6 +87,11 @@ const ProductPage = () => {
             discountPercentage={product.discountPercentage}
           />
           
+          {/* Short Description */}
+          <div className="mb-6">
+            <p className="text-bahola-neutral-700">{product.shortDescription}</p>
+          </div>
+          
           <div className="mb-6">
             <h2 className="font-semibold mb-2">Description</h2>
             <p className="text-bahola-neutral-700">{product.description}</p>
@@ -119,6 +125,7 @@ const ProductPage = () => {
         usage={product.usage}
         ingredients={product.ingredients}
         reviewCount={product.reviewCount}
+        productId={product.id}
       />
       
       {/* Related Products Section */}

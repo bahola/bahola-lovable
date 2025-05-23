@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -37,6 +36,9 @@ const formSchema = z.object({
   })).optional(),
   upsellProducts: z.array(z.string()).optional(),
   crossSellProducts: z.array(z.string()).optional(),
+  benefits: z.array(z.string()).optional(),
+  usage_instructions: z.string().optional(),
+  ingredients: z.string().optional(),
 });
 
 export type ProductFormSchema = z.infer<typeof formSchema>;
@@ -64,6 +66,9 @@ const defaultValues = {
   variations: [],
   upsellProducts: [],
   crossSellProducts: [],
+  benefits: [],
+  usage_instructions: "",
+  ingredients: "",
 };
 
 export const useProductForm = (onProductAdded?: (product?: any) => void, initialProduct?: any, isEditing = false) => {
@@ -118,6 +123,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
         })) || [],
         upsellProducts: initialProduct.upsell_products || [],
         crossSellProducts: initialProduct.cross_sell_products || [],
+        benefits: initialProduct.benefits || [],
+        usage_instructions: initialProduct.usage_instructions || "",
+        ingredients: initialProduct.ingredients || "",
       };
     } catch (error) {
       console.error('Error initializing form with product data:', error);

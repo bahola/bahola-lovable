@@ -33,6 +33,41 @@ export type Database = {
         }
         Relationships: []
       }
+      product_reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          product_id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          id?: string
+          product_id: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          product_id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_subcategories: {
         Row: {
           category_id: string
@@ -111,6 +146,7 @@ export type Database = {
       }
       products: {
         Row: {
+          benefits: string[] | null
           category_id: string | null
           created_at: string
           description: string | null
@@ -118,6 +154,7 @@ export type Database = {
           hsn_code: string
           id: string
           image: string | null
+          ingredients: string | null
           name: string
           pack_sizes: string[] | null
           potencies: string[] | null
@@ -127,9 +164,11 @@ export type Database = {
           subcategory_id: string | null
           type: string
           updated_at: string
+          usage_instructions: string | null
           weight: number
         }
         Insert: {
+          benefits?: string[] | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -137,6 +176,7 @@ export type Database = {
           hsn_code: string
           id?: string
           image?: string | null
+          ingredients?: string | null
           name: string
           pack_sizes?: string[] | null
           potencies?: string[] | null
@@ -146,9 +186,11 @@ export type Database = {
           subcategory_id?: string | null
           type: string
           updated_at?: string
+          usage_instructions?: string | null
           weight?: number
         }
         Update: {
+          benefits?: string[] | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -156,6 +198,7 @@ export type Database = {
           hsn_code?: string
           id?: string
           image?: string | null
+          ingredients?: string | null
           name?: string
           pack_sizes?: string[] | null
           potencies?: string[] | null
@@ -165,6 +208,7 @@ export type Database = {
           subcategory_id?: string | null
           type?: string
           updated_at?: string
+          usage_instructions?: string | null
           weight?: number
         }
         Relationships: [
