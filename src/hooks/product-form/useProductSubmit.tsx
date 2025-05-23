@@ -42,15 +42,17 @@ export const useProductSubmit = ({
       const categoryId = values.category && values.category !== "" ? values.category : null;
       const subcategoryId = values.subcategory && values.subcategory !== "" ? values.subcategory : null;
       
+      console.log('Category ID:', categoryId, 'Subcategory ID:', subcategoryId);
+      
       // Prepare the product data
       const productData = {
         name: values.name,
         type: values.type,
         description: values.description,
-        short_description: values.shortDescription,
+        short_description: values.shortDescription || '',
         hsn_code: values.hsnCode,
         price: values.price,
-        stock: values.type === 'simple' ? values.stock : null, // Stock for simple products
+        stock: values.type === 'simple' ? values.stock : null,
         weight: values.weight,
         dimensions: dimensionsFormatted,
         category_id: categoryId,
@@ -58,6 +60,8 @@ export const useProductSubmit = ({
         pack_sizes: values.type === 'variable' ? values.packSizes : null,
         potencies: values.type === 'variable' ? values.potencies : null
       };
+      
+      console.log('Product data to save:', productData);
       
       let newProduct;
       
@@ -86,7 +90,6 @@ export const useProductSubmit = ({
             
           if (deleteError) {
             console.error('Error deleting existing variations:', deleteError);
-            // Continue anyway to try to insert new variations
           }
           
           // Insert new variations
@@ -121,10 +124,12 @@ export const useProductSubmit = ({
           .single();
           
         if (error) {
+          console.error('Error inserting product:', error);
           throw error;
         }
         
         newProduct = insertedProduct;
+        console.log('Product saved successfully:', newProduct);
         
         // If it's a variable product, insert the variations
         if (values.type === 'variable' && values.variations && newProduct) {

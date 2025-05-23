@@ -122,6 +122,7 @@ export type Database = {
           pack_sizes: string[] | null
           potencies: string[] | null
           price: number
+          short_description: string | null
           stock: number | null
           subcategory_id: string | null
           type: string
@@ -140,6 +141,7 @@ export type Database = {
           pack_sizes?: string[] | null
           potencies?: string[] | null
           price?: number
+          short_description?: string | null
           stock?: number | null
           subcategory_id?: string | null
           type: string
@@ -158,6 +160,7 @@ export type Database = {
           pack_sizes?: string[] | null
           potencies?: string[] | null
           price?: number
+          short_description?: string | null
           stock?: number | null
           subcategory_id?: string | null
           type?: string

@@ -19,6 +19,8 @@ const ProductsManagement = () => {
   const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
+      console.log('Fetching products from database...');
+      
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -37,10 +39,11 @@ const ProductsManagement = () => {
         `);
       
       if (error) {
+        console.error('Error fetching products:', error);
         throw error;
       }
       
-      console.log('Fetched products with categories:', data);
+      console.log('Raw fetched products:', data);
       
       // Transform the data to match our ProductListItem interface
       const transformedProducts: ProductListItem[] = data.map(product => ({
@@ -55,6 +58,8 @@ const ProductsManagement = () => {
         category: product.category?.name || 'Uncategorized',
         subcategory: product.subcategory?.name || '',
       }));
+      
+      console.log('Transformed products:', transformedProducts);
       
       setProducts(transformedProducts);
       setFilteredProducts(transformedProducts);
@@ -149,6 +154,7 @@ const ProductsManagement = () => {
         
         <div className="flex items-center gap-2">
           <AddProductSheet onProductAdded={() => {
+            console.log('Product added, refreshing list...');
             // Refresh product list after adding a product
             fetchProducts();
           }} />
