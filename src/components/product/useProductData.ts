@@ -80,6 +80,10 @@ export const useProductData = (productId: string | undefined) => {
             }
           }
           
+          // Create array of images from the main image
+          const mainImage = data.image || '/placeholder.svg';
+          const imageArray = mainImage ? [mainImage] : ['/placeholder.svg'];
+          
           // Transform the data into the shape we need for the UI
           setProduct({
             id: data.id,
@@ -89,8 +93,8 @@ export const useProductData = (productId: string | undefined) => {
             price: data.price,
             originalPrice: data.price * 1.15, // Example: calculate original price before discount
             discountPercentage: 14, // Example: hardcoded discount
-            image: data.image || '/placeholder.svg',
-            images: [data.image || '/placeholder.svg', '/placeholder.svg', '/placeholder.svg'],
+            image: mainImage,
+            images: imageArray,
             rating: avgRating,
             reviewCount: count || 0,
             stock: data.stock || 0,

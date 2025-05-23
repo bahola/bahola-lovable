@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -31,14 +32,20 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
   if ('product' in props) {
     // Handle the original ProductProps format
     const { product } = props;
+    const imageUrl = product.image && product.image !== '' ? product.image : '/placeholder.svg';
+    
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
         <Link to={`/product/${product.id}`} className="block">
           <div className="relative">
             <img 
-              src={product.image || '/placeholder.svg'} 
+              src={imageUrl} 
               alt={product.name} 
               className="w-full h-48 object-contain p-4 bg-bahola-neutral-50"
+              onError={(e) => {
+                console.log('Image failed to load:', imageUrl);
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
             />
             <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors">
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />
@@ -70,14 +77,20 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
   } else {
     // Handle the CategoryPage/SearchResults format
     const { title, description, price, imageSrc, discountPercentage, rating, reviewCount, url } = props;
+    const imageUrl = imageSrc && imageSrc !== '' ? imageSrc : '/placeholder.svg';
+    
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
         <Link to={url} className="block">
           <div className="relative">
             <img 
-              src={imageSrc || '/placeholder.svg'} 
+              src={imageUrl} 
               alt={title} 
               className="w-full h-48 object-contain p-4 bg-bahola-neutral-50"
+              onError={(e) => {
+                console.log('Image failed to load:', imageUrl);
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
             />
             <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors">
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />

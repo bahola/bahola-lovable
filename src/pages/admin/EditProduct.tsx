@@ -55,12 +55,16 @@ const EditProduct = () => {
     }
   }, [productId, navigate, toast]);
   
-  const handleProductUpdated = useCallback(() => {
+  const handleProductUpdated = useCallback((updatedProduct?: any) => {
     toast({
-      title: "Product updated",
-      description: "The product has been successfully updated."
+      title: "Product updated successfully",
+      description: `${updatedProduct?.name || 'The product'} has been updated and saved.`,
     });
-    navigate('/admin/products');
+    
+    // Optional: Navigate back to products list after a short delay
+    setTimeout(() => {
+      navigate('/admin/products');
+    }, 1500);
   }, [navigate, toast]);
   
   if (isLoading) {
