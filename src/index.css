@@ -85,7 +85,7 @@
 
 @layer components {
   .mega-menu {
-    @apply invisible absolute left-0 top-full opacity-0 bg-white shadow-lg transition-all duration-300 transform translate-y-2 z-50;
+    @apply invisible absolute left-0 top-full opacity-0 bg-white shadow-lg border border-gray-200 transition-all duration-300 transform translate-y-2 z-50;
     width: 400px; /* Default width for smaller mega menus */
   }
 
@@ -110,23 +110,23 @@
   }
 
   .top-menu-item {
-    @apply text-sm text-bahola-neutral-600 hover:text-bahola-blue-500 transition-colors duration-200;
+    @apply text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200 font-medium;
   }
 
   .main-menu-item {
-    @apply text-base font-medium text-bahola-neutral-800 hover:text-bahola-blue-500 transition-colors duration-200 relative py-5 px-4;
+    @apply text-base font-medium text-gray-800 hover:text-blue-600 transition-colors duration-200 relative py-5 px-4 cursor-pointer;
   }
 
   .sticky-header {
-    @apply fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md shadow-sm z-50 transition-all duration-300;
+    @apply fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-50 transition-all duration-300;
   }
 
   .sticky-subheader {
-    @apply fixed top-[64px] left-0 right-0 bg-white/90 backdrop-blur-md shadow-sm z-40 transition-all duration-300;
+    @apply fixed top-[64px] left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-40 transition-all duration-300;
   }
 
   .navbar-transparent {
-    @apply bg-transparent backdrop-blur-md;
+    @apply bg-white/95 backdrop-blur-md;
   }
 
   /* Mobile menu styles */
@@ -143,11 +143,11 @@
   }
 
   .mobile-menu-item {
-    @apply py-4 px-6 border-b border-bahola-neutral-100 text-bahola-neutral-800 font-medium flex items-center justify-between;
+    @apply py-4 px-6 border-b border-gray-100 text-gray-800 font-medium flex items-center justify-between hover:bg-gray-50 transition-colors duration-200;
   }
 
   .mobile-submenu {
-    @apply h-0 overflow-hidden transition-all duration-300 bg-bahola-blue-50/50;
+    @apply h-0 overflow-hidden transition-all duration-300 bg-blue-50/50;
   }
 
   .mobile-submenu-open {
