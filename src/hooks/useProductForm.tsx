@@ -3,9 +3,9 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from '@/integrations/supabase/client';
-import { ProductVariation } from "@/types/product";
+import { useProductVariations } from './product-form/useProductVariations';
+import { useProductImages } from './product-form/useProductImages';
+import { useProductSubmit } from './product-form/useProductSubmit';
 
 // Form schema for validation
 const formSchema = z.object({
@@ -17,7 +17,7 @@ const formSchema = z.object({
   hsnCode: z.string(),
   price: z.number().min(0),
   category: z.string().optional(),
-  subcategory: z.string().optional(), // Added subcategory field
+  subcategory: z.string().optional(),
   weight: z.number().min(0),
   dimensions: z.object({
     length: z.number().min(0),
@@ -50,7 +50,7 @@ const defaultValues = {
   hsnCode: "",
   price: 0,
   category: "",
-  subcategory: "", // Added default value for subcategory
+  subcategory: "",
   weight: 0,
   dimensions: {
     length: 0,
@@ -67,13 +67,7 @@ const defaultValues = {
 };
 
 export const useProductForm = (onProductAdded?: (product?: any) => void, initialProduct?: any, isEditing = false) => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
-  const [potencyValues, setPotencyValues] = useState<string[]>([]);
-  const [packSizeValues, setPackSizeValues] = useState<string[]>([]);
-  const [variations, setVariations] = useState<ProductVariation[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [productId, setProductId] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
 
@@ -98,25 +92,6 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Set product ID for editing
       setProductId(initialProduct.id);
       
-      // Set potencies and pack sizes if they exist
-      const potencies = initialProduct.potencies || [];
-      const packSizes = initialProduct.pack_sizes || [];
-      
-      // Set variations if available
-      let formattedVariations: ProductVariation[] = [];
-      if (initialProduct.product_variations && initialProduct.product_variations.length > 0) {
-        formattedVariations = initialProduct.product_variations.map((v: any) => ({
-          potency: v.potency || '',
-          packSize: v.pack_size || '',
-          price: v.price || 0,
-          stock: v.stock || 0,
-          weight: v.weight || 0,
-        }));
-      }
-      
-      // Set image URLs if available
-      const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
-      
       // Return formatted initial values with subcategory
       return {
         name: initialProduct.name || "",
@@ -127,14 +102,20 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
         hsnCode: initialProduct.hsn_code || "",
         price: initialProduct.price || 0,
         category: initialProduct.category_id || "",
-        subcategory: initialProduct.subcategory_id || "", // Added subcategory
+        subcategory: initialProduct.subcategory_id || "",
         weight: initialProduct.weight || 0,
         dimensions: dimensionsObj,
         taxStatus: initialProduct.tax_status || "taxable",
         taxClass: initialProduct.tax_class || "5",
-        potencies: potencies,
-        packSizes: packSizes,
-        variations: formattedVariations,
+        potencies: initialProduct.potencies || [],
+        packSizes: initialProduct.pack_sizes || [],
+        variations: initialProduct.product_variations?.map((v: any) => ({
+          potency: v.potency || '',
+          packSize: v.pack_size || '',
+          price: v.price || 0,
+          stock: v.stock || 0,
+          weight: v.weight || 0,
+        })) || [],
         upsellProducts: initialProduct.upsell_products || [],
         crossSellProducts: initialProduct.cross_sell_products || [],
       };
@@ -152,6 +133,41 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
     defaultValues: initialValues,
   });
 
+  // Watch for product type changes
+  const productType = form.watch("type");
+
+  // Use our custom hooks
+  const { 
+    potencyValues, 
+    packSizeValues, 
+    variations, 
+    handleAddPotency, 
+    handleAddPackSize, 
+    handleRemovePotency, 
+    handleRemovePackSize, 
+    handleUpdateVariation,
+    setInitialVariations
+  } = useProductVariations(form);
+
+  const { 
+    imageUrls, 
+    handleAddImage, 
+    handleChangeImage, 
+    handleRemoveImage,
+    setInitialImages
+  } = useProductImages();
+
+  const { 
+    isSubmitting, 
+    onSubmit: submitHandler 
+  } = useProductSubmit({
+    form,
+    variations,
+    onProductAdded,
+    isEditing,
+    productId
+  });
+
   // Initialize state values from initialProduct only once
   useEffect(() => {
     if (!initialized && initialProduct && isEditing) {
@@ -160,347 +176,35 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       const packSizes = initialProduct.pack_sizes || [];
       const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
       
-      setPotencyValues(potencies);
-      setPackSizeValues(packSizes);
-      setImageUrls(imageUrlsValue);
-      
-      if (initialProduct.product_variations && initialProduct.product_variations.length > 0) {
-        const formattedVariations = initialProduct.product_variations.map((v: any) => ({
+      setInitialVariations(
+        potencies, 
+        packSizes, 
+        initialProduct.product_variations?.map((v: any) => ({
           potency: v.potency || '',
           packSize: v.pack_size || '',
           price: v.price || 0,
           stock: v.stock || 0,
           weight: v.weight || 0,
-        }));
-        setVariations(formattedVariations);
-      }
+        })) || []
+      );
       
+      setInitialImages(imageUrlsValue);
       setInitialized(true);
     }
-  }, [initialProduct, isEditing, initialized]);
+  }, [initialProduct, isEditing, initialized, setInitialVariations, setInitialImages]);
 
-  // Watch for product type changes
-  const productType = form.watch("type");
-
+  // Wrap submitHandler to handle form reset
   const onSubmit = useCallback(async (values: ProductFormSchema) => {
-    try {
-      setIsSubmitting(true);
-      
-      // Add variations if product type is variable
-      if (values.type === "variable") {
-        values.variations = variations;
-      }
-      
-      console.log(`${isEditing ? 'Updating' : 'Saving'} product with data:`, values);
-      
-      // Format dimensions as a string for storage
-      const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
-      
-      // Set category and subcategory to null if empty
-      const categoryId = values.category && values.category !== "" ? values.category : null;
-      const subcategoryId = values.subcategory && values.subcategory !== "" ? values.subcategory : null;
-      
-      // Prepare the product data
-      const productData = {
-        name: values.name,
-        type: values.type,
-        description: values.description,
-        hsn_code: values.hsnCode,
-        price: values.price,
-        stock: values.type === 'simple' ? values.stock : null, // Stock for simple products
-        weight: values.weight,
-        dimensions: dimensionsFormatted,
-        category_id: categoryId,
-        subcategory_id: subcategoryId, // Added subcategory_id
-        pack_sizes: values.type === 'variable' ? values.packSizes : null,
-        potencies: values.type === 'variable' ? values.potencies : null
-      };
-      
-      let newProduct;
-      
-      if (isEditing && productId) {
-        // Update the product in Supabase
-        const { data: updatedProduct, error } = await supabase
-          .from('products')
-          .update(productData)
-          .eq('id', productId)
-          .select()
-          .single();
-          
-        if (error) {
-          throw error;
-        }
-        
-        newProduct = updatedProduct;
-        
-        // If it's a variable product, first delete existing variations then insert new ones
-        if (values.type === 'variable' && values.variations) {
-          // Delete existing variations
-          const { error: deleteError } = await supabase
-            .from('product_variations')
-            .delete()
-            .eq('product_id', productId);
-            
-          if (deleteError) {
-            console.error('Error deleting existing variations:', deleteError);
-            // Continue anyway to try to insert new variations
-          }
-          
-          // Insert new variations
-          const variationsData = values.variations.map(variation => ({
-            product_id: productId,
-            potency: variation.potency,
-            pack_size: variation.packSize,
-            price: variation.price,
-            stock: variation.stock,
-            weight: variation.weight
-          }));
-          
-          const { error: variationError } = await supabase
-            .from('product_variations')
-            .insert(variationsData);
-            
-          if (variationError) {
-            console.error('Error updating variations:', variationError);
-            toast({
-              title: "Warning",
-              description: `Product updated but there was an issue with variations: ${variationError.message}`,
-              variant: "destructive",
-            });
-          }
-        }
-      } else {
-        // Insert the new product into Supabase
-        const { data: insertedProduct, error } = await supabase
-          .from('products')
-          .insert(productData)
-          .select()
-          .single();
-          
-        if (error) {
-          throw error;
-        }
-        
-        newProduct = insertedProduct;
-        
-        // If it's a variable product, insert the variations
-        if (values.type === 'variable' && values.variations && newProduct) {
-          const variationsData = values.variations.map(variation => ({
-            product_id: newProduct.id,
-            potency: variation.potency,
-            pack_size: variation.packSize,
-            price: variation.price,
-            stock: variation.stock,
-            weight: variation.weight
-          }));
-          
-          const { error: variationError } = await supabase
-            .from('product_variations')
-            .insert(variationsData);
-            
-          if (variationError) {
-            console.error('Error creating variations:', variationError);
-            toast({
-              title: "Warning",
-              description: `Product saved but there was an issue with variations: ${variationError.message}`,
-              variant: "destructive",
-            });
-          }
-        }
-      }
-      
-      // Display success message
-      toast({
-        title: isEditing ? "Product updated successfully" : "Product saved successfully",
-        description: `The product "${values.name}" has been ${isEditing ? 'updated' : 'added'} to your inventory.`,
-      });
-      
-      // Call the callback if provided
-      if (onProductAdded) {
-        onProductAdded(newProduct);
-      }
-      
-      if (!isEditing) {
-        // Reset form only for new products
-        form.reset(defaultValues);
-        setVariations([]);
-        setPotencyValues([]);
-        setPackSizeValues([]);
-        setImageUrls([]);
-        setActiveTab("general");
-      }
-      
-    } catch (error) {
-      console.error(`Error ${isEditing ? 'updating' : 'saving'} product:`, error);
-      toast({
-        title: `Failed to ${isEditing ? 'update' : 'save'} product`,
-        description: error instanceof Error ? error.message : `There was an error ${isEditing ? 'updating' : 'saving'} your product. Please try again.`,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [form, isEditing, onProductAdded, productId, toast, variations]);
-
-  // Prevent recreation on each render with useCallback
-  const handleAddPotency = useCallback((newPotency: string) => {
-    if (newPotency && !potencyValues.includes(newPotency)) {
-      const updatedPotencies = [...potencyValues, newPotency];
-      setPotencyValues(updatedPotencies);
-      form.setValue("potencies", updatedPotencies);
-      
-      // Generate variations with the updated potencies
-      generateVariations(updatedPotencies, packSizeValues);
-      return true;
-    }
-    return false;
-  }, [potencyValues, packSizeValues, form]);
-
-  const handleAddPackSize = useCallback((newPackSize: string) => {
-    if (newPackSize && !packSizeValues.includes(newPackSize)) {
-      const updatedPackSizes = [...packSizeValues, newPackSize];
-      setPackSizeValues(updatedPackSizes);
-      form.setValue("packSizes", updatedPackSizes);
-      
-      // Generate variations with the updated pack sizes
-      generateVariations(potencyValues, updatedPackSizes);
-      return true;
-    }
-    return false;
-  }, [potencyValues, packSizeValues, form]);
-
-  const generateVariations = useCallback((potencies: string[], packSizes: string[]) => {
-    const newVariations: ProductVariation[] = [];
-    const baseWeight = form.getValues("weight") || 0;
+    const result = await submitHandler(values);
     
-    // If both attributes exist, create combination variations
-    if (potencies.length > 0 && packSizes.length > 0) {
-      potencies.forEach(potency => {
-        packSizes.forEach(packSize => {
-          // Check if variation already exists
-          const existingVariation = variations.find(
-            v => v.potency === potency && v.packSize === packSize
-          );
-          
-          if (existingVariation) {
-            newVariations.push(existingVariation);
-          } else {
-            newVariations.push({
-              potency,
-              packSize,
-              price: form.getValues("price") || 0,
-              stock: 0,
-              weight: baseWeight
-            });
-          }
-        });
-      });
-    } 
-    // If only potencies exist
-    else if (potencies.length > 0) {
-      potencies.forEach(potency => {
-        // Check if variation already exists
-        const existingVariation = variations.find(
-          v => v.potency === potency && v.packSize === ""
-        );
-        
-        if (existingVariation) {
-          newVariations.push(existingVariation);
-        } else {
-          newVariations.push({
-            potency,
-            packSize: "",
-            price: form.getValues("price") || 0,
-            stock: 0,
-            weight: baseWeight
-          });
-        }
-      });
-    } 
-    // If only pack sizes exist
-    else if (packSizes.length > 0) {
-      packSizes.forEach(packSize => {
-        // Check if variation already exists
-        const existingVariation = variations.find(
-          v => v.potency === "" && v.packSize === packSize
-        );
-        
-        if (existingVariation) {
-          newVariations.push(existingVariation);
-        } else {
-          newVariations.push({
-            potency: "",
-            packSize,
-            price: form.getValues("price") || 0,
-            stock: 0,
-            weight: baseWeight
-          });
-        }
-      });
+    if (result && !isEditing) {
+      // Reset form only for new products
+      form.reset(defaultValues);
+      setInitialVariations([], [], []);
+      setInitialImages([]);
+      setActiveTab("general");
     }
-    
-    setVariations(newVariations);
-    form.setValue("variations", newVariations);
-  }, [form, variations]);
-
-  const handleRemovePotency = useCallback((value: string) => {
-    const updatedPotencies = potencyValues.filter(p => p !== value);
-    setPotencyValues(updatedPotencies);
-    form.setValue("potencies", updatedPotencies);
-    
-    // If we're removing the last potency and there are no pack sizes, clear all variations
-    if (updatedPotencies.length === 0 && packSizeValues.length === 0) {
-      setVariations([]);
-      form.setValue("variations", []);
-      return;
-    }
-    
-    // Update variations to remove ones that contain this potency
-    const updatedVariations = variations.filter(v => v.potency !== value);
-    setVariations(updatedVariations);
-    form.setValue("variations", updatedVariations);
-  }, [potencyValues, packSizeValues, variations, form]);
-
-  const handleRemovePackSize = useCallback((value: string) => {
-    const updatedPackSizes = packSizeValues.filter(p => p !== value);
-    setPackSizeValues(updatedPackSizes);
-    form.setValue("packSizes", updatedPackSizes);
-    
-    // If we're removing the last pack size and there are no potencies, clear all variations
-    if (updatedPackSizes.length === 0 && potencyValues.length === 0) {
-      setVariations([]);
-      form.setValue("variations", []);
-      return;
-    }
-    
-    // Update variations to remove ones that contain this pack size
-    const updatedVariations = variations.filter(v => v.packSize !== value);
-    setVariations(updatedVariations);
-    form.setValue("variations", updatedVariations);
-  }, [packSizeValues, potencyValues, variations, form]);
-
-  const handleUpdateVariation = useCallback((index: number, field: keyof ProductVariation, value: number) => {
-    const updatedVariations = [...variations];
-    updatedVariations[index] = { ...updatedVariations[index], [field]: value };
-    setVariations(updatedVariations);
-    form.setValue("variations", updatedVariations);
-  }, [variations, form]);
-
-  const handleAddImage = useCallback(() => {
-    setImageUrls([...imageUrls, ""]);
-  }, [imageUrls]);
-
-  const handleChangeImage = useCallback((index: number, url: string) => {
-    const newUrls = [...imageUrls];
-    newUrls[index] = url;
-    setImageUrls(newUrls);
-  }, [imageUrls]);
-
-  const handleRemoveImage = useCallback((index: number) => {
-    const newUrls = [...imageUrls];
-    newUrls.splice(index, 1);
-    setImageUrls(newUrls);
-  }, [imageUrls]);
+  }, [submitHandler, isEditing, form, setInitialVariations, setInitialImages]);
 
   return {
     form,
