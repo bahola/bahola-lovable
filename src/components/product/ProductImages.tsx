@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ImageOff } from 'lucide-react';
 
 interface ProductImagesProps {
   image: string;
@@ -9,23 +10,51 @@ interface ProductImagesProps {
 }
 
 const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productName }) => {
+  const [mainImageError, setMainImageError] = useState(false);
+  const [thumbnailErrors, setThumbnailErrors] = useState<Record<number, boolean>>({});
+
+  const handleMainImageError = () => {
+    console.error("Error loading main product image:", image);
+    setMainImageError(true);
+  };
+
+  const handleThumbnailError = (index: number) => {
+    console.error("Error loading thumbnail image:", images[index]);
+    setThumbnailErrors(prev => ({ ...prev, [index]: true }));
+  };
+
   return (
     <div>
-      <div className="bg-white rounded-lg overflow-hidden mb-4">
-        <img 
-          src={image} 
-          alt={productName} 
-          className="w-full h-auto object-contain aspect-square"
-        />
+      <div className="bg-white rounded-lg overflow-hidden mb-4 aspect-square">
+        {mainImageError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
+            <ImageOff className="h-16 w-16 text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500">Image not available</p>
+          </div>
+        ) : (
+          <img 
+            src={image} 
+            alt={productName} 
+            className="w-full h-auto object-contain aspect-square"
+            onError={handleMainImageError}
+          />
+        )}
       </div>
       <div className="grid grid-cols-3 gap-4">
         {images.map((img, index) => (
-          <div key={index} className="bg-white rounded-lg overflow-hidden cursor-pointer">
-            <img 
-              src={img} 
-              alt={`${productName} view ${index + 1}`} 
-              className="w-full h-auto object-contain aspect-square"
-            />
+          <div key={index} className="bg-white rounded-lg overflow-hidden cursor-pointer aspect-square">
+            {thumbnailErrors[index] ? (
+              <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                <ImageOff className="h-8 w-8 text-gray-400" />
+              </div>
+            ) : (
+              <img 
+                src={img} 
+                alt={`${productName} view ${index + 1}`} 
+                className="w-full h-auto object-contain aspect-square"
+                onError={() => handleThumbnailError(index)}
+              />
+            )}
           </div>
         ))}
       </div>
