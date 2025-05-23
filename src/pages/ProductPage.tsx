@@ -23,6 +23,7 @@ import ProductReviews from '@/components/product/ProductReviews';
 const ProductPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariation, setSelectedVariation] = useState<any>(null);
   const { product, loading } = useProductData(productId);
   const { toast } = useToast();
   
@@ -35,6 +36,10 @@ const ProductPage = () => {
       description: `${quantity} x ${product.name} added to your cart`,
     });
     // In a real app, this would dispatch to a cart context/store
+  };
+
+  const handleVariationSelect = (variation: any) => {
+    setSelectedVariation(variation);
   };
 
   // Loading state
@@ -83,6 +88,7 @@ const ProductPage = () => {
           
           <ProductPrice 
             price={product.price}
+            selectedPrice={selectedVariation?.price}
             originalPrice={product.originalPrice}
             discountPercentage={product.discountPercentage}
           />
@@ -102,7 +108,10 @@ const ProductPage = () => {
             <ProductSpecs potency={product.potency} brand={product.brand} />
           )}
           
-          <ProductVariations variations={product.variations} />
+          <ProductVariations 
+            variations={product.variations} 
+            onVariationSelect={handleVariationSelect}
+          />
           
           <ProductQuantity 
             quantity={quantity} 

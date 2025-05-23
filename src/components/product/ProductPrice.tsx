@@ -3,15 +3,24 @@ import React from 'react';
 
 interface ProductPriceProps {
   price: number;
+  selectedPrice?: number; // Added for variation price
   originalPrice?: number;
   discountPercentage?: number;
 }
 
-const ProductPrice: React.FC<ProductPriceProps> = ({ price, originalPrice, discountPercentage }) => {
+const ProductPrice: React.FC<ProductPriceProps> = ({ 
+  price, 
+  selectedPrice, 
+  originalPrice, 
+  discountPercentage 
+}) => {
+  // Use selectedPrice if available, otherwise fall back to base price
+  const displayPrice = selectedPrice !== undefined ? selectedPrice : price;
+  
   return (
     <div className="mb-6">
       <div className="flex items-center">
-        <span className="text-2xl font-bold">₹{price}</span>
+        <span className="text-2xl font-bold">₹{displayPrice}</span>
         {originalPrice && (
           <>
             <span className="ml-3 text-bahola-neutral-500 line-through">₹{originalPrice}</span>
