@@ -42,6 +42,14 @@ const ProductPage = () => {
     setSelectedVariation(variation);
   };
 
+  // Calculate current stock based on selected variation or total stock
+  const getCurrentStock = () => {
+    if (selectedVariation) {
+      return selectedVariation.stock || 0;
+    }
+    return product?.stock || 0;
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -65,6 +73,8 @@ const ProductPage = () => {
   if (!product) {
     return <ProductNotFound />;
   }
+
+  const currentStock = getCurrentStock();
   
   return (
     <PageLayout title={product.name} description={product.description}>
@@ -83,7 +93,7 @@ const ProductPage = () => {
           <ProductRating 
             rating={product.rating}
             reviewCount={product.reviewCount}
-            stock={product.stock}
+            stock={currentStock}
           />
           
           <ProductPrice 
@@ -115,7 +125,7 @@ const ProductPage = () => {
           
           <ProductQuantity 
             quantity={quantity} 
-            stock={product.stock}
+            stock={currentStock}
             setQuantity={setQuantity}
           />
           
@@ -124,7 +134,7 @@ const ProductPage = () => {
             quantity={quantity}
             setQuantity={setQuantity}
             handleAddToCart={handleAddToCart}
-            isOutOfStock={product.stock <= 0}
+            isOutOfStock={currentStock <= 0}
           />
           
           <ProductShipping shippingInfo={product.shipping} />

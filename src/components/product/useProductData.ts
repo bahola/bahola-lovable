@@ -88,6 +88,18 @@ export const useProductData = (productId: string | undefined) => {
           const imageArray = mainImage && mainImage.trim() !== '' && mainImage.startsWith('http') ? [mainImage] : [];
           console.log('Image array created:', imageArray);
           
+          // Calculate stock based on product type
+          let totalStock = 0;
+          if (data.type === 'variable' && data.product_variations && data.product_variations.length > 0) {
+            // For variable products, sum up stock from all variations
+            totalStock = data.product_variations.reduce((sum: number, variation: any) => sum + (variation.stock || 0), 0);
+            console.log('Variable product total stock:', totalStock, 'from variations:', data.product_variations);
+          } else {
+            // For simple products, use the product's stock
+            totalStock = data.stock || 0;
+            console.log('Simple product stock:', totalStock);
+          }
+          
           // Transform the data into the shape we need for the UI
           setProduct({
             id: data.id,
@@ -101,7 +113,7 @@ export const useProductData = (productId: string | undefined) => {
             images: imageArray,
             rating: avgRating,
             reviewCount: count || 0,
-            stock: data.stock || 0,
+            stock: totalStock,
             potency: data.product_variations?.[0]?.potency || '30C',
             brand: 'Bahola Labs', // Example: hardcoded brand
             benefits: data.benefits || [
