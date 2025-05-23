@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   title: string;
@@ -22,7 +21,7 @@ export const getPageInfo = (id: string | undefined, isConcernPage: boolean, subc
     return {
       name: `${baseName} - ${subcategoryId.toUpperCase()}`,
       description: `Browse our ${baseName} remedies that start with ${subcategoryId.toUpperCase()}.`,
-      productCount: 8 + Math.floor(Math.random() * 30) // Random number for demo
+      productCount: 0 // Will be updated by actual product count from database
     };
   }
   
@@ -31,10 +30,11 @@ export const getPageInfo = (id: string | undefined, isConcernPage: boolean, subc
     description: isConcernPage 
       ? `Browse our homeopathic remedies for ${baseName}.`
       : `Explore our range of high-quality ${baseName} designed to support your health naturally.`,
-    productCount: 10 + Math.floor(Math.random() * 30) // Random number for demo
+    productCount: 0 // Will be updated by actual product count from database
   };
 };
 
+// Keep this function for backwards compatibility, but it's no longer used
 export const generateMockProducts = (subcategoryId?: string): Product[] => {
   const productTypes = [
     'Arnica', 'Belladonna', 'Nux Vomica', 'Bryonia', 'Allium Cepa', 'Chamomilla',
