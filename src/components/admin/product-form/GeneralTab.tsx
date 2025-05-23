@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -21,11 +20,27 @@ interface Subcategory {
   name: string;
 }
 
+// Health concerns from Shop by Concern mega menu
+const healthConcerns = [
+  'Allergies', 'Cancer', 'Heart Health', 'Child Care', 
+  'Ear Nose Throat', 'Eye Care', 'Gut Health', 'Womens Care',
+  'Hair Care', 'Immune boosters', 'Infection', 'Lifestyle',
+  'Muscle & Joint Care', 'Mental health', 'Nutritive', 'Pain Care',
+  'Reproductive care', 'Respiratory Care', 'Skin Care', 'Tooth Care',
+  'Urinary care'
+];
+
 const GeneralTab = ({ form }: GeneralTabProps) => {
   const [categories, setCategories] = useState(initialCategories);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [isLoadingSubcategories, setIsLoadingSubcategories] = useState(false);
   const selectedCategory = form.watch("category");
+
+  // Find the "Specialty Combinations" category
+  const specialtyCombinationsCategory = categories.find(cat => 
+    cat.name.toLowerCase().includes('specialty') || 
+    cat.name.toLowerCase().includes('combination')
+  );
 
   // Fetch subcategories when category changes
   useEffect(() => {
@@ -35,6 +50,17 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
         return;
       }
 
+      // If it's the Specialty Combinations category, use health concerns
+      if (specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id) {
+        const concernSubcategories = healthConcerns.map((concern, index) => ({
+          id: concern.toLowerCase().replace(/\s+/g, '-'),
+          name: concern
+        }));
+        setSubcategories(concernSubcategories);
+        return;
+      }
+
+      // Otherwise, fetch from database as before
       setIsLoadingSubcategories(true);
       try {
         const { data, error } = await supabase
@@ -56,7 +82,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
     };
 
     fetchSubcategories();
-  }, [selectedCategory]);
+  }, [selectedCategory, specialtyCombinationsCategory]);
 
   return (
     <Card>
@@ -161,6 +187,9 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   <span className="flex items-center">
                     <Layers className="h-4 w-4 mr-1" /> 
                     Subcategory
+                    {specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id && (
+                      <span className="ml-2 text-sm text-muted-foreground">(Health Concerns)</span>
+                    )}
                   </span>
                 </FormLabel>
                 <Select 
@@ -175,7 +204,9 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                           ? "Loading subcategories..." 
                           : subcategories.length === 0 
                             ? "No subcategories available" 
-                            : "Select a subcategory"
+                            : specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id
+                              ? "Select a health concern"
+                              : "Select a subcategory"
                       } />
                     </SelectTrigger>
                   </FormControl>
@@ -188,7 +219,10 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  Select a subcategory to further classify your product.
+                  {specialtyCombinationsCategory && selectedCategory === specialtyCombinationsCategory.id 
+                    ? "Select a health concern for your specialty combination product."
+                    : "Select a subcategory to further classify your product."
+                  }
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -196,6 +230,7 @@ const GeneralTab = ({ form }: GeneralTabProps) => {
           />
         )}
 
+        
         <FormField
           control={form.control}
           name="type"
