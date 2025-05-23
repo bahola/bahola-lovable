@@ -34,7 +34,7 @@ export const useProductSubmit = ({
       const mainImageUrl = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
       console.log('Using main image for product:', mainImageUrl);
 
-      // Prepare the product data for submission - removed tax_class since it doesn't exist in the database
+      // Prepare the product data for submission with tax fields
       const productData = {
         name: values.name,
         type: values.type,
@@ -53,6 +53,8 @@ export const useProductSubmit = ({
         benefits: values.benefits || [],
         usage_instructions: values.usage_instructions || null,
         ingredients: values.ingredients || null,
+        tax_status: values.taxStatus,
+        tax_class: values.taxClass,
       };
 
       console.log('Submitting product data:', productData);

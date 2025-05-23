@@ -1,8 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductProps {
   product: {
@@ -28,6 +30,103 @@ interface ProductCardProps {
 
 // Original ProductCard component
 export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) => {
+  const { toast } = useToast();
+  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+  
+  const handleAddToCart = async (e: React.MouseEvent, productId: string | number, productName: string, productPrice: number, productImage: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Get current cart from localStorage or initialize an empty array
+    const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
+    
+    // Check if product already exists in cart
+    const existingItem = currentCart.find((item: any) => item.id === productId);
+    
+    if (existingItem) {
+      // Increment quantity if product already in cart
+      existingItem.quantity += 1;
+    } else {
+      // Add new product with quantity 1
+      currentCart.push({
+        id: productId,
+        name: productName,
+        price: productPrice,
+        image: productImage,
+        quantity: 1
+      });
+    }
+    
+    // Save updated cart to localStorage
+    localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
+    
+    // Notify user
+    toast({
+      title: "Added to cart",
+      description: `${productName} has been added to your cart.`
+    });
+  };
+
+  const handleAddToWishlist = async (e: React.MouseEvent, productId: string | number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    try {
+      setIsAddingToWishlist(true);
+      
+      // Check if user is logged in
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData?.session?.user;
+      
+      if (!user) {
+        toast({
+          title: "Please login",
+          description: "You need to be logged in to add items to your wishlist.",
+        });
+        return;
+      }
+      
+      // Check if product is already in wishlist
+      const { data: existingItems } = await supabase
+        .from('wishlist')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('product_id', productId);
+        
+      if (existingItems && existingItems.length > 0) {
+        toast({
+          title: "Already in wishlist",
+          description: "This product is already in your wishlist.",
+        });
+        return;
+      }
+      
+      // Add item to wishlist
+      const { error } = await supabase
+        .from('wishlist')
+        .insert({
+          user_id: user.id,
+          product_id: productId
+        });
+        
+      if (error) throw error;
+      
+      toast({
+        title: "Added to wishlist",
+        description: "Product has been added to your wishlist."
+      });
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add product to wishlist.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAddingToWishlist(false);
+    }
+  };
+  
   // Check which type of props we received
   if ('product' in props) {
     // Handle the original ProductProps format
@@ -47,7 +146,11 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
                 (e.target as HTMLImageElement).src = '/placeholder.svg';
               }}
             />
-            <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors">
+            <button 
+              className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors"
+              onClick={(e) => handleAddToWishlist(e, product.id)}
+              disabled={isAddingToWishlist}
+            >
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />
             </button>
           </div>
@@ -67,7 +170,11 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
           
           <div className="flex justify-between items-center mt-4">
             <span className="text-lg font-bold text-bahola-blue-600">₹{product.price}</span>
-            <Button size="sm" className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2">
+            <Button 
+              size="sm" 
+              className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2"
+              onClick={(e) => handleAddToCart(e, product.id, product.name, product.price, product.image)}
+            >
               <ShoppingCart size={18} />
             </Button>
           </div>
@@ -78,6 +185,7 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
     // Handle the CategoryPage/SearchResults format
     const { title, description, price, imageSrc, discountPercentage, rating, reviewCount, url } = props;
     const imageUrl = imageSrc && imageSrc !== '' ? imageSrc : '/placeholder.svg';
+    const productId = url.split('/').pop() || '';
     
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
@@ -92,7 +200,11 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
                 (e.target as HTMLImageElement).src = '/placeholder.svg';
               }}
             />
-            <button className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors">
+            <button 
+              className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-bahola-blue-50 transition-colors"
+              onClick={(e) => handleAddToWishlist(e, productId)}
+              disabled={isAddingToWishlist}
+            >
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />
             </button>
             {discountPercentage > 0 && (
@@ -119,7 +231,11 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
           
           <div className="flex justify-between items-center mt-4">
             <span className="text-lg font-bold text-bahola-blue-600">₹{price}</span>
-            <Button size="sm" className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2">
+            <Button 
+              size="sm" 
+              className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2"
+              onClick={(e) => handleAddToCart(e, productId, title, price, imageSrc)}
+            >
               <ShoppingCart size={18} />
             </Button>
           </div>
