@@ -80,11 +80,13 @@ export const useProductData = (productId: string | undefined) => {
             }
           }
           
-          // Handle the main image - use the image from database if available, otherwise empty
+          // Handle the main image - use the image from database if available
           const mainImage = data.image || '';
+          console.log('Product image from database:', mainImage);
           
           // Create array of images - only include valid image URLs
-          const imageArray = mainImage ? [mainImage] : [];
+          const imageArray = mainImage && mainImage.trim() !== '' && mainImage.startsWith('http') ? [mainImage] : [];
+          console.log('Image array created:', imageArray);
           
           // Transform the data into the shape we need for the UI
           setProduct({

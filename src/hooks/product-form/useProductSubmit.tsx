@@ -1,16 +1,15 @@
 
 import { useState } from 'react';
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
-import { ProductVariation } from '@/types/product';
-import { UseFormReturn } from 'react-hook-form';
+import { useToast } from '@/hooks/use-toast';
+import type { ProductFormSchema } from '../useProductForm';
 
 interface UseProductSubmitProps {
-  form: UseFormReturn<any>;
-  variations: ProductVariation[];
+  form: any;
+  variations: any[];
   onProductAdded?: (product?: any) => void;
-  isEditing: boolean;
-  productId: string | null;
+  isEditing?: boolean;
+  productId?: string | null;
   imageUrls: string[];
 }
 
@@ -18,187 +17,129 @@ export const useProductSubmit = ({
   form,
   variations,
   onProductAdded,
-  isEditing,
+  isEditing = false,
   productId,
   imageUrls
 }: UseProductSubmitProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const onSubmit = async (values: any) => {
-    setIsSubmitting(true);
-    console.log('Submitting product form with values:', values);
-    console.log('Current image URLs:', imageUrls);
-    
+  const onSubmit = async (values: ProductFormSchema) => {
     try {
-      let product;
-      
-      // Format dimensions string (length/width/height)
-      const dimensions = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
-      
-      // Get the main image URL from imageUrls if available
-      const mainImage = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
-      console.log('Using main image for product:', mainImage);
-      
-      // Prepare product data
+      setIsSubmitting(true);
+      console.log('Submitting product form with values:', values);
+      console.log('Current image URLs:', imageUrls);
+
+      // Get the main image URL from imageUrls array
+      const mainImageUrl = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
+      console.log('Using main image for product:', mainImageUrl);
+
+      // Prepare the product data for submission
       const productData = {
         name: values.name,
         type: values.type,
-        description: values.description,
-        short_description: values.shortDescription,
+        description: values.description || '',
+        short_description: values.shortDescription || '',
         hsn_code: values.hsnCode,
         price: values.price,
-        stock: values.type === 'simple' ? values.stock : null,
+        stock: values.stock || 0,
         weight: values.weight,
-        dimensions,
-        // Use the first image URL as the main product image
-        image: mainImage,
+        dimensions: `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`,
+        image: mainImageUrl, // Use the main image URL from the imageUrls array
         category_id: values.category || null,
         subcategory_id: values.subcategory || null,
-        potencies: values.type === 'variable' ? values.potencies : null,
-        pack_sizes: values.type === 'variable' ? values.packSizes : null,
+        potencies: values.potencies && values.potencies.length > 0 ? values.potencies : null,
+        pack_sizes: values.packSizes && values.packSizes.length > 0 ? values.packSizes : null,
         benefits: values.benefits || [],
         usage_instructions: values.usage_instructions || null,
         ingredients: values.ingredients || null,
-        // Add tax fields but don't use the "tax_" prefix in the database columns
-        tax_status: values.taxStatus || 'taxable',
-        tax_class: values.taxClass || '5'
+        tax_status: values.taxStatus,
+        tax_class: values.taxClass,
       };
-      
+
       console.log('Submitting product data:', productData);
-      
+
+      let result;
       if (isEditing && productId) {
-        // Update existing product - remove tax fields that don't exist in the database schema
-        const { tax_status, tax_class, ...productDataWithoutTax } = productData;
-        
-        // Add tax data in the correct format for the database
-        const dataToUpdate = {
-          ...productDataWithoutTax,
-          // Store tax data in the correct format for your database schema
-          // For example, if your database uses these column names:
-          taxable: tax_status === 'taxable',
-          tax_rate: tax_class
-        };
-        
-        const { data: updatedProduct, error } = await supabase
+        // Update existing product
+        const { data, error } = await supabase
           .from('products')
-          .update(dataToUpdate)
+          .update(productData)
           .eq('id', productId)
           .select()
           .single();
-        
-        if (error) {
-          throw error;
-        }
-        
-        product = updatedProduct;
-        console.log('Updated product:', product);
-        
-        // Handle variations for variable products
-        if (values.type === 'variable' && variations) {
-          // First, delete existing variations
-          const { error: deleteError } = await supabase
-            .from('product_variations')
-            .delete()
-            .eq('product_id', productId);
-          
-          if (deleteError) {
-            throw deleteError;
-          }
-          
-          // Then add new variations
-          if (variations.length > 0) {
-            const variationsData = variations.map(variation => ({
-              product_id: productId,
-              potency: variation.potency,
-              pack_size: variation.packSize,
-              price: variation.price,
-              stock: variation.stock,
-              weight: variation.weight
-            }));
-            
-            const { error: variationError } = await supabase
-              .from('product_variations')
-              .insert(variationsData);
-            
-            if (variationError) {
-              throw variationError;
-            }
-          }
-        }
-        
-        toast({
-          title: "Product updated",
-          description: `${values.name} has been updated successfully.`
-        });
+
+        if (error) throw error;
+        result = data;
       } else {
-        // Insert new product - remove tax fields that don't exist in the database schema
-        const { tax_status, tax_class, ...productDataWithoutTax } = productData;
-        
-        // Add tax data in the correct format for the database
-        const dataToInsert = {
-          ...productDataWithoutTax,
-          // Store tax data in the correct format for your database schema
-          taxable: tax_status === 'taxable',
-          tax_rate: tax_class
-        };
-        
-        const { data: newProduct, error } = await supabase
+        // Create new product
+        const { data, error } = await supabase
           .from('products')
-          .insert(dataToInsert)
+          .insert(productData)
           .select()
           .single();
-        
-        if (error) {
-          throw error;
-        }
-        
-        product = newProduct;
-        console.log('Created new product:', product);
-        
-        // Add variations for variable products
-        if (values.type === 'variable' && variations.length > 0) {
-          const variationsData = variations.map(variation => ({
-            product_id: product.id,
-            potency: variation.potency,
-            pack_size: variation.packSize,
-            price: variation.price,
-            stock: variation.stock,
-            weight: variation.weight
-          }));
-          
-          const { error: variationError } = await supabase
+
+        if (error) throw error;
+        result = data;
+      }
+
+      // Handle variations if it's a variable product
+      if (values.type === 'variable' && variations.length > 0 && result?.id) {
+        // First, delete existing variations if editing
+        if (isEditing) {
+          await supabase
             .from('product_variations')
-            .insert(variationsData);
-          
-          if (variationError) {
-            throw variationError;
-          }
+            .delete()
+            .eq('product_id', result.id);
         }
-        
-        toast({
-          title: "Product created",
-          description: `${values.name} has been created successfully.`
-        });
+
+        // Insert new variations
+        const variationData = variations.map(variation => ({
+          product_id: result.id,
+          potency: variation.potency,
+          pack_size: variation.packSize,
+          price: variation.price,
+          stock: variation.stock,
+          weight: variation.weight,
+        }));
+
+        const { error: variationError } = await supabase
+          .from('product_variations')
+          .insert(variationData);
+
+        if (variationError) {
+          console.error('Error inserting variations:', variationError);
+          throw variationError;
+        }
       }
-      
+
+      console.log('Product submitted successfully:', result);
+
+      toast({
+        title: isEditing ? "Product updated successfully" : "Product created successfully",
+        description: `${result.name} has been ${isEditing ? 'updated' : 'created'}.`,
+      });
+
       if (onProductAdded) {
-        onProductAdded(product);
+        onProductAdded(result);
       }
-      
-      return product;
-    } catch (error: any) {
+
+      return result;
+    } catch (error) {
       console.error('Error submitting product:', error);
       toast({
-        title: "Failed to save product",
-        description: error.message || "An unexpected error occurred",
-        variant: "destructive"
+        title: "Error",
+        description: `Failed to ${isEditing ? 'update' : 'create'} product. Please try again.`,
+        variant: "destructive",
       });
-      return null;
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
   };
-  
-  return { isSubmitting, onSubmit };
+
+  return {
+    isSubmitting,
+    onSubmit,
+  };
 };

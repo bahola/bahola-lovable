@@ -23,15 +23,26 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
     setThumbnailErrors(prev => ({ ...prev, [index]: true }));
   };
 
-  // Check if we have a valid image URL
-  const hasValidImage = image && image !== '' && image !== '/placeholder.svg' && image !== 'null' && image !== null;
+  // Check if we have a valid image URL - be more specific about what's invalid
+  const isValidImageUrl = (url: string) => {
+    return url && 
+           url.trim() !== '' && 
+           url !== '/placeholder.svg' && 
+           url !== 'null' && 
+           url !== 'undefined' &&
+           url.startsWith('http');
+  };
+
+  const hasValidImage = isValidImageUrl(image);
   
   // Use the main image if it's valid, otherwise show placeholder
   const displayImage = hasValidImage ? image : null;
   
   // For thumbnails, only show if we have valid images
-  const validImages = images?.filter(img => img && img !== '' && img !== '/placeholder.svg' && img !== 'null') || [];
+  const validImages = images?.filter(img => isValidImageUrl(img)) || [];
   const displayImages = hasValidImage ? [image, ...validImages.slice(0, 2)] : validImages.slice(0, 3);
+
+  console.log('ProductImages - image:', image, 'hasValidImage:', hasValidImage, 'displayImage:', displayImage);
 
   return (
     <div>
@@ -40,6 +51,9 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
             <ImageOff className="h-16 w-16 text-gray-400 mb-2" />
             <p className="text-sm text-gray-500">Image not available</p>
+            {image && !hasValidImage && (
+              <p className="text-xs text-gray-400 mt-1">Invalid image URL: {image}</p>
+            )}
           </div>
         ) : (
           <img 
@@ -56,7 +70,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
         <div className="grid grid-cols-3 gap-4">
           {displayImages.slice(0, 3).map((img, index) => (
             <div key={index} className="bg-white rounded-lg overflow-hidden cursor-pointer aspect-square">
-              {thumbnailErrors[index] || !img ? (
+              {thumbnailErrors[index] || !isValidImageUrl(img) ? (
                 <div className="w-full h-full flex items-center justify-center bg-gray-100">
                   <ImageOff className="h-8 w-8 text-gray-400" />
                 </div>
