@@ -17,6 +17,7 @@ const formSchema = z.object({
   hsnCode: z.string(),
   price: z.number().min(0),
   category: z.string().optional(),
+  subcategory: z.string().optional(), // Added subcategory field
   weight: z.number().min(0),
   dimensions: z.object({
     length: z.number().min(0),
@@ -49,6 +50,7 @@ const defaultValues = {
   hsnCode: "",
   price: 0,
   category: "",
+  subcategory: "", // Added default value for subcategory
   weight: 0,
   dimensions: {
     length: 0,
@@ -115,7 +117,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Set image URLs if available
       const imageUrlsValue = initialProduct.image ? [initialProduct.image] : [];
       
-      // Return formatted initial values
+      // Return formatted initial values with subcategory
       return {
         name: initialProduct.name || "",
         type: initialProduct.type || "simple",
@@ -125,6 +127,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
         hsnCode: initialProduct.hsn_code || "",
         price: initialProduct.price || 0,
         category: initialProduct.category_id || "",
+        subcategory: initialProduct.subcategory_id || "", // Added subcategory
         weight: initialProduct.weight || 0,
         dimensions: dimensionsObj,
         taxStatus: initialProduct.tax_status || "taxable",
@@ -193,8 +196,9 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
       // Format dimensions as a string for storage
       const dimensionsFormatted = `${values.dimensions.length}/${values.dimensions.width}/${values.dimensions.height}`;
       
-      // Set category to null if empty
+      // Set category and subcategory to null if empty
       const categoryId = values.category && values.category !== "" ? values.category : null;
+      const subcategoryId = values.subcategory && values.subcategory !== "" ? values.subcategory : null;
       
       // Prepare the product data
       const productData = {
@@ -207,6 +211,7 @@ export const useProductForm = (onProductAdded?: (product?: any) => void, initial
         weight: values.weight,
         dimensions: dimensionsFormatted,
         category_id: categoryId,
+        subcategory_id: subcategoryId, // Added subcategory_id
         pack_sizes: values.type === 'variable' ? values.packSizes : null,
         potencies: values.type === 'variable' ? values.potencies : null
       };

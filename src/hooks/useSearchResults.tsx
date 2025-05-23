@@ -14,6 +14,8 @@ interface Product {
   rating: number;
   reviewCount: number;
   url: string;
+  category?: string;     // Added category
+  subcategory?: string;  // Added subcategory
 }
 
 interface SearchFilters {
@@ -52,8 +54,8 @@ export const useSearchResults = () => {
           description,
           price,
           image,
-          category:category_id(name),
-          subcategory:subcategory_id(name)
+          category:category_id(id, name),
+          subcategory:subcategory_id(id, name)
         `);
 
       // Apply search filter if we have a search term
@@ -79,7 +81,9 @@ export const useSearchResults = () => {
           discountPercentage: 0, // Default value
           rating: 4.5, // Default value
           reviewCount: 10, // Default value
-          url: `/product/${product.id}`
+          url: `/product/${product.id}`,
+          category: product.category?.name || '',
+          subcategory: product.subcategory?.name || ''
         }));
         
         setSearchResults(transformedProducts);
@@ -119,6 +123,14 @@ export const useSearchResults = () => {
   useEffect(() => {
     // Apply additional filters and sorting here if needed
     // This would modify the searchResults further based on filters and sort options
+    // We can now filter by category and subcategory too
+    if (filters.categories.length > 0) {
+      setSearchResults(prev => 
+        prev.filter(product => 
+          product.category && filters.categories.includes(product.category)
+        )
+      );
+    }
   }, [filters, sortOption]);
 
   // Handle search submission
