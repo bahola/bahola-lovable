@@ -34,7 +34,7 @@ export const useProductSubmit = ({
       const mainImageUrl = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
       console.log('Using main image for product:', mainImageUrl);
 
-      // Prepare the product data for submission
+      // Prepare the product data for submission - removed tax_class since it doesn't exist in the database
       const productData = {
         name: values.name,
         type: values.type,
@@ -53,8 +53,6 @@ export const useProductSubmit = ({
         benefits: values.benefits || [],
         usage_instructions: values.usage_instructions || null,
         ingredients: values.ingredients || null,
-        tax_status: values.taxStatus,
-        tax_class: values.taxClass,
       };
 
       console.log('Submitting product data:', productData);
@@ -71,6 +69,7 @@ export const useProductSubmit = ({
 
         if (error) throw error;
         result = data;
+        console.log('Product updated successfully:', result);
       } else {
         // Create new product
         const { data, error } = await supabase
@@ -81,6 +80,7 @@ export const useProductSubmit = ({
 
         if (error) throw error;
         result = data;
+        console.log('Product created successfully:', result);
       }
 
       // Handle variations if it's a variable product
@@ -112,8 +112,6 @@ export const useProductSubmit = ({
           throw variationError;
         }
       }
-
-      console.log('Product submitted successfully:', result);
 
       toast({
         title: isEditing ? "Product updated successfully" : "Product created successfully",

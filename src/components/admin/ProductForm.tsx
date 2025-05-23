@@ -44,6 +44,8 @@ const ProductForm = memo(({ onProductAdded, initialProduct, isEditing = false }:
     handleRemoveImage,
   } = useProductForm(onProductAdded, initialProduct, isEditing);
 
+  console.log('ProductForm - Current imageUrls:', imageUrls);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
