@@ -49,37 +49,50 @@ const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVar
 
   // Helper function to check if a variation has a valid potency
   const hasValidPotency = (variation: Variation) => {
-    return variation.potency && variation.potency.trim() !== '' && variation.potency !== 'undefined';
+    return variation.potency && 
+           typeof variation.potency === 'string' && 
+           variation.potency.trim() !== '' && 
+           variation.potency !== 'undefined' && 
+           variation.potency !== 'null';
   };
 
   // Helper function to check if a variation has a valid pack size
   const hasValidPackSize = (variation: Variation) => {
-    return variation.pack_size && variation.pack_size.trim() !== '' && variation.pack_size !== 'undefined';
+    return variation.pack_size && 
+           typeof variation.pack_size === 'string' && 
+           variation.pack_size.trim() !== '' && 
+           variation.pack_size !== 'undefined' && 
+           variation.pack_size !== 'null';
   };
 
   return (
     <div className="mb-6">
       <h2 className="font-semibold mb-2">Available Variations</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {variations.map((variation) => (
-          <div 
-            key={variation.id}
-            className={`border rounded p-2 text-center cursor-pointer transition-colors ${
-              selectedVariation === variation.id 
-                ? 'border-bahola-blue-500 bg-bahola-blue-50' 
-                : 'border-bahola-neutral-200 hover:bg-bahola-blue-50'
-            }`}
-            onClick={() => handleVariationClick(variation)}
-          >
-            {hasValidPotency(variation) && (
-              <div className="font-medium">{variation.potency}</div>
-            )}
-            {hasValidPackSize(variation) && (
-              <div className="text-sm">{variation.pack_size}</div>
-            )}
-            <div className="text-bahola-blue-600">₹{variation.price}</div>
-          </div>
-        ))}
+        {variations.map((variation) => {
+          console.log('Variation potency:', `"${variation.potency}"`, 'hasValidPotency:', hasValidPotency(variation));
+          console.log('Variation pack_size:', `"${variation.pack_size}"`, 'hasValidPackSize:', hasValidPackSize(variation));
+          
+          return (
+            <div 
+              key={variation.id}
+              className={`border rounded p-2 text-center cursor-pointer transition-colors ${
+                selectedVariation === variation.id 
+                  ? 'border-bahola-blue-500 bg-bahola-blue-50' 
+                  : 'border-bahola-neutral-200 hover:bg-bahola-blue-50'
+              }`}
+              onClick={() => handleVariationClick(variation)}
+            >
+              {hasValidPotency(variation) && (
+                <div className="font-medium">{variation.potency}</div>
+              )}
+              {hasValidPackSize(variation) && (
+                <div className="text-sm">{variation.pack_size}</div>
+              )}
+              <div className="text-bahola-blue-600">₹{variation.price}</div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
