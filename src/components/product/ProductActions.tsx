@@ -22,6 +22,7 @@ interface ProductActionsProps {
 const ProductActions: React.FC<ProductActionsProps> = ({ 
   product, 
   quantity, 
+  setQuantity,
   handleAddToCart, 
   isOutOfStock = false 
 }) => {

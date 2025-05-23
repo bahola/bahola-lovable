@@ -111,6 +111,9 @@ const ProductPage = () => {
           />
           
           <ProductActions 
+            product={product}
+            quantity={quantity}
+            setQuantity={setQuantity}
             handleAddToCart={handleAddToCart}
             isOutOfStock={product.stock <= 0}
           />
