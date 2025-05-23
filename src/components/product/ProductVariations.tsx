@@ -31,9 +31,14 @@ const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVar
     return null;
   }
 
-  // Group variations by attributes to only show attributes that have values
-  const hasPotencyVariations = variations.some(v => v.potency && v.potency.trim() !== '');
-  const hasPackSizeVariations = variations.some(v => v.pack_size && v.pack_size.trim() !== '');
+  // Check if there are actual variations with meaningful differences
+  const hasPotencyVariations = variations.some(v => v.potency && v.potency.trim() !== '' && v.potency !== 'undefined');
+  const hasPackSizeVariations = variations.some(v => v.pack_size && v.pack_size.trim() !== '' && v.pack_size !== 'undefined');
+
+  // If there are no meaningful attribute variations, don't show the section
+  if (!hasPotencyVariations && !hasPackSizeVariations) {
+    return null;
+  }
 
   const handleVariationClick = (variation: Variation) => {
     setSelectedVariation(variation.id);
@@ -56,10 +61,10 @@ const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVar
             }`}
             onClick={() => handleVariationClick(variation)}
           >
-            {hasPotencyVariations && (
+            {hasPotencyVariations && variation.potency && variation.potency.trim() !== '' && variation.potency !== 'undefined' && (
               <div className="font-medium">{variation.potency}</div>
             )}
-            {hasPackSizeVariations && (
+            {hasPackSizeVariations && variation.pack_size && variation.pack_size.trim() !== '' && variation.pack_size !== 'undefined' && (
               <div className="text-sm">{variation.pack_size}</div>
             )}
             <div className="text-bahola-blue-600">₹{variation.price}</div>
