@@ -55,7 +55,12 @@ const CategoryPage = () => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        console.log('Fetching products for category/subcategory:', { categoryId, subcategoryId, id });
+        console.log('Fetching products for category/subcategory/concern:', { 
+          categoryId, 
+          subcategoryId, 
+          concernId, 
+          isConcernPage 
+        });
         
         let query = supabase
           .from('products')
@@ -70,8 +75,36 @@ const CategoryPage = () => {
             subcategory:subcategory_id(id, name)
           `);
 
+        // If we're on a concern page, we should filter by the concern (which is the subcategory)
+        if (isConcernPage && concernId) {
+          // First, get the "Specialty Products" category ID
+          const { data: categoryData } = await supabase
+            .from('product_categories')
+            .select('id')
+            .ilike('name', '%specialty%')
+            .single();
+          
+          if (categoryData) {
+            // Then find subcategory matching the concern name/slug
+            const { data: subcategoryData } = await supabase
+              .from('product_subcategories')
+              .select('id')
+              .or(`name.ilike.%${concernId}%, slug.ilike.%${concernId}%`)
+              .eq('category_id', categoryData.id)
+              .single();
+            
+            if (subcategoryData) {
+              console.log('Found matching subcategory for concern:', subcategoryData);
+              query = query
+                .eq('category_id', categoryData.id)
+                .eq('subcategory_id', subcategoryData.id);
+            } else {
+              console.log('No matching subcategory found for concern:', concernId);
+            }
+          }
+        }
         // If we have a specific category, filter by it
-        if (categoryId) {
+        else if (categoryId) {
           // First, get the category UUID by slug
           const { data: categoryData } = await supabase
             .from('product_categories')
@@ -136,7 +169,7 @@ const CategoryPage = () => {
     };
 
     fetchProducts();
-  }, [categoryId, subcategoryId, id]);
+  }, [categoryId, subcategoryId, concernId, isConcernPage]);
   
   // Get page info based on if we're viewing a category, subcategory, or concern
   const pageInfo = getPageInfo(id, isConcernPage, subcategoryId);

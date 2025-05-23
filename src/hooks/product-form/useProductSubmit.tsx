@@ -60,7 +60,7 @@ export const useProductSubmit = ({
         benefits: values.benefits || [],
         usage_instructions: values.usage_instructions || null,
         ingredients: values.ingredients || null,
-        // Add tax fields
+        // Add tax fields but don't use the "tax_" prefix in the database columns
         tax_status: values.taxStatus || 'taxable',
         tax_class: values.taxClass || '5'
       };
@@ -68,10 +68,21 @@ export const useProductSubmit = ({
       console.log('Submitting product data:', productData);
       
       if (isEditing && productId) {
-        // Update existing product
+        // Update existing product - remove tax fields that don't exist in the database schema
+        const { tax_status, tax_class, ...productDataWithoutTax } = productData;
+        
+        // Add tax data in the correct format for the database
+        const dataToUpdate = {
+          ...productDataWithoutTax,
+          // Store tax data in the correct format for your database schema
+          // For example, if your database uses these column names:
+          taxable: tax_status === 'taxable',
+          tax_rate: tax_class
+        };
+        
         const { data: updatedProduct, error } = await supabase
           .from('products')
-          .update(productData)
+          .update(dataToUpdate)
           .eq('id', productId)
           .select()
           .single();
@@ -121,10 +132,20 @@ export const useProductSubmit = ({
           description: `${values.name} has been updated successfully.`
         });
       } else {
-        // Insert new product
+        // Insert new product - remove tax fields that don't exist in the database schema
+        const { tax_status, tax_class, ...productDataWithoutTax } = productData;
+        
+        // Add tax data in the correct format for the database
+        const dataToInsert = {
+          ...productDataWithoutTax,
+          // Store tax data in the correct format for your database schema
+          taxable: tax_status === 'taxable',
+          tax_rate: tax_class
+        };
+        
         const { data: newProduct, error } = await supabase
           .from('products')
-          .insert(productData)
+          .insert(dataToInsert)
           .select()
           .single();
         
