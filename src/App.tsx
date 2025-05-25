@@ -14,6 +14,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
 import Homeopathy from './pages/Homeopathy';
 import ILoveHomeopathy from './pages/ILoveHomeopathy';
+import AppointmentBooking from './pages/AppointmentBooking';
+import AppointmentConfirmation from './pages/AppointmentConfirmation';
 
 function App() {
   return (
@@ -31,6 +33,10 @@ function App() {
         <Route path="/bach-flower" element={<CategoryPage />} />
         <Route path="/bach-flower/:subcategory" element={<CategoryPage />} />
         <Route path="/concern/:concernId" element={<CategoryPage />} />
+        
+        {/* Appointment routes */}
+        <Route path="/book-appointment" element={<AppointmentBooking />} />
+        <Route path="/appointment-confirmation" element={<AppointmentConfirmation />} />
         
         {/* Admin routes */}
         <Route path="/admin" element={<AdminDashboard />} />

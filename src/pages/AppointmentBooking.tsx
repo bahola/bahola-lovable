@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@/components/ui/separator";
-import { CreditCard, Calendar as CalendarIcon } from 'lucide-react';
+import { CreditCard, Calendar as CalendarIcon, Clock, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Form schema for validation
@@ -55,7 +55,7 @@ const generateTimeSlots = (date: Date) => {
 };
 
 // Appointment pricing
-const APPOINTMENT_PRICE = 1200; // ₹1,200
+const APPOINTMENT_PRICE = 1000; // ₹1,000
 
 const AppointmentBooking = () => {
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ const AppointmentBooking = () => {
     // Simulate payment processing
     setTimeout(() => {
       toast.dismiss();
-      toast.success("Appointment booked successfully!");
+      toast.success("Payment successful! Appointment confirmed.");
       
       // Redirect to confirmation page
       navigate("/appointment-confirmation");
@@ -124,7 +124,7 @@ const AppointmentBooking = () => {
   };
 
   return (
-    <PageLayout title="Book In-Person Appointment" description="Schedule your appointment and complete payment">
+    <PageLayout title="Book In-Person Appointment" description="Schedule your homeopathic consultation with our expert physicians">
       <div className="max-w-4xl mx-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -165,7 +165,10 @@ const AppointmentBooking = () => {
               {/* Time Slots Section */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Select Time Slot</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-bahola-blue-500" />
+                    Select Time Slot
+                  </CardTitle>
                   <CardDescription>
                     Choose a 30-minute time slot for your appointment
                   </CardDescription>
@@ -273,25 +276,46 @@ const AppointmentBooking = () => {
               </CardContent>
             </Card>
 
-            {/* Payment Section */}
+            {/* Consultation Details & Payment Section */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CreditCard className="h-5 w-5 text-bahola-blue-500" />
-                  Payment Details
+                  Consultation & Payment Details
                 </CardTitle>
                 <CardDescription>
                   Complete payment to confirm your appointment
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mb-4">
-                  <div className="bg-bahola-blue-50 p-4 rounded-lg mb-4">
-                    <p className="text-bahola-blue-700 font-medium">Appointment Fee</p>
-                    <p className="text-2xl font-bold text-bahola-blue-800">₹{APPOINTMENT_PRICE.toLocaleString()}</p>
-                    <p className="text-sm text-bahola-blue-600 mt-1">
-                      30-minute consultation with our homeopathic physician
-                    </p>
+                <div className="mb-6">
+                  <div className="bg-bahola-blue-50 p-6 rounded-lg mb-4">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <p className="text-bahola-blue-700 font-medium">Homeopathic Consultation</p>
+                        <p className="text-2xl font-bold text-bahola-blue-800">₹{APPOINTMENT_PRICE.toLocaleString()}</p>
+                      </div>
+                      <CheckCircle className="h-6 w-6 text-green-500" />
+                    </div>
+                    
+                    <div className="space-y-2 text-sm text-bahola-blue-600">
+                      <p className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        30-minute in-person consultation
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        Expert homeopathic physician assessment
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        Personalized treatment plan
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <strong>15-day follow-up reviews included</strong>
+                      </p>
+                    </div>
                   </div>
                   
                   <FormField
@@ -359,7 +383,7 @@ const AppointmentBooking = () => {
               </CardContent>
               <CardFooter>
                 <Button type="submit" className="w-full bg-bahola-blue-500 hover:bg-bahola-blue-600">
-                  Pay ₹{APPOINTMENT_PRICE.toLocaleString()} & Book Appointment
+                  Pay ₹{APPOINTMENT_PRICE.toLocaleString()} & Confirm Appointment
                 </Button>
               </CardFooter>
             </Card>
