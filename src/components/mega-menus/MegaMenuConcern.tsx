@@ -55,14 +55,14 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
       <div className="p-6 bg-white">
         <h2 className="text-xl font-bold mb-6 text-gray-800">Shop by Health Concern</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-6">
           {concerns.map((concern) => (
             <a 
               key={concern} 
               href={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`}
               className="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-200 text-gray-700 hover:text-blue-600"
             >
-              <div className="mr-3 text-blue-500">
+              <div className="mr-3 text-blue-500 flex-shrink-0">
                 {getConcernIcon(concern)}
               </div>
               <span className="text-sm font-medium">
