@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
 import ProductPage from './pages/ProductPage';
 import CategoryPage from './pages/CategoryPage';
+import CategoryOverview from './pages/CategoryOverview';
 import SearchResults from './pages/SearchResults';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/product/:productId" element={<ProductPage />} />
+        <Route path="/categories" element={<CategoryOverview />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/login" element={<Login />} />
