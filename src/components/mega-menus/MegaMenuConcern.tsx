@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
@@ -55,7 +54,7 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
       <div className="p-6 bg-white shadow-lg">
         <h2 className="text-xl font-bold mb-6 text-gray-800">Shop by Health Concern</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
+        <div className="grid grid-cols-3 gap-4 max-w-6xl">
           {concerns.map((concern) => (
             <a 
               key={concern} 
