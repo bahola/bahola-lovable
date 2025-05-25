@@ -45,82 +45,84 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
   
   return (
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="container mx-auto p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            {categories.slice(0, 2).map((category, index) => (
-              <div key={category.id} className={index > 0 ? "mt-6" : ""}>
-                <Link 
-                  to={`/category/${category.id}`} 
-                  className={`block text-lg font-semibold mb-4 ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"}`}
-                >
-                  {category.name}
-                </Link>
-                {category.subcategories.length > 0 && (
-                  <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-                    {category.subcategories.map((subcategory) => (
-                      <Link
-                        key={subcategory.id}
-                        to={`/category/${category.id}/${subcategory.id}`}
-                        className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""}`}
-                      >
-                        {subcategory.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          
-          <div>
-            {categories.slice(2, 3).map((category, index) => (
-              <div key={category.id} className={index > 0 ? "mt-6" : ""}>
-                <Link 
-                  to={`/category/${category.id}`} 
-                  className={`block text-lg font-semibold mb-4 ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"}`}
-                >
-                  {category.name}
-                </Link>
-                {category.subcategories.length > 0 && (
-                  <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-                    {category.subcategories.map((subcategory) => (
-                      <Link
-                        key={subcategory.id}
-                        to={`/category/${category.id}/${subcategory.id}`}
-                        className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""}`}
-                      >
-                        {subcategory.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            
-            <div className="mt-6 grid grid-cols-1 gap-3">
-              {categories.slice(3).map((category) => (
-                <Link 
-                  key={category.id}
-                  to={`/category/${category.id}`}
-                  className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800"
-                >
-                  {category.name}
-                </Link>
+      <div className="p-6 bg-gradient-to-br from-blue-50 to-white shadow-lg border-t-4 border-blue-500">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              {categories.slice(0, 2).map((category, index) => (
+                <div key={category.id} className={index > 0 ? "mt-6" : ""}>
+                  <Link 
+                    to={`/category/${category.id}`} 
+                    className={`block text-lg font-semibold mb-4 ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"}`}
+                  >
+                    {category.name}
+                  </Link>
+                  {category.subcategories.length > 0 && (
+                    <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                      {category.subcategories.map((subcategory) => (
+                        <Link
+                          key={subcategory.id}
+                          to={`/category/${category.id}/${subcategory.id}`}
+                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm`}
+                        >
+                          {subcategory.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
+            
+            <div>
+              {categories.slice(2, 3).map((category, index) => (
+                <div key={category.id} className={index > 0 ? "mt-6" : ""}>
+                  <Link 
+                    to={`/category/${category.id}`} 
+                    className={`block text-lg font-semibold mb-4 ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"}`}
+                  >
+                    {category.name}
+                  </Link>
+                  {category.subcategories.length > 0 && (
+                    <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                      {category.subcategories.map((subcategory) => (
+                        <Link
+                          key={subcategory.id}
+                          to={`/category/${category.id}/${subcategory.id}`}
+                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm`}
+                        >
+                          {subcategory.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              <div className="mt-6 grid grid-cols-1 gap-3">
+                {categories.slice(3).map((category) => (
+                  <Link 
+                    key={category.id}
+                    to={`/category/${category.id}`}
+                    className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        <Separator className="my-4" />
-        
-        <div className="text-center">
-          <Link
-            to="/categories"
-            className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-800 font-medium"
-          >
-            View All Categories
-          </Link>
+          <Separator className="my-4" />
+          
+          <div className="text-center">
+            <Link
+              to="/categories"
+              className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-800 font-medium"
+            >
+              View All Categories
+            </Link>
+          </div>
         </div>
       </div>
     </div>
