@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
@@ -52,14 +53,14 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
 
   return (
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="p-6 bg-white shadow-lg">
+      <div className="p-6 bg-gradient-to-br from-blue-50 to-white shadow-lg border-t-4 border-blue-500">
         <h2 className="text-xl font-bold mb-6 text-gray-800">Shop by Health Concern</h2>
         <div className="grid grid-cols-3 gap-4 max-w-6xl">
           {concerns.map((concern) => (
             <a 
               key={concern} 
               href={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`}
-              className="flex items-center p-3 hover:bg-blue-50 rounded-lg transition-colors duration-200 text-gray-700 hover:text-blue-600 min-w-0"
+              className="flex items-center p-3 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-gray-700 hover:text-blue-600 min-w-0 bg-white/70 hover:bg-blue-100 shadow-sm"
             >
               <div className="mr-3 text-blue-500 flex-shrink-0">
                 {getConcernIcon(concern)}
