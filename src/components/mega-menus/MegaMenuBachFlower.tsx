@@ -22,7 +22,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Link 
-                  to="/bach-flower" 
+                  to="/bach-flower-concerns" 
                   className="flex flex-col items-center p-6 border border-bahola-neutral-200 rounded-lg hover:border-bahola-blue-300 hover:bg-bahola-blue-50 transition-colors bg-white/70 shadow-sm"
                 >
                   <div className="mb-3 text-bahola-blue-500">
@@ -70,7 +70,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
                 </Link>
               </div>
               <div className="mt-4">
-                <Link to="/bach-flower" className="text-bahola-blue-500 font-semibold hover:text-bahola-blue-700 flex items-center">
+                <Link to="/bach-flower-concerns" className="text-bahola-blue-500 font-semibold hover:text-bahola-blue-700 flex items-center">
                   View all Bach Flower remedies
                   <ChevronRight size={16} className="ml-1" />
                 </Link>

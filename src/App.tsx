@@ -16,6 +16,7 @@ import Homeopathy from './pages/Homeopathy';
 import ILoveHomeopathy from './pages/ILoveHomeopathy';
 import AppointmentBooking from './pages/AppointmentBooking';
 import AppointmentConfirmation from './pages/AppointmentConfirmation';
+import BachFlowerConcerns from './pages/BachFlowerConcerns';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/homeopathy" element={<Homeopathy />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/bach-flower" element={<CategoryPage />} />
+        <Route path="/bach-flower-concerns" element={<BachFlowerConcerns />} />
         <Route path="/bach-flower/:subcategory" element={<CategoryPage />} />
         <Route path="/concern/:concernId" element={<CategoryPage />} />
         
