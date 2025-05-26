@@ -42,6 +42,7 @@ function App() {
         
         {/* Appointment routes */}
         <Route path="/book-appointment" element={<AppointmentBooking />} />
+        <Route path="/video-consultation" element={<VideoConsultation />} />
         <Route path="/appointment-confirmation" element={<AppointmentConfirmation />} />
         
         {/* Admin routes */}
