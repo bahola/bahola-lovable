@@ -37,10 +37,30 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
       colorClass: "text-blue-800 hover:text-blue-900", // Darker blue color
       subColorClass: "hover:bg-blue-100 hover:border-blue-300" // Darker blue highlight
     },
-    { id: "bio-chemics", name: "Bio Chemics", subcategories: [] },
-    { id: "bio-combinations", name: "Bio Combinations", subcategories: [] },
-    { id: "triturations", name: "Triturations", subcategories: [] },
-    { id: "single-remedies", name: "Single Remedies", subcategories: [] }
+    { 
+      id: "bio-chemics", 
+      name: "Bio Chemics", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    },
+    { 
+      id: "bio-combinations", 
+      name: "Bio Combinations", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    },
+    { 
+      id: "triturations", 
+      name: "Triturations", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    },
+    { 
+      id: "single-remedies", 
+      name: "Single Remedies", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    }
   ];
   
   return (
@@ -63,7 +83,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
                         <Link
                           key={subcategory.id}
                           to={`/category/${category.id}/${subcategory.id}`}
-                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm`}
+                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm transition-colors`}
                         >
                           {subcategory.name}
                         </Link>
@@ -89,7 +109,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
                         <Link
                           key={subcategory.id}
                           to={`/category/${category.id}/${subcategory.id}`}
-                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm`}
+                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm transition-colors`}
                         >
                           {subcategory.name}
                         </Link>
@@ -104,7 +124,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
                   <Link 
                     key={category.id}
                     to={`/category/${category.id}`}
-                    className="text-lg font-semibold text-bahola-blue-600 hover:text-bahola-blue-800"
+                    className={`text-lg font-semibold ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"} transition-colors`}
                   >
                     {category.name}
                   </Link>
@@ -118,7 +138,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
           <div className="text-center">
             <Link
               to="/categories"
-              className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-800 font-medium"
+              className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-800 font-medium transition-colors"
             >
               View All Categories
             </Link>
