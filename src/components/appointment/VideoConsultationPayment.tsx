@@ -40,44 +40,70 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
       return;
     }
 
-    // Make API call to create order (in real app, this would be your backend endpoint)
-    const data = {
-      amount: consultationPrice * 100, // Razorpay expects amount in paise
-      currency: "INR",
-      receipt: `video_consultation_${Date.now()}`,
-    };
+    // Get form data for prefill
+    const customerName = watch("name") || "";
+    const customerEmail = watch("email") || "";
+    const customerPhone = watch("phone") || "";
+    const appointmentDate = watch("appointmentDate");
+    const appointmentTime = watch("appointmentTime") || "";
+
+    // Basic validation
+    if (!customerName || !customerEmail || !customerPhone || !appointmentDate || !appointmentTime) {
+      toast.error("Please fill in all appointment details before proceeding with payment");
+      return;
+    }
 
     const options = {
-      key: "rzp_test_9999999999", // Replace with your Razorpay key
+      key: "YOUR_RAZORPAY_KEY_ID", // Replace this with your actual Razorpay Key ID
       name: "Bahola Labs",
-      currency: data.currency,
-      amount: data.amount,
-      order_id: `order_${Date.now()}`, // In real app, this comes from your backend
+      currency: "INR",
+      amount: consultationPrice * 100, // Razorpay expects amount in paise
       description: "Video Consultation Fee",
       image: "/bahola-logo.png",
       handler: function (response: any) {
-        // Verify payment on your server (in real app)
         console.log("Payment successful:", response);
+        
+        // Store appointment details in localStorage for now
+        const appointmentData = {
+          paymentId: response.razorpay_payment_id,
+          customerName,
+          customerEmail,
+          customerPhone,
+          appointmentDate: appointmentDate.toISOString(),
+          appointmentTime,
+          consultationType: "video",
+          amount: consultationPrice,
+          paymentStatus: "completed",
+          createdAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem('lastAppointment', JSON.stringify(appointmentData));
+        
         toast.success("Payment successful! Video consultation confirmed.");
         
-        // Redirect to confirmation page or handle success
+        // Redirect to confirmation page
         setTimeout(() => {
           window.location.href = "/appointment-confirmation";
         }, 1000);
       },
       prefill: {
-        name: watch("name"),
-        email: watch("email"),
-        contact: watch("phone"),
+        name: customerName,
+        email: customerEmail,
+        contact: customerPhone,
       },
       notes: {
         consultation_type: "video",
-        appointment_date: watch("appointmentDate"),
-        appointment_time: watch("appointmentTime"),
+        appointment_date: appointmentDate?.toISOString(),
+        appointment_time: appointmentTime,
       },
       theme: {
         color: "#1e3a8a", // Bahola blue color
       },
+      modal: {
+        ondismiss: function() {
+          toast.info("Payment cancelled");
+        }
+      }
     };
 
     const paymentObject = new (window as any).Razorpay(options);
