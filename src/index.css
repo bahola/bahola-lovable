@@ -96,10 +96,30 @@
   }
 
   .mega-menu.mega-menu-full {
-    width: 60vw; /* 60% of viewport width - using vw units for viewport width */
-    max-width: 1200px;
+    width: 90vw;
+    max-width: 1000px;
     left: 50%;
+    right: auto;
     transform: translateX(-50%) translateY(2px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Ensure mega menus don't overflow on smaller screens */
+  @media (max-width: 1200px) {
+    .mega-menu.mega-menu-full {
+      width: 95vw;
+      max-width: 900px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mega-menu.mega-menu-full {
+      width: 98vw;
+      max-width: none;
+      left: 1vw;
+      transform: translateY(2px);
+    }
   }
 
   .mega-menu-open {
@@ -109,6 +129,12 @@
 
   .mega-menu-open:not(.mega-menu-full) {
     transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .mega-menu-open.mega-menu-full {
+      transform: translateY(0);
+    }
   }
 
   .cloud-bg {
