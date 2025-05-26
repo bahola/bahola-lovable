@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Video, CheckCircle, CreditCard } from 'lucide-react';
 import { Control, FieldValues, UseFormWatch } from 'react-hook-form';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface VideoConsultationPaymentProps {
   control: Control<any>;
@@ -53,61 +53,105 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
       return;
     }
 
-    const options = {
-      key: "YOUR_RAZORPAY_KEY_ID", // Replace this with your actual Razorpay Key ID
-      name: "Bahola Labs",
-      currency: "INR",
-      amount: consultationPrice * 100, // Razorpay expects amount in paise
-      description: "Video Consultation Fee",
-      image: "/bahola-logo.png",
-      handler: function (response: any) {
-        console.log("Payment successful:", response);
-        
-        // Store appointment details in localStorage for now
-        const appointmentData = {
-          paymentId: response.razorpay_payment_id,
-          customerName,
-          customerEmail,
-          customerPhone,
-          appointmentDate: appointmentDate.toISOString(),
-          appointmentTime,
-          consultationType: "video",
-          amount: consultationPrice,
-          paymentStatus: "completed",
-          createdAt: new Date().toISOString()
-        };
-        
-        localStorage.setItem('lastAppointment', JSON.stringify(appointmentData));
-        
-        toast.success("Payment successful! Video consultation confirmed.");
-        
-        // Redirect to confirmation page
-        setTimeout(() => {
-          window.location.href = "/appointment-confirmation";
-        }, 1000);
-      },
-      prefill: {
-        name: customerName,
-        email: customerEmail,
-        contact: customerPhone,
-      },
-      notes: {
-        consultation_type: "video",
-        appointment_date: appointmentDate?.toISOString(),
+    // Create appointment record in database first
+    try {
+      const { data: currentUser } = await supabase.auth.getUser();
+      
+      const appointmentData = {
+        user_id: currentUser.user?.id || null,
+        customer_name: customerName,
+        customer_email: customerEmail,
+        customer_phone: customerPhone,
+        appointment_date: appointmentDate.toISOString().split('T')[0], // Convert to date format
         appointment_time: appointmentTime,
-      },
-      theme: {
-        color: "#1e3a8a", // Bahola blue color
-      },
-      modal: {
-        ondismiss: function() {
-          toast.info("Payment cancelled");
-        }
-      }
-    };
+        consultation_type: 'video',
+        amount: consultationPrice,
+        payment_status: 'pending'
+      };
 
-    const paymentObject = new (window as any).Razorpay(options);
-    paymentObject.open();
+      const { data: appointment, error } = await supabase
+        .from('appointments')
+        .insert(appointmentData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating appointment:', error);
+        toast.error("Failed to create appointment record");
+        return;
+      }
+
+      const options = {
+        key: "YOUR_RAZORPAY_KEY_ID", // Replace this with your actual Razorpay Key ID
+        name: "Bahola Labs",
+        currency: "INR",
+        amount: consultationPrice * 100, // Razorpay expects amount in paise
+        description: "Video Consultation Fee",
+        image: "/bahola-logo.png",
+        handler: async function (response: any) {
+          console.log("Payment successful:", response);
+          
+          // Update appointment with payment details
+          try {
+            const { error: updateError } = await supabase
+              .from('appointments')
+              .update({
+                payment_id: response.razorpay_payment_id,
+                payment_status: 'completed',
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', appointment.id);
+
+            if (updateError) {
+              console.error('Error updating payment status:', updateError);
+              toast.error("Payment successful but failed to update record");
+            } else {
+              toast.success("Payment successful! Video consultation confirmed.");
+              
+              // Redirect to confirmation page
+              setTimeout(() => {
+                window.location.href = "/appointment-confirmation";
+              }, 1000);
+            }
+          } catch (updateError) {
+            console.error('Error updating appointment:', updateError);
+            toast.error("Payment successful but failed to update record");
+          }
+        },
+        prefill: {
+          name: customerName,
+          email: customerEmail,
+          contact: customerPhone,
+        },
+        notes: {
+          consultation_type: "video",
+          appointment_date: appointmentDate?.toISOString(),
+          appointment_time: appointmentTime,
+          appointment_id: appointment.id,
+        },
+        theme: {
+          color: "#1e3a8a", // Bahola blue color
+        },
+        modal: {
+          ondismiss: async function() {
+            // Update appointment status to cancelled if payment is dismissed
+            await supabase
+              .from('appointments')
+              .update({ payment_status: 'cancelled' })
+              .eq('id', appointment.id);
+            
+            toast.info("Payment cancelled");
+          }
+        }
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      toast.error("Failed to create appointment. Please try again.");
+    }
   };
 
   return (

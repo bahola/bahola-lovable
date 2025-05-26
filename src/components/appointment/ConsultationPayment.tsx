@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { CreditCard, CheckCircle } from 'lucide-react';
 import { Control, FieldValues, UseFormWatch } from 'react-hook-form';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ConsultationPaymentProps {
   control: Control<any>;
@@ -15,7 +17,144 @@ interface ConsultationPaymentProps {
   appointmentPrice: number;
 }
 
+// Razorpay integration function
+const initializeRazorpay = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+};
+
 export const ConsultationPayment = ({ control, watch, appointmentPrice }: ConsultationPaymentProps) => {
+  const handleRazorpayPayment = async () => {
+    const res = await initializeRazorpay();
+
+    if (!res) {
+      toast.error("Razorpay SDK Failed to load");
+      return;
+    }
+
+    // Get form data for prefill
+    const customerName = watch("name") || "";
+    const customerEmail = watch("email") || "";
+    const customerPhone = watch("phone") || "";
+    const appointmentDate = watch("appointmentDate");
+    const appointmentTime = watch("appointmentTime") || "";
+
+    // Basic validation
+    if (!customerName || !customerEmail || !customerPhone || !appointmentDate || !appointmentTime) {
+      toast.error("Please fill in all appointment details before proceeding with payment");
+      return;
+    }
+
+    // Create appointment record in database first
+    try {
+      const { data: currentUser } = await supabase.auth.getUser();
+      
+      const appointmentData = {
+        user_id: currentUser.user?.id || null,
+        customer_name: customerName,
+        customer_email: customerEmail,
+        customer_phone: customerPhone,
+        appointment_date: appointmentDate.toISOString().split('T')[0], // Convert to date format
+        appointment_time: appointmentTime,
+        consultation_type: 'in-person',
+        amount: appointmentPrice,
+        payment_status: 'pending'
+      };
+
+      const { data: appointment, error } = await supabase
+        .from('appointments')
+        .insert(appointmentData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating appointment:', error);
+        toast.error("Failed to create appointment record");
+        return;
+      }
+
+      const options = {
+        key: "YOUR_RAZORPAY_KEY_ID", // Replace this with your actual Razorpay Key ID
+        name: "Bahola Labs",
+        currency: "INR",
+        amount: appointmentPrice * 100, // Razorpay expects amount in paise
+        description: "In-Person Consultation Fee",
+        image: "/bahola-logo.png",
+        handler: async function (response: any) {
+          console.log("Payment successful:", response);
+          
+          // Update appointment with payment details
+          try {
+            const { error: updateError } = await supabase
+              .from('appointments')
+              .update({
+                payment_id: response.razorpay_payment_id,
+                payment_status: 'completed',
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', appointment.id);
+
+            if (updateError) {
+              console.error('Error updating payment status:', updateError);
+              toast.error("Payment successful but failed to update record");
+            } else {
+              toast.success("Payment successful! Appointment confirmed.");
+              
+              // Redirect to confirmation page
+              setTimeout(() => {
+                window.location.href = "/appointment-confirmation";
+              }, 1000);
+            }
+          } catch (updateError) {
+            console.error('Error updating appointment:', updateError);
+            toast.error("Payment successful but failed to update record");
+          }
+        },
+        prefill: {
+          name: customerName,
+          email: customerEmail,
+          contact: customerPhone,
+        },
+        notes: {
+          consultation_type: "in-person",
+          appointment_date: appointmentDate?.toISOString(),
+          appointment_time: appointmentTime,
+          appointment_id: appointment.id,
+        },
+        theme: {
+          color: "#1e3a8a", // Bahola blue color
+        },
+        modal: {
+          ondismiss: async function() {
+            // Update appointment status to cancelled if payment is dismissed
+            await supabase
+              .from('appointments')
+              .update({ payment_status: 'cancelled' })
+              .eq('id', appointment.id);
+            
+            toast.info("Payment cancelled");
+          }
+        }
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      toast.error("Failed to create appointment. Please try again.");
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -122,7 +261,11 @@ export const ConsultationPayment = ({ control, watch, appointmentPrice }: Consul
         )}
       </CardContent>
       <CardFooter>
-        <Button type="submit" className="w-full bg-bahola-blue-500 hover:bg-bahola-blue-600">
+        <Button 
+          type="button" 
+          className="w-full bg-bahola-blue-500 hover:bg-bahola-blue-600"
+          onClick={handleRazorpayPayment}
+        >
           Pay ₹{appointmentPrice.toLocaleString()} & Confirm Appointment
         </Button>
       </CardFooter>

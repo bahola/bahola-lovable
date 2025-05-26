@@ -6,7 +6,6 @@ import { Form } from '@/components/ui/form';
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from 'sonner';
 import { AppointmentDatePicker } from '@/components/appointment/AppointmentDatePicker';
 import { AppointmentTimeSlots } from '@/components/appointment/AppointmentTimeSlots';
 import { PatientInformationForm } from '@/components/appointment/PatientInformationForm';
@@ -60,21 +59,11 @@ const AppointmentBooking = () => {
     setSelectedDate(date);
   };
 
+  // Form submission is now handled by the payment component
+  // This is just for form validation
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // In a real app, this would call an API to process payment and create the appointment
-    console.log("Form values:", values);
-
-    // Show loading toast
-    toast.loading("Processing payment...");
-
-    // Simulate payment processing
-    setTimeout(() => {
-      toast.dismiss();
-      toast.success("Payment successful! Appointment confirmed.");
-      
-      // Redirect to confirmation page
-      navigate("/appointment-confirmation");
-    }, 2000);
+    // The actual submission is handled by the ConsultationPayment component
+    console.log("Form validation passed:", values);
   };
 
   return (
