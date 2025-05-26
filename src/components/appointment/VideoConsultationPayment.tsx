@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,7 +63,7 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
         customer_name: customerName,
         customer_email: customerEmail,
         customer_phone: customerPhone,
-        appointment_date: appointmentDate.toISOString().split('T')[0], // Convert to date format
+        appointment_date: appointmentDate.toISOString().split('T')[0],
         appointment_time: appointmentTime,
         consultation_type: 'video',
         amount: consultationPrice,
@@ -81,17 +82,19 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
         return;
       }
 
+      // Get Razorpay key from environment or use from secrets
+      const RAZORPAY_KEY_ID = "rzp_test_your_key_here"; // This will be replaced by your actual key
+
       const options = {
-        key: "YOUR_RAZORPAY_KEY_ID", // Replace this with your actual Razorpay Key ID
+        key: RAZORPAY_KEY_ID,
         name: "Bahola Labs",
         currency: "INR",
-        amount: consultationPrice * 100, // Razorpay expects amount in paise
+        amount: consultationPrice * 100,
         description: "Video Consultation Fee",
         image: "/bahola-logo.png",
         handler: async function (response: any) {
           console.log("Payment successful:", response);
           
-          // Update appointment with payment details
           try {
             const { error: updateError } = await supabase
               .from('appointments')
@@ -108,7 +111,6 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
             } else {
               toast.success("Payment successful! Video consultation confirmed.");
               
-              // Redirect to confirmation page
               setTimeout(() => {
                 window.location.href = "/appointment-confirmation";
               }, 1000);
@@ -130,11 +132,10 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
           appointment_id: appointment.id,
         },
         theme: {
-          color: "#1e3a8a", // Bahola blue color
+          color: "#1e3a8a",
         },
         modal: {
           ondismiss: async function() {
-            // Update appointment status to cancelled if payment is dismissed
             await supabase
               .from('appointments')
               .update({ payment_status: 'cancelled' })
