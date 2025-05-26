@@ -33,8 +33,10 @@ export const ConsultSection = () => {
             <p className="text-bahola-neutral-600 text-center mb-6">
               Connect with our homeopaths from anywhere through secure video consultations.
             </p>
-            <Button className="w-full btn-bahola">
-              Book Video Call
+            <Button className="w-full btn-bahola" asChild>
+              <Link to="/video-consultation">
+                Book Video Call
+              </Link>
             </Button>
           </div>
         </div>

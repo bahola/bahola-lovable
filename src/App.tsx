@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound';
 import Homeopathy from './pages/Homeopathy';
 import ILoveHomeopathy from './pages/ILoveHomeopathy';
 import AppointmentBooking from './pages/AppointmentBooking';
+import VideoConsultation from './pages/VideoConsultation';
 import AppointmentConfirmation from './pages/AppointmentConfirmation';
 import BachFlowerConcerns from './pages/BachFlowerConcerns';
 
