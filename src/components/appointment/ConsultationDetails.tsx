@@ -1,0 +1,40 @@
+
+import React from 'react';
+import { CheckCircle } from 'lucide-react';
+
+interface ConsultationDetailsProps {
+  price: number;
+}
+
+export const ConsultationDetails = ({ price }: ConsultationDetailsProps) => {
+  return (
+    <div className="bg-bahola-blue-50 p-6 rounded-lg mb-4">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <p className="text-bahola-blue-700 font-medium">Homeopathic Consultation</p>
+          <p className="text-2xl font-bold text-bahola-blue-800">₹{price.toLocaleString()}</p>
+        </div>
+        <CheckCircle className="h-6 w-6 text-green-500" />
+      </div>
+      
+      <div className="space-y-2 text-sm text-bahola-blue-600">
+        <p className="flex items-center gap-2">
+          <CheckCircle className="h-4 w-4 text-green-500" />
+          30-minute in-person consultation
+        </p>
+        <p className="flex items-center gap-2">
+          <CheckCircle className="h-4 w-4 text-green-500" />
+          Expert homeopathic physician assessment
+        </p>
+        <p className="flex items-center gap-2">
+          <CheckCircle className="h-4 w-4 text-green-500" />
+          Personalized treatment plan
+        </p>
+        <p className="flex items-center gap-2">
+          <CheckCircle className="h-4 w-4 text-green-500" />
+          <strong>15-day follow-up reviews included</strong>
+        </p>
+      </div>
+    </div>
+  );
+};
