@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -82,8 +81,7 @@ export const ConsultationPayment = ({ control, watch, appointmentPrice }: Consul
         return;
       }
 
-      // Get Razorpay key from environment or use from secrets
-      const RAZORPAY_KEY_ID = "rzp_test_your_key_here"; // This will be replaced by your actual key
+      const RAZORPAY_KEY_ID = "rzp_live_VQHpUDc1myNrvm";
 
       const options = {
         key: RAZORPAY_KEY_ID,
