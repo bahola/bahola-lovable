@@ -53,7 +53,9 @@ export const Header = () => {
     <>
       <header className="w-full">
         {/* Top Menu */}
-        <TopBar onOpenAuthModal={setAuthModalOpen} />
+        <div className={isScrolled ? 'hidden' : 'block'}>
+          <TopBar onOpenAuthModal={setAuthModalOpen} />
+        </div>
 
         {/* Main Menu */}
         <MainHeader 
