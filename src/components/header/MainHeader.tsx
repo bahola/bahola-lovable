@@ -39,7 +39,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/bahola-logo.png" 
+              src="/lovable-uploads/ee08c806-593a-4759-b27e-d41be5af04a8.png" 
               alt="Bahola" 
               className="h-10 w-auto"
               onError={(e) => {
