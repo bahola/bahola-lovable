@@ -9,14 +9,14 @@ interface SearchBarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onSearch: (e: React.FormEvent) => void;
-  onClear?: () => void;
+  onClearSearch?: () => void;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ 
   searchQuery, 
   setSearchQuery, 
   onSearch,
-  onClear
+  onClearSearch
 }) => {
   const navigate = useNavigate();
   const [inputFocused, setInputFocused] = useState(false);
@@ -39,13 +39,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         />
         <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
         
-        {searchQuery && onClear && (
+        {searchQuery && onClearSearch && (
           <Button 
             type="button"
             variant="ghost"
             size="icon"
             className="absolute right-10 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
-            onClick={onClear}
+            onClick={onClearSearch}
           >
             <X size={16} />
           </Button>

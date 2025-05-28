@@ -45,6 +45,12 @@ export const Header = () => {
     setActiveSubmenu(prev => prev === submenu ? null : submenu);
   };
 
+  // Wrapper function to match the expected signature
+  const handleSearchWrapper = () => {
+    const event = { preventDefault: () => {} } as React.FormEvent;
+    handleSearch(event);
+  };
+
   return (
     <>
       <header className="w-full">
@@ -58,7 +64,7 @@ export const Header = () => {
           isScrolled={isScrolled}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          onSearch={handleSearch}
+          onSearch={handleSearchWrapper}
           onClearSearch={clearSearch}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
