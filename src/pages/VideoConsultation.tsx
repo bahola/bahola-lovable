@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/PageLayout';
@@ -29,7 +28,7 @@ const formSchema = z.object({
 });
 
 // Video consultation pricing
-const VIDEO_CONSULTATION_PRICE = 800; // ₹800
+const VIDEO_CONSULTATION_PRICE = 800;
 
 const VideoConsultation = () => {
   const navigate = useNavigate();
@@ -70,8 +69,8 @@ const VideoConsultation = () => {
     <PageLayout title="Book Video Consultation" description="Schedule your online homeopathic consultation with our expert physicians">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 p-6 bg-bahola-navy-50 rounded-lg border-l-4 border-bahola-navy-950">
-          <h2 className="text-xl font-bold text-bahola-navy-950 mb-2 font-helvetica">Convenient Online Consultation</h2>
-          <p className="text-bahola-navy-700 font-serif">Connect with our homeopathic experts from the comfort of your home through secure video consultation.</p>
+          <h2 className="text-xl font-medium text-bahola-navy-950 mb-2 font-helvetica brand-subtitle">Convenient Online Consultation</h2>
+          <p className="text-bahola-navy-700 brand-body leading-brand-content">Connect with our homeopathic experts from the comfort of your home through secure video consultation.</p>
         </div>
         
         <Form {...form}>

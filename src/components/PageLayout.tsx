@@ -22,8 +22,8 @@ export const PageLayout = ({ children, title, description }: PageLayoutProps) =>
       <main className="flex-grow">
         <div className="bg-bahola-navy-50 py-8 md:py-12">
           <div className="container mx-auto px-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-bahola-navy-950 font-helvetica">{title}</h1>
-            {description && <p className="mt-2 text-lg text-bahola-navy-700 font-serif">{description}</p>}
+            <h1 className="text-3xl md:text-4xl font-light text-bahola-navy-950 font-helvetica tracking-brand-tight">{title}</h1>
+            {description && <p className="mt-2 text-lg text-bahola-navy-700 brand-body leading-brand-content">{description}</p>}
           </div>
         </div>
         

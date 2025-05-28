@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -76,7 +75,7 @@ export default {
 						700: '#334e68',
 						800: '#243b53',
 						900: '#102a43',
-						950: '#003366', // Deep Navy Blue - Primary Brand Color
+						950: '#003366',
 					},
 					blue: {
 						50: '#e6f3ff',
@@ -84,7 +83,7 @@ export default {
 						200: '#80bfff',
 						300: '#4da6ff',
 						400: '#1a8cff',
-						500: '#0066CC', // Royal Blue - Secondary Brand Color
+						500: '#0066CC',
 						600: '#0052a3',
 						700: '#003d7a',
 						800: '#002952',
@@ -96,7 +95,7 @@ export default {
 						200: '#a8d4ff',
 						300: '#7cbfff',
 						400: '#50aaff',
-						500: '#4A90E2', // Sky Blue - Accent Color
+						500: '#4A90E2',
 						600: '#3b73b5',
 						700: '#2c5688',
 						800: '#1d395b',
@@ -108,7 +107,7 @@ export default {
 						200: '#80d5df',
 						300: '#4dc4d2',
 						400: '#1ab3c5',
-						500: '#17A2B8', // Healthcare Teal
+						500: '#17A2B8',
 						600: '#128293',
 						700: '#0e626e',
 						800: '#094149',
@@ -120,7 +119,7 @@ export default {
 						200: '#9ed79e',
 						300: '#79c879',
 						400: '#54b954',
-						500: '#28A745', // Medical Green
+						500: '#28A745',
 						600: '#208637',
 						700: '#186529',
 						800: '#10441b',
@@ -132,7 +131,7 @@ export default {
 						200: '#ffbba3',
 						300: '#ff9975',
 						400: '#ff7747',
-						500: '#FF6B35', // Action Orange
+						500: '#FF6B35',
 						600: '#cc562a',
 						700: '#99401f',
 						800: '#662b15',
@@ -144,7 +143,7 @@ export default {
 						200: '#ffe899',
 						300: '#ffdc6d',
 						400: '#ffd042',
-						500: '#FFC107', // Warning Amber
+						500: '#FFC107',
 						600: '#cc9a06',
 						700: '#997404',
 						800: '#664d03',
@@ -165,9 +164,19 @@ export default {
 				}
 			},
 			fontFamily: {
+				// Brand Book Typography System
+				'helvetica': ['Inter', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				'minion': ['Crimson Text', 'Georgia', 'Minion Pro', 'serif'],
+				// Keep existing fallbacks
 				sans: ['Inter', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-				serif: ['Georgia', 'Minion Pro', 'serif'],
-				'helvetica': ['Helvetica Neue', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				serif: ['Crimson Text', 'Georgia', 'Minion Pro', 'serif'],
+			},
+			letterSpacing: {
+				'brand-tight': '-0.02em',
+			},
+			lineHeight: {
+				'brand-body': '1.5',
+				'brand-content': '1.6',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -12,27 +12,27 @@ export const ConsultationDetails = ({ price }: ConsultationDetailsProps) => {
       <div className="flex justify-between items-start mb-4">
         <div>
           <p className="text-bahola-navy-700 font-medium font-helvetica">Homeopathic Consultation</p>
-          <p className="text-2xl font-bold text-bahola-navy-950 font-helvetica">₹{price.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-bahola-navy-950 font-helvetica tracking-brand-tight">₹{price.toLocaleString()}</p>
         </div>
         <CheckCircle className="h-6 w-6 text-bahola-green-500" />
       </div>
       
       <div className="space-y-2 text-sm text-bahola-navy-600">
-        <p className="flex items-center gap-2 font-serif">
+        <p className="flex items-center gap-2 brand-body">
           <CheckCircle className="h-4 w-4 text-bahola-green-500" />
           30-minute in-person consultation
         </p>
-        <p className="flex items-center gap-2 font-serif">
+        <p className="flex items-center gap-2 brand-body">
           <CheckCircle className="h-4 w-4 text-bahola-green-500" />
           Expert homeopathic physician assessment
         </p>
-        <p className="flex items-center gap-2 font-serif">
+        <p className="flex items-center gap-2 brand-body">
           <CheckCircle className="h-4 w-4 text-bahola-green-500" />
           Personalized treatment plan
         </p>
-        <p className="flex items-center gap-2 font-serif">
+        <p className="flex items-center gap-2 brand-body">
           <CheckCircle className="h-4 w-4 text-bahola-green-500" />
-          <strong>15-day follow-up reviews included</strong>
+          <span className="brand-emphasis text-bahola-navy-950">15-day follow-up reviews included</span>
         </p>
       </div>
     </div>
