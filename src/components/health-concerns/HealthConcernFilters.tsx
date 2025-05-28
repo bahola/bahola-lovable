@@ -38,16 +38,16 @@ export const HealthConcernFilters: React.FC<HealthConcernFiltersProps> = ({
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
-      <h3 className="font-semibold text-gray-900 mb-4">Filter by Category</h3>
+      <h3 className="font-semibold text-bahola-navy-950 mb-4 font-helvetica">Filter by Category</h3>
       
       <div className="space-y-2 mb-8">
         {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => onCategoryChange(category.id)}
-            className={`w-full text-left p-3 rounded-lg transition-colors ${
+            className={`w-full text-left p-3 rounded-lg transition-colors font-helvetica ${
               selectedCategory === category.id
-                ? 'bg-bahola-blue-50 text-bahola-blue-700 border-l-4 border-bahola-blue-500'
+                ? 'bg-bahola-navy-50 text-bahola-navy-950 border-l-4 border-bahola-navy-950'
                 : 'hover:bg-gray-50'
             }`}
           >
@@ -64,13 +64,13 @@ export const HealthConcernFilters: React.FC<HealthConcernFiltersProps> = ({
       </div>
 
       <div className="border-t pt-6">
-        <h4 className="font-medium text-gray-900 mb-3">Popular Searches</h4>
+        <h4 className="font-medium text-bahola-navy-950 mb-3 font-helvetica">Popular Searches</h4>
         <div className="flex flex-wrap gap-2">
           {popularSearches.map((search, index) => (
             <Badge
               key={index}
               variant="outline"
-              className="cursor-pointer hover:bg-gray-50 text-xs"
+              className="cursor-pointer hover:bg-gray-50 text-xs border-bahola-neutral-200 text-bahola-navy-800"
             >
               {search}
             </Badge>
@@ -79,11 +79,11 @@ export const HealthConcernFilters: React.FC<HealthConcernFiltersProps> = ({
       </div>
 
       <div className="border-t pt-6 mt-6">
-        <h4 className="font-medium text-gray-900 mb-3">Need Help?</h4>
-        <p className="text-sm text-gray-600 mb-3">
+        <h4 className="font-medium text-bahola-navy-950 mb-3 font-helvetica">Need Help?</h4>
+        <p className="text-sm text-bahola-neutral-600 mb-3 font-serif">
           Can't find what you're looking for? Our homeopathy experts are here to help.
         </p>
-        <button className="w-full bg-bahola-blue-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-bahola-blue-700 transition-colors">
+        <button className="w-full bg-bahola-navy-950 text-white py-2 px-4 rounded-lg text-sm hover:bg-bahola-navy-900 transition-colors font-helvetica">
           Contact Expert
         </button>
       </div>

@@ -63,33 +63,111 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Bahola specific colors
+				// Bahola Brand Colors from Brand Book
 				bahola: {
+					navy: {
+						50: '#f0f4f8',
+						100: '#d9e2ec',
+						200: '#bcccdc',
+						300: '#9fb3c8',
+						400: '#829ab1',
+						500: '#627d98',
+						600: '#486581',
+						700: '#334e68',
+						800: '#243b53',
+						900: '#102a43',
+						950: '#003366', // Deep Navy Blue - Primary Brand Color
+					},
 					blue: {
-						50: '#E6F7FF',
-						100: '#BAE3FF',
-						200: '#7CC4FA',
-						300: '#4DA9F6',
-						400: '#1E90FF', // Primary blue
-						500: '#0EA5E9', // Accent blue
-						600: '#0078D4',
-						700: '#005BA1',
-						800: '#003F73',
-						900: '#002851',
+						50: '#e6f3ff',
+						100: '#b3d9ff',
+						200: '#80bfff',
+						300: '#4da6ff',
+						400: '#1a8cff',
+						500: '#0066CC', // Royal Blue - Secondary Brand Color
+						600: '#0052a3',
+						700: '#003d7a',
+						800: '#002952',
+						900: '#001429',
+					},
+					sky: {
+						50: '#f0f7ff',
+						100: '#d4e9ff',
+						200: '#a8d4ff',
+						300: '#7cbfff',
+						400: '#50aaff',
+						500: '#4A90E2', // Sky Blue - Accent Color
+						600: '#3b73b5',
+						700: '#2c5688',
+						800: '#1d395b',
+						900: '#0e1c2e',
+					},
+					teal: {
+						50: '#e6f7f9',
+						100: '#b3e6ec',
+						200: '#80d5df',
+						300: '#4dc4d2',
+						400: '#1ab3c5',
+						500: '#17A2B8', // Healthcare Teal
+						600: '#128293',
+						700: '#0e626e',
+						800: '#094149',
+						900: '#052124',
+					},
+					green: {
+						50: '#e8f5e8',
+						100: '#c3e6c3',
+						200: '#9ed79e',
+						300: '#79c879',
+						400: '#54b954',
+						500: '#28A745', // Medical Green
+						600: '#208637',
+						700: '#186529',
+						800: '#10441b',
+						900: '#08220d',
+					},
+					orange: {
+						50: '#fff4f0',
+						100: '#ffddd1',
+						200: '#ffbba3',
+						300: '#ff9975',
+						400: '#ff7747',
+						500: '#FF6B35', // Action Orange
+						600: '#cc562a',
+						700: '#99401f',
+						800: '#662b15',
+						900: '#33150a',
+					},
+					amber: {
+						50: '#fffbf0',
+						100: '#fff3c4',
+						200: '#ffe899',
+						300: '#ffdc6d',
+						400: '#ffd042',
+						500: '#FFC107', // Warning Amber
+						600: '#cc9a06',
+						700: '#997404',
+						800: '#664d03',
+						900: '#332701',
 					},
 					neutral: {
-						50: '#F8FAFC',
-						100: '#F1F5F9',
-						200: '#E2E8F0',
-						300: '#CBD5E1',
-						400: '#94A3B8',
-						500: '#64748B',
-						600: '#475569',
-						700: '#334155',
-						800: '#1E293B',
-						900: '#0F172A',
+						50: '#f8f9fa',
+						100: '#f1f3f4',
+						200: '#e8eaed',
+						300: '#dadce0',
+						400: '#bdc1c6',
+						500: '#9aa0a6',
+						600: '#80868b',
+						700: '#5f6368',
+						800: '#3c4043',
+						900: '#202124',
 					}
 				}
+			},
+			fontFamily: {
+				sans: ['Inter', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				serif: ['Georgia', 'Minion Pro', 'serif'],
+				'helvetica': ['Helvetica Neue', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

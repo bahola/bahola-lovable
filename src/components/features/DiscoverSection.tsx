@@ -49,7 +49,7 @@ export const DiscoverSection = () => {
   ];
   
   return (
-    <section className="py-16 bg-bahola-blue-50">
+    <section className="py-16 bg-bahola-navy-50">
       <div className="container mx-auto px-4">
         <h2 className="section-title">Discover Homeopathic Remedies by Condition</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -71,14 +71,14 @@ export const DiscoverSection = () => {
                 <div className="text-bahola-blue-500">
                   {concern.icon}
                 </div>
-                <h3 className="font-medium text-bahola-neutral-800">{concern.name}</h3>
+                <h3 className="font-medium text-bahola-navy-950 font-helvetica">{concern.name}</h3>
               </div>
             </a>
           ))}
         </div>
         <div className="text-center mt-10">
           <Link to="/health-concerns">
-            <Button className="btn-bahola">
+            <Button className="btn-bahola font-helvetica">
               View All Health Concerns
             </Button>
           </Link>

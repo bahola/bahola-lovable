@@ -30,7 +30,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
         <div className="flex items-center justify-between h-20">
           {/* Mobile menu button */}
           <button
-            className="lg:hidden"
+            className="lg:hidden text-bahola-navy-950"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <Menu size={24} />
@@ -48,7 +48,7 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
               }}
             />
-            <span className="hidden text-2xl font-bold text-bahola-blue-600">
+            <span className="hidden text-2xl font-bold text-bahola-navy-950 font-helvetica">
               Bahola
             </span>
           </Link>

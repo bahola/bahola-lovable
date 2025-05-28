@@ -40,20 +40,20 @@ export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({ concern, v
           <div className="flex-1">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">{concern.name}</h3>
+                <h3 className="text-xl font-semibold text-bahola-navy-950 mb-1 font-helvetica">{concern.name}</h3>
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="secondary" className="text-xs">
                     {concern.category}
                   </Badge>
                   {concern.trending && (
-                    <Badge className="bg-orange-100 text-orange-700 text-xs">
+                    <Badge className="bg-bahola-orange-100 text-bahola-orange-700 text-xs">
                       <TrendingUp size={12} className="mr-1" />
                       Trending
                     </Badge>
                   )}
                 </div>
               </div>
-              <div className="text-right text-sm text-gray-500">
+              <div className="text-right text-sm text-bahola-neutral-600">
                 <div className="flex items-center gap-1">
                   <Users size={14} />
                   {concern.searchVolume.toLocaleString()} searches
@@ -61,24 +61,24 @@ export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({ concern, v
               </div>
             </div>
             
-            <p className="text-gray-600 mb-4">{concern.description}</p>
+            <p className="text-bahola-neutral-700 mb-4 font-serif">{concern.description}</p>
             
             <div className="flex items-center justify-between">
               <div className="flex flex-wrap gap-1">
                 {concern.commonRemedies.slice(0, 3).map((remedy, index) => (
-                  <span key={index} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                  <span key={index} className="text-xs bg-bahola-blue-50 text-bahola-blue-700 px-2 py-1 rounded">
                     {remedy}
                   </span>
                 ))}
                 {concern.commonRemedies.length > 3 && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-bahola-neutral-600">
                     +{concern.commonRemedies.length - 3} more
                   </span>
                 )}
               </div>
               
               <Link to={`/concern/${concern.id}`}>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-bahola-navy-950 text-bahola-navy-950 hover:bg-bahola-navy-950 hover:text-white font-helvetica">
                   View Remedies
                   <ArrowRight size={14} className="ml-1" />
                 </Button>
@@ -99,7 +99,7 @@ export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({ concern, v
           className="w-full h-full object-cover"
         />
         {concern.trending && (
-          <Badge className="absolute top-3 right-3 bg-orange-500">
+          <Badge className="absolute top-3 right-3 bg-bahola-orange-500">
             <TrendingUp size={12} className="mr-1" />
             Trending
           </Badge>
@@ -111,7 +111,7 @@ export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({ concern, v
           <Badge variant="secondary" className="text-xs mb-2">
             {concern.category}
           </Badge>
-          <div className="text-right text-sm text-gray-500">
+          <div className="text-right text-sm text-bahola-neutral-600">
             <div className="flex items-center gap-1">
               <Users size={14} />
               {(concern.searchVolume / 1000).toFixed(0)}k
@@ -119,24 +119,24 @@ export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({ concern, v
           </div>
         </div>
         
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{concern.name}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{concern.description}</p>
+        <h3 className="text-lg font-semibold text-bahola-navy-950 mb-2 font-helvetica">{concern.name}</h3>
+        <p className="text-bahola-neutral-700 text-sm mb-4 line-clamp-2 font-serif">{concern.description}</p>
         
         <div className="flex flex-wrap gap-1 mb-4">
           {concern.commonRemedies.slice(0, 2).map((remedy, index) => (
-            <span key={index} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+            <span key={index} className="text-xs bg-bahola-blue-50 text-bahola-blue-700 px-2 py-1 rounded">
               {remedy}
             </span>
           ))}
           {concern.commonRemedies.length > 2 && (
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-bahola-neutral-600">
               +{concern.commonRemedies.length - 2}
             </span>
           )}
         </div>
         
         <Link to={`/concern/${concern.id}`} className="block">
-          <Button className="w-full" variant="outline">
+          <Button className="w-full bg-bahola-navy-950 hover:bg-bahola-navy-900 font-helvetica" variant="outline">
             View Remedies
             <ArrowRight size={14} className="ml-1" />
           </Button>
