@@ -42,7 +42,15 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
               src="/bahola-logo.png" 
               alt="Bahola" 
               className="h-10 w-auto"
+              onError={(e) => {
+                // Fallback to text logo if image fails to load
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+              }}
             />
+            <span className="hidden text-2xl font-bold text-bahola-blue-600">
+              Bahola
+            </span>
           </Link>
 
           {/* Search Bar - Hidden on mobile */}
