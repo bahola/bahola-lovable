@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -80,7 +81,7 @@
 
   /* Brand Book Typography Implementation */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
@@ -109,10 +110,22 @@
     font-size: 1.25rem;
   }
 
-  /* Body text follows Minion Pro guidelines */
+  /* Body text follows Minion Pro guidelines with specific line heights and sizes */
   p, li, span {
     font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
-    line-height: 1.6;
+    line-height: 1.5; /* Within 1.4-1.6 range for optimal readability */
+  }
+  
+  /* Standard body text - 12-14pt (equivalent to 1rem-1.125rem) */
+  .text-body {
+    font-size: 1rem; /* 16px = ~12pt */
+    line-height: 1.5;
+  }
+  
+  /* Fine print - 10-12pt (equivalent to 0.75rem-1rem) */
+  .text-fine {
+    font-size: 0.875rem; /* 14px = ~10.5pt */
+    line-height: 1.4;
   }
 }
 
@@ -174,56 +187,64 @@
 
   .btn-bahola {
     @apply px-6 py-2 bg-gradient-to-r from-bahola-blue-500 to-bahola-navy-950 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:from-bahola-blue-600 hover:to-bahola-navy-900;
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  /* Brand Book Typography Classes */
+  /* Brand Book Typography Classes with specific sizing */
   .brand-headline {
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 300;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
 
   .brand-title {
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
 
   .brand-subtitle {
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
 
   .brand-emphasis {
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
   }
 
+  /* Minion Pro body text with brand book specifications */
   .brand-body {
     font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
-    line-height: 1.6;
+    font-size: 1rem; /* 12-14pt range */
+    line-height: 1.5; /* 1.4-1.6 for optimal readability */
+  }
+  
+  .brand-body-fine {
+    font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
+    font-size: 0.875rem; /* 10-12pt range for fine print */
+    line-height: 1.4; /* 1.4-1.6 for optimal readability */
   }
 
   .section-title {
     @apply text-3xl font-light text-bahola-navy-950 mb-6 text-center tracking-brand-tight;
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .top-menu-item {
     @apply text-sm text-gray-600 hover:text-bahola-blue-500 transition-colors duration-200 font-medium;
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .main-menu-item {
     @apply text-base font-medium text-bahola-navy-900 hover:text-bahola-blue-500 transition-colors duration-200 relative py-5 px-4 cursor-pointer;
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .sticky-header {
@@ -254,7 +275,7 @@
 
   .mobile-menu-item {
     @apply py-4 px-6 border-b border-gray-100 text-bahola-navy-900 font-medium flex items-center justify-between hover:bg-gray-50 transition-colors duration-200;
-    font-family: 'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .mobile-submenu {

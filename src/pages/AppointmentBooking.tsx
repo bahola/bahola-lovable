@@ -70,7 +70,7 @@ const AppointmentBooking = () => {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 p-6 bg-bahola-navy-50 rounded-lg border-l-4 border-bahola-navy-950">
           <h2 className="text-xl font-medium text-bahola-navy-950 mb-2 font-helvetica brand-subtitle">Professional Homeopathic Care</h2>
-          <p className="text-bahola-navy-700 brand-body leading-brand-content">Experience personalized healing with our expert physicians in a comfortable clinical setting.</p>
+          <p className="text-bahola-navy-700 brand-body">Experience personalized healing with our expert physicians in a comfortable clinical setting.</p>
         </div>
         
         <Form {...form}>
