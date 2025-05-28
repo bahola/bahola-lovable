@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductProps {
   product: {
@@ -13,6 +13,8 @@ interface ProductProps {
     price: number;
     rating: number;
     image: string;
+    originalPrice?: number;
+    discountPercentage?: number;
   }
 }
 
@@ -25,32 +27,26 @@ interface ProductCardProps {
   rating: number;
   reviewCount: number;
   url: string;
+  originalPrice?: number;
 }
 
 export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) => {
   const { toast } = useToast();
+  const { addToCart } = useCart();
   const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
   
-  const handleAddToCart = async (e: React.MouseEvent, productId: string, productName: string, productPrice: number, productImage: string) => {
+  const handleAddToCart = async (e: React.MouseEvent, productId: string, productName: string, productPrice: number, productImage: string, originalPrice?: number, discountPercentage?: number) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
-    const existingItem = currentCart.find((item: any) => item.id === productId);
-    
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      currentCart.push({
-        id: productId,
-        name: productName,
-        price: productPrice,
-        image: productImage,
-        quantity: 1
-      });
-    }
-    
-    localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
+    addToCart({
+      id: productId,
+      name: productName,
+      price: productPrice,
+      originalPrice,
+      discountPercentage,
+      image: productImage
+    });
     
     toast({
       title: "Added to cart",
@@ -119,6 +115,9 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
     const { product } = props;
     const imageUrl = product.image && product.image !== '' ? product.image : '/placeholder.svg';
     const productIdString = String(product.id);
+    const discountPrice = product.originalPrice && product.discountPercentage 
+      ? product.originalPrice * (1 - product.discountPercentage / 100)
+      : product.price;
     
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
@@ -140,6 +139,11 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
             >
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />
             </button>
+            {product.discountPercentage && (
+              <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                {product.discountPercentage}% OFF
+              </div>
+            )}
           </div>
         </Link>
         
@@ -156,11 +160,16 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
           </Link>
           
           <div className="flex justify-between items-center mt-4">
-            <span className="text-lg font-bold text-bahola-blue-600">₹{product.price}</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-bahola-blue-600">₹{Math.round(discountPrice)}</span>
+              {product.originalPrice && product.discountPercentage && (
+                <span className="text-sm text-bahola-neutral-500 line-through">₹{product.originalPrice}</span>
+              )}
+            </div>
             <Button 
               size="sm" 
               className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2"
-              onClick={(e) => handleAddToCart(e, productIdString, product.name, product.price, product.image)}
+              onClick={(e) => handleAddToCart(e, productIdString, product.name, discountPrice, product.image, product.originalPrice, product.discountPercentage)}
             >
               <ShoppingCart size={18} />
             </Button>
@@ -169,9 +178,12 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
       </div>
     );
   } else {
-    const { title, description, price, imageSrc, discountPercentage, rating, reviewCount, url } = props;
+    const { title, description, price, imageSrc, discountPercentage, rating, reviewCount, url, originalPrice } = props;
     const imageUrl = imageSrc && imageSrc !== '' ? imageSrc : '/placeholder.svg';
     const productId = url.split('/').pop() || '';
+    const discountPrice = originalPrice && discountPercentage 
+      ? originalPrice * (1 - discountPercentage / 100)
+      : price;
     
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
@@ -194,7 +206,7 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
               <Heart size={18} className="text-bahola-neutral-600 hover:text-bahola-blue-500" />
             </button>
             {discountPercentage > 0 && (
-              <div className="absolute top-3 left-3 bg-bahola-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+              <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
                 {discountPercentage}% OFF
               </div>
             )}
@@ -216,11 +228,16 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
           <p className="text-sm text-bahola-neutral-600 line-clamp-2">{description}</p>
           
           <div className="flex justify-between items-center mt-4">
-            <span className="text-lg font-bold text-bahola-blue-600">₹{price}</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-bahola-blue-600">₹{Math.round(discountPrice)}</span>
+              {originalPrice && discountPercentage > 0 && (
+                <span className="text-sm text-bahola-neutral-500 line-through">₹{originalPrice}</span>
+              )}
+            </div>
             <Button 
               size="sm" 
               className="bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white rounded-full p-2"
-              onClick={(e) => handleAddToCart(e, productId, title, price, imageSrc)}
+              onClick={(e) => handleAddToCart(e, productId, title, discountPrice, imageSrc, originalPrice, discountPercentage)}
             >
               <ShoppingCart size={18} />
             </Button>

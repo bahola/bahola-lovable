@@ -4,118 +4,99 @@ import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 const Cart = () => {
-  // This would typically be managed by a cart context or state management in a real app
-  const [cartItems, setCartItems] = React.useState([
-    {
-      id: 'product-1',
-      name: 'Arnica Montana 30C',
-      description: 'For bruises and injuries',
-      price: 185,
-      image: '/placeholder.svg',
-      quantity: 2
-    },
-    {
-      id: 'product-2',
-      name: 'Nux Vomica 200C',
-      description: 'For digestive issues',
-      price: 210,
-      image: '/placeholder.svg',
-      quantity: 1
-    },
-    {
-      id: 'product-3',
-      name: 'Eupatorium Perfoliatum Q',
-      description: 'Mother tincture for fever',
-      price: 320,
-      image: '/placeholder.svg',
-      quantity: 1
-    }
-  ]);
+  const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice } = useCart();
   
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
+  const subtotal = items.reduce((sum, item) => {
+    const itemPrice = getDiscountedPrice(item);
+    return sum + (itemPrice * item.quantity);
+  }, 0);
   
-  const removeItem = (id: string) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-  };
-  
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = subtotal >= 500 ? 0 : 50;
   const tax = Math.round(subtotal * 0.18); // 18% GST
   const total = subtotal + shipping + tax;
   
   return (
     <PageLayout title="Your Cart" description="Review and modify your selected items">
-      {cartItems.length > 0 ? (
+      {items.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="p-6 border-b">
                 <h2 className="text-xl font-bold">
-                  Shopping Cart ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items)
+                  Shopping Cart ({items.reduce((sum, item) => sum + item.quantity, 0)} items)
                 </h2>
               </div>
               
               <ul className="divide-y">
-                {cartItems.map(item => (
-                  <li key={item.id} className="p-6">
-                    <div className="flex flex-wrap md:flex-nowrap items-center">
-                      <div className="w-20 h-20 bg-gray-100 rounded overflow-hidden flex-shrink-0 mr-4">
-                        <img 
-                          src={item.image} 
-                          alt={item.name} 
-                          className="w-full h-full object-contain"
-                        />
+                {items.map(item => {
+                  const itemPrice = getDiscountedPrice(item);
+                  const hasDiscount = item.discountPercentage && item.originalPrice;
+                  
+                  return (
+                    <li key={item.id} className="p-6">
+                      <div className="flex flex-wrap md:flex-nowrap items-center">
+                        <div className="w-20 h-20 bg-gray-100 rounded overflow-hidden flex-shrink-0 mr-4">
+                          <img 
+                            src={item.image} 
+                            alt={item.name} 
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        
+                        <div className="flex-grow mt-4 md:mt-0">
+                          <h3 className="font-medium">
+                            <Link to={`/product/${item.id}`} className="hover:text-bahola-blue-500">
+                              {item.name}
+                            </Link>
+                          </h3>
+                          <div className="mt-2 flex items-center gap-2">
+                            <div className="text-bahola-blue-600 font-bold">₹{Math.round(itemPrice)}</div>
+                            {hasDiscount && (
+                              <>
+                                <span className="text-sm text-bahola-neutral-500 line-through">
+                                  ₹{item.originalPrice}
+                                </span>
+                                <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs">
+                                  {item.discountPercentage}% OFF
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center mt-4 md:mt-0">
+                          <button 
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="p-1 rounded-full hover:bg-gray-100"
+                          >
+                            <Minus className="h-4 w-4" />
+                          </button>
+                          <span className="mx-3 font-medium">{item.quantity}</span>
+                          <button 
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="p-1 rounded-full hover:bg-gray-100"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                        
+                        <div className="ml-4 md:ml-8 mt-4 md:mt-0 text-right">
+                          <div className="font-bold">₹{Math.round(itemPrice * item.quantity)}</div>
+                          <button 
+                            onClick={() => removeFromCart(item.id)}
+                            className="text-red-500 hover:text-red-700 flex items-center mt-2 text-sm"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" /> Remove
+                          </button>
+                        </div>
                       </div>
-                      
-                      <div className="flex-grow mt-4 md:mt-0">
-                        <h3 className="font-medium">
-                          <Link to={`/product/${item.id}`} className="hover:text-bahola-blue-500">
-                            {item.name}
-                          </Link>
-                        </h3>
-                        <p className="text-bahola-neutral-600 text-sm">{item.description}</p>
-                        <div className="mt-2 text-bahola-blue-600 font-bold">₹{item.price}</div>
-                      </div>
-                      
-                      <div className="flex items-center mt-4 md:mt-0">
-                        <button 
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="p-1 rounded-full hover:bg-gray-100"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </button>
-                        <span className="mx-3 font-medium">{item.quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="p-1 rounded-full hover:bg-gray-100"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </button>
-                      </div>
-                      
-                      <div className="ml-4 md:ml-8 mt-4 md:mt-0 text-right">
-                        <div className="font-bold">₹{item.price * item.quantity}</div>
-                        <button 
-                          onClick={() => removeItem(item.id)}
-                          className="text-red-500 hover:text-red-700 flex items-center mt-2 text-sm"
-                        >
-                          <Trash2 className="h-4 w-4 mr-1" /> Remove
-                        </button>
-                      </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
               
               <div className="p-6 bg-gray-50">
@@ -124,7 +105,11 @@ const Cart = () => {
                     <ShoppingCart className="mr-2 h-4 w-4" /> Continue Shopping
                   </Link>
                   
-                  <Button variant="outline" className="text-red-500 border-red-500 hover:bg-red-50">
+                  <Button 
+                    variant="outline" 
+                    className="text-red-500 border-red-500 hover:bg-red-50"
+                    onClick={clearCart}
+                  >
                     <Trash2 className="mr-2 h-4 w-4" /> Clear Cart
                   </Button>
                 </div>
@@ -142,7 +127,7 @@ const Cart = () => {
               <div className="p-6 space-y-4">
                 <div className="flex justify-between">
                   <span className="text-bahola-neutral-600">Subtotal</span>
-                  <span className="font-medium">₹{subtotal}</span>
+                  <span className="font-medium">₹{Math.round(subtotal)}</span>
                 </div>
                 
                 <div className="flex justify-between">
@@ -166,7 +151,7 @@ const Cart = () => {
                 <div className="border-t pt-4 mt-4">
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span>₹{total}</span>
+                    <span>₹{Math.round(total)}</span>
                   </div>
                   <p className="text-bahola-neutral-500 text-xs mt-1">
                     (Including GST)

@@ -17,10 +17,6 @@ export const Header = () => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { searchQuery, setSearchQuery, handleSearch, clearSearch } = useSearch();
-  
-  // Mock cart data - this would be replaced with actual cart state
-  const cartItems = 3;
-  const cartTotal = 1250;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,8 +60,6 @@ export const Header = () => {
           setSearchQuery={setSearchQuery}
           onSearch={handleSearch}
           onClearSearch={clearSearch}
-          cartItems={cartItems}
-          cartTotal={cartTotal}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
         />

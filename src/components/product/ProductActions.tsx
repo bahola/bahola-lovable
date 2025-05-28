@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductActionsProps {
   product: {
     id: string;
     name: string;
     price: number;
+    originalPrice?: number;
+    discountPercentage?: number;
     image?: string;
     stock?: number;
   };
@@ -27,27 +30,20 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   isOutOfStock = false 
 }) => {
   const { toast } = useToast();
+  const { addToCart } = useCart();
   const [isAddingToWishlist, setIsAddingToWishlist] = React.useState(false);
 
   const defaultAddToCart = () => {
     if (!product) return;
     
-    const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
-    const existingItemIndex = currentCart.findIndex((item: any) => item.id === product.id);
-    
-    if (existingItemIndex >= 0) {
-      currentCart[existingItemIndex].quantity += quantity;
-    } else {
-      currentCart.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image || '/placeholder.svg',
-        quantity: quantity
-      });
-    }
-    
-    localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discountPercentage: product.discountPercentage,
+      image: product.image || '/placeholder.svg'
+    }, quantity);
     
     toast({
       title: "Added to cart",

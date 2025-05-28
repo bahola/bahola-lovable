@@ -19,6 +19,8 @@ import AppointmentBooking from './pages/AppointmentBooking';
 import VideoConsultation from './pages/VideoConsultation';
 import AppointmentConfirmation from './pages/AppointmentConfirmation';
 import BachFlowerConcerns from './pages/BachFlowerConcerns';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/homeopathy" element={<Homeopathy />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/bach-flower" element={<CategoryPage />} />
