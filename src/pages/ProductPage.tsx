@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/CartContext';
 
 // Import refactored components
 import ProductImages, { ProductImagesLoading } from '@/components/product/ProductImages';
@@ -26,16 +27,41 @@ const ProductPage = () => {
   const [selectedVariation, setSelectedVariation] = useState<any>(null);
   const { product, loading } = useProductData(productId);
   const { toast } = useToast();
+  const { addToCart } = useCart();
   
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!product) {
+      console.error('No product available to add to cart');
+      return;
+    }
     
     console.log(`Adding ${quantity} of ${product.name} to cart`);
-    toast({
-      title: "Added to cart",
-      description: `${quantity} x ${product.name} added to your cart`,
-    });
-    // In a real app, this would dispatch to a cart context/store
+    
+    try {
+      // Calculate the price based on selected variation or base price
+      const finalPrice = selectedVariation?.price || product.price;
+      
+      addToCart({
+        id: String(product.id),
+        name: product.name,
+        price: finalPrice,
+        originalPrice: product.originalPrice,
+        discountPercentage: product.discountPercentage,
+        image: product.image || '/placeholder.svg'
+      }, quantity);
+      
+      toast({
+        title: "Added to cart",
+        description: `${quantity} x ${product.name} added to your cart`,
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleVariationSelect = (variation: any) => {
@@ -130,7 +156,15 @@ const ProductPage = () => {
           />
           
           <ProductActions 
-            product={product}
+            product={{
+              id: String(product.id),
+              name: product.name,
+              price: selectedVariation?.price || product.price,
+              originalPrice: product.originalPrice,
+              discountPercentage: product.discountPercentage,
+              image: product.image,
+              stock: currentStock
+            }}
             quantity={quantity}
             setQuantity={setQuantity}
             handleAddToCart={handleAddToCart}

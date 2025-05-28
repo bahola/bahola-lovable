@@ -45,6 +45,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
+        console.log('Loaded cart from localStorage:', parsedCart);
         setItems(parsedCart);
       } catch (error) {
         console.error('Error parsing cart from localStorage:', error);
@@ -55,6 +56,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   // Save cart to localStorage whenever items change
   useEffect(() => {
+    console.log('Saving cart to localStorage:', items);
     localStorage.setItem('bahola_cart', JSON.stringify(items));
   }, [items]);
 
@@ -66,6 +68,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const addToCart = (newItem: Omit<CartItem, 'quantity'>, quantity = 1) => {
+    console.log('Adding item to cart:', { newItem, quantity });
+    
+    if (!newItem.id || !newItem.name || !newItem.price) {
+      console.error('Invalid item data:', newItem);
+      return;
+    }
+
     setItems(prevItems => {
       const existingItemIndex = prevItems.findIndex(item => item.id === newItem.id);
       
@@ -75,18 +84,24 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           ...updatedItems[existingItemIndex],
           quantity: updatedItems[existingItemIndex].quantity + quantity
         };
+        console.log('Updated existing item:', updatedItems[existingItemIndex]);
         return updatedItems;
       } else {
-        return [...prevItems, { ...newItem, quantity }];
+        const newCartItem = { ...newItem, quantity };
+        console.log('Added new item:', newCartItem);
+        return [...prevItems, newCartItem];
       }
     });
   };
 
   const removeFromCart = (id: string) => {
+    console.log('Removing item from cart:', id);
     setItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
+    console.log('Updating quantity:', { id, quantity });
+    
     if (quantity <= 0) {
       removeFromCart(id);
       return;
@@ -100,6 +115,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   const clearCart = () => {
+    console.log('Clearing cart');
     setItems([]);
   };
 

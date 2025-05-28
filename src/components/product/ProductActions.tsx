@@ -32,23 +32,41 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   const { toast } = useToast();
   const { addToCart } = useCart();
   const [isAddingToWishlist, setIsAddingToWishlist] = React.useState(false);
+  const [isAddingToCart, setIsAddingToCart] = React.useState(false);
 
-  const defaultAddToCart = () => {
-    if (!product) return;
+  const defaultAddToCart = async () => {
+    if (!product) {
+      console.error('No product available');
+      return;
+    }
     
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      discountPercentage: product.discountPercentage,
-      image: product.image || '/placeholder.svg'
-    }, quantity);
-    
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart`
-    });
+    try {
+      setIsAddingToCart(true);
+      console.log('Adding to cart:', { product, quantity });
+      
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        discountPercentage: product.discountPercentage,
+        image: product.image || '/placeholder.svg'
+      }, quantity);
+      
+      toast({
+        title: "Added to cart",
+        description: `${product.name} has been added to your cart`
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   const handleAddToWishlist = async () => {
@@ -124,16 +142,18 @@ const ProductActions: React.FC<ProductActionsProps> = ({
 
   const finalIsOutOfStock = isOutOfStock || (product.stock !== undefined && product.stock <= 0);
 
+  const onAddToCartClick = handleAddToCart || defaultAddToCart;
+
   return (
     <div className="flex flex-col gap-3 mt-6">
       <Button 
         size="lg" 
         className="w-full flex items-center gap-2" 
-        disabled={finalIsOutOfStock}
-        onClick={handleAddToCart || defaultAddToCart}
+        disabled={finalIsOutOfStock || isAddingToCart}
+        onClick={onAddToCartClick}
       >
         <ShoppingCart className="h-5 w-5" />
-        {finalIsOutOfStock ? "Out of Stock" : "Add to Cart"}
+        {isAddingToCart ? "Adding..." : finalIsOutOfStock ? "Out of Stock" : "Add to Cart"}
       </Button>
       
       <div className="grid grid-cols-2 gap-3">
@@ -144,7 +164,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
           disabled={isAddingToWishlist}
         >
           <Heart className="h-5 w-5" />
-          Wishlist
+          {isAddingToWishlist ? "Adding..." : "Wishlist"}
         </Button>
         
         <Button 
