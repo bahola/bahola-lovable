@@ -2,6 +2,7 @@
 import React from 'react';
 import { Bug, Wheat, Brain, Pill, Droplets, Heart, Dumbbell, Baby } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Link } from 'react-router-dom';
 
 export const DiscoverSection = () => {
   const concerns = [
@@ -76,9 +77,11 @@ export const DiscoverSection = () => {
           ))}
         </div>
         <div className="text-center mt-10">
-          <Button className="btn-bahola">
-            View All Health Concerns
-          </Button>
+          <Link to="/health-concerns">
+            <Button className="btn-bahola">
+              View All Health Concerns
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

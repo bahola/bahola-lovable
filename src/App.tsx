@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -21,6 +20,7 @@ import AppointmentConfirmation from './pages/AppointmentConfirmation';
 import BachFlowerConcerns from './pages/BachFlowerConcerns';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import HealthConcerns from './pages/HealthConcerns';
 
 function App() {
   return (
@@ -43,6 +43,7 @@ function App() {
         <Route path="/bach-flower-concerns" element={<BachFlowerConcerns />} />
         <Route path="/bach-flower/:subcategory" element={<CategoryPage />} />
         <Route path="/concern/:concernId" element={<CategoryPage />} />
+        <Route path="/health-concerns" element={<HealthConcerns />} />
         
         {/* Appointment routes */}
         <Route path="/book-appointment" element={<AppointmentBooking />} />
