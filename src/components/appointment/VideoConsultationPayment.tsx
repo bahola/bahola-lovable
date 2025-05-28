@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -130,7 +131,7 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
           appointment_id: appointment.id,
         },
         theme: {
-          color: "#1e3a8a",
+          color: "#003366",
         },
         modal: {
           ondismiss: async function() {
@@ -154,46 +155,46 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
   };
 
   return (
-    <Card>
+    <Card className="border-bahola-neutral-200">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-bahola-navy-950 font-helvetica">
           <Video className="h-5 w-5 text-bahola-blue-500" />
           Video Consultation & Payment Details
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="font-serif text-bahola-neutral-600">
           Complete payment to confirm your video consultation
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          <div className="bg-bahola-blue-50 p-6 rounded-lg mb-4">
+          <div className="bg-bahola-navy-50 p-6 rounded-lg mb-4">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <p className="text-bahola-blue-700 font-medium">Video Consultation</p>
-                <p className="text-2xl font-bold text-bahola-blue-800">₹{consultationPrice.toLocaleString()}</p>
+                <p className="text-bahola-navy-700 font-medium font-helvetica">Video Consultation</p>
+                <p className="text-2xl font-bold text-bahola-navy-950 font-helvetica">₹{consultationPrice.toLocaleString()}</p>
               </div>
-              <CheckCircle className="h-6 w-6 text-green-500" />
+              <CheckCircle className="h-6 w-6 text-bahola-green-500" />
             </div>
             
-            <div className="space-y-2 text-sm text-bahola-blue-600">
-              <p className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
+            <div className="space-y-2 text-sm text-bahola-navy-600">
+              <p className="flex items-center gap-2 font-serif">
+                <CheckCircle className="h-4 w-4 text-bahola-green-500" />
                 30-minute secure video consultation
               </p>
-              <p className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
+              <p className="flex items-center gap-2 font-serif">
+                <CheckCircle className="h-4 w-4 text-bahola-green-500" />
                 Expert homeopathic physician assessment
               </p>
-              <p className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
+              <p className="flex items-center gap-2 font-serif">
+                <CheckCircle className="h-4 w-4 text-bahola-green-500" />
                 Digital prescription and treatment plan
               </p>
-              <p className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
+              <p className="flex items-center gap-2 font-serif">
+                <CheckCircle className="h-4 w-4 text-bahola-green-500" />
                 <strong>15-day follow-up reviews included</strong>
               </p>
-              <p className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
+              <p className="flex items-center gap-2 font-serif">
+                <CheckCircle className="h-4 w-4 text-bahola-green-500" />
                 <strong>Recorded session for future reference</strong>
               </p>
             </div>
@@ -204,7 +205,7 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
             name="paymentMethod"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Payment Method</FormLabel>
+                <FormLabel className="text-bahola-navy-950 font-helvetica">Payment Method</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -213,14 +214,14 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="card" id="card" />
-                      <Label htmlFor="card" className="flex items-center gap-2">
+                      <Label htmlFor="card" className="flex items-center gap-2 font-helvetica">
                         <CreditCard className="h-4 w-4" />
                         Credit/Debit Card
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="upi" id="upi" />
-                      <Label htmlFor="upi">UPI Payment</Label>
+                      <Label htmlFor="upi" className="font-helvetica">UPI Payment</Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -233,21 +234,21 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
         {watch("paymentMethod") === "card" && (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="cardName">Name on Card</Label>
-              <Input id="cardName" placeholder="John Doe" className="mt-1" />
+              <Label htmlFor="cardName" className="text-bahola-navy-950 font-helvetica">Name on Card</Label>
+              <Input id="cardName" placeholder="John Doe" className="mt-1 border-bahola-neutral-300 font-serif" />
             </div>
             <div>
-              <Label htmlFor="cardNumber">Card Number</Label>
-              <Input id="cardNumber" placeholder="1234 5678 9012 3456" className="mt-1" />
+              <Label htmlFor="cardNumber" className="text-bahola-navy-950 font-helvetica">Card Number</Label>
+              <Input id="cardNumber" placeholder="1234 5678 9012 3456" className="mt-1 border-bahola-neutral-300 font-serif" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="expiry">Expiry Date</Label>
-                <Input id="expiry" placeholder="MM/YY" className="mt-1" />
+                <Label htmlFor="expiry" className="text-bahola-navy-950 font-helvetica">Expiry Date</Label>
+                <Input id="expiry" placeholder="MM/YY" className="mt-1 border-bahola-neutral-300 font-serif" />
               </div>
               <div>
-                <Label htmlFor="cvv">CVV</Label>
-                <Input id="cvv" placeholder="123" className="mt-1" />
+                <Label htmlFor="cvv" className="text-bahola-navy-950 font-helvetica">CVV</Label>
+                <Input id="cvv" placeholder="123" className="mt-1 border-bahola-neutral-300 font-serif" />
               </div>
             </div>
           </div>
@@ -256,8 +257,8 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
         {watch("paymentMethod") === "upi" && (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="upiId">UPI ID</Label>
-              <Input id="upiId" placeholder="yourname@upi" className="mt-1" />
+              <Label htmlFor="upiId" className="text-bahola-navy-950 font-helvetica">UPI ID</Label>
+              <Input id="upiId" placeholder="yourname@upi" className="mt-1 border-bahola-neutral-300 font-serif" />
             </div>
           </div>
         )}
@@ -265,7 +266,7 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
       <CardFooter>
         <Button 
           type="button" 
-          className="w-full bg-bahola-blue-500 hover:bg-bahola-blue-600"
+          className="w-full bg-bahola-navy-950 hover:bg-bahola-navy-900 text-white font-helvetica"
           onClick={handleRazorpayPayment}
         >
           Pay ₹{consultationPrice.toLocaleString()} via Razorpay

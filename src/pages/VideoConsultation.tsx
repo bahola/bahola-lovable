@@ -69,6 +69,11 @@ const VideoConsultation = () => {
   return (
     <PageLayout title="Book Video Consultation" description="Schedule your online homeopathic consultation with our expert physicians">
       <div className="max-w-4xl mx-auto">
+        <div className="mb-8 p-6 bg-bahola-navy-50 rounded-lg border-l-4 border-bahola-navy-950">
+          <h2 className="text-xl font-bold text-bahola-navy-950 mb-2 font-helvetica">Convenient Online Consultation</h2>
+          <p className="text-bahola-navy-700 font-serif">Connect with our homeopathic experts from the comfort of your home through secure video consultation.</p>
+        </div>
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

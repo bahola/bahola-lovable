@@ -31,13 +31,13 @@ export const ConsultationPayment = ({ control, watch, appointmentPrice }: Consul
   };
 
   return (
-    <Card>
+    <Card className="border-bahola-neutral-200">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-bahola-navy-950 font-helvetica">
           <CreditCard className="h-5 w-5 text-bahola-blue-500" />
           Consultation & Payment Details
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="font-serif text-bahola-neutral-600">
           Complete payment to confirm your appointment
         </CardDescription>
       </CardHeader>
@@ -51,7 +51,7 @@ export const ConsultationPayment = ({ control, watch, appointmentPrice }: Consul
       <CardFooter>
         <Button 
           type="button" 
-          className="w-full bg-bahola-blue-500 hover:bg-bahola-blue-600"
+          className="w-full bg-bahola-navy-950 hover:bg-bahola-navy-900 text-white font-helvetica"
           onClick={handleRazorpayPayment}
         >
           Pay ₹{appointmentPrice.toLocaleString()} & Confirm Appointment
