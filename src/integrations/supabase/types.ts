@@ -60,6 +60,69 @@ export type Database = {
         }
         Relationships: []
       }
+      customers: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          customer_id: string
+          customer_type: Database["public"]["Enums"]["customer_type"]
+          email: string
+          id: string
+          last_order_date: string | null
+          name: string
+          notes: string | null
+          phone: string
+          pincode: string | null
+          source: string | null
+          state: string | null
+          status: string | null
+          total_orders: number | null
+          total_spent: number | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          customer_id: string
+          customer_type?: Database["public"]["Enums"]["customer_type"]
+          email: string
+          id?: string
+          last_order_date?: string | null
+          name: string
+          notes?: string | null
+          phone: string
+          pincode?: string | null
+          source?: string | null
+          state?: string | null
+          status?: string | null
+          total_orders?: number | null
+          total_spent?: number | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          customer_id?: string
+          customer_type?: Database["public"]["Enums"]["customer_type"]
+          email?: string
+          id?: string
+          last_order_date?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string
+          pincode?: string | null
+          source?: string | null
+          state?: string | null
+          status?: string | null
+          total_orders?: number | null
+          total_spent?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_categories: {
         Row: {
           created_at: string
@@ -428,10 +491,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_customer_id: {
+        Args: { customer_type: Database["public"]["Enums"]["customer_type"] }
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      customer_type: "customer" | "doctor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -546,6 +612,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      customer_type: ["customer", "doctor"],
+    },
   },
 } as const
