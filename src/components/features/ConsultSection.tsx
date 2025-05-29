@@ -10,8 +10,8 @@ export const ConsultSection = () => {
       <div className="container mx-auto px-4">
         {/* Centered heading above all blocks */}
         <div className="text-center mb-8">
-          <div className="inline-block bg-white/90 backdrop-blur-sm rounded-lg px-6 py-3 shadow-md">
-            <h2 className="text-xl font-light text-bahola-navy-950 tracking-brand-tight">
+          <div className="inline-block bg-white/90 backdrop-blur-sm rounded-lg px-8 py-4 shadow-md">
+            <h2 className="text-3xl font-bold text-bahola-navy-950 tracking-brand-tight">
               Consult a Homeopath
             </h2>
           </div>
