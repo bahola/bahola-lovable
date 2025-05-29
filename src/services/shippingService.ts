@@ -38,7 +38,7 @@ export const shippingService = {
           shipping_zones(*)
         `)
         .or(`pincode.like.%${pincode}%,pincode.is.null`)
-        .order('pincode', { ascending: false, nullsLast: true })
+        .order('pincode', { ascending: false, nullsFirst: false })
         .limit(1)
         .single();
 
