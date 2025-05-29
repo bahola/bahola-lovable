@@ -19,19 +19,20 @@ export const ConsultSection = () => {
                   className="w-full h-full object-cover object-center"
                 />
               </div>
-              {/* Highlighted heading overlay */}
-              <div className="absolute top-4 left-4 right-4">
-                <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-md">
-                  <h2 className="text-xl font-light text-bahola-navy-950 text-center tracking-brand-tight">
-                    Consult a Homeopath
-                  </h2>
-                </div>
-              </div>
             </div>
           </div>
           
           {/* Appointment blocks */}
           <div className="lg:col-span-2 order-1 lg:order-2">
+            {/* Centered heading above blocks */}
+            <div className="text-center mb-6">
+              <div className="inline-block bg-white/90 backdrop-blur-sm rounded-lg px-6 py-3 shadow-md">
+                <h2 className="text-xl font-light text-bahola-navy-950 tracking-brand-tight">
+                  Consult a Homeopath
+                </h2>
+              </div>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-96">
               <div className="bg-white rounded-xl shadow-lg p-6 border border-bahola-neutral-200 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-bahola-blue-100 text-bahola-blue-500 mx-auto mb-6">
