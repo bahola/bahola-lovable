@@ -27,6 +27,9 @@ import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import ReturnPolicy from './pages/ReturnPolicy';
 import OrderTracking from './pages/OrderTracking';
+import PromoOffers from './pages/PromoOffers';
+import DiscountsManagement from './pages/admin/DiscountsManagement';
+import AdminHome from './pages/admin/AdminHome';
 
 function App() {
   return (
@@ -45,6 +48,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/track-order" element={<OrderTracking />} />
+        <Route path="/promo-offers" element={<PromoOffers />} />
         <Route path="/homeopathy" element={<Homeopathy />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/bach-flower" element={<CategoryPage />} />
@@ -64,14 +68,16 @@ function App() {
         <Route path="/appointment-confirmation" element={<AppointmentConfirmation />} />
         
         {/* Admin routes */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/products" element={<ProductsManagement />} />
-        <Route path="/admin/products/edit/:productId" element={<EditProduct />} />
-        <Route path="/admin/orders" element={<AdminDashboard />} />
-        <Route path="/admin/customers" element={<AdminDashboard />} />
-        <Route path="/admin/discounts" element={<AdminDashboard />} />
-        <Route path="/admin/analytics" element={<AdminDashboard />} />
-        <Route path="/admin/settings" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route index element={<AdminHome />} />
+          <Route path="products" element={<ProductsManagement />} />
+          <Route path="products/edit/:productId" element={<EditProduct />} />
+          <Route path="orders" element={<AdminHome />} />
+          <Route path="customers" element={<AdminHome />} />
+          <Route path="discounts" element={<DiscountsManagement />} />
+          <Route path="analytics" element={<AdminHome />} />
+          <Route path="settings" element={<AdminHome />} />
+        </Route>
         
         {/* Professional routes */}
         <Route path="/professional/materia-medica" element={<NotFound />} />
