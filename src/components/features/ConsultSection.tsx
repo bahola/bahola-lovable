@@ -11,19 +11,28 @@ export const ConsultSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
           {/* Doctor consultation image */}
           <div className="lg:col-span-1 order-2 lg:order-1">
-            <h2 className="section-title text-left mb-6">Consult a Homeopath</h2>
-            <div className="rounded-xl overflow-hidden shadow-lg">
-              <img 
-                src="/lovable-uploads/0108ad38-606a-475c-a72b-c841b9ba5dae.png" 
-                alt="Doctor consultation session"
-                className="w-full h-auto object-cover"
-              />
+            <div className="relative">
+              <div className="rounded-xl overflow-hidden shadow-lg h-96">
+                <img 
+                  src="/lovable-uploads/0108ad38-606a-475c-a72b-c841b9ba5dae.png" 
+                  alt="Doctor consultation session"
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              {/* Highlighted heading overlay */}
+              <div className="absolute top-4 left-4 right-4">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-md">
+                  <h2 className="text-xl font-light text-bahola-navy-950 text-center tracking-brand-tight">
+                    Consult a Homeopath
+                  </h2>
+                </div>
+              </div>
             </div>
           </div>
           
           {/* Appointment blocks */}
           <div className="lg:col-span-2 order-1 lg:order-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full pt-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-96">
               <div className="bg-white rounded-xl shadow-lg p-6 border border-bahola-neutral-200 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-bahola-blue-100 text-bahola-blue-500 mx-auto mb-6">
                   <Calendar size={32} />
