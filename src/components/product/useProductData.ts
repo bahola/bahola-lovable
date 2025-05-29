@@ -130,8 +130,8 @@ export const useProductData = (productId: string | undefined) => {
             shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
             category: data.product_categories?.name || 'Uncategorized',
             variations: data.product_variations || [],
-            tax_status: data.tax_status || 'taxable',
-            tax_class: data.tax_class || '5'
+            tax_status: (data.tax_status === 'non-taxable' ? 'non-taxable' : 'taxable') as 'taxable' | 'non-taxable',
+            tax_class: (data.tax_class === '0' || data.tax_class === '12' ? data.tax_class : '5') as '0' | '5' | '12'
           });
         }
       } catch (error) {
