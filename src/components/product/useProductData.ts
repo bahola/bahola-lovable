@@ -25,6 +25,8 @@ interface ProductData {
   shipping: string;
   category: string;
   variations: any[];
+  tax_status: 'taxable' | 'non-taxable';
+  tax_class: '0' | '5' | '12';
 }
 
 export const useProductData = (productId: string | undefined) => {
@@ -127,7 +129,9 @@ export const useProductData = (productId: string | undefined) => {
             precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
             shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
             category: data.product_categories?.name || 'Uncategorized',
-            variations: data.product_variations || []
+            variations: data.product_variations || [],
+            tax_status: data.tax_status || 'taxable',
+            tax_class: data.tax_class || '5'
           });
         }
       } catch (error) {
