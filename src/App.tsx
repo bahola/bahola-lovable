@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -21,6 +22,11 @@ import BachFlowerConcerns from './pages/BachFlowerConcerns';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import HealthConcerns from './pages/HealthConcerns';
+import ThankYou from './pages/ThankYou';
+import TermsConditions from './pages/TermsConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import ReturnPolicy from './pages/ReturnPolicy';
+import OrderTracking from './pages/OrderTracking';
 
 function App() {
   return (
@@ -37,6 +43,8 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/thank-you" element={<ThankYou />} />
+        <Route path="/track-order" element={<OrderTracking />} />
         <Route path="/homeopathy" element={<Homeopathy />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/bach-flower" element={<CategoryPage />} />
@@ -44,6 +52,11 @@ function App() {
         <Route path="/bach-flower/:subcategory" element={<CategoryPage />} />
         <Route path="/concern/:concernId" element={<CategoryPage />} />
         <Route path="/health-concerns" element={<HealthConcerns />} />
+        
+        {/* Legal pages */}
+        <Route path="/terms" element={<TermsConditions />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/return-policy" element={<ReturnPolicy />} />
         
         {/* Appointment routes */}
         <Route path="/book-appointment" element={<AppointmentBooking />} />
