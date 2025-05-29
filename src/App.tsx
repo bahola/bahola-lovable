@@ -29,6 +29,7 @@ import ReturnPolicy from './pages/ReturnPolicy';
 import OrderTracking from './pages/OrderTracking';
 import PromoOffers from './pages/PromoOffers';
 import DiscountsManagement from './pages/admin/DiscountsManagement';
+import ShippingManagement from './pages/admin/ShippingManagement';
 import AdminHome from './pages/admin/AdminHome';
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
           <Route path="orders" element={<AdminHome />} />
           <Route path="customers" element={<AdminHome />} />
           <Route path="discounts" element={<DiscountsManagement />} />
+          <Route path="shipping" element={<ShippingManagement />} />
           <Route path="analytics" element={<AdminHome />} />
           <Route path="settings" element={<AdminHome />} />
         </Route>

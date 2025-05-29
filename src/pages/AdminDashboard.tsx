@@ -9,7 +9,8 @@ import {
   Tag, 
   BarChart4, 
   Settings,
-  ChevronRight
+  ChevronRight,
+  Truck
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ const AdminDashboard = () => {
     { name: 'Orders', path: '/admin/orders', icon: ClipboardList },
     { name: 'Customers', path: '/admin/customers', icon: Users },
     { name: 'Discounts', path: '/admin/discounts', icon: Tag },
+    { name: 'Shipping', path: '/admin/shipping', icon: Truck },
     { name: 'Analytics', path: '/admin/analytics', icon: BarChart4 },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
