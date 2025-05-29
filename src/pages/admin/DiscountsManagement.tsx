@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Search, Edit, Trash2, Tag, Calendar, Percent, Users, Package, Eye, EyeOff } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -538,7 +537,6 @@ const DiscountsManagement = () => {
                     <Switch 
                       checked={discount.status === 'Active'}
                       onCheckedChange={() => toggleDiscountStatus(discount.id)}
-                      size="sm"
                     />
                   </div>
                 </TableCell>
