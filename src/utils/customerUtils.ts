@@ -22,7 +22,7 @@ export const createCustomerFromRegistration = async (customerData: CustomerData)
   try {
     const { data, error } = await supabase
       .from('customers')
-      .insert([{
+      .insert({
         name: customerData.name,
         email: customerData.email,
         phone: customerData.phone || '',
@@ -33,7 +33,7 @@ export const createCustomerFromRegistration = async (customerData: CustomerData)
         state: customerData.state || null,
         pincode: customerData.pincode || null,
         notes: customerData.notes || null
-      }])
+      })
       .select()
       .single();
 

@@ -121,7 +121,7 @@ const CustomersManagement = () => {
     try {
       const { data, error } = await supabase
         .from('customers')
-        .insert([{
+        .insert({
           name: newCustomer.name,
           email: newCustomer.email,
           phone: newCustomer.phone,
@@ -132,7 +132,7 @@ const CustomersManagement = () => {
           customer_type: newCustomer.customer_type,
           source: newCustomer.source,
           notes: newCustomer.notes || null
-        }])
+        })
         .select()
         .single();
 
