@@ -12,9 +12,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 
 // TypeScript types for customer data
 type CustomerType = 'customer' | 'doctor';
+type CustomerInsert = Omit<Database['public']['Tables']['customers']['Insert'], 'customer_id'>;
 
 interface Customer {
   id: string;
@@ -119,20 +121,22 @@ const CustomersManagement = () => {
 
   const handleAddCustomer = async () => {
     try {
+      const insertData: CustomerInsert = {
+        name: newCustomer.name,
+        email: newCustomer.email,
+        phone: newCustomer.phone,
+        address: newCustomer.address || null,
+        city: newCustomer.city || null,
+        state: newCustomer.state || null,
+        pincode: newCustomer.pincode || null,
+        customer_type: newCustomer.customer_type,
+        source: newCustomer.source,
+        notes: newCustomer.notes || null
+      };
+
       const { data, error } = await supabase
         .from('customers')
-        .insert({
-          name: newCustomer.name,
-          email: newCustomer.email,
-          phone: newCustomer.phone,
-          address: newCustomer.address || null,
-          city: newCustomer.city || null,
-          state: newCustomer.state || null,
-          pincode: newCustomer.pincode || null,
-          customer_type: newCustomer.customer_type,
-          source: newCustomer.source,
-          notes: newCustomer.notes || null
-        })
+        .insert(insertData)
         .select()
         .single();
 

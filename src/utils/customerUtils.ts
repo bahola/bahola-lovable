@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Database } from '@/integrations/supabase/types';
 
 type CustomerType = Database['public']['Enums']['customer_type'];
+type CustomerInsert = Omit<Database['public']['Tables']['customers']['Insert'], 'customer_id'>;
 
 export interface CustomerData {
   name: string;
@@ -20,20 +21,22 @@ export interface CustomerData {
 // Function to create a customer record when a user registers
 export const createCustomerFromRegistration = async (customerData: CustomerData) => {
   try {
+    const insertData: CustomerInsert = {
+      name: customerData.name,
+      email: customerData.email,
+      phone: customerData.phone || '',
+      customer_type: customerData.customer_type,
+      source: customerData.source || 'signup',
+      address: customerData.address || null,
+      city: customerData.city || null,
+      state: customerData.state || null,
+      pincode: customerData.pincode || null,
+      notes: customerData.notes || null
+    };
+
     const { data, error } = await supabase
       .from('customers')
-      .insert({
-        name: customerData.name,
-        email: customerData.email,
-        phone: customerData.phone || '',
-        customer_type: customerData.customer_type,
-        source: customerData.source || 'signup',
-        address: customerData.address || null,
-        city: customerData.city || null,
-        state: customerData.state || null,
-        pincode: customerData.pincode || null,
-        notes: customerData.notes || null
-      })
+      .insert(insertData)
       .select()
       .single();
 
