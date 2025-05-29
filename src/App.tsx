@@ -30,6 +30,7 @@ import OrderTracking from './pages/OrderTracking';
 import PromoOffers from './pages/PromoOffers';
 import DiscountsManagement from './pages/admin/DiscountsManagement';
 import ShippingManagement from './pages/admin/ShippingManagement';
+import CustomersManagement from './pages/admin/CustomersManagement';
 import AdminHome from './pages/admin/AdminHome';
 
 function App() {
@@ -74,7 +75,7 @@ function App() {
           <Route path="products" element={<ProductsManagement />} />
           <Route path="products/edit/:productId" element={<EditProduct />} />
           <Route path="orders" element={<AdminHome />} />
-          <Route path="customers" element={<AdminHome />} />
+          <Route path="customers" element={<CustomersManagement />} />
           <Route path="discounts" element={<DiscountsManagement />} />
           <Route path="shipping" element={<ShippingManagement />} />
           <Route path="analytics" element={<AdminHome />} />
