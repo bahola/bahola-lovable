@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, Eye, Mail, Edit, Trash2, Users, Plus, Upload } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -34,6 +33,14 @@ interface Customer {
   total_orders?: number;
   total_spent?: number;
   last_order_date?: string;
+  first_order_date?: string;
+  average_order_value?: number;
+  purchase_frequency?: number;
+  days_between_orders?: number;
+  predicted_next_purchase_date?: string;
+  customer_lifetime_value?: number;
+  ltv_segment?: string;
+  marketing_priority?: number;
   created_at: string;
   updated_at: string;
 }
@@ -420,146 +427,200 @@ const CustomersManagement = () => {
               <TableHead>Phone</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Source</TableHead>
-              <TableHead>Orders</TableHead>
-              <TableHead>Total Spent</TableHead>
+              <TableHead>LTV</TableHead>
+              <TableHead>AOV</TableHead>
+              <TableHead>Frequency</TableHead>
+              <TableHead>Next Purchase</TableHead>
+              <TableHead>Priority</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCustomers.map((customer) => (
-              <TableRow key={customer.id}>
-                <TableCell className="font-medium">{customer.customer_id}</TableCell>
-                <TableCell>{customer.name}</TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>{customer.phone}</TableCell>
-                <TableCell>
-                  {customer.city && customer.state ? `${customer.city}, ${customer.state}` : 'N/A'}
-                </TableCell>
-                <TableCell>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                    categoryColors[customer.customer_type] || 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {customer.customer_type === 'doctor' ? 'Doctor' : 'Customer'}
-                  </span>
-                </TableCell>
-                <TableCell className="capitalize">{customer.source || 'manual'}</TableCell>
-                <TableCell>{customer.total_orders || 0}</TableCell>
-                <TableCell>₹{(customer.total_spent || 0).toFixed(2)}</TableCell>
-                <TableCell>
-                  <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    {customer.status || 'active'}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button variant="ghost" size="sm" onClick={() => handleViewCustomer(customer.id)}>
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </SheetTrigger>
-                      <SheetContent side="right">
-                        <SheetHeader>
-                          <SheetTitle>Customer Profile</SheetTitle>
-                        </SheetHeader>
-                        {selectedCustomer && (
-                          <div className="py-4">
-                            <div className="flex justify-center mb-6">
-                              <div className="h-24 w-24 rounded-full bg-bahola-blue-100 flex items-center justify-center text-bahola-blue-700 text-xl font-bold">
-                                {selectedCustomer.name.split(' ').map(n => n[0]).join('')}
-                              </div>
-                            </div>
-                            
-                            <div className="text-center mb-6">
-                              <h3 className="text-xl font-bold">{selectedCustomer.name}</h3>
-                              <p className="text-muted-foreground">{selectedCustomer.email}</p>
-                              <div className="mt-2">
-                                <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                                  categoryColors[selectedCustomer.customer_type] || 'bg-gray-100 text-gray-800'
-                                }`}>
-                                  {selectedCustomer.customer_type === 'doctor' ? 'Doctor' : 'Customer'} - {selectedCustomer.customer_id}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            <div className="space-y-6">
-                              <div className="bg-muted rounded-lg p-4">
-                                <h4 className="font-medium mb-2">Contact Information</h4>
-                                <div className="space-y-2 text-sm">
-                                  <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Email:</span>
-                                    <span>{selectedCustomer.email}</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Phone:</span>
-                                    <span>{selectedCustomer.phone}</span>
-                                  </div>
-                                  {(selectedCustomer.city || selectedCustomer.state) && (
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">Location:</span>
-                                      <span>{selectedCustomer.city && selectedCustomer.state ? `${selectedCustomer.city}, ${selectedCustomer.state}` : 'N/A'}</span>
-                                    </div>
-                                  )}
-                                  <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Source:</span>
-                                    <span className="capitalize">{selectedCustomer.source || 'manual'}</span>
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              <div className="bg-muted rounded-lg p-4">
-                                <h4 className="font-medium mb-2">Order Statistics</h4>
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div className="bg-white rounded-md p-3 text-center">
-                                    <p className="text-muted-foreground text-xs">Total Orders</p>
-                                    <p className="text-2xl font-bold">{selectedCustomer.total_orders || 0}</p>
-                                  </div>
-                                  <div className="bg-white rounded-md p-3 text-center">
-                                    <p className="text-muted-foreground text-xs">Total Spent</p>
-                                    <p className="text-2xl font-bold">₹{(selectedCustomer.total_spent || 0).toFixed(2)}</p>
-                                  </div>
-                                </div>
-                                {selectedCustomer.last_order_date && (
-                                  <div className="mt-2">
-                                    <p className="text-sm">
-                                      <span className="text-muted-foreground">Last Order Date:</span>{' '}
-                                      <span>{selectedCustomer.last_order_date}</span>
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                              
-                              <div className="flex space-x-2">
-                                <Button className="flex-1">
-                                  <Mail className="h-4 w-4 mr-2" />
-                                  Contact
-                                </Button>
-                                <Button variant="outline" className="flex-1">
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit
-                                </Button>
-                              </div>
-                            </div>
+            {filteredCustomers.map((customer) => {
+              const daysUntilNext = customer.predicted_next_purchase_date 
+                ? Math.ceil((new Date(customer.predicted_next_purchase_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+                : null;
+              
+              const marketingPriority = customer.marketing_priority || 3;
+              const priorityColors = {
+                1: 'bg-red-100 text-red-800',
+                2: 'bg-orange-100 text-orange-800',
+                3: 'bg-gray-100 text-gray-800'
+              };
+
+              return (
+                <TableRow key={customer.id}>
+                  <TableCell className="font-medium">{customer.customer_id}</TableCell>
+                  <TableCell>{customer.name}</TableCell>
+                  <TableCell>{customer.email}</TableCell>
+                  <TableCell>{customer.phone}</TableCell>
+                  <TableCell>
+                    {customer.city && customer.state ? `${customer.city}, ${customer.state}` : 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                      categoryColors[customer.customer_type] || 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {customer.customer_type === 'doctor' ? 'Doctor' : 'Customer'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-right">
+                      <div className="font-semibold">₹{(customer.customer_lifetime_value || 0).toFixed(0)}</div>
+                      <div className={`text-xs px-1 py-0.5 rounded capitalize ${
+                        customer.ltv_segment === 'high' ? 'bg-green-100 text-green-700' :
+                        customer.ltv_segment === 'medium' ? 'bg-blue-100 text-blue-700' :
+                        customer.ltv_segment === 'low' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-gray-100 text-gray-700'
+                      }`}>
+                        {customer.ltv_segment || 'new'}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>₹{(customer.average_order_value || 0).toFixed(0)}</TableCell>
+                  <TableCell>{(customer.purchase_frequency || 0).toFixed(1)}/mo</TableCell>
+                  <TableCell>
+                    {customer.predicted_next_purchase_date ? (
+                      <div className="text-sm">
+                        <div>{new Date(customer.predicted_next_purchase_date).toLocaleDateString()}</div>
+                        {daysUntilNext !== null && (
+                          <div className={`text-xs ${
+                            daysUntilNext <= 0 ? 'text-red-600' : 
+                            daysUntilNext <= 3 ? 'text-orange-600' : 
+                            'text-gray-600'
+                          }`}>
+                            {daysUntilNext > 0 ? `${daysUntilNext}d` : 
+                             daysUntilNext === 0 ? 'Today' : 
+                             `${Math.abs(daysUntilNext)}d overdue`}
                           </div>
                         )}
-                      </SheetContent>
-                    </Sheet>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleDeleteCustomer(customer.id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-red-500" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">N/A</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                      priorityColors[marketingPriority as keyof typeof priorityColors]
+                    }`}>
+                      P{marketingPriority}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {customer.status || 'active'}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Sheet>
+                        <SheetTrigger asChild>
+                          <Button variant="ghost" size="sm" onClick={() => handleViewCustomer(customer.id)}>
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </SheetTrigger>
+                        <SheetContent side="right">
+                          <SheetHeader>
+                            <SheetTitle>Customer Profile</SheetTitle>
+                          </SheetHeader>
+                          {selectedCustomer && (
+                            <div className="py-4">
+                              <div className="flex justify-center mb-6">
+                                <div className="h-24 w-24 rounded-full bg-bahola-blue-100 flex items-center justify-center text-bahola-blue-700 text-xl font-bold">
+                                  {selectedCustomer.name.split(' ').map(n => n[0]).join('')}
+                                </div>
+                              </div>
+                              
+                              <div className="text-center mb-6">
+                                <h3 className="text-xl font-bold">{selectedCustomer.name}</h3>
+                                <p className="text-muted-foreground">{selectedCustomer.email}</p>
+                                <div className="mt-2">
+                                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                                    categoryColors[selectedCustomer.customer_type] || 'bg-gray-100 text-gray-800'
+                                  }`}>
+                                    {selectedCustomer.customer_type === 'doctor' ? 'Doctor' : 'Customer'} - {selectedCustomer.customer_id}
+                                  </span>
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-6">
+                                <div className="bg-muted rounded-lg p-4">
+                                  <h4 className="font-medium mb-2">Contact Information</h4>
+                                  <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between">
+                                      <span className="text-muted-foreground">Email:</span>
+                                      <span>{selectedCustomer.email}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-muted-foreground">Phone:</span>
+                                      <span>{selectedCustomer.phone}</span>
+                                    </div>
+                                    {(selectedCustomer.city || selectedCustomer.state) && (
+                                      <div className="flex justify-between">
+                                        <span className="text-muted-foreground">Location:</span>
+                                        <span>{selectedCustomer.city && selectedCustomer.state ? `${selectedCustomer.city}, ${selectedCustomer.state}` : 'N/A'}</span>
+                                      </div>
+                                    )}
+                                    <div className="flex justify-between">
+                                      <span className="text-muted-foreground">Source:</span>
+                                      <span className="capitalize">{selectedCustomer.source || 'manual'}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <div className="bg-muted rounded-lg p-4">
+                                  <h4 className="font-medium mb-2">Order Statistics</h4>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-white rounded-md p-3 text-center">
+                                      <p className="text-muted-foreground text-xs">Total Orders</p>
+                                      <p className="text-2xl font-bold">{selectedCustomer.total_orders || 0}</p>
+                                    </div>
+                                    <div className="bg-white rounded-md p-3 text-center">
+                                      <p className="text-muted-foreground text-xs">Total Spent</p>
+                                      <p className="text-2xl font-bold">₹{(selectedCustomer.total_spent || 0).toFixed(2)}</p>
+                                    </div>
+                                  </div>
+                                  {selectedCustomer.last_order_date && (
+                                    <div className="mt-2">
+                                      <p className="text-sm">
+                                        <span className="text-muted-foreground">Last Order Date:</span>{' '}
+                                        <span>{selectedCustomer.last_order_date}</span>
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                <div className="flex space-x-2">
+                                  <Button className="flex-1">
+                                    <Mail className="h-4 w-4 mr-2" />
+                                    Contact
+                                  </Button>
+                                  <Button variant="outline" className="flex-1">
+                                    <Edit className="h-4 w-4 mr-2" />
+                                    Edit
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </SheetContent>
+                      </Sheet>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleDeleteCustomer(customer.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </Card>

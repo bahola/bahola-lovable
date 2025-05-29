@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Database } from '@/integrations/supabase/types';
 
@@ -84,7 +83,7 @@ export const updateCustomerOrderStats = async (
     // First get current stats
     const { data: customer, error: fetchError } = await supabase
       .from('customers')
-      .select('total_orders, total_spent')
+      .select('total_orders, total_spent, first_order_date')
       .eq('id', customerId)
       .single();
 
@@ -93,13 +92,18 @@ export const updateCustomerOrderStats = async (
       return { success: false, error: fetchError.message };
     }
 
+    // Calculate if this is the first order
+    const isFirstOrder = !customer.first_order_date;
+    const newFirstOrderDate = isFirstOrder ? orderDate : customer.first_order_date;
+
     // Update with new stats
     const { data, error } = await supabase
       .from('customers')
       .update({
         total_orders: (customer.total_orders || 0) + 1,
         total_spent: (customer.total_spent || 0) + orderAmount,
-        last_order_date: orderDate
+        last_order_date: orderDate,
+        first_order_date: newFirstOrderDate
       })
       .eq('id', customerId)
       .select()
@@ -110,9 +114,31 @@ export const updateCustomerOrderStats = async (
       return { success: false, error: error.message };
     }
 
+    // The trigger will automatically calculate LTV metrics when we update the order stats
+    console.log('Customer stats updated, LTV metrics will be recalculated automatically');
+    
     return { success: true, data };
   } catch (error) {
     console.error('Unexpected error updating customer stats:', error);
+    return { success: false, error: 'Unexpected error occurred' };
+  }
+};
+
+// Function to manually recalculate LTV for a customer
+export const recalculateCustomerLTV = async (customerId: string) => {
+  try {
+    const { data, error } = await supabase.rpc('calculate_customer_ltv', {
+      customer_uuid: customerId
+    });
+
+    if (error) {
+      console.error('Error recalculating LTV:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Unexpected error recalculating LTV:', error);
     return { success: false, error: 'Unexpected error occurred' };
   }
 };

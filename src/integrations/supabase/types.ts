@@ -63,17 +63,25 @@ export type Database = {
       customers: {
         Row: {
           address: string | null
+          average_order_value: number | null
           city: string | null
           created_at: string
           customer_id: string
+          customer_lifetime_value: number | null
           customer_type: Database["public"]["Enums"]["customer_type"]
+          days_between_orders: number | null
           email: string
+          first_order_date: string | null
           id: string
           last_order_date: string | null
+          ltv_segment: string | null
+          marketing_priority: number | null
           name: string
           notes: string | null
           phone: string
           pincode: string | null
+          predicted_next_purchase_date: string | null
+          purchase_frequency: number | null
           source: string | null
           state: string | null
           status: string | null
@@ -83,17 +91,25 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          average_order_value?: number | null
           city?: string | null
           created_at?: string
           customer_id: string
+          customer_lifetime_value?: number | null
           customer_type?: Database["public"]["Enums"]["customer_type"]
+          days_between_orders?: number | null
           email: string
+          first_order_date?: string | null
           id?: string
           last_order_date?: string | null
+          ltv_segment?: string | null
+          marketing_priority?: number | null
           name: string
           notes?: string | null
           phone: string
           pincode?: string | null
+          predicted_next_purchase_date?: string | null
+          purchase_frequency?: number | null
           source?: string | null
           state?: string | null
           status?: string | null
@@ -103,17 +119,25 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          average_order_value?: number | null
           city?: string | null
           created_at?: string
           customer_id?: string
+          customer_lifetime_value?: number | null
           customer_type?: Database["public"]["Enums"]["customer_type"]
+          days_between_orders?: number | null
           email?: string
+          first_order_date?: string | null
           id?: string
           last_order_date?: string | null
+          ltv_segment?: string | null
+          marketing_priority?: number | null
           name?: string
           notes?: string | null
           phone?: string
           pincode?: string | null
+          predicted_next_purchase_date?: string | null
+          purchase_frequency?: number | null
           source?: string | null
           state?: string | null
           status?: string | null
@@ -491,6 +515,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_customer_ltv: {
+        Args: { customer_uuid: string }
+        Returns: undefined
+      }
       generate_customer_id: {
         Args: { customer_type: Database["public"]["Enums"]["customer_type"] }
         Returns: string
