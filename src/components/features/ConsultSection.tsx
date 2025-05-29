@@ -14,7 +14,7 @@ export const ConsultSection = () => {
             <div className="relative">
               <div className="rounded-xl overflow-hidden shadow-lg h-96">
                 <img 
-                  src="/lovable-uploads/0108ad38-606a-475c-a72b-c841b9ba5dae.png" 
+                  src="/lovable-uploads/a824791e-2dc7-4e18-b909-67012e2997d7.png" 
                   alt="Doctor consultation session"
                   className="w-full h-full object-cover object-center"
                 />
