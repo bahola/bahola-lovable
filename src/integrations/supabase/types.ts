@@ -285,6 +285,115 @@ export type Database = {
           },
         ]
       }
+      shipping_areas: {
+        Row: {
+          area_name: string
+          city: string | null
+          created_at: string
+          id: string
+          pincode: string | null
+          state: string | null
+          zone_id: string
+        }
+        Insert: {
+          area_name: string
+          city?: string | null
+          created_at?: string
+          id?: string
+          pincode?: string | null
+          state?: string | null
+          zone_id: string
+        }
+        Update: {
+          area_name?: string
+          city?: string | null
+          created_at?: string
+          id?: string
+          pincode?: string | null
+          state?: string | null
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_areas_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "shipping_zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shipping_rates: {
+        Row: {
+          base_price: number
+          base_weight_grams: number
+          created_at: string
+          id: string
+          incremental_rate: number
+          incremental_weight_grams: number
+          max_weight_grams: number | null
+          min_weight_grams: number | null
+          updated_at: string
+          zone_id: string
+        }
+        Insert: {
+          base_price: number
+          base_weight_grams?: number
+          created_at?: string
+          id?: string
+          incremental_rate: number
+          incremental_weight_grams: number
+          max_weight_grams?: number | null
+          min_weight_grams?: number | null
+          updated_at?: string
+          zone_id: string
+        }
+        Update: {
+          base_price?: number
+          base_weight_grams?: number
+          created_at?: string
+          id?: string
+          incremental_rate?: number
+          incremental_weight_grams?: number
+          max_weight_grams?: number | null
+          min_weight_grams?: number | null
+          updated_at?: string
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_rates_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "shipping_zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shipping_zones: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       wishlist: {
         Row: {
           added_at: string | null

@@ -1,25 +1,32 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import ShippingCalculator from '@/components/shipping/ShippingCalculator';
 
 const Cart = () => {
   const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice, getSubtotal, getTotalTax } = useCart();
+  const [shippingCost, setShippingCost] = useState(0);
+  const [shippingZone, setShippingZone] = useState<string>('');
   
   const subtotal = getSubtotal();
-  const shipping = subtotal >= 500 ? 0 : 50;
   const tax = getTotalTax();
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shippingCost + tax;
+
+  const handleShippingUpdate = (cost: number, zone?: string) => {
+    setShippingCost(cost);
+    setShippingZone(zone || '');
+  };
   
   return (
     <PageLayout title="Your Cart" description="Review and modify your selected items">
       {items.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="p-6 border-b">
                 <h2 className="text-xl font-bold">
@@ -115,6 +122,9 @@ const Cart = () => {
                 </div>
               </div>
             </div>
+
+            {/* Shipping Calculator */}
+            <ShippingCalculator onShippingUpdate={handleShippingUpdate} />
           </div>
           
           {/* Order Summary */}
@@ -131,9 +141,11 @@ const Cart = () => {
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Shipping</span>
+                  <span className="text-bahola-neutral-600">
+                    Shipping {shippingZone && `(${shippingZone})`}
+                  </span>
                   <span className="font-medium">
-                    {shipping === 0 ? 'Free' : `₹${shipping}`}
+                    {shippingCost === 0 ? 'Calculate above' : `₹${shippingCost}`}
                   </span>
                 </div>
                 
@@ -142,19 +154,13 @@ const Cart = () => {
                   <span className="font-medium">₹{Math.round(tax)}</span>
                 </div>
                 
-                {shipping > 0 && (
-                  <div className="text-bahola-neutral-600 text-sm bg-bahola-blue-50 p-3 rounded">
-                    Add ₹{500 - subtotal} more to qualify for free shipping
-                  </div>
-                )}
-                
                 <div className="border-t pt-4 mt-4">
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
                     <span>₹{Math.round(total)}</span>
                   </div>
                   <p className="text-bahola-neutral-500 text-xs mt-1">
-                    (Including GST)
+                    (Including GST {shippingCost > 0 ? '& Shipping' : ''})
                   </p>
                 </div>
                 

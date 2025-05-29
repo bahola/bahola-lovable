@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
@@ -7,17 +8,30 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CreditCard, Building, Home, Shield, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import ShippingCalculator from '@/components/shipping/ShippingCalculator';
 
 const Checkout = () => {
   const [addressType, setAddressType] = useState('home');
   const [paymentMethod, setPaymentMethod] = useState('razorpay');
+  const [shippingCost, setShippingCost] = useState(0);
+  const [shippingZone, setShippingZone] = useState<string>('');
+  const [pincode, setPincode] = useState('');
   const { items, getSubtotal, getTotalTax } = useCart();
   
   // Calculate order summary using cart methods
   const subtotal = getSubtotal();
-  const shipping = subtotal >= 500 ? 0 : 50;
   const tax = getTotalTax();
-  const total = subtotal + shipping + tax;
+  const total = subtotal + shippingCost + tax;
+
+  const handleShippingUpdate = (cost: number, zone?: string) => {
+    setShippingCost(cost);
+    setShippingZone(zone || '');
+  };
+
+  const handlePincodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setPincode(value);
+  };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +127,14 @@ const Checkout = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="pincode">PIN Code</Label>
-                    <Input id="pincode" required />
+                    <Input 
+                      id="pincode" 
+                      value={pincode}
+                      onChange={handlePincodeChange}
+                      placeholder="Enter 6-digit pincode"
+                      maxLength={6}
+                      required 
+                    />
                   </div>
                 </div>
                 
@@ -123,6 +144,12 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
+
+            {/* Shipping Calculator */}
+            <ShippingCalculator 
+              onShippingUpdate={handleShippingUpdate}
+              defaultPincode={pincode}
+            />
             
             {/* Payment Method */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -188,8 +215,8 @@ const Checkout = () => {
                   </div>
                   
                   <div className="flex justify-between">
-                    <span>Shipping</span>
-                    <span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
+                    <span>Shipping {shippingZone && `(${shippingZone})`}</span>
+                    <span>{shippingCost === 0 ? 'Calculate above' : `₹${shippingCost}`}</span>
                   </div>
                   
                   <div className="flex justify-between">
@@ -241,8 +268,10 @@ const Checkout = () => {
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
+                  <span className="text-bahola-neutral-600">
+                    Shipping {shippingZone && `(${shippingZone})`}
+                  </span>
+                  <span>{shippingCost === 0 ? 'Calculate above' : `₹${shippingCost}`}</span>
                 </div>
                 
                 <div className="flex justify-between">
