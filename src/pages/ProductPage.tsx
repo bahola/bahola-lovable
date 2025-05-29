@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
@@ -47,7 +46,9 @@ const ProductPage = () => {
         price: finalPrice,
         originalPrice: product.originalPrice,
         discountPercentage: product.discountPercentage,
-        image: product.image || '/placeholder.svg'
+        image: product.image || '/placeholder.svg',
+        taxStatus: product.tax_status || 'taxable',
+        taxClass: product.tax_class || '5'
       }, quantity);
       
       toast({

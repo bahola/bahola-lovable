@@ -9,6 +9,8 @@ export interface CartItem {
   discountPercentage?: number;
   image: string;
   quantity: number;
+  taxStatus?: 'taxable' | 'non-taxable';
+  taxClass?: '0' | '5' | '12';
 }
 
 interface CartContextType {
@@ -20,6 +22,9 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getDiscountedPrice: (item: CartItem) => number;
+  calculateTax: (item: CartItem) => number;
+  getSubtotal: () => number;
+  getTotalTax: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -65,6 +70,29 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       return item.originalPrice * (1 - item.discountPercentage / 100);
     }
     return item.price;
+  };
+
+  const calculateTax = (item: CartItem): number => {
+    if (item.taxStatus === 'non-taxable') {
+      return 0;
+    }
+    
+    const itemPrice = getDiscountedPrice(item);
+    const taxRate = parseFloat(item.taxClass || '5') / 100;
+    return itemPrice * item.quantity * taxRate;
+  };
+
+  const getSubtotal = (): number => {
+    return items.reduce((total, item) => {
+      const itemPrice = getDiscountedPrice(item);
+      return total + (itemPrice * item.quantity);
+    }, 0);
+  };
+
+  const getTotalTax = (): number => {
+    return items.reduce((total, item) => {
+      return total + calculateTax(item);
+    }, 0);
   };
 
   const addToCart = (newItem: Omit<CartItem, 'quantity'>, quantity = 1) => {
@@ -121,10 +149,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
   
-  const totalAmount = items.reduce((total, item) => {
-    const itemPrice = getDiscountedPrice(item);
-    return total + (itemPrice * item.quantity);
-  }, 0);
+  const totalAmount = getSubtotal() + getTotalTax();
 
   const value: CartContextType = {
     items,
@@ -134,7 +159,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     removeFromCart,
     updateQuantity,
     clearCart,
-    getDiscountedPrice
+    getDiscountedPrice,
+    calculateTax,
+    getSubtotal,
+    getTotalTax
   };
 
   return (

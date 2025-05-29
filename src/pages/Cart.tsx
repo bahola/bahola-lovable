@@ -7,15 +7,11 @@ import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 
 const Cart = () => {
-  const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice } = useCart();
+  const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice, getSubtotal, getTotalTax } = useCart();
   
-  const subtotal = items.reduce((sum, item) => {
-    const itemPrice = getDiscountedPrice(item);
-    return sum + (itemPrice * item.quantity);
-  }, 0);
-  
+  const subtotal = getSubtotal();
   const shipping = subtotal >= 500 ? 0 : 50;
-  const tax = Math.round(subtotal * 0.18); // 18% GST
+  const tax = getTotalTax();
   const total = subtotal + shipping + tax;
   
   return (
@@ -65,6 +61,10 @@ const Cart = () => {
                                 </span>
                               </>
                             )}
+                          </div>
+                          {/* Tax information */}
+                          <div className="mt-1 text-xs text-bahola-neutral-500">
+                            {item.taxStatus === 'non-taxable' ? 'Non-taxable' : `${item.taxClass || '5'}% GST`}
                           </div>
                         </div>
                         
@@ -138,8 +138,8 @@ const Cart = () => {
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Tax (18% GST)</span>
-                  <span className="font-medium">₹{tax}</span>
+                  <span className="text-bahola-neutral-600">Tax (GST)</span>
+                  <span className="font-medium">₹{Math.round(tax)}</span>
                 </div>
                 
                 {shipping > 0 && (

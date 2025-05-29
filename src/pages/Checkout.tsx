@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
@@ -7,23 +6,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CreditCard, Building, Home, Shield, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 const Checkout = () => {
   const [addressType, setAddressType] = useState('home');
   const [paymentMethod, setPaymentMethod] = useState('razorpay');
+  const { items, getSubtotal, getTotalTax } = useCart();
   
-  // Order summary data - would come from cart state in a real app
-  const orderSummary = {
-    subtotal: 715,
-    shipping: 0,
-    tax: 129,
-    total: 844,
-    items: [
-      { id: 'product-1', name: 'Arnica Montana 30C', quantity: 2, price: 185 },
-      { id: 'product-2', name: 'Nux Vomica 200C', quantity: 1, price: 210 },
-      { id: 'product-3', name: 'Eupatorium Perfoliatum Q', quantity: 1, price: 320 }
-    ]
-  };
+  // Calculate order summary using cart methods
+  const subtotal = getSubtotal();
+  const shipping = subtotal >= 500 ? 0 : 50;
+  const tax = getTotalTax();
+  const total = subtotal + shipping + tax;
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,22 +184,22 @@ const Checkout = () => {
                 <div className="p-6 space-y-4">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>₹{orderSummary.subtotal}</span>
+                    <span>₹{Math.round(subtotal)}</span>
                   </div>
                   
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>{orderSummary.shipping === 0 ? 'Free' : `₹${orderSummary.shipping}`}</span>
+                    <span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
                   </div>
                   
                   <div className="flex justify-between">
-                    <span>Tax (18% GST)</span>
-                    <span>₹{orderSummary.tax}</span>
+                    <span>Tax (GST)</span>
+                    <span>₹{Math.round(tax)}</span>
                   </div>
                   
                   <div className="border-t pt-4 mt-4 flex justify-between font-bold">
                     <span>Total</span>
-                    <span>₹{orderSummary.total}</span>
+                    <span>₹{Math.round(total)}</span>
                   </div>
                 </div>
               </div>
@@ -226,13 +220,16 @@ const Checkout = () => {
             
             <div className="p-6">
               <ul className="space-y-4 mb-6">
-                {orderSummary.items.map(item => (
+                {items.map(item => (
                   <li key={item.id} className="flex justify-between">
                     <div>
                       <span className="font-medium">{item.name}</span>
                       <span className="text-bahola-neutral-500 ml-1">x{item.quantity}</span>
+                      <div className="text-xs text-bahola-neutral-400">
+                        {item.taxStatus === 'non-taxable' ? 'Non-taxable' : `${item.taxClass || '5'}% GST`}
+                      </div>
                     </div>
-                    <span>₹{item.price * item.quantity}</span>
+                    <span>₹{Math.round(item.price * item.quantity)}</span>
                   </li>
                 ))}
               </ul>
@@ -240,24 +237,24 @@ const Checkout = () => {
               <div className="border-t pt-4 space-y-3">
                 <div className="flex justify-between">
                   <span className="text-bahola-neutral-600">Subtotal</span>
-                  <span>₹{orderSummary.subtotal}</span>
+                  <span>₹{Math.round(subtotal)}</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span className="text-bahola-neutral-600">Shipping</span>
-                  <span>{orderSummary.shipping === 0 ? 'Free' : `₹${orderSummary.shipping}`}</span>
+                  <span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
                 </div>
                 
                 <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Tax (18% GST)</span>
-                  <span>₹{orderSummary.tax}</span>
+                  <span className="text-bahola-neutral-600">Tax (GST)</span>
+                  <span>₹{Math.round(tax)}</span>
                 </div>
               </div>
               
               <div className="border-t pt-4 mt-4">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>₹{orderSummary.total}</span>
+                  <span>₹{Math.round(total)}</span>
                 </div>
               </div>
               
