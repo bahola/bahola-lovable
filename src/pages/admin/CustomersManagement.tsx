@@ -16,7 +16,6 @@ import { Database } from "@/integrations/supabase/types";
 
 // TypeScript types for customer data
 type CustomerType = 'customer' | 'doctor';
-type CustomerInsert = Omit<Database['public']['Tables']['customers']['Insert'], 'customer_id'>;
 
 interface Customer {
   id: string;
@@ -121,7 +120,8 @@ const CustomersManagement = () => {
 
   const handleAddCustomer = async () => {
     try {
-      const insertData: CustomerInsert = {
+      const insertData = {
+        customer_id: '', // This will be overwritten by the database trigger
         name: newCustomer.name,
         email: newCustomer.email,
         phone: newCustomer.phone,

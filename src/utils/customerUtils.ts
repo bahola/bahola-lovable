@@ -3,7 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Database } from '@/integrations/supabase/types';
 
 type CustomerType = Database['public']['Enums']['customer_type'];
-type CustomerInsert = Omit<Database['public']['Tables']['customers']['Insert'], 'customer_id'>;
 
 export interface CustomerData {
   name: string;
@@ -21,7 +20,8 @@ export interface CustomerData {
 // Function to create a customer record when a user registers
 export const createCustomerFromRegistration = async (customerData: CustomerData) => {
   try {
-    const insertData: CustomerInsert = {
+    const insertData = {
+      customer_id: '', // This will be overwritten by the database trigger
       name: customerData.name,
       email: customerData.email,
       phone: customerData.phone || '',
