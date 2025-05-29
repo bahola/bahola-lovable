@@ -164,12 +164,12 @@ export default {
 				}
 			},
 			fontFamily: {
-				// Brand Book Typography System
+				// Brand Book Typography System - Updated to use Proxima Nova
 				'helvetica': ['Inter', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-				'minion': ['Crimson Text', 'Georgia', 'Minion Pro', 'serif'],
+				'proxima': ['Proxima Nova', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 				// Keep existing fallbacks
-				sans: ['Inter', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-				serif: ['Crimson Text', 'Georgia', 'Minion Pro', 'serif'],
+				sans: ['Proxima Nova', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				serif: ['Proxima Nova', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 			},
 			letterSpacing: {
 				'brand-tight': '-0.02em',

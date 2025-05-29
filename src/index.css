@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -75,7 +74,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
+    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1rem; /* Updated to 16pt equivalent */
     line-height: 1.5;
   }
@@ -111,9 +110,9 @@
     font-size: 1.25rem;
   }
 
-  /* Body text follows Minion Pro guidelines with specific line heights and sizes */
+  /* Body text follows Proxima Nova guidelines with specific line heights and sizes */
   p, li, span {
-    font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
+    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.5; /* Within 1.4-1.6 range for optimal readability */
   }
   
@@ -220,15 +219,15 @@
     line-height: 1.2;
   }
 
-  /* Minion Pro body text with brand book specifications - Updated to 16pt */
+  /* Proxima Nova body text with brand book specifications - Updated to 16pt */
   .brand-body {
-    font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
+    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1rem; /* Updated to 16pt equivalent */
     line-height: 1.5; /* 1.4-1.6 for optimal readability */
   }
   
   .brand-body-fine {
-    font-family: 'Crimson Text', Georgia, 'Minion Pro', serif;
+    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 0.875rem; /* 14pt for fine print */
     line-height: 1.4; /* 1.4-1.6 for optimal readability */
   }
