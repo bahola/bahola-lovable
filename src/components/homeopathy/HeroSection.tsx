@@ -8,9 +8,9 @@ export const HomeopathyHeroSection = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-          alt="Peaceful natural landscape" 
-          className="w-full h-full object-cover opacity-30"
+          src="/lovable-uploads/730d1598-271f-4c89-b882-c14cbc238a19.png"
+          alt="Person with arms outstretched at mountain sunrise - freedom and wellness" 
+          className="w-full h-full object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-bahola-blue-900/60 to-bahola-navy-900/40"></div>
       </div>
