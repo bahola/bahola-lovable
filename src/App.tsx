@@ -32,6 +32,7 @@ import DiscountsManagement from './pages/admin/DiscountsManagement';
 import ShippingManagement from './pages/admin/ShippingManagement';
 import CustomersManagement from './pages/admin/CustomersManagement';
 import AdminHome from './pages/admin/AdminHome';
+import HelpCenter from './pages/HelpCenter';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/track-order" element={<OrderTracking />} />
         <Route path="/promo-offers" element={<PromoOffers />} />
+        <Route path="/help-center" element={<HelpCenter />} />
         <Route path="/homeopathy" element={<Homeopathy />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/bach-flower" element={<CategoryPage />} />
