@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -33,6 +32,8 @@ import ShippingManagement from './pages/admin/ShippingManagement';
 import CustomersManagement from './pages/admin/CustomersManagement';
 import AdminHome from './pages/admin/AdminHome';
 import HelpCenter from './pages/HelpCenter';
+import VideoConsultationRoom from './components/video/VideoConsultationRoom';
+import VideoConsultationJoin from './components/video/VideoConsultationJoin';
 
 function App() {
   return (
@@ -89,6 +90,10 @@ function App() {
         <Route path="/professional/remedy-deep-dive" element={<NotFound />} />
         <Route path="/professional/case-studies" element={<NotFound />} />
         <Route path="/professional/signup" element={<Register />} />
+        
+        {/* Video consultation routes */}
+        <Route path="/video-room/:appointmentId" element={<VideoConsultationRoom />} />
+        <Route path="/join-consultation/:appointmentId" element={<VideoConsultationJoin />} />
         
         {/* Catch all route */}
         <Route path="*" element={<NotFound />} />
