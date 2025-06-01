@@ -6,18 +6,64 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Form } from '@/components/ui/form';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { VideoConsultationPayment } from '@/components/appointment/VideoConsultationPayment';
+import { AppointmentDatePicker } from '@/components/appointment/AppointmentDatePicker';
+import { AppointmentTimeSlots } from '@/components/appointment/AppointmentTimeSlots';
+import { PatientInformationForm } from '@/components/appointment/PatientInformationForm';
+import { generateTimeSlots } from '@/utils/timeSlots';
 import { useToast } from "@/hooks/use-toast";
 import { Video, Clock, Shield, Users } from 'lucide-react';
+
+// Form schema for validation
+const formSchema = z.object({
+  appointmentDate: z.date({
+    required_error: "Please select a date for your consultation",
+  }),
+  appointmentTime: z.string({
+    required_error: "Please select a time slot",
+  }),
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  phone: z.string().min(10, { message: "Please enter a valid phone number." }),
+});
 
 const VideoConsultation = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [appointmentId, setAppointmentId] = useState('');
+  const [showBooking, setShowBooking] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [timeSlots, setTimeSlots] = useState(selectedDate ? generateTimeSlots(selectedDate) : []);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
+  });
+
+  // Generate new time slots when the selected date changes
+  React.useEffect(() => {
+    if (selectedDate) {
+      setTimeSlots(generateTimeSlots(selectedDate));
+      form.setValue("appointmentDate", selectedDate);
+      form.resetField("appointmentTime");
+    }
+  }, [selectedDate, form]);
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+  };
 
   const handleQuickConsultation = () => {
-    setShowPayment(true);
+    setShowBooking(true);
   };
 
   const handleJoinExisting = () => {
@@ -33,8 +79,12 @@ const VideoConsultation = () => {
     navigate(`/join-consultation/${appointmentId}`);
   };
 
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log("Form validation passed:", values);
+    setShowPayment(true);
+  };
+
   const handlePaymentSuccess = (paymentDetails: any) => {
-    // Generate a new appointment ID for the consultation
     const newAppointmentId = `CONS${Date.now()}`;
     
     toast({
@@ -42,7 +92,6 @@ const VideoConsultation = () => {
       description: "Your video consultation is ready to start"
     });
     
-    // Navigate to the consultation room
     navigate(`/video-room/${newAppointmentId}`);
   };
 
@@ -58,6 +107,60 @@ const VideoConsultation = () => {
             <Button 
               variant="outline" 
               onClick={() => setShowPayment(false)}
+            >
+              Back to Booking
+            </Button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (showBooking) {
+    return (
+      <PageLayout 
+        title="Book Video Consultation" 
+        description="Schedule your video consultation with our expert physicians"
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8 p-6 bg-bahola-green-50 rounded-lg border-l-4 border-bahola-green-600">
+            <h2 className="text-xl font-medium text-bahola-green-800 mb-2 font-helvetica brand-subtitle">Video Consultation Booking</h2>
+            <p className="text-bahola-green-700 brand-body">Schedule your convenient online consultation with our homeopathy experts.</p>
+          </div>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <AppointmentDatePicker
+                  control={form.control}
+                  selectedDate={selectedDate}
+                  onDateSelect={handleDateSelect}
+                />
+                
+                <AppointmentTimeSlots
+                  control={form.control}
+                  selectedDate={selectedDate}
+                  timeSlots={timeSlots}
+                />
+              </div>
+
+              <PatientInformationForm control={form.control} />
+
+              <div className="flex justify-center">
+                <Button 
+                  type="submit"
+                  className="w-full md:w-auto px-8 py-3 bg-bahola-green-600 hover:bg-bahola-green-700"
+                >
+                  Proceed to Payment
+                </Button>
+              </div>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowBooking(false)}
             >
               Back to Options
             </Button>
@@ -104,7 +207,7 @@ const VideoConsultation = () => {
             <CardHeader>
               <CardTitle>Book New Consultation</CardTitle>
               <CardDescription>
-                Start a new video consultation with our homeopathy experts
+                Schedule a video consultation with our homeopathy experts
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -114,7 +217,7 @@ const VideoConsultation = () => {
                   <li>• 30-minute video consultation</li>
                   <li>• Personalized treatment plan</li>
                   <li>• Follow-up recommendations</li>
-                  <li>• Prescription if needed</li>
+                  <li>• Digital prescription</li>
                 </ul>
               </div>
               <div className="text-2xl font-bold text-green-600">₹500</div>
