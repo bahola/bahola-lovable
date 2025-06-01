@@ -7,44 +7,52 @@ import { Link } from 'react-router-dom';
 export const DiscoverSection = () => {
   const concerns = [
     { 
-      name: 'Allergies', 
+      name: 'Allergies & Hay Fever', 
       icon: <Bug size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843"
+      image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
+      route: '/concern/allergies-hay-fever'
     },
     { 
-      name: 'Digestive Health', 
+      name: 'Digestive Issues', 
       icon: <Wheat size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027"
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+      route: '/concern/digestive-issues'
     },
     { 
-      name: 'Stress & Anxiety', 
+      name: 'Anxiety & Stress', 
       icon: <Brain size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b"
+      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+      route: '/concern/anxiety-stress'
     },
     { 
-      name: 'Sleep Issues', 
+      name: 'Sleep Disorders', 
       icon: <Pill size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07"
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+      route: '/concern/insomnia-sleep-disorders'
     },
     { 
-      name: 'Skin Problems', 
+      name: 'Skin Conditions', 
       icon: <Droplets size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843"
+      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
+      route: '/concern/skin-conditions'
     },
     { 
-      name: 'Immune Support', 
+      name: 'Cold & Flu', 
       icon: <Heart size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      route: '/concern/cold-flu'
     },
     { 
-      name: 'Joint Pain', 
+      name: 'Joint Pain & Arthritis', 
       icon: <Dumbbell size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027"
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+      route: '/concern/joint-pain-arthritis'
     },
     { 
       name: 'Women\'s Health', 
       icon: <Baby size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07"
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+      route: '/concern/womens-health'
     },
   ];
   
@@ -54,9 +62,9 @@ export const DiscoverSection = () => {
         <h2 className="section-title">Discover Homeopathic Remedies by Condition</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {concerns.map((concern) => (
-            <a 
+            <Link 
               key={concern.name}
-              href={`/concern/${concern.name.toLowerCase().replace(/[&\s]+/g, '-')}`}
+              to={concern.route}
               className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all text-center flex flex-col h-64"
             >
               <div className="h-32 overflow-hidden relative">
@@ -73,7 +81,7 @@ export const DiscoverSection = () => {
                 </div>
                 <h3 className="font-medium text-bahola-navy-950 font-helvetica">{concern.name}</h3>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
         <div className="text-center mt-10">
