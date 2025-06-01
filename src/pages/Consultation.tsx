@@ -3,7 +3,7 @@ import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Calendar, Video, Clock, Users, Shield, Heart } from 'lucide-react';
+import { Calendar, Video, Clock, Users, Shield, Heart, CheckCircle, ArrowRight } from 'lucide-react';
 
 const Consultation = () => {
   return (
@@ -51,7 +51,7 @@ const Consultation = () => {
                 </li>
                 <li className="flex items-start">
                   <Clock className="h-5 w-5 text-bahola-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-bahola-neutral-700">60-90 minute session</span>
+                  <span className="text-bahola-neutral-700">30 minute session</span>
                 </li>
               </ul>
               
@@ -98,7 +98,7 @@ const Consultation = () => {
                 </li>
                 <li className="flex items-start">
                   <Clock className="h-5 w-5 text-bahola-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                  <span className="text-bahola-neutral-700">45-60 minute session</span>
+                  <span className="text-bahola-neutral-700">30 minute session</span>
                 </li>
               </ul>
               
@@ -117,26 +117,147 @@ const Consultation = () => {
           </div>
         </div>
 
-        {/* Additional Information */}
+        {/* Step-by-Step Guide */}
+        <div className="bg-white rounded-xl shadow-lg border border-bahola-neutral-200 p-8 mb-8">
+          <h3 className="text-2xl font-bold mb-6 text-bahola-navy-950 text-center">How It Works - Step by Step</h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            
+            {/* In-Person Steps */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-bahola-blue-600 flex items-center">
+                <Calendar className="h-5 w-5 mr-2" />
+                In-Person Consultation Process
+              </h4>
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <div className="bg-bahola-blue-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-blue-600 font-semibold mr-4 mt-0.5 flex-shrink-0">1</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Book Your Appointment</h5>
+                    <p className="text-sm text-bahola-neutral-600">Select your preferred date and time slot online</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-blue-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-blue-600 font-semibold mr-4 mt-0.5 flex-shrink-0">2</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Complete Payment</h5>
+                    <p className="text-sm text-bahola-neutral-600">Secure online payment of ₹1,000 to confirm your slot</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-blue-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-blue-600 font-semibold mr-4 mt-0.5 flex-shrink-0">3</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Receive Confirmation</h5>
+                    <p className="text-sm text-bahola-neutral-600">Get appointment details and clinic address via email/SMS</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-blue-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-blue-600 font-semibold mr-4 mt-0.5 flex-shrink-0">4</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Visit Our Clinic</h5>
+                    <p className="text-sm text-bahola-neutral-600">Arrive 10 minutes early at our Besant Nagar clinic</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-blue-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-blue-600 font-semibold mr-4 mt-0.5 flex-shrink-0">5</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Consultation & Treatment</h5>
+                    <p className="text-sm text-bahola-neutral-600">30-minute session with physical examination and personalized remedy</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Video Steps */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-bahola-green-600 flex items-center">
+                <Video className="h-5 w-5 mr-2" />
+                Video Consultation Process
+              </h4>
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <div className="bg-bahola-green-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-green-600 font-semibold mr-4 mt-0.5 flex-shrink-0">1</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Schedule Online</h5>
+                    <p className="text-sm text-bahola-neutral-600">Choose your preferred date and time for video call</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-green-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-green-600 font-semibold mr-4 mt-0.5 flex-shrink-0">2</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Make Payment</h5>
+                    <p className="text-sm text-bahola-neutral-600">Secure payment of ₹500 to confirm your video session</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-green-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-green-600 font-semibold mr-4 mt-0.5 flex-shrink-0">3</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Get Video Link</h5>
+                    <p className="text-sm text-bahola-neutral-600">Receive secure video consultation link via email</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-green-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-green-600 font-semibold mr-4 mt-0.5 flex-shrink-0">4</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Join Video Call</h5>
+                    <p className="text-sm text-bahola-neutral-600">Connect from anywhere using your device camera and microphone</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-bahola-green-100 rounded-full w-8 h-8 flex items-center justify-center text-bahola-green-600 font-semibold mr-4 mt-0.5 flex-shrink-0">5</div>
+                  <div>
+                    <h5 className="font-medium text-bahola-navy-900">Receive Digital Prescription</h5>
+                    <p className="text-sm text-bahola-neutral-600">30-minute consultation with digital treatment plan delivered to your email</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* What to Expect Section */}
         <div className="bg-bahola-navy-50 p-8 rounded-lg">
-          <h3 className="text-xl font-semibold mb-4 text-bahola-navy-950">What to Expect</h3>
+          <h3 className="text-xl font-semibold mb-4 text-bahola-navy-950">What to Expect During Your Consultation</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h4 className="font-medium mb-2 text-bahola-navy-900">Before Your Consultation</h4>
               <ul className="space-y-1 text-sm text-bahola-navy-700">
-                <li>• Prepare a detailed symptom history</li>
-                <li>• List current medications and treatments</li>
-                <li>• Note what makes symptoms better or worse</li>
-                <li>• Consider your emotional and mental state</li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Prepare a detailed symptom history
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  List current medications and treatments
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Note what makes symptoms better or worse
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Consider your emotional and mental state
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-medium mb-2 text-bahola-navy-900">During Your Consultation</h4>
               <ul className="space-y-1 text-sm text-bahola-navy-700">
-                <li>• Comprehensive case taking session</li>
-                <li>• Discussion of lifestyle and dietary factors</li>
-                <li>• Personalized remedy recommendation</li>
-                <li>• Clear dosage and follow-up instructions</li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Comprehensive case taking session
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Discussion of lifestyle and dietary factors
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Personalized remedy recommendation
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-4 w-4 text-bahola-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                  Clear dosage and follow-up instructions
+                </li>
               </ul>
             </div>
           </div>
