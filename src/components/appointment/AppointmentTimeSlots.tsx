@@ -17,16 +17,16 @@ interface AppointmentTimeSlotsProps {
 export const AppointmentTimeSlots = ({ control, selectedDate, timeSlots }: AppointmentTimeSlotsProps) => {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Clock className="h-5 w-5 text-bahola-blue-500" />
+      <CardHeader style={{ backgroundColor: '#A8DADC' }} className="rounded-t-lg">
+        <CardTitle className="flex items-center gap-2 text-gray-800">
+          <Clock className="h-5 w-5" style={{ color: '#2E86AB' }} />
           Select Time Slot
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-gray-700">
           Choose a 30-minute time slot for your appointment
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         {selectedDate ? (
           <FormField
             control={control}
@@ -49,13 +49,25 @@ export const AppointmentTimeSlots = ({ control, selectedDate, timeSlots }: Appoi
                         />
                         <Label
                           htmlFor={slot.value}
-                          className={`flex items-center justify-center px-3 py-2 border rounded-md text-sm cursor-pointer ${
+                          className={`flex items-center justify-center px-3 py-2 border rounded-md text-sm cursor-pointer transition-all ${
                             !slot.available
-                              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                              ? "cursor-not-allowed text-gray-600"
                               : field.value === slot.value
-                              ? "bg-bahola-blue-50 border-bahola-blue-500 text-bahola-blue-700"
-                              : "hover:bg-bahola-blue-50 hover:border-bahola-blue-300"
+                              ? "text-white font-medium"
+                              : "text-gray-700 hover:border-gray-400"
                           }`}
+                          style={{
+                            backgroundColor: !slot.available 
+                              ? '#F8D7DA'  // Booked (Soft Red)
+                              : field.value === slot.value 
+                              ? '#0066CC'  // Selected
+                              : '#D4EDDA', // Available (Soft Green)
+                            borderColor: !slot.available 
+                              ? '#F8D7DA' 
+                              : field.value === slot.value 
+                              ? '#0066CC' 
+                              : '#D4EDDA'
+                          }}
                         >
                           {slot.time}
                         </Label>
