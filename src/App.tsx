@@ -54,6 +54,21 @@ function App() {
         <Route path="/track-order" element={<OrderTracking />} />
         <Route path="/promo-offers" element={<PromoOffers />} />
         <Route path="/help-center" element={<HelpCenter />} />
+        
+        {/* Help Center Individual Pages */}
+        <Route path="/help/getting-started" element={<React.lazy(() => import('./pages/help-center/GettingStarted'))} />
+        <Route path="/help/potency-guide" element={<React.lazy(() => import('./pages/help-center/PotencyGuide'))} />
+        <Route path="/help/using-pellets" element={<React.lazy(() => import('./pages/help-center/UsingPellets'))} />
+        <Route path="/help/first-aid-kit" element={<React.lazy(() => import('./pages/help-center/FirstAidKit'))} />
+        <Route path="/help/liquid-remedies-troubleshooting" element={<React.lazy(() => import('./pages/help-center/LiquidRemediesTroubleshooting'))} />
+        <Route path="/help/no-results-troubleshooting" element={<React.lazy(() => import('./pages/help-center/NoResultsTroubleshooting'))} />
+        <Route path="/help/children-safety" element={<React.lazy(() => import('./pages/help-center/ChildrenSafety'))} />
+        <Route path="/help/remedy-interactions" element={<React.lazy(() => import('./pages/help-center/RemedyInteractions'))} />
+        <Route path="/help/bach-flower-selector" element={<React.lazy(() => import('./pages/help-center/BachFlowerSelector'))} />
+        <Route path="/help/seasonal-remedies" element={<React.lazy(() => import('./pages/help-center/SeasonalRemedies'))} />
+        <Route path="/help/shipping-issues" element={<React.lazy(() => import('./pages/help-center/ShippingIssues'))} />
+        <Route path="/help/certifications" element={<React.lazy(() => import('./pages/help-center/Certifications'))} />
+        
         <Route path="/homeopathy" element={<Homeopathy />} />
         <Route path="/i-love-homeopathy" element={<ILoveHomeopathy />} />
         <Route path="/bach-flower" element={<CategoryPage />} />
@@ -81,8 +96,9 @@ function App() {
           <Route path="customers" element={<CustomersManagement />} />
           <Route path="discounts" element={<DiscountsManagement />} />
           <Route path="shipping" element={<ShippingManagement />} />
+          <Route path="help-center" element={<React.lazy(() => import('./pages/admin/HelpCenterManagement'))} />
           <Route path="analytics" element={<AdminHome />} />
-          <Route path="settings" element={<AdminHome />} />
+          <Route path="settings" element={<SettingsManagement />} />
         </Route>
         
         {/* Professional routes */}

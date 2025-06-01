@@ -147,6 +147,39 @@ export type Database = {
         }
         Relationships: []
       }
+      help_center_content: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_published: boolean
+          meta_description: string | null
+          page_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          meta_description?: string | null
+          page_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          meta_description?: string | null
+          page_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_categories: {
         Row: {
           created_at: string
@@ -526,6 +559,19 @@ export type Database = {
     }
     Enums: {
       customer_type: "customer" | "doctor"
+      help_page_type:
+        | "getting_started"
+        | "potency_guide"
+        | "using_pellets"
+        | "first_aid_kit"
+        | "liquid_remedies_troubleshooting"
+        | "no_results_troubleshooting"
+        | "children_safety"
+        | "remedy_interactions"
+        | "bach_flower_selector"
+        | "seasonal_remedies"
+        | "shipping_issues"
+        | "certifications"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -642,6 +688,20 @@ export const Constants = {
   public: {
     Enums: {
       customer_type: ["customer", "doctor"],
+      help_page_type: [
+        "getting_started",
+        "potency_guide",
+        "using_pellets",
+        "first_aid_kit",
+        "liquid_remedies_troubleshooting",
+        "no_results_troubleshooting",
+        "children_safety",
+        "remedy_interactions",
+        "bach_flower_selector",
+        "seasonal_remedies",
+        "shipping_issues",
+        "certifications",
+      ],
     },
   },
 } as const

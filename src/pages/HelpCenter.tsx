@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Input } from '@/components/ui/input';
@@ -184,8 +183,123 @@ const HelpCenter: React.FC = () => {
   // Get unique categories for tabs
   const categories = ['All', ...new Set(knowledgeBaseData.map(item => item.category))];
   
+  // Updated links to point to individual pages
+  const updatedKnowledgeBaseData: Article[] = [
+    {
+      id: 'guide-001',
+      title: 'Getting Started with Homeopathy',
+      description: 'Learn the basics of homeopathy and how to incorporate it into your wellness routine.',
+      category: 'Guides',
+      type: 'guide',
+      link: '/help/getting-started',
+      updatedAt: '2025-03-15'
+    },
+    {
+      id: 'guide-002',
+      title: 'Understanding Potency in Homeopathic Remedies',
+      description: 'A comprehensive guide to different potencies and how to choose the right one.',
+      category: 'Guides',
+      type: 'guide',
+      link: '/help/potency-guide',
+      updatedAt: '2025-02-28'
+    },
+    {
+      id: 'tutorial-001',
+      title: 'How to Use Homeopathic Pellets',
+      description: 'Step-by-step instructions for taking homeopathic pellets correctly.',
+      category: 'Tutorials',
+      type: 'tutorial',
+      link: '/help/using-pellets',
+      videoLink: 'https://example.com/videos/using-pellets',
+      updatedAt: '2025-03-20'
+    },
+    {
+      id: 'tutorial-002',
+      title: 'Creating a Homeopathic First Aid Kit',
+      description: 'Learn how to assemble a comprehensive homeopathic first aid kit for your home.',
+      category: 'Tutorials',
+      type: 'tutorial',
+      link: '/help/first-aid-kit',
+      videoLink: 'https://example.com/videos/first-aid-kit',
+      updatedAt: '2025-01-15'
+    },
+    {
+      id: 'troubleshoot-001',
+      title: 'Troubleshooting Common Issues with Liquid Remedies',
+      description: 'Solutions for common problems when using liquid homeopathic remedies.',
+      category: 'Troubleshooting',
+      type: 'guide',
+      link: '/help/liquid-remedies-troubleshooting',
+      updatedAt: '2025-03-05'
+    },
+    {
+      id: 'troubleshoot-002',
+      title: 'What to Do If You Don\'t See Results',
+      description: 'Guidance on what to do when homeopathic remedies don\'t seem to be working.',
+      category: 'Troubleshooting',
+      type: 'faq',
+      link: '/help/no-results-troubleshooting',
+      updatedAt: '2025-02-10'
+    },
+    {
+      id: 'doc-001',
+      title: 'Homeopathy for Children: Safety Guidelines',
+      description: 'Important safety information for using homeopathic remedies with children.',
+      category: 'Documentation',
+      type: 'documentation',
+      link: '/help/children-safety',
+      updatedAt: '2025-03-25'
+    },
+    {
+      id: 'doc-002',
+      title: 'Homeopathic Remedy Interactions',
+      description: 'Comprehensive information about potential interactions between remedies and medications.',
+      category: 'Documentation',
+      type: 'documentation',
+      link: '/help/remedy-interactions',
+      updatedAt: '2025-01-30'
+    },
+    {
+      id: 'tutorial-003',
+      title: 'How to Use the Bach Flower Remedies Selector Tool',
+      description: 'A tutorial on using our online tool to find the right Bach Flower remedy for your needs.',
+      category: 'Tutorials',
+      type: 'tutorial',
+      link: '/help/bach-flower-selector',
+      videoLink: 'https://example.com/videos/bach-selector',
+      updatedAt: '2025-02-05'
+    },
+    {
+      id: 'guide-003',
+      title: 'Seasonal Homeopathic Remedies Guide',
+      description: 'Learn which remedies are most useful during different seasons and for seasonal conditions.',
+      category: 'Guides',
+      type: 'guide',
+      link: '/help/seasonal-remedies',
+      updatedAt: '2025-03-10'
+    },
+    {
+      id: 'troubleshoot-003',
+      title: 'Shipping and Delivery Issues',
+      description: 'Common shipping problems and how to resolve them quickly.',
+      category: 'Troubleshooting',
+      type: 'faq',
+      link: '/help/shipping-issues',
+      updatedAt: '2025-03-18'
+    },
+    {
+      id: 'doc-003',
+      title: 'Product Certification and Standards',
+      description: 'Information about the quality standards and certifications of our homeopathic products.',
+      category: 'Documentation',
+      type: 'documentation',
+      link: '/help/certifications',
+      updatedAt: '2025-02-20'
+    }
+  ];
+  
   // Filter articles based on search query and active tab
-  const filteredArticles = knowledgeBaseData.filter(article => {
+  const filteredArticles = updatedKnowledgeBaseData.filter(article => {
     const matchesSearch = searchQuery === '' || 
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -196,7 +310,7 @@ const HelpCenter: React.FC = () => {
   });
 
   // Group articles by category for the browse section
-  const articlesByCategory = groupArticlesByCategory(knowledgeBaseData);
+  const articlesByCategory = groupArticlesByCategory(updatedKnowledgeBaseData);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -262,7 +376,7 @@ const HelpCenter: React.FC = () => {
                   New to homeopathy? Start here to learn the basics and common remedies.
                 </p>
                 <Button variant="outline" size="sm" className="w-full" asChild>
-                  <a href="/guides/getting-started">
+                  <a href="/help/getting-started">
                     Read Guide <ArrowRight size={16} className="ml-1" />
                   </a>
                 </Button>
@@ -277,7 +391,7 @@ const HelpCenter: React.FC = () => {
                   Watch step-by-step tutorials on using homeopathic remedies correctly.
                 </p>
                 <Button variant="outline" size="sm" className="w-full" asChild>
-                  <a href="/tutorials">
+                  <a href="/help/using-pellets">
                     Watch Tutorials <ArrowRight size={16} className="ml-1" />
                   </a>
                 </Button>
@@ -292,7 +406,7 @@ const HelpCenter: React.FC = () => {
                   Solutions for common problems and answers to frequent questions.
                 </p>
                 <Button variant="outline" size="sm" className="w-full" asChild>
-                  <a href="/troubleshooting">
+                  <a href="/help/shipping-issues">
                     View Solutions <ArrowRight size={16} className="ml-1" />
                   </a>
                 </Button>
