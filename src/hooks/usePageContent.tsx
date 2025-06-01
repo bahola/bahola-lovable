@@ -17,14 +17,21 @@ export const usePageContent = (pageSlug: string) => {
   useEffect(() => {
     const fetchPageContent = async () => {
       try {
+        console.log('Fetching page content for slug:', pageSlug);
+        
         const { data, error } = await supabase
           .from('website_pages')
           .select('title, content, meta_description, is_published')
           .eq('page_slug', pageSlug)
+          .eq('is_published', true)
           .maybeSingle();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
         
+        console.log('Fetched data:', data);
         setPageData(data);
       } catch (err) {
         console.error('Error fetching page content:', err);
