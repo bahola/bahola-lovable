@@ -25,10 +25,29 @@ import ShippingInfo from './pages/ShippingInfo';
 import NotFound from './pages/NotFound';
 import Consultation from './pages/Consultation';
 import Homeopathy from './pages/Homeopathy';
+import HelpCenter from './pages/HelpCenter';
+import StoreLocator from './pages/StoreLocator';
 import { AuthModals } from './components/AuthModals';
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminHome from "./pages/admin/AdminHome";
+import PagesManagement from "./pages/admin/PagesManagement";
+import HelpCenterManagement from "./pages/admin/HelpCenterManagement";
 import DoctorSchedule from "./pages/DoctorSchedule";
 import { ProtectedDoctorRoute } from './components/auth/ProtectedDoctorRoute';
+
+// Import help center pages
+import GettingStarted from './pages/help-center/GettingStarted';
+import PotencyGuide from './pages/help-center/PotencyGuide';
+import UsingPellets from './pages/help-center/UsingPellets';
+import FirstAidKit from './pages/help-center/FirstAidKit';
+import LiquidRemediesTroubleshooting from './pages/help-center/LiquidRemediesTroubleshooting';
+import NoResultsTroubleshooting from './pages/help-center/NoResultsTroubleshooting';
+import ChildrenSafety from './pages/help-center/ChildrenSafety';
+import RemedyInteractions from './pages/help-center/RemedyInteractions';
+import BachFlowerSelector from './pages/help-center/BachFlowerSelector';
+import SeasonalRemedies from './pages/help-center/SeasonalRemedies';
+import ShippingIssues from './pages/help-center/ShippingIssues';
+import Certifications from './pages/help-center/Certifications';
 
 const queryClient = new QueryClient();
 
@@ -51,6 +70,8 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/consultation" element={<Consultation />} />
                 <Route path="/homeopathy" element={<Homeopathy />} />
+                <Route path="/help-center" element={<HelpCenter />} />
+                <Route path="/store-locator" element={<StoreLocator />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/account" element={<UserAccount />} />
@@ -63,6 +84,20 @@ function App() {
                 <Route path="/join-consultation/:appointmentId" element={<></>} />
                 <Route path="/video-room/:roomId" element={<></>} />
                 
+                {/* Help Center Routes */}
+                <Route path="/help/getting-started" element={<GettingStarted />} />
+                <Route path="/help/potency-guide" element={<PotencyGuide />} />
+                <Route path="/help/using-pellets" element={<UsingPellets />} />
+                <Route path="/help/first-aid-kit" element={<FirstAidKit />} />
+                <Route path="/help/liquid-remedies-troubleshooting" element={<LiquidRemediesTroubleshooting />} />
+                <Route path="/help/no-results-troubleshooting" element={<NoResultsTroubleshooting />} />
+                <Route path="/help/children-safety" element={<ChildrenSafety />} />
+                <Route path="/help/remedy-interactions" element={<RemedyInteractions />} />
+                <Route path="/help/bach-flower-selector" element={<BachFlowerSelector />} />
+                <Route path="/help/seasonal-remedies" element={<SeasonalRemedies />} />
+                <Route path="/help/shipping-issues" element={<ShippingIssues />} />
+                <Route path="/help/certifications" element={<Certifications />} />
+                
                 {/* Doctor Routes */}
                 <Route path="/doctor/schedule" element={
                   <ProtectedDoctorRoute>
@@ -71,7 +106,11 @@ function App() {
                 } />
                 
                 {/* Admin Routes */}
-                <Route path="/admin/*" element={<AdminDashboard />} />
+                <Route path="/admin" element={<AdminDashboard />}>
+                  <Route index element={<AdminHome />} />
+                  <Route path="pages" element={<PagesManagement />} />
+                  <Route path="help-center" element={<HelpCenterManagement />} />
+                </Route>
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
