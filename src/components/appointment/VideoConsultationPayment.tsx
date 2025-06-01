@@ -12,9 +12,8 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
 interface VideoConsultationPaymentProps {
-  control: Control<any>;
-  watch: UseFormWatch<FieldValues>;
-  consultationPrice: number;
+  onPaymentSuccess: (paymentDetails: any) => void;
+  consultationPrice?: number;
 }
 
 // Razorpay integration function
@@ -32,7 +31,7 @@ const initializeRazorpay = () => {
   });
 };
 
-export const VideoConsultationPayment = ({ control, watch, consultationPrice }: VideoConsultationPaymentProps) => {
+export const VideoConsultationPayment = ({ onPaymentSuccess, consultationPrice = 500 }: VideoConsultationPaymentProps) => {
   const handleRazorpayPayment = async () => {
     const res = await initializeRazorpay();
 
@@ -41,30 +40,21 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
       return;
     }
 
-    // Get form data for prefill
-    const customerName = watch("name") || "";
-    const customerEmail = watch("email") || "";
-    const customerPhone = watch("phone") || "";
-    const appointmentDate = watch("appointmentDate");
-    const appointmentTime = watch("appointmentTime") || "";
-
-    // Basic validation
-    if (!customerName || !customerEmail || !customerPhone || !appointmentDate || !appointmentTime) {
-      toast.error("Please fill in all appointment details before proceeding with payment");
-      return;
-    }
-
-    // Create appointment record in database first
     try {
       const { data: currentUser } = await supabase.auth.getUser();
       
+      // For demo purposes, we'll use mock data or current user data
+      const customerName = currentUser.user?.user_metadata?.name || "Demo User";
+      const customerEmail = currentUser.user?.email || "demo@example.com";
+      const customerPhone = currentUser.user?.user_metadata?.phone || "1234567890";
+
       const appointmentData = {
         user_id: currentUser.user?.id || null,
         customer_name: customerName,
         customer_email: customerEmail,
         customer_phone: customerPhone,
-        appointment_date: appointmentDate.toISOString().split('T')[0],
-        appointment_time: appointmentTime,
+        appointment_date: new Date().toISOString().split('T')[0],
+        appointment_time: new Date().toLocaleTimeString(),
         consultation_type: 'video',
         amount: consultationPrice,
         payment_status: 'pending'
@@ -109,10 +99,10 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
               toast.error("Payment successful but failed to update record");
             } else {
               toast.success("Payment successful! Video consultation confirmed.");
-              
-              setTimeout(() => {
-                window.location.href = "/appointment-confirmation";
-              }, 1000);
+              onPaymentSuccess({
+                appointmentId: appointment.id,
+                paymentId: response.razorpay_payment_id
+              });
             }
           } catch (updateError) {
             console.error('Error updating appointment:', updateError);
@@ -126,8 +116,6 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
         },
         notes: {
           consultation_type: "video",
-          appointment_date: appointmentDate?.toISOString(),
-          appointment_time: appointmentTime,
           appointment_id: appointment.id,
         },
         theme: {
@@ -199,69 +187,7 @@ export const VideoConsultationPayment = ({ control, watch, consultationPrice }: 
               </p>
             </div>
           </div>
-          
-          <FormField
-            control={control}
-            name="paymentMethod"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-bahola-navy-950 font-helvetica">Payment Method</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="card" id="card" />
-                      <Label htmlFor="card" className="flex items-center gap-2 font-helvetica">
-                        <CreditCard className="h-4 w-4" />
-                        Credit/Debit Card
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="upi" id="upi" />
-                      <Label htmlFor="upi" className="font-helvetica">UPI Payment</Label>
-                    </div>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
-
-        {watch("paymentMethod") === "card" && (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="cardName" className="text-bahola-navy-950 font-helvetica">Name on Card</Label>
-              <Input id="cardName" placeholder="John Doe" className="mt-1 border-bahola-neutral-300 font-serif" />
-            </div>
-            <div>
-              <Label htmlFor="cardNumber" className="text-bahola-navy-950 font-helvetica">Card Number</Label>
-              <Input id="cardNumber" placeholder="1234 5678 9012 3456" className="mt-1 border-bahola-neutral-300 font-serif" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="expiry" className="text-bahola-navy-950 font-helvetica">Expiry Date</Label>
-                <Input id="expiry" placeholder="MM/YY" className="mt-1 border-bahola-neutral-300 font-serif" />
-              </div>
-              <div>
-                <Label htmlFor="cvv" className="text-bahola-navy-950 font-helvetica">CVV</Label>
-                <Input id="cvv" placeholder="123" className="mt-1 border-bahola-neutral-300 font-serif" />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {watch("paymentMethod") === "upi" && (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="upiId" className="text-bahola-navy-950 font-helvetica">UPI ID</Label>
-              <Input id="upiId" placeholder="yourname@upi" className="mt-1 border-bahola-neutral-300 font-serif" />
-            </div>
-          </div>
-        )}
       </CardContent>
       <CardFooter>
         <Button 
