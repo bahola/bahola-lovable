@@ -10,7 +10,9 @@ import {
   BarChart4, 
   Settings,
   ChevronRight,
-  Truck
+  Truck,
+  FileText,
+  HelpCircle
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -25,6 +27,8 @@ const AdminDashboard = () => {
     { name: 'Customers', path: '/admin/customers', icon: Users },
     { name: 'Discounts', path: '/admin/discounts', icon: Tag },
     { name: 'Shipping', path: '/admin/shipping', icon: Truck },
+    { name: 'Pages', path: '/admin/pages', icon: FileText },
+    { name: 'Help Center', path: '/admin/help-center', icon: HelpCircle },
     { name: 'Analytics', path: '/admin/analytics', icon: BarChart4 },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];

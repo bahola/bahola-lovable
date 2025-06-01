@@ -1,3 +1,4 @@
+
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -56,6 +57,7 @@ const SeasonalRemedies = React.lazy(() => import('./pages/help-center/SeasonalRe
 const ShippingIssues = React.lazy(() => import('./pages/help-center/ShippingIssues'));
 const Certifications = React.lazy(() => import('./pages/help-center/Certifications'));
 const HelpCenterManagement = React.lazy(() => import('./pages/admin/HelpCenterManagement'));
+const PagesManagement = React.lazy(() => import('./pages/admin/PagesManagement'));
 const SettingsManagement = React.lazy(() => import('./pages/admin/SettingsManagement'));
 
 function App() {
@@ -129,6 +131,7 @@ function App() {
             <Route path="customers" element={<CustomersManagement />} />
             <Route path="discounts" element={<DiscountsManagement />} />
             <Route path="shipping" element={<ShippingManagement />} />
+            <Route path="pages" element={<PagesManagement />} />
             <Route path="help-center" element={<HelpCenterManagement />} />
             <Route path="analytics" element={<AdminHome />} />
             <Route path="settings" element={<SettingsManagement />} />

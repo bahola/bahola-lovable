@@ -3,10 +3,13 @@ import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { usePageContent } from '@/hooks/usePageContent';
 
 const Contact: React.FC = () => {
+  const { pageData, loading } = usePageContent('contact');
+
   return (
-    <PageLayout title="Contact Us" description="Get in touch with Bahola Labs for support and consultation">
+    <PageLayout title={pageData?.title || "Contact Us"} description={pageData?.meta_description || "Get in touch with Bahola Labs for support and consultation"}>
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="bg-white p-8 rounded-lg shadow-sm">
@@ -58,9 +61,15 @@ const Contact: React.FC = () => {
             <h2 className="text-2xl font-semibold mb-6 text-bahola-navy-950">Send us a Message</h2>
             
             <div className="bg-bahola-blue-50 p-6 rounded-lg">
-              <p className="text-bahola-blue-700 mb-4">
-                Contact form will be available soon. For now, please reach out to us directly using the contact information provided.
-              </p>
+              {loading ? (
+                <div className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                </div>
+              ) : (
+                <p className="text-bahola-blue-700 mb-4">
+                  {pageData?.content || "Contact form will be available soon. For now, please reach out to us directly using the contact information provided."}
+                </p>
+              )}
               <Button asChild>
                 <a href="mailto:care@baholalabs.in">Send Email</a>
               </Button>

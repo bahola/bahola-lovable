@@ -2,10 +2,13 @@
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Star } from 'lucide-react';
+import { usePageContent } from '@/hooks/usePageContent';
 
 const Reviews: React.FC = () => {
+  const { pageData, loading } = usePageContent('reviews');
+
   return (
-    <PageLayout title="Customer Reviews" description="Read what our customers say about Bahola Labs products and services">
+    <PageLayout title={pageData?.title || "Customer Reviews"} description={pageData?.meta_description || "Read what our customers say about Bahola Labs products and services"}>
       <div className="max-w-4xl mx-auto">
         <div className="bg-white p-8 rounded-lg shadow-sm">
           <h1 className="text-3xl font-bold mb-6 text-bahola-navy-950">Customer Reviews</h1>
@@ -18,15 +21,18 @@ const Reviews: React.FC = () => {
             </div>
             
             <h2 className="text-2xl font-semibold mb-4 text-bahola-navy-950">Coming Soon</h2>
-            <p className="text-lg text-bahola-neutral-700 mb-6">
-              We're working on bringing you authentic customer reviews and testimonials.
-            </p>
             
-            <div className="bg-bahola-blue-50 p-6 rounded-lg">
-              <p className="text-bahola-blue-700">
-                In the meantime, feel free to contact us directly to hear about our customers' experiences with our homeopathic remedies.
-              </p>
-            </div>
+            {loading ? (
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+              </div>
+            ) : (
+              <div className="bg-bahola-blue-50 p-6 rounded-lg">
+                <div className="whitespace-pre-wrap text-bahola-blue-700">
+                  {pageData?.content || "We're working on bringing you authentic customer reviews and testimonials."}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

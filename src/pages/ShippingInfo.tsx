@@ -2,10 +2,13 @@
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Truck, Package, Clock, MapPin } from 'lucide-react';
+import { usePageContent } from '@/hooks/usePageContent';
 
 const ShippingInfo: React.FC = () => {
+  const { pageData, loading } = usePageContent('shipping');
+
   return (
-    <PageLayout title="Shipping Information" description="Learn about our shipping policies, delivery times, and coverage areas">
+    <PageLayout title={pageData?.title || "Shipping Information"} description={pageData?.meta_description || "Learn about our shipping policies, delivery times, and coverage areas"}>
       <div className="max-w-4xl mx-auto">
         <div className="bg-white p-8 rounded-lg shadow-sm">
           <h1 className="text-3xl font-bold mb-6 text-bahola-navy-950">Shipping Information</h1>
@@ -46,9 +49,15 @@ const ShippingInfo: React.FC = () => {
           
           <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Page Under Construction</h2>
-            <p className="text-bahola-neutral-700">
-              We're working on providing comprehensive shipping information. Please contact us directly for current shipping policies and rates.
-            </p>
+            {loading ? (
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+              </div>
+            ) : (
+              <div className="whitespace-pre-wrap text-bahola-neutral-700">
+                {pageData?.content || "We're working on providing comprehensive shipping information. Please contact us directly for current shipping policies and rates."}
+              </div>
+            )}
           </div>
         </div>
       </div>
