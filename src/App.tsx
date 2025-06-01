@@ -34,6 +34,7 @@ import PagesManagement from "./pages/admin/PagesManagement";
 import HelpCenterManagement from "./pages/admin/HelpCenterManagement";
 import DoctorSchedule from "./pages/DoctorSchedule";
 import { ProtectedDoctorRoute } from './components/auth/ProtectedDoctorRoute';
+import HealthConcerns from './pages/HealthConcerns';
 
 // Import help center pages
 import GettingStarted from './pages/help-center/GettingStarted';
@@ -48,6 +49,23 @@ import BachFlowerSelector from './pages/help-center/BachFlowerSelector';
 import SeasonalRemedies from './pages/help-center/SeasonalRemedies';
 import ShippingIssues from './pages/help-center/ShippingIssues';
 import Certifications from './pages/help-center/Certifications';
+
+// Import health concern pages
+import AnxietyStress from './pages/health-concerns/AnxietyStress';
+import InsomniaPage from './pages/health-concerns/InsomniaPage';
+import DigestiveIssues from './pages/health-concerns/DigestiveIssues';
+import AllergiesHayFever from './pages/health-concerns/AllergiesHayFever';
+import HeadachesMigraines from './pages/health-concerns/HeadachesMigraines';
+import SkinConditions from './pages/health-concerns/SkinConditions';
+import ColdFlu from './pages/health-concerns/ColdFlu';
+import JointPainArthritis from './pages/health-concerns/JointPainArthritis';
+import WomensHealth from './pages/health-concerns/WomensHealth';
+import ChildrensHealth from './pages/health-concerns/ChildrensHealth';
+import DepressionMood from './pages/health-concerns/DepressionMood';
+import WeightManagement from './pages/health-concerns/WeightManagement';
+import EyeProblems from './pages/health-concerns/EyeProblems';
+import HighBloodPressure from './pages/health-concerns/HighBloodPressure';
+import DiabetesSupport from './pages/health-concerns/DiabetesSupport';
 
 const queryClient = new QueryClient();
 
@@ -70,6 +88,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/consultation" element={<Consultation />} />
                 <Route path="/homeopathy" element={<Homeopathy />} />
+                <Route path="/health-concerns" element={<HealthConcerns />} />
                 <Route path="/help-center" element={<HelpCenter />} />
                 <Route path="/store-locator" element={<StoreLocator />} />
                 <Route path="/register" element={<Register />} />
@@ -97,6 +116,23 @@ function App() {
                 <Route path="/help/seasonal-remedies" element={<SeasonalRemedies />} />
                 <Route path="/help/shipping-issues" element={<ShippingIssues />} />
                 <Route path="/help/certifications" element={<Certifications />} />
+                
+                {/* Health Concern Routes */}
+                <Route path="/concern/anxiety-stress" element={<AnxietyStress />} />
+                <Route path="/concern/insomnia-sleep-disorders" element={<InsomniaPage />} />
+                <Route path="/concern/digestive-issues" element={<DigestiveIssues />} />
+                <Route path="/concern/allergies-hay-fever" element={<AllergiesHayFever />} />
+                <Route path="/concern/headaches-migraines" element={<HeadachesMigraines />} />
+                <Route path="/concern/skin-conditions" element={<SkinConditions />} />
+                <Route path="/concern/cold-flu" element={<ColdFlu />} />
+                <Route path="/concern/joint-pain-arthritis" element={<JointPainArthritis />} />
+                <Route path="/concern/womens-health" element={<WomensHealth />} />
+                <Route path="/concern/childrens-health" element={<ChildrensHealth />} />
+                <Route path="/concern/depression-mood" element={<DepressionMood />} />
+                <Route path="/concern/weight-management" element={<WeightManagement />} />
+                <Route path="/concern/eye-problems" element={<EyeProblems />} />
+                <Route path="/concern/high-blood-pressure" element={<HighBloodPressure />} />
+                <Route path="/concern/diabetes-support" element={<DiabetesSupport />} />
                 
                 {/* Doctor Routes */}
                 <Route path="/doctor/schedule" element={
