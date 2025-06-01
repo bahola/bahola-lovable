@@ -24,6 +24,7 @@ import ReturnPolicy from './pages/ReturnPolicy';
 import ShippingInfo from './pages/ShippingInfo';
 import NotFound from './pages/NotFound';
 import Consultation from './pages/Consultation';
+import Homeopathy from './pages/Homeopathy';
 import { AuthModals } from './components/AuthModals';
 import AdminDashboard from "./pages/AdminDashboard";
 import DoctorSchedule from "./pages/DoctorSchedule";
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/product/:productSlug" element={<ProductPage />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/consultation" element={<Consultation />} />
+                <Route path="/homeopathy" element={<Homeopathy />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/account" element={<UserAccount />} />
