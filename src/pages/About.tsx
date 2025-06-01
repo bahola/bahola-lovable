@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { usePageContent } from '@/hooks/usePageContent';
@@ -21,6 +20,43 @@ const About: React.FC = () => {
     );
   }
 
+  // Function to render content with basic markdown support
+  const renderContent = (content: string) => {
+    const lines = content.split('\n');
+    return lines.map((line, index) => {
+      // Handle headings
+      if (line.startsWith('### ')) {
+        return (
+          <h3 key={index} className="text-xl font-semibold mb-3 text-bahola-blue-800 mt-6">
+            {line.replace('### ', '')}
+          </h3>
+        );
+      } else if (line.startsWith('## ')) {
+        return (
+          <h2 key={index} className="text-2xl font-semibold mb-4 text-bahola-navy-950 mt-8">
+            {line.replace('## ', '')}
+          </h2>
+        );
+      } else if (line.startsWith('# ')) {
+        return (
+          <h1 key={index} className="text-3xl font-bold mb-6 text-bahola-navy-950 mt-8">
+            {line.replace('# ', '')}
+          </h1>
+        );
+      } else if (line.trim() === '') {
+        // Empty line
+        return <br key={index} />;
+      } else {
+        // Regular paragraph
+        return (
+          <p key={index} className="mb-4 text-bahola-neutral-700 leading-relaxed">
+            {line}
+          </p>
+        );
+      }
+    });
+  };
+
   // If we have data from the database, use it
   if (pageData && !error) {
     return (
@@ -28,7 +64,7 @@ const About: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white p-8 rounded-lg shadow-sm">
             <div className="prose prose-lg max-w-none">
-              <div className="whitespace-pre-wrap">{pageData.content}</div>
+              {renderContent(pageData.content)}
             </div>
           </div>
         </div>
