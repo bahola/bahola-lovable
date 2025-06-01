@@ -72,6 +72,7 @@ function App() {
           <Route path="/track-order" element={<OrderTracking />} />
           <Route path="/promo-offers" element={<PromoOffers />} />
           <Route path="/help-center" element={<HelpCenter />} />
+          <Route path="/faq" element={<FAQ />} />
           
           {/* Help Center Individual Pages */}
           <Route path="/help/getting-started" element={<GettingStarted />} />

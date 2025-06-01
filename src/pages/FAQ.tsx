@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Input } from '@/components/ui/input';
@@ -19,94 +20,231 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // FAQ data organized by topics
 const faqData = {
-  'Products and Usage': [
+  'Homeopathy Basics': [
     {
-      question: 'What is homeopathy?',
-      answer: 'Homeopathy is a medical system based on the belief that the body can cure itself. It uses tiny amounts of natural substances, like plants and minerals, to stimulate the healing process. Founded in the late 18th century by Samuel Hahnemann, homeopathy follows the principle that "like cures like."'
+      question: 'What is Homeopathy?',
+      answer: 'Homeopathy is a natural system of medicine developed over 200 years ago by German physician Dr. Samuel Hahnemann. It is based on the principle of "like cures like" (similia similibus curentur), meaning that a substance that can cause symptoms in a healthy person can be used to treat similar symptoms in an ill person when given in highly diluted doses.'
     },
     {
-      question: 'Are homeopathic products safe to use?',
-      answer: 'Yes, homeopathic products are generally considered safe due to their high dilution. They have minimal side effects and are suitable for people of all ages, including infants, pregnant women, and the elderly. However, it\'s always advisable to consult with a healthcare provider before starting any new treatment.'
+      question: 'How does Homeopathy work?',
+      answer: `Homeopathy works on three fundamental principles:
+
+• Law of Similars: Substances that produce symptoms in healthy individuals can treat similar symptoms in sick individuals
+• Minimum Dose: The healing effect is enhanced when the medicine is given in the smallest possible dose
+• Individualization: Treatment is tailored to each person's unique symptom pattern, constitution, and circumstances
+
+The medicines are prepared through a process of serial dilution and succussion (vigorous shaking), which is believed to enhance the therapeutic properties while minimizing side effects.`
     },
     {
-      question: 'How should I store homeopathic products?',
-      answer: 'Store homeopathic remedies in a cool, dry place away from direct sunlight, strong smells, and electrical appliances. Keep them in their original containers, tightly closed. Avoid handling the tablets directly; instead, tip them into the cap of the container or a clean paper. Store away from food items and out of reach of children.'
-    },
-    {
-      question: 'Can I take multiple homeopathic remedies together?',
-      answer: 'While it\'s possible to take multiple homeopathic remedies together, it\'s best to consult with a qualified homeopath who can recommend the appropriate combination based on your specific health needs. Self-prescription of multiple remedies might reduce their effectiveness.'
+      question: 'Is Homeopathy scientifically proven?',
+      answer: `The scientific evidence for homeopathy includes:
+
+• Clinical trials: Various studies showing positive results for specific conditions
+• Systematic reviews: Mixed findings with some showing benefits
+• Observational studies: Real-world effectiveness data
+• Laboratory research: Studies on ultra-molecular dilutions
+
+While debate continues in the scientific community, millions of patients worldwide report benefits from homeopathic treatment.`
     }
   ],
-  'Ordering and Shipping': [
+  'Safety and Side Effects': [
     {
-      question: 'How long does shipping take?',
-      answer: 'Domestic orders are typically processed within 1-2 business days and delivered within 3-5 business days, depending on your location. International shipping can take 7-14 business days. You\'ll receive tracking information once your order is dispatched.'
+      question: 'Is Homeopathy safe?',
+      answer: `Yes, homeopathy is generally considered very safe when practiced by qualified practitioners. The medicines are:
+
+• Highly diluted: Reducing the risk of toxic effects
+• Non-addictive: No risk of dependency
+• Gentle: Suitable for all age groups, including infants, pregnant women, and elderly
+• No known drug interactions: Can be safely used alongside conventional medications
+
+However, it's important to consult with a qualified homeopathic practitioner for proper diagnosis and treatment.`
     },
     {
-      question: 'Do you ship internationally?',
-      answer: 'Yes, we ship internationally to select countries. Shipping costs and delivery times vary based on location. Please note that international orders may be subject to customs duties and taxes, which are the responsibility of the recipient.'
+      question: 'Are there any side effects?',
+      answer: `Homeopathic medicines are generally free from side effects due to their highly diluted nature. However, some patients may experience:
+
+• Initial aggravation: Temporary worsening of symptoms before improvement begins
+• Proving symptoms: Rare occurrence of new symptoms if the wrong remedy is taken repeatedly
+• Detox reactions: Mild symptoms as the body eliminates toxins
+
+These reactions are typically mild and temporary. Always consult your homeopath if you experience any unusual symptoms.`
     },
     {
-      question: 'What if my order arrives damaged?',
-      answer: 'If your order arrives damaged, please contact our customer service team within 48 hours of receiving the package. Include your order number and photos of the damaged items. We\'ll arrange for a replacement or refund as soon as possible.'
-    },
-    {
-      question: 'Can I modify or cancel my order after placing it?',
-      answer: 'You can modify or cancel your order within 1 hour of placing it by contacting our customer service team. After this period, orders enter our processing system and cannot be modified or canceled. Please ensure your order details are correct before confirming.'
+      question: 'Can children and pregnant women use Homeopathy?',
+      answer: `Yes, homeopathy is particularly beneficial for:
+
+Children:
+• Safe and gentle for all ages, including newborns
+• Effective for common childhood ailments
+• Helps build natural immunity
+• No risk of antibiotic resistance
+
+Pregnant Women:
+• Safe during pregnancy and breastfeeding
+• Helps with pregnancy-related discomforts
+• Supports natural childbirth
+• Aids in postpartum recovery
+
+Always consult a qualified homeopathic practitioner for appropriate remedies and dosages.`
     }
   ],
-  'Returns and Refunds': [
+  'Treatment and Conditions': [
     {
-      question: 'What is your return policy?',
-      answer: 'We accept returns within 30 days of purchase for unopened products in their original packaging. To initiate a return, please contact our customer service team with your order number and reason for return. Return shipping costs are the responsibility of the customer unless the return is due to our error.'
+      question: 'What conditions can Homeopathy treat?',
+      answer: `Homeopathy can be effective for a wide range of acute and chronic conditions, including:
+
+Acute Conditions:
+• Common cold and flu
+• Fever and infections
+• Digestive issues
+• Injuries and trauma
+• Allergic reactions
+
+Chronic Conditions:
+• Arthritis and joint pain
+• Skin conditions (eczema, psoriasis)
+• Respiratory disorders (asthma, bronchitis)
+• Mental and emotional issues (anxiety, depression)
+• Hormonal imbalances
+• Autoimmune disorders`
     },
     {
-      question: 'How long does it take to process a refund?',
-      answer: 'Once we receive your returned items and verify their condition, refunds are processed within 5-7 business days. The refund will be issued to the original payment method used for the purchase. You\'ll receive an email notification once the refund is processed.'
+      question: 'How long does Homeopathic treatment take?',
+      answer: `The duration of treatment varies depending on:
+
+• Nature of the condition: Acute conditions may respond within hours to days, while chronic conditions may take weeks to months
+• Individual response: Each person responds differently based on their vital force and constitution
+• Severity and duration: Long-standing conditions typically require longer treatment periods
+• Patient compliance: Following the prescribed regimen consistently affects outcomes
+
+Generally, patients may notice initial improvements within 2-4 weeks of starting treatment.`
     },
     {
-      question: 'Can I exchange a product instead of returning it?',
-      answer: 'Yes, we offer exchanges for products of equal or lesser value within 30 days of purchase. If you wish to exchange for a product of higher value, you\'ll need to pay the difference. Contact our customer service team to arrange an exchange.'
-    },
-    {
-      question: 'Do you offer a satisfaction guarantee?',
-      answer: 'Yes, we stand behind the quality of our products with a 100% satisfaction guarantee. If you\'re not completely satisfied with your purchase, please contact our customer service team within 30 days of receiving your order to discuss a return, exchange, or refund options.'
+      question: 'Can Homeopathy cure serious diseases?',
+      answer: `Homeopathy can be beneficial for serious conditions as:
+
+• Complementary treatment: Supporting conventional care
+• Palliative care: Improving quality of life
+• Preventive medicine: Strengthening immunity
+• Chronic management: Long-term symptom control
+
+However, for life-threatening conditions, conventional medical care should be the primary treatment, with homeopathy as supportive therapy.`
     }
   ],
-  'Account and Orders': [
+  'Usage and Consultation': [
     {
-      question: 'How do I create an account?',
-      answer: 'To create an account, click on the "Sign Up" button at the top of our website. You\'ll need to provide your email address, create a password, and fill in your basic information. Having an account allows you to track orders, save favorite products, and enjoy a smoother checkout process.'
+      question: 'How should Homeopathic medicines be taken?',
+      answer: `General Guidelines:
+
+• Take medicines on an empty stomach (30 minutes before or after meals)
+• Avoid strong flavors, coffee, mint, and camphor during treatment
+• Let pills dissolve under the tongue rather than swallowing
+• Store medicines in a cool, dry place away from strong odors
+• Follow the specific dosage and frequency prescribed by your homeopath
+
+Important: Never self-medicate or change dosages without consulting your practitioner.`
     },
     {
-      question: 'How can I track my order?',
-      answer: 'Once your order is dispatched, you\'ll receive a shipping confirmation email with a tracking number and link. You can also track your order by logging into your account and viewing your order history. If you don\'t see a tracking number, your order may still be processing.'
+      question: 'What should I expect during a Homeopathic consultation?',
+      answer: `A typical homeopathic consultation involves:
+
+Initial Consultation (60-90 minutes):
+• Detailed case history including physical, mental, and emotional symptoms
+• Past medical history and family history
+• Lifestyle factors, preferences, and personality traits
+• Physical examination if necessary
+• Remedy selection based on totality of symptoms
+
+Follow-up Consultations (30-45 minutes):
+• Assessment of progress
+• Adjustment of treatment plan
+• Address any concerns or new symptoms`
     },
     {
-      question: 'I forgot my password. How can I reset it?',
-      answer: 'To reset your password, click on the "Sign In" button, then select "Forgot Password." Enter the email address associated with your account, and we\'ll send you a password reset link. If you don\'t receive the email, check your spam folder or contact customer service for assistance.'
+      question: 'How do I choose a qualified Homeopathic practitioner?',
+      answer: `Look for practitioners who have:
+
+• Formal education from recognized homeopathic institutions
+• Valid registration with homeopathic medical boards
+• Experience in treating your specific condition
+• Good reputation and patient testimonials
+• Proper clinical setup and ethical practices`
     },
     {
-      question: 'Can I view my order history?',
-      answer: 'Yes, you can view your order history by logging into your account and navigating to the "Order History" section. This provides details of all your past orders, including product information, order status, and tracking numbers for recent orders.'
+      question: 'What should I avoid during Homeopathic treatment?',
+      answer: `Substances to avoid:
+• Strong coffee and tea
+• Mint and menthol products
+• Camphor and eucalyptus
+• Strong perfumes and aromatics
+• Recreational drugs and excessive alcohol
+
+Lifestyle factors:
+• Maintain regular meal and sleep schedules
+• Avoid excessive stress
+• Follow prescribed dietary guidelines
+• Continue gentle exercise as tolerated`
     }
   ],
-  'Prescriptions and Consultations': [
+  'Medicine Preparation and Integration': [
     {
-      question: 'Do I need a prescription for homeopathic remedies?',
-      answer: 'Most homeopathic remedies do not require a prescription and are available over-the-counter. However, for personalized treatment plans or specific health conditions, we recommend consulting with a qualified homeopath who can recommend the appropriate remedies for your needs.'
+      question: 'How are Homeopathic medicines prepared?',
+      answer: `Homeopathic medicines are prepared through:
+
+• Source Selection: Plant, mineral, or animal substances
+• Mother Tincture: Initial extraction in alcohol
+• Serial Dilution: Progressive dilution in specific ratios
+• Succussion: Vigorous shaking between dilutions
+• Potentization: Process that increases therapeutic effect
+• Final Form: Pills, liquids, or tablets
+
+This process ensures safety while maintaining therapeutic efficacy.`
     },
     {
-      question: 'How can I consult with a homeopath?',
-      answer: 'You can schedule a consultation with one of our qualified homeopaths through our website\'s "Consult a Homeopath" page. We offer both in-person and virtual consultations. During the consultation, the homeopath will assess your health concerns and recommend suitable remedies.'
+      question: 'Can Homeopathy be used with conventional medicine?',
+      answer: `Yes, homeopathy can safely complement conventional medical treatment. Many patients use homeopathy alongside:
+
+• Prescription medications
+• Surgical procedures
+• Other complementary therapies
+
+However, it's essential to inform both your homeopath and conventional doctor about all treatments you're receiving to ensure optimal care coordination.`
     },
     {
-      question: 'What should I expect during a homeopathic consultation?',
-      answer: 'A homeopathic consultation typically lasts 60-90 minutes for a first visit. The homeopath will ask detailed questions about your symptoms, medical history, lifestyle, and emotional state. This comprehensive approach helps identify the most appropriate remedies for your specific health needs.'
-    },
+      question: 'What is the difference between Homeopathy and other alternative medicines?',
+      answer: `Key differences:
+
+Homeopathy:
+• Principle: Like cures like
+• Medicines: Highly diluted
+• Approach: Individualized
+• Side effects: Minimal
+
+Ayurveda:
+• Principle: Balance of doshas
+• Medicines: Herbal preparations
+• Approach: Constitutional
+• Side effects: Possible
+
+Allopathy:
+• Principle: Opposite cures opposite
+• Medicines: Chemical compounds
+• Approach: Disease-specific
+• Side effects: Common`
+    }
+  ],
+  'Cost and Contact': [
     {
-      question: 'How often will I need follow-up consultations?',
-      answer: 'Follow-up consultations are usually scheduled 4-6 weeks after the initial consultation to assess your progress and make any necessary adjustments to your treatment plan. The frequency of subsequent follow-ups depends on your individual health situation and response to the remedies.'
+      question: 'How much does Homeopathic treatment cost?',
+      answer: `The cost of homeopathic treatment varies based on:
+
+• Consultation fees: Initial and follow-up visits
+• Medicine costs: Generally affordable compared to conventional drugs
+• Treatment duration: Longer for chronic conditions
+• Practitioner experience: Senior practitioners may charge more
+• Location: Urban areas typically cost more
+
+Many patients find homeopathy cost-effective due to its gentle approach and reduced need for additional medications.`
     }
   ]
 };
@@ -124,7 +262,7 @@ const FAQ: React.FC = () => {
   
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(initialQuery);
-  const [activeTab, setActiveTab] = useState('Products and Usage');
+  const [activeTab, setActiveTab] = useState('Homeopathy Basics');
   
   // Debounce search input
   useEffect(() => {
@@ -178,7 +316,7 @@ const FAQ: React.FC = () => {
   }, [location.search]);
 
   return (
-    <PageLayout title="Frequently Asked Questions" description="Find answers to common questions about our products and services">
+    <PageLayout title="Frequently Asked Questions About Homeopathy" description="Find comprehensive answers to common questions about homeopathy, treatment, safety, and more">
       <div className="max-w-4xl mx-auto">
         {/* Search Section */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -224,7 +362,7 @@ const FAQ: React.FC = () => {
                         </span>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-bahola-neutral-700">
+                    <AccordionContent className="text-bahola-neutral-700 whitespace-pre-line">
                       {faq.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -264,7 +402,7 @@ const FAQ: React.FC = () => {
                       <AccordionTrigger className="text-left font-medium">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-bahola-neutral-700">
+                      <AccordionContent className="text-bahola-neutral-700 whitespace-pre-line">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>
@@ -274,6 +412,17 @@ const FAQ: React.FC = () => {
             ))}
           </Tabs>
         )}
+
+        {/* Disclaimer Section */}
+        <div className="mt-12 bg-amber-50 p-6 rounded-lg border border-amber-200">
+          <h3 className="text-lg font-semibold mb-2 text-amber-800">Important Information</h3>
+          <p className="text-amber-700 mb-4">
+            For more information about homeopathic treatment and Bahola products, please consult with qualified homeopathic practitioners or contact authorized Bahola distributors in your area.
+          </p>
+          <p className="text-sm text-amber-600">
+            <strong>Disclaimer:</strong> This information is for educational purposes only and should not replace professional medical advice. Always consult qualified healthcare practitioners for proper diagnosis and treatment.
+          </p>
+        </div>
 
         {/* Related Resources Section */}
         <div className="mt-12 bg-bahola-blue-50 p-6 rounded-lg">
