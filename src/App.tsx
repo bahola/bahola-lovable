@@ -36,6 +36,11 @@ import FAQ from './pages/FAQ';
 import VideoConsultationRoom from './components/video/VideoConsultationRoom';
 import VideoConsultationJoin from './components/video/VideoConsultationJoin';
 import ScrollToTop from './components/ScrollToTop';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Reviews from './pages/Reviews';
+import ShippingInfo from './pages/ShippingInfo';
+import StoreLocator from './pages/StoreLocator';
 
 // Lazy load help center pages
 const GettingStarted = React.lazy(() => import('./pages/help-center/GettingStarted'));
@@ -75,6 +80,13 @@ function App() {
           <Route path="/promo-offers" element={<PromoOffers />} />
           <Route path="/help-center" element={<HelpCenter />} />
           <Route path="/faq" element={<FAQ />} />
+          
+          {/* New pages */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/shipping" element={<ShippingInfo />} />
+          <Route path="/stores" element={<StoreLocator />} />
           
           {/* Help Center Individual Pages */}
           <Route path="/help/getting-started" element={<GettingStarted />} />

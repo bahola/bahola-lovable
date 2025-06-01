@@ -1,119 +1,71 @@
 
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-const Contact = () => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // This would be connected to a form submission API in a real implementation
-    console.log('Contact form submitted');
-    // Display success message or redirect
-  };
-
+const Contact: React.FC = () => {
   return (
-    <PageLayout title="Contact Us" description="Get in touch with Bahola Labs">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Contact Information */}
-        <div className="lg:col-span-1">
-          <h2 className="text-2xl font-bold mb-6">Reach Out to Us</h2>
-          
-          <div className="space-y-6">
-            <div className="flex items-start">
-              <MapPin className="h-6 w-6 text-bahola-blue-500 mr-3 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold mb-1">Head Office</h3>
-                <p className="text-bahola-neutral-600">
-                  2, Tiger Varadachari Road,<br />
-                  Kalakshetra Colony, Besant Nagar,<br />
-                  Chennai - 600090, India
-                </p>
-              </div>
-            </div>
+    <PageLayout title="Contact Us" description="Get in touch with Bahola Labs for support and consultation">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8">
+          <div className="bg-white p-8 rounded-lg shadow-sm">
+            <h1 className="text-3xl font-bold mb-6 text-bahola-navy-950">Contact Information</h1>
             
-            <div className="flex items-start">
-              <Phone className="h-6 w-6 text-bahola-blue-500 mr-3 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold mb-1">Phone</h3>
-                <p className="text-bahola-neutral-600">+91 9791035385</p>
+            <div className="space-y-6">
+              <div className="flex items-start">
+                <MapPin className="text-bahola-blue-600 mr-4 mt-1" size={20} />
+                <div>
+                  <h3 className="font-semibold mb-1">Address</h3>
+                  <p className="text-bahola-neutral-700">
+                    2, Tiger Varachari Road, Kalakshetra Colony<br />
+                    Besant Nagar, Chennai – 600090
+                  </p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start">
-              <Mail className="h-6 w-6 text-bahola-blue-500 mr-3 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold mb-1">Email</h3>
-                <p className="text-bahola-neutral-600">Customer Care: care@baholalabs.in</p>
-                <p className="text-bahola-neutral-600">Sales Enquiries: sales@baholalabs.in</p>
+              
+              <div className="flex items-start">
+                <Phone className="text-bahola-blue-600 mr-4 mt-1" size={20} />
+                <div>
+                  <h3 className="font-semibold mb-1">Phone</h3>
+                  <p className="text-bahola-neutral-700">+91 9791035385</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start">
-              <Clock className="h-6 w-6 text-bahola-blue-500 mr-3 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold mb-1">Business Hours</h3>
-                <p className="text-bahola-neutral-600">
-                  Monday - Friday: 9:00 AM - 6:00 PM<br />
-                  Saturday: 9:00 AM - 1:00 PM<br />
-                  Sunday: Closed
-                </p>
+              
+              <div className="flex items-start">
+                <Mail className="text-bahola-blue-600 mr-4 mt-1" size={20} />
+                <div>
+                  <h3 className="font-semibold mb-1">Email</h3>
+                  <p className="text-bahola-neutral-700">care@baholalabs.in</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <Clock className="text-bahola-blue-600 mr-4 mt-1" size={20} />
+                <div>
+                  <h3 className="font-semibold mb-1">Business Hours</h3>
+                  <p className="text-bahola-neutral-700">
+                    Monday - Friday: 9:00 AM - 6:00 PM<br />
+                    Saturday: 9:00 AM - 1:00 PM<br />
+                    Sunday: Closed
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        
-        {/* Contact Form */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Your Name</Label>
-                <Input id="name" placeholder="Enter your full name" required />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" placeholder="Enter your email" required />
-              </div>
-            </div>
+          <div className="bg-white p-8 rounded-lg shadow-sm">
+            <h2 className="text-2xl font-semibold mb-6 text-bahola-navy-950">Send us a Message</h2>
             
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" placeholder="Enter your phone number" />
+            <div className="bg-bahola-blue-50 p-6 rounded-lg">
+              <p className="text-bahola-blue-700 mb-4">
+                Contact form will be available soon. For now, please reach out to us directly using the contact information provided.
+              </p>
+              <Button asChild>
+                <a href="mailto:care@baholalabs.in">Send Email</a>
+              </Button>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="subject">Subject</Label>
-              <Input id="subject" placeholder="What is your message about?" required />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
-              <textarea 
-                id="message" 
-                rows={5}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bahola-blue-400"
-                placeholder="How can we help you?"
-                required
-              ></textarea>
-            </div>
-            
-            <div className="flex items-center">
-              <input type="checkbox" id="consent" className="mr-2" required />
-              <Label htmlFor="consent" className="text-sm">
-                I agree to the processing of my personal data in accordance with the <a href="/privacy" className="text-bahola-blue-500 hover:underline">Privacy Policy</a>
-              </Label>
-            </div>
-            
-            <Button type="submit" className="w-full md:w-auto">
-              Submit Message
-            </Button>
-          </form>
+          </div>
         </div>
       </div>
     </PageLayout>
