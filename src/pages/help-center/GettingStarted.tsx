@@ -26,11 +26,16 @@ const GettingStarted = () => {
           .eq('is_published', true)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.log('Database error:', error);
+          throw error;
+        }
+        
+        console.log('Fetched content:', data);
         setContent(data);
       } catch (err) {
+        console.log('Error fetching content, using fallback:', err);
         setError('Failed to load content');
-        console.error('Error fetching content:', err);
       } finally {
         setLoading(false);
       }
@@ -39,19 +44,9 @@ const GettingStarted = () => {
     fetchContent();
   }, []);
 
-  if (loading) {
-    return (
-      <PageLayout title="Getting Started" description="Loading...">
-        <div className="space-y-4">
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-32 w-full" />
-        </div>
-      </PageLayout>
-    );
-  }
-
-  const fallbackContent = `# Beginner's Guide to Homeopathy
+  const fallbackContent = {
+    title: "Getting Started with Homeopathy",
+    content: `# Beginner's Guide to Homeopathy
 
 Welcome to your introduction to homeopathy! Whether you're completely new to this healing system or looking to deepen your understanding, this guide will help you get started on your homeopathic journey.
 
@@ -235,28 +230,38 @@ Once you're comfortable with the basics:
 
 **Remember**: This guide provides general information about homeopathy. For serious health conditions or persistent symptoms, always consult with qualified healthcare professionals. Homeopathy works best as part of a comprehensive approach to health and wellness.
 
-Ready to begin? Browse our remedy selection or contact our homeopathic consultants for personalized guidance on your healing journey.`;
+Ready to begin? Browse our remedy selection or contact our homeopathic consultants for personalized guidance on your healing journey.`,
+    meta_description: "Your complete beginner's guide to homeopathy"
+  };
 
-  if (error || !content) {
+  if (loading) {
     return (
-      <PageLayout title="Getting Started with Homeopathy" description="Your complete beginner's guide to homeopathy">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="prose prose-lg max-w-none">
-              <div className="whitespace-pre-wrap">{fallbackContent}</div>
-            </div>
-          </div>
+      <PageLayout title="Getting Started" description="Loading...">
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
         </div>
       </PageLayout>
     );
   }
 
+  // Use fallback content if there's an error or no content from database
+  const displayContent = content || fallbackContent;
+
   return (
-    <PageLayout title={content.title} description={content.meta_description}>
+    <PageLayout title={displayContent.title} description={displayContent.meta_description}>
       <div className="max-w-4xl mx-auto">
+        {error && (
+          <Alert className="mb-6">
+            <AlertDescription>
+              Content loaded from fallback. To edit this content, please use the admin panel.
+            </AlertDescription>
+          </Alert>
+        )}
         <div className="bg-white p-8 rounded-lg shadow-sm">
           <div className="prose prose-lg max-w-none">
-            <div className="whitespace-pre-wrap">{content.content}</div>
+            <div className="whitespace-pre-wrap">{displayContent.content}</div>
           </div>
         </div>
       </div>
