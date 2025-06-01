@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Input } from '@/components/ui/input';
@@ -317,7 +316,7 @@ const FAQ: React.FC = () => {
 
   return (
     <PageLayout title="Frequently Asked Questions About Homeopathy" description="Find comprehensive answers to common questions about homeopathy, treatment, safety, and more">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Search Section */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
           <form onSubmit={handleSearch} className="flex gap-2">
@@ -381,12 +380,12 @@ const FAQ: React.FC = () => {
         {/* FAQ Categories and Questions */}
         {!debouncedSearchQuery && (
           <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6 flex flex-wrap justify-start gap-2">
+            <TabsList className="mb-6 flex flex-wrap justify-start gap-2 h-auto">
               {Object.keys(faqData).map((category) => (
                 <TabsTrigger 
                   key={category} 
                   value={category}
-                  className="px-4 py-2 rounded-md"
+                  className="px-4 py-2 rounded-md text-sm whitespace-nowrap"
                 >
                   {category}
                 </TabsTrigger>
