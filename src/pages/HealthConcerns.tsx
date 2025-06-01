@@ -1,13 +1,12 @@
 
 import React, { useState } from 'react';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { Filter, Grid3X3, List, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { HealthConcernCard } from '@/components/health-concerns/HealthConcernCard';
 import { HealthConcernFilters } from '@/components/health-concerns/HealthConcernFilters';
 import { healthConcernsData } from '@/data/healthConcernsData';
+import { PageLayout } from '@/components/PageLayout';
 
 const HealthConcerns = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,11 +39,12 @@ const HealthConcerns = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      
+    <PageLayout 
+      title="Health Concerns & Homeopathic Solutions" 
+      description="Discover natural remedies for your health concerns with our comprehensive guide to homeopathic treatments"
+    >
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12">
+      <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 -mx-4 -mt-8 mb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -72,8 +72,8 @@ const HealthConcerns = () => {
       </section>
 
       {/* Main Content */}
-      <main className="flex-grow bg-gray-50">
-        <div className="container mx-auto px-4 py-8">
+      <div className="bg-gray-50 -mx-4 px-4 py-8">
+        <div className="container mx-auto">
           {/* Breadcrumb */}
           <nav className="text-sm text-gray-600 mb-6">
             <span>Home</span> / <span className="text-gray-900">Health Concerns</span>
@@ -178,10 +178,8 @@ const HealthConcerns = () => {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 
