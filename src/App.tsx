@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -42,6 +41,7 @@ import Contact from './pages/Contact';
 import Reviews from './pages/Reviews';
 import ShippingInfo from './pages/ShippingInfo';
 import StoreLocator from './pages/StoreLocator';
+import Consultation from './pages/Consultation';
 
 // Lazy load help center pages
 const GettingStarted = React.lazy(() => import('./pages/help-center/GettingStarted'));
@@ -86,6 +86,7 @@ function App() {
           {/* New pages */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/consultation" element={<Consultation />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/shipping" element={<ShippingInfo />} />
           <Route path="/stores" element={<StoreLocator />} />
