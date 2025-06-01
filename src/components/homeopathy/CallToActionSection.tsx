@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export const CallToActionSection = () => {
   return (
@@ -20,11 +21,11 @@ export const CallToActionSection = () => {
           <p className="text-xl mb-10">Take the first step toward reclaiming your health and vitality today.</p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button className="px-8 py-3 bg-white text-bahola-blue-600 hover:bg-gray-100 text-lg font-semibold rounded-full">
-              Find a remedy for...
+            <Button className="px-8 py-3 bg-white text-bahola-blue-600 hover:bg-gray-100 text-lg font-semibold rounded-full" asChild>
+              <Link to="/categories">Find a remedy for...</Link>
             </Button>
-            <Button className="px-8 py-3 bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white text-lg font-semibold rounded-full border-2 border-white">
-              Talk to a Homeopath Now
+            <Button className="px-8 py-3 bg-bahola-blue-500 hover:bg-bahola-blue-600 text-white text-lg font-semibold rounded-full border-2 border-white" asChild>
+              <Link to="/consultation">Talk to a Homeopath Now</Link>
             </Button>
           </div>
         </div>

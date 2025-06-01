@@ -59,7 +59,7 @@ export const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-bahola-navy-950">Quick Links</h3>
             <ul className="space-y-2">
               <li><Link to="/about" className="hover:text-bahola-blue-600 text-bahola-neutral-700">About Us</Link></li>
-              <li><Link to="/contact" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Consult a Homeopath</Link></li>
+              <li><Link to="/consultation" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Consult a Homeopath</Link></li>
               <li><Link to="/i-love-homeopathy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">I ❤️ HOMEOPATHY</Link></li>
               <li><Link to="/reviews" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Customer Reviews</Link></li>
               <li><Link to="/faq" className="hover:text-bahola-blue-600 text-bahola-neutral-700">FAQs</Link></li>
