@@ -1,7 +1,5 @@
 
 import React from 'react';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { HomeopathyHeroSection } from '@/components/homeopathy/HeroSection';
 import { HomeopathyIntroductionSection } from '@/components/homeopathy/IntroductionSection';
 import { TransformationImage } from '@/components/homeopathy/TransformationImage';
@@ -12,8 +10,6 @@ import { CallToActionSection } from '@/components/homeopathy/CallToActionSection
 const Homeopathy = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       {/* Hero Section */}
       <HomeopathyHeroSection />
       
@@ -33,8 +29,6 @@ const Homeopathy = () => {
       
       {/* Call-to-Action Section */}
       <CallToActionSection />
-      
-      <Footer />
     </div>
   );
 };
