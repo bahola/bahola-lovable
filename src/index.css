@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -142,9 +143,17 @@
     width: 90vw !important;
     max-width: 1200px !important;
     left: 50% !important;
-    top: 180px !important;
     transform: translateX(-50%) translateY(2px) !important;
     z-index: 9999 !important;
+  }
+
+  /* Position mega menu correctly based on scroll state */
+  .sticky-subheader .mega-menu.mega-menu-full {
+    top: 60px !important; /* Position relative to sticky subheader */
+  }
+
+  .mega-menu.mega-menu-full:not(.sticky-subheader .mega-menu.mega-menu-full) {
+    top: 180px !important; /* Original position when not sticky */
   }
 
   /* Ensure mega menus don't overflow on smaller screens */
@@ -159,6 +168,13 @@
     .mega-menu.mega-menu-full {
       width: 98vw !important;
       max-width: none !important;
+    }
+    
+    .sticky-subheader .mega-menu.mega-menu-full {
+      top: 50px !important;
+    }
+    
+    .mega-menu.mega-menu-full:not(.sticky-subheader .mega-menu.mega-menu-full) {
       top: 200px !important;
     }
   }
