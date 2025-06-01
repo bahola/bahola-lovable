@@ -23,6 +23,7 @@ import TermsConditions from './pages/TermsConditions';
 import ReturnPolicy from './pages/ReturnPolicy';
 import ShippingInfo from './pages/ShippingInfo';
 import NotFound from './pages/NotFound';
+import Consultation from './pages/Consultation';
 import { AuthModals } from './components/AuthModals';
 import AdminDashboard from "./pages/AdminDashboard";
 import DoctorSchedule from "./pages/DoctorSchedule";
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/products/:categorySlug" element={<CategoryPage />} />
                 <Route path="/product/:productSlug" element={<ProductPage />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/consultation" element={<Consultation />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/account" element={<UserAccount />} />
