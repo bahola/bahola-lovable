@@ -147,6 +147,45 @@ export type Database = {
         }
         Relationships: []
       }
+      doctor_schedules: {
+        Row: {
+          break_end_time: string | null
+          break_start_time: string | null
+          created_at: string
+          date: string
+          doctor_id: string
+          end_time: string
+          id: string
+          is_available: boolean
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          break_end_time?: string | null
+          break_start_time?: string | null
+          created_at?: string
+          date: string
+          doctor_id: string
+          end_time: string
+          id?: string
+          is_available?: boolean
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          break_end_time?: string | null
+          break_start_time?: string | null
+          created_at?: string
+          date?: string
+          doctor_id?: string
+          end_time?: string
+          id?: string
+          is_available?: boolean
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       help_center_content: {
         Row: {
           content: string
