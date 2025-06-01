@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
@@ -36,6 +35,7 @@ import HelpCenter from './pages/HelpCenter';
 import FAQ from './pages/FAQ';
 import VideoConsultationRoom from './components/video/VideoConsultationRoom';
 import VideoConsultationJoin from './components/video/VideoConsultationJoin';
+import ScrollToTop from './components/ScrollToTop';
 
 // Lazy load help center pages
 const GettingStarted = React.lazy(() => import('./pages/help-center/GettingStarted'));
@@ -56,6 +56,7 @@ const SettingsManagement = React.lazy(() => import('./pages/admin/SettingsManage
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div>}>
         <Routes>
           <Route path="/" element={<Index />} />
