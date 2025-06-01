@@ -1,97 +1,31 @@
+
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
-import { usePageContent } from '@/hooks/usePageContent';
 
 const About: React.FC = () => {
-  const { pageData, loading, error } = usePageContent('about');
-
-  if (loading) {
-    return (
-      <PageLayout title="About Bahola Labs" description="Learn about our commitment to homeopathic medicine and natural healing">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-            </div>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
-
-  // Function to render content with basic markdown support
-  const renderContent = (content: string) => {
-    const lines = content.split('\n');
-    return lines.map((line, index) => {
-      // Handle headings
-      if (line.startsWith('### ')) {
-        return (
-          <h3 key={index} className="text-xl font-semibold mb-3 text-bahola-blue-800 mt-6">
-            {line.replace('### ', '')}
-          </h3>
-        );
-      } else if (line.startsWith('## ')) {
-        return (
-          <h2 key={index} className="text-2xl font-semibold mb-4 text-bahola-navy-950 mt-8">
-            {line.replace('## ', '')}
-          </h2>
-        );
-      } else if (line.startsWith('# ')) {
-        return (
-          <h1 key={index} className="text-3xl font-bold mb-6 text-bahola-navy-950 mt-8">
-            {line.replace('# ', '')}
-          </h1>
-        );
-      } else if (line.trim() === '') {
-        // Empty line
-        return <br key={index} />;
-      } else {
-        // Regular paragraph
-        return (
-          <p key={index} className="mb-4 text-bahola-neutral-700 leading-relaxed">
-            {line}
-          </p>
-        );
-      }
-    });
-  };
-
-  // If we have data from the database, use it
-  if (pageData && !error) {
-    return (
-      <PageLayout title={pageData.title} description={pageData.meta_description}>
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="prose prose-lg max-w-none">
-              {renderContent(pageData.content)}
-            </div>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
-
-  // Fallback content when no database content is available
   return (
     <PageLayout title="About Bahola Labs" description="Learn about our commitment to homeopathic medicine and natural healing">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white p-8 rounded-lg shadow-sm">
-          {error && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-              <p className="text-yellow-800">
-                Using fallback content. Database content not available: {error}
-              </p>
-            </div>
-          )}
-          
-          <h1 className="text-4xl font-bold mb-8 text-bahola-navy-950">Welcome to Bahola</h1>
-          
-          <div className="space-y-8 text-bahola-neutral-700 leading-relaxed">
-            <p>
-              Since our inception in 1939, Bahola Labs has been a pioneer in the field of homeopathy. Founded by Dr. V.R. Murty, whose passion for natural healing was ignited by a personal experience, we have grown into a trusted name in homeopathic pharmaceuticals. Our mission is to make homeopathy the preferred choice for treating acute and chronic conditions, providing natural, effective remedies where allopathy may fall short.
+      <div className="max-w-6xl mx-auto">
+        {/* Hero Section with Image */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+          <div>
+            <h1 className="text-4xl font-bold mb-6 text-bahola-navy-950">Welcome to Bahola</h1>
+            <p className="text-lg text-bahola-neutral-700 leading-relaxed">
+              Since our inception in 1939, Bahola Labs has been a pioneer in the field of homeopathy. Founded by Dr. V.R. Murty, whose passion for natural healing was ignited by a personal experience, we have grown into a trusted name in homeopathic pharmaceuticals.
             </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <img 
+              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+              alt="Bahola Labs - Homeopathic Medicine Research" 
+              className="w-full h-auto rounded-lg"
+            />
+          </div>
+        </div>
 
+        {/* Main Content */}
+        <div className="bg-white p-8 rounded-lg shadow-sm">
+          <div className="space-y-8 text-bahola-neutral-700 leading-relaxed">
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-bahola-navy-950">Our Mission</h2>
               <p>
@@ -108,21 +42,22 @@ const About: React.FC = () => {
 
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-bahola-navy-950">Our Values</h2>
-              <div className="space-y-3">
-                <div>
-                  <strong className="text-bahola-blue-700">Quality:</strong> We uphold the highest standards in every aspect of our production, from sourcing the finest ingredients to rigorous quality control measures.
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-bahola-blue-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-bahola-blue-700 mb-2">Quality</h3>
+                  <p className="text-sm">We uphold the highest standards in every aspect of our production, from sourcing the finest ingredients to rigorous quality control measures.</p>
                 </div>
-                <div>
-                  <strong className="text-bahola-blue-700">Innovation:</strong> We stay at the forefront of natural wellness by continuously researching and developing advanced homeopathic medicines.
+                <div className="bg-bahola-blue-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-bahola-blue-700 mb-2">Innovation</h3>
+                  <p className="text-sm">We stay at the forefront of natural wellness by continuously researching and developing advanced homeopathic medicines.</p>
                 </div>
-                <div>
-                  <strong className="text-bahola-blue-700">Expertise:</strong> Our team of experienced homeopaths and scientists are dedicated to creating effective remedies backed by extensive knowledge and research.
+                <div className="bg-bahola-blue-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-bahola-blue-700 mb-2">Expertise</h3>
+                  <p className="text-sm">Our team of experienced homeopaths and scientists are dedicated to creating effective remedies backed by extensive knowledge and research.</p>
                 </div>
-                <div>
-                  <strong className="text-bahola-blue-700">Empathy:</strong> We understand the unique health challenges faced by our customers and strive to provide solutions that truly make a difference.
-                </div>
-                <div>
-                  <strong className="text-bahola-blue-700">Integrity:</strong> We are committed to transparency and honesty in all our interactions, building trust with our customers and partners.
+                <div className="bg-bahola-blue-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-bahola-blue-700 mb-2">Integrity</h3>
+                  <p className="text-sm">We are committed to transparency and honesty in all our interactions, building trust with our customers and partners.</p>
                 </div>
               </div>
             </div>
@@ -130,14 +65,48 @@ const About: React.FC = () => {
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-bahola-navy-950">Our Products</h2>
               <p className="mb-4">Bahola Labs offers a comprehensive range of homeopathic remedies, including:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Mother Tinctures:</strong> Pure, potent extracts derived from the highest quality raw materials.</li>
-                <li><strong>Dilutions:</strong> Carefully prepared to ensure maximum efficacy and safety.</li>
-                <li><strong>LM Potencies:</strong> Designed for deep, constitutional healing.</li>
-                <li><strong>Nosodes:</strong> Prepared from natural sources to support immune function and preventive care.</li>
-                <li><strong>Bio Chemics & Bio Combinations:</strong> Formulated to address specific health concerns and restore balance.</li>
-                <li><strong>Triturations:</strong> Finely ground remedies for optimal absorption and effectiveness.</li>
-              </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-bahola-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <div>
+                      <strong>Mother Tinctures:</strong> Pure, potent extracts derived from the highest quality raw materials.
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-bahola-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <div>
+                      <strong>Dilutions:</strong> Carefully prepared to ensure maximum efficacy and safety.
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-bahola-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <div>
+                      <strong>LM Potencies:</strong> Designed for deep, constitutional healing.
+                    </div>
+                  </li>
+                </ul>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-bahola-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <div>
+                      <strong>Nosodes:</strong> Prepared from natural sources to support immune function and preventive care.
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-bahola-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <div>
+                      <strong>Bio Chemics & Bio Combinations:</strong> Formulated to address specific health concerns and restore balance.
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-bahola-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                    <div>
+                      <strong>Triturations:</strong> Finely ground remedies for optimal absorption and effectiveness.
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div>
