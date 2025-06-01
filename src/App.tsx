@@ -33,6 +33,7 @@ import ShippingManagement from './pages/admin/ShippingManagement';
 import CustomersManagement from './pages/admin/CustomersManagement';
 import AdminHome from './pages/admin/AdminHome';
 import HelpCenter from './pages/HelpCenter';
+import FAQ from './pages/FAQ';
 import VideoConsultationRoom from './components/video/VideoConsultationRoom';
 import VideoConsultationJoin from './components/video/VideoConsultationJoin';
 
