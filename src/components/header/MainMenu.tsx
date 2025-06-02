@@ -62,11 +62,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
       </div>
 
-      <Link to="/i-love-homeopathy" className="main-menu-item flex items-center">
+      <a 
+        href="https://lovable.dev/projects/90f95490-dd0f-4544-953c-3fada8daac1b" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="main-menu-item flex items-center"
+      >
         <span className="whitespace-nowrap text-gray-800 font-medium">I</span>
         <div className="mx-1 text-red-500">❤️</div>
         <span className="whitespace-nowrap text-gray-800 font-medium">HOMEOPATHY</span>
-      </Link>
+      </a>
       
       <Link to="/homeopathy" className="main-menu-item">
         <span className="text-gray-800 font-medium">Why Homeopathy</span>

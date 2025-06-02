@@ -165,8 +165,13 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </div>
         </div>
         
-        {/* I ❤️ HOMEOPATHY */}
-        <a href="/i-love-homeopathy" className="mobile-menu-item block">
+        {/* I ❤️ HOMEOPATHY - Updated to link to blog */}
+        <a 
+          href="https://lovable.dev/projects/90f95490-dd0f-4544-953c-3fada8daac1b" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="mobile-menu-item block"
+        >
           <div className="flex items-center">
             <span>I</span>
             <Heart size={16} className="mx-1 text-red-500 fill-red-500" />

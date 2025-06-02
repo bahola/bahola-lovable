@@ -50,3 +50,15 @@ export const sitemapUrls: SitemapUrl[] = [
   { url: '/concern/diabetes-support', changefreq: 'weekly', priority: 0.8 },
   { url: '/concern/headaches-migraines', changefreq: 'weekly', priority: 0.8 },
 ];
+
+// Blog integration function to share content URLs
+export const addBlogBacklinks = (blogArticles: Array<{slug: string, healthConcern?: string}>) => {
+  const blogBaseUrl = 'https://lovable.dev/projects/90f95490-dd0f-4544-953c-3fada8daac1b';
+  
+  return blogArticles.map(article => ({
+    url: `/blog-redirect/${article.slug}`,
+    changefreq: 'weekly' as const,
+    priority: 0.6,
+    canonical: `${blogBaseUrl}#${article.slug}`
+  }));
+};

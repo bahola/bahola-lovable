@@ -60,7 +60,16 @@ export const Footer = () => {
             <ul className="space-y-2">
               <li><Link to="/about" className="hover:text-bahola-blue-600 text-bahola-neutral-700">About Us</Link></li>
               <li><Link to="/consultation" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Consult a Homeopath</Link></li>
-              <li><Link to="/i-love-homeopathy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">I ❤️ HOMEOPATHY</Link></li>
+              <li>
+                <a 
+                  href="https://lovable.dev/projects/90f95490-dd0f-4544-953c-3fada8daac1b" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-bahola-blue-600 text-bahola-neutral-700"
+                >
+                  I ❤️ HOMEOPATHY Blog
+                </a>
+              </li>
               <li><Link to="/reviews" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Customer Reviews</Link></li>
               <li><Link to="/faq" className="hover:text-bahola-blue-600 text-bahola-neutral-700">FAQs</Link></li>
               <li><Link to="/help-center" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Help Center</Link></li>
