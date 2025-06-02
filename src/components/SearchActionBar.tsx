@@ -47,8 +47,8 @@ export const SearchActionBar = () => {
             </form>
             
             {/* Action Buttons */}
-            <div className="flex justify-center">
-              <Button asChild className="px-12 py-3 btn-bahola text-base font-medium font-helvetica min-w-max whitespace-nowrap">
+            <div className="flex justify-center w-full">
+              <Button asChild className="btn-bahola text-base font-medium font-helvetica" style={{ whiteSpace: 'nowrap', minWidth: 'fit-content' }}>
                 <Link to="/health-concerns">Health Problems</Link>
               </Button>
             </div>
