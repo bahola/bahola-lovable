@@ -12,9 +12,9 @@ export const SearchActionBar = () => {
     <div className="bg-white py-8 border-b border-bahola-neutral-200">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+          <div className="flex flex-col items-center justify-center gap-6 lg:gap-8">
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="flex-1 max-w-md lg:max-w-lg relative">
+            <form onSubmit={handleSearch} className="w-full max-w-md lg:max-w-lg relative">
               <div className="relative">
                 <input 
                   type="text" 
@@ -47,7 +47,7 @@ export const SearchActionBar = () => {
             </form>
             
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex justify-center">
               <Button asChild className="px-6 py-3 btn-bahola text-base font-medium font-helvetica whitespace-nowrap">
                 <Link to="/health-concerns">Health Problems</Link>
               </Button>
