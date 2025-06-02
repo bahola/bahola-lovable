@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Filter, Grid3X3, List, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,10 +37,40 @@ const HealthConcerns = () => {
     }
   });
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "Health Concerns & Homeopathic Solutions",
+    "description": "Comprehensive guide to natural homeopathic treatments for various health conditions including anxiety, digestive issues, skin problems, and more.",
+    "url": "https://bahola-labs.lovable.app/health-concerns",
+    "medicalAudience": {
+      "@type": "MedicalAudience",
+      "audienceType": "Patient"
+    },
+    "about": healthConcernsData.map(concern => ({
+      "@type": "MedicalCondition",
+      "name": concern.name,
+      "description": concern.description
+    }))
+  };
+
   return (
     <PageLayout 
       title="Health Concerns & Homeopathic Solutions" 
-      description="Discover natural remedies for your health concerns with our comprehensive guide to homeopathic treatments"
+      description="Discover natural remedies for your health concerns with our comprehensive guide to homeopathic treatments for anxiety, digestive issues, skin conditions, and more."
+      keywords={[
+        'health concerns',
+        'homeopathic solutions',
+        'natural remedies',
+        'anxiety treatment',
+        'digestive health',
+        'skin conditions',
+        'sleep disorders',
+        'joint pain',
+        'womens health',
+        'cold flu treatment',
+        'alternative medicine'
+      ]}
     >
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 -mx-4 -mt-8 mb-8">

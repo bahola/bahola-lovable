@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
 
 import { CartProvider } from './contexts/CartContext';
@@ -66,97 +66,101 @@ import WeightManagement from './pages/health-concerns/WeightManagement';
 import EyeProblems from './pages/health-concerns/EyeProblems';
 import HighBloodPressure from './pages/health-concerns/HighBloodPressure';
 import DiabetesSupport from './pages/health-concerns/DiabetesSupport';
+import Sitemap from './pages/Sitemap';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <AuthModals modalType={null} onClose={() => {}} />
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/products" element={<CategoryPage />} />
-                <Route path="/products/:categorySlug" element={<CategoryPage />} />
-                <Route path="/product/:productSlug" element={<ProductPage />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/consultation" element={<Consultation />} />
-                <Route path="/homeopathy" element={<Homeopathy />} />
-                <Route path="/health-concerns" element={<HealthConcerns />} />
-                <Route path="/help-center" element={<HelpCenter />} />
-                <Route path="/store-locator" element={<StoreLocator />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/account" element={<UserAccount />} />
-                <Route path="/video-consultation" element={<VideoConsultation />} />
-                <Route path="/appointment-booking" element={<AppointmentBooking />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/terms-conditions" element={<TermsConditions />} />
-                <Route path="/returns-policy" element={<ReturnPolicy />} />
-                <Route path="/shipping-policy" element={<ShippingInfo />} />
-                <Route path="/join-consultation/:appointmentId" element={<></>} />
-                <Route path="/video-room/:roomId" element={<></>} />
-                
-                {/* Help Center Routes */}
-                <Route path="/help/getting-started" element={<GettingStarted />} />
-                <Route path="/help/potency-guide" element={<PotencyGuide />} />
-                <Route path="/help/using-pellets" element={<UsingPellets />} />
-                <Route path="/help/first-aid-kit" element={<FirstAidKit />} />
-                <Route path="/help/liquid-remedies-troubleshooting" element={<LiquidRemediesTroubleshooting />} />
-                <Route path="/help/no-results-troubleshooting" element={<NoResultsTroubleshooting />} />
-                <Route path="/help/children-safety" element={<ChildrenSafety />} />
-                <Route path="/help/remedy-interactions" element={<RemedyInteractions />} />
-                <Route path="/help/bach-flower-selector" element={<BachFlowerSelector />} />
-                <Route path="/help/seasonal-remedies" element={<SeasonalRemedies />} />
-                <Route path="/help/shipping-issues" element={<ShippingIssues />} />
-                <Route path="/help/certifications" element={<Certifications />} />
-                
-                {/* Health Concern Routes */}
-                <Route path="/concern/anxiety-stress" element={<AnxietyStress />} />
-                <Route path="/concern/insomnia-sleep-disorders" element={<InsomniaPage />} />
-                <Route path="/concern/digestive-issues" element={<DigestiveIssues />} />
-                <Route path="/concern/allergies-hay-fever" element={<AllergiesHayFever />} />
-                <Route path="/concern/headaches-migraines" element={<HeadachesMigraines />} />
-                <Route path="/concern/skin-conditions" element={<SkinConditions />} />
-                <Route path="/concern/cold-flu" element={<ColdFlu />} />
-                <Route path="/concern/joint-pain-arthritis" element={<JointPainArthritis />} />
-                <Route path="/concern/womens-health" element={<WomensHealth />} />
-                <Route path="/concern/childrens-health" element={<ChildrensHealth />} />
-                <Route path="/concern/depression-mood" element={<DepressionMood />} />
-                <Route path="/concern/weight-management" element={<WeightManagement />} />
-                <Route path="/concern/eye-problems" element={<EyeProblems />} />
-                <Route path="/concern/high-blood-pressure" element={<HighBloodPressure />} />
-                <Route path="/concern/diabetes-support" element={<DiabetesSupport />} />
-                
-                {/* Doctor Routes */}
-                <Route path="/doctor/schedule" element={
-                  <ProtectedDoctorRoute>
-                    <DoctorSchedule />
-                  </ProtectedDoctorRoute>
-                } />
-                
-                {/* Admin Routes */}
-                <Route path="/admin" element={<AdminDashboard />}>
-                  <Route index element={<AdminHome />} />
-                  <Route path="pages" element={<PagesManagement />} />
-                  <Route path="help-center" element={<HelpCenterManagement />} />
-                </Route>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <CartProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <AuthModals modalType={null} onClose={() => {}} />
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/products" element={<CategoryPage />} />
+                  <Route path="/products/:categorySlug" element={<CategoryPage />} />
+                  <Route path="/product/:productSlug" element={<ProductPage />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/consultation" element={<Consultation />} />
+                  <Route path="/homeopathy" element={<Homeopathy />} />
+                  <Route path="/health-concerns" element={<HealthConcerns />} />
+                  <Route path="/help-center" element={<HelpCenter />} />
+                  <Route path="/store-locator" element={<StoreLocator />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/account" element={<UserAccount />} />
+                  <Route path="/video-consultation" element={<VideoConsultation />} />
+                  <Route path="/appointment-booking" element={<AppointmentBooking />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-conditions" element={<TermsConditions />} />
+                  <Route path="/returns-policy" element={<ReturnPolicy />} />
+                  <Route path="/shipping-policy" element={<ShippingInfo />} />
+                  <Route path="/sitemap" element={<Sitemap />} />
+                  <Route path="/join-consultation/:appointmentId" element={<></>} />
+                  <Route path="/video-room/:roomId" element={<></>} />
+                  
+                  {/* Help Center Routes */}
+                  <Route path="/help/getting-started" element={<GettingStarted />} />
+                  <Route path="/help/potency-guide" element={<PotencyGuide />} />
+                  <Route path="/help/using-pellets" element={<UsingPellets />} />
+                  <Route path="/help/first-aid-kit" element={<FirstAidKit />} />
+                  <Route path="/help/liquid-remedies-troubleshooting" element={<LiquidRemediesTroubleshooting />} />
+                  <Route path="/help/no-results-troubleshooting" element={<NoResultsTroubleshooting />} />
+                  <Route path="/help/children-safety" element={<ChildrenSafety />} />
+                  <Route path="/help/remedy-interactions" element={<RemedyInteractions />} />
+                  <Route path="/help/bach-flower-selector" element={<BachFlowerSelector />} />
+                  <Route path="/help/seasonal-remedies" element={<SeasonalRemedies />} />
+                  <Route path="/help/shipping-issues" element={<ShippingIssues />} />
+                  <Route path="/help/certifications" element={<Certifications />} />
+                  
+                  {/* Health Concern Routes */}
+                  <Route path="/concern/anxiety-stress" element={<AnxietyStress />} />
+                  <Route path="/concern/insomnia-sleep-disorders" element={<InsomniaPage />} />
+                  <Route path="/concern/digestive-issues" element={<DigestiveIssues />} />
+                  <Route path="/concern/allergies-hay-fever" element={<AllergiesHayFever />} />
+                  <Route path="/concern/headaches-migraines" element={<HeadachesMigraines />} />
+                  <Route path="/concern/skin-conditions" element={<SkinConditions />} />
+                  <Route path="/concern/cold-flu" element={<ColdFlu />} />
+                  <Route path="/concern/joint-pain-arthritis" element={<JointPainArthritis />} />
+                  <Route path="/concern/womens-health" element={<WomensHealth />} />
+                  <Route path="/concern/childrens-health" element={<ChildrensHealth />} />
+                  <Route path="/concern/depression-mood" element={<DepressionMood />} />
+                  <Route path="/concern/weight-management" element={<WeightManagement />} />
+                  <Route path="/concern/eye-problems" element={<EyeProblems />} />
+                  <Route path="/concern/high-blood-pressure" element={<HighBloodPressure />} />
+                  <Route path="/concern/diabetes-support" element={<DiabetesSupport />} />
+                  
+                  {/* Doctor Routes */}
+                  <Route path="/doctor/schedule" element={
+                    <ProtectedDoctorRoute>
+                      <DoctorSchedule />
+                    </ProtectedDoctorRoute>
+                  } />
+                  
+                  {/* Admin Routes */}
+                  <Route path="/admin" element={<AdminDashboard />}>
+                    <Route index element={<AdminHome />} />
+                    <Route path="pages" element={<PagesManagement />} />
+                    <Route path="help-center" element={<HelpCenterManagement />} />
+                  </Route>
 
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </BrowserRouter>
-      </CartProvider>
-    </QueryClientProvider>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </BrowserRouter>
+        </CartProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

@@ -1,14 +1,31 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
 
 User-agent: *
 Allow: /
+
+# Important pages
+Allow: /
+Allow: /about
+Allow: /products
+Allow: /health-concerns
+Allow: /consultation
+Allow: /homeopathy
+Allow: /help-center
+Allow: /contact
+
+# Health concern pages
+Allow: /concern/
+
+# Help center pages
+Allow: /help/
+
+# Disallow admin and private pages
+Disallow: /admin
+Disallow: /account
+Disallow: /video-room/
+Disallow: /join-consultation/
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://bahola-labs.lovable.app/sitemap.xml
