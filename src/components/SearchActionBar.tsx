@@ -51,14 +51,6 @@ export const SearchActionBar = () => {
               <Button asChild className="px-6 py-3 btn-bahola text-base font-medium font-helvetica whitespace-nowrap">
                 <Link to="/health-concerns">Health Problems</Link>
               </Button>
-              
-              <Button 
-                asChild 
-                variant="outline" 
-                className="px-6 py-3 text-base font-medium border-2 border-bahola-blue-500 text-bahola-blue-500 hover:bg-bahola-blue-50 font-helvetica whitespace-nowrap"
-              >
-                <Link to="/health-concerns">Shop by Concern</Link>
-              </Button>
             </div>
           </div>
         </div>
