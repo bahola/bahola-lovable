@@ -1,12 +1,20 @@
 
 import React from 'react';
 import { Phone, Truck, Heart, Gift, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
 
-interface TopBarProps {
-  onOpenAuthModal: (type: 'signin' | 'signup') => void;
-}
+export const TopBar: React.FC = () => {
+  const { isAuthenticated, user, logout } = useERPNextAuth();
 
-export const TopBar: React.FC<TopBarProps> = ({ onOpenAuthModal }) => {
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <div className="bg-bahola-blue-50 py-2">
       <div className="container mx-auto px-4 flex flex-wrap items-center justify-between">
@@ -32,19 +40,27 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenAuthModal }) => {
             <Gift size={14} />
             <span>Promo Pocket</span>
           </a>
-          <button 
-            className="top-menu-item flex items-center space-x-1"
-            onClick={() => onOpenAuthModal('signup')}
-          >
+          <Link to="/register" className="top-menu-item flex items-center space-x-1">
             <Mail size={14} />
             <span>Email Signup</span>
-          </button>
-          <button 
-            className="top-menu-item flex items-center"
-            onClick={() => onOpenAuthModal('signin')}
-          >
-            Sign In
-          </button>
+          </Link>
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-4">
+              <Link to="/account" className="top-menu-item">
+                Welcome, {user?.full_name || 'User'}
+              </Link>
+              <button 
+                className="top-menu-item"
+                onClick={handleLogout}
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="top-menu-item">
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </div>
