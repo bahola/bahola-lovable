@@ -22,16 +22,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 }) => {
   return (
     <nav className="hidden lg:flex items-center space-x-2">
-      <Link to="/shop" className="main-menu-item">
-        <span className="text-gray-800 font-medium">Shop</span>
-      </Link>
-
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('concern')}
         onMouseLeave={onMenuLeave}
       >
-        <span className="text-gray-800 font-medium">Shop by Concern</span>
+        <span className="text-gray-800 font-medium">Shop by Problem</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
         <MegaMenuConcern isOpen={activeMenu === 'concern'} />
       </div>
