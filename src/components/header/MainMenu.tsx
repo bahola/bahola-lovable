@@ -22,6 +22,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 }) => {
   return (
     <nav className="hidden lg:flex items-center space-x-2">
+      <Link to="/shop" className="main-menu-item">
+        <span className="text-gray-800 font-medium">Shop</span>
+      </Link>
+
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('concern')}

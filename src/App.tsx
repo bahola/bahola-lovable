@@ -9,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import Index from './pages/Index';
+import Shop from './pages/Shop';
 import About from './pages/About';
 import CategoryPage from './pages/CategoryPage';
 import ProductPage from './pages/ProductPage';
@@ -83,6 +84,7 @@ function App() {
               <main className="flex-1">
                 <Routes>
                   <Route path="/" element={<Index />} />
+                  <Route path="/shop" element={<Shop />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/products" element={<CategoryPage />} />
                   <Route path="/products/:categorySlug" element={<CategoryPage />} />
