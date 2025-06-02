@@ -21,10 +21,12 @@ interface Product {
 }
 
 const CategoryPage = () => {
-  const { categoryId, concernId, subcategoryId } = useParams<{ 
+  const { categoryId, concernId, subcategoryId, diseaseCategory, diseaseSubcategory } = useParams<{ 
     categoryId?: string; 
     concernId?: string;
     subcategoryId?: string;
+    diseaseCategory?: string;
+    diseaseSubcategory?: string;
   }>();
   
   const location = useLocation();
@@ -46,20 +48,24 @@ const CategoryPage = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
   
-  // Determine if we're viewing a category or concern page
+  // Determine if we're viewing a category, concern, or disease page
   const isConcernPage = location.pathname.includes('/concern/');
-  const id = isConcernPage ? concernId : categoryId;
+  const isDiseasePage = location.pathname.includes('/diseases/');
+  const id = isConcernPage ? concernId : isDiseasePage ? diseaseCategory : categoryId;
   
   // Fetch products from database
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        console.log('Fetching products for category/subcategory/concern:', { 
+        console.log('Fetching products for category/subcategory/concern/disease:', { 
           categoryId, 
           subcategoryId, 
           concernId, 
-          isConcernPage 
+          diseaseCategory,
+          diseaseSubcategory,
+          isConcernPage,
+          isDiseasePage
         });
         
         let query = supabase
@@ -75,8 +81,9 @@ const CategoryPage = () => {
             subcategory:subcategory_id(id, name)
           `);
 
-        // If we're on a concern page, we should filter by the concern (which is the subcategory)
-        if (isConcernPage && concernId) {
+        // If we're on a concern or disease page, we should filter by the concern/disease (which is the subcategory)
+        if ((isConcernPage && concernId) || (isDiseasePage && diseaseSubcategory)) {
+          const searchTerm = isConcernPage ? concernId : diseaseSubcategory;
           // First, get the "Specialty Products" category ID
           const { data: categoryData } = await supabase
             .from('product_categories')
@@ -85,21 +92,21 @@ const CategoryPage = () => {
             .single();
           
           if (categoryData) {
-            // Then find subcategory matching the concern name/slug
+            // Then find subcategory matching the concern/disease name/slug
             const { data: subcategoryData } = await supabase
               .from('product_subcategories')
               .select('id')
-              .or(`name.ilike.%${concernId}%, slug.ilike.%${concernId}%`)
+              .or(`name.ilike.%${searchTerm}%, slug.ilike.%${searchTerm}%`)
               .eq('category_id', categoryData.id)
               .single();
             
             if (subcategoryData) {
-              console.log('Found matching subcategory for concern:', subcategoryData);
+              console.log('Found matching subcategory for concern/disease:', subcategoryData);
               query = query
                 .eq('category_id', categoryData.id)
                 .eq('subcategory_id', subcategoryData.id);
             } else {
-              console.log('No matching subcategory found for concern:', concernId);
+              console.log('No matching subcategory found for concern/disease:', searchTerm);
             }
           }
         }
@@ -169,10 +176,10 @@ const CategoryPage = () => {
     };
 
     fetchProducts();
-  }, [categoryId, subcategoryId, concernId, isConcernPage]);
+  }, [categoryId, subcategoryId, concernId, diseaseCategory, diseaseSubcategory, isConcernPage, isDiseasePage]);
   
-  // Get page info based on if we're viewing a category, subcategory, or concern
-  const pageInfo = getPageInfo(id, isConcernPage, subcategoryId);
+  // Get page info based on if we're viewing a category, subcategory, concern, or disease
+  const pageInfo = getPageInfo(id, isConcernPage || isDiseasePage, subcategoryId || diseaseSubcategory);
   
   // Filter toggle function
   const toggleFilter = (filter: string) => {
@@ -219,7 +226,7 @@ const CategoryPage = () => {
           <CategoryPageHeader 
             categoryId={categoryId}
             subcategoryId={subcategoryId}
-            isConcernPage={isConcernPage}
+            isConcernPage={isConcernPage || isDiseasePage}
             formattedName={formatName(id)}
             productCount={filteredProducts.length}
             viewMode={viewMode}

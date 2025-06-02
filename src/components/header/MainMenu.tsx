@@ -27,7 +27,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         onMouseEnter={() => onMenuHover('concern')}
         onMouseLeave={onMenuLeave}
       >
-        <span className="text-gray-800 font-medium">Shop by Problem</span>
+        <span className="text-gray-800 font-medium">Shop by Disease</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
         <MegaMenuConcern isOpen={activeMenu === 'concern'} />
       </div>

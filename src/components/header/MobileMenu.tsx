@@ -25,8 +25,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   activeSubmenu,
   onSubmenuToggle
 }) => {
-  // Common health concerns for mobile menu
-  const commonConcerns = ['Allergies', 'Cancer', 'Heart Health', 'Child Care', 'Eye Care'];
+  // Common disease categories for mobile menu
+  const commonDiseases = ['Mental Health', 'Digestive Disorders', 'Respiratory Diseases', 'Skin Diseases', 'Cardiovascular Disorders'];
   
   return (
     <div 
@@ -84,27 +84,27 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       
       {/* Mobile menu items */}
       <div>
-        {/* Shop by Concern */}
+        {/* Shop by Disease */}
         <div>
           <button 
             className="mobile-menu-item w-full"
-            onClick={() => onSubmenuToggle('concern')}
+            onClick={() => onSubmenuToggle('diseases')}
           >
-            <span>Shop by Concern</span>
-            <ChevronRight size={20} className={`transition-transform duration-300 ${activeSubmenu === 'concern' ? 'rotate-90' : ''}`} />
+            <span>Shop by Disease</span>
+            <ChevronRight size={20} className={`transition-transform duration-300 ${activeSubmenu === 'diseases' ? 'rotate-90' : ''}`} />
           </button>
-          <div className={`mobile-submenu ${activeSubmenu === 'concern' ? 'mobile-submenu-open' : ''}`}>
+          <div className={`mobile-submenu ${activeSubmenu === 'diseases' ? 'mobile-submenu-open' : ''}`}>
             <div className="p-4 grid grid-cols-1 gap-2">
-              {commonConcerns.map(concern => (
+              {commonDiseases.map(disease => (
                 <a 
-                  key={concern} 
-                  href={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`} 
+                  key={disease} 
+                  href={`/diseases/${disease.toLowerCase().replace(/\s+/g, '-').replace('&', '')}`} 
                   className="py-2 px-4 hover:bg-bahola-blue-100 rounded"
                 >
-                  {concern}
+                  {disease}
                 </a>
               ))}
-              <a href="/categories" className="py-2 px-4 text-bahola-blue-500 font-semibold">View all concerns →</a>
+              <a href="/diseases" className="py-2 px-4 text-bahola-blue-500 font-semibold">View all diseases →</a>
             </div>
           </div>
         </div>

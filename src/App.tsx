@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -51,7 +52,7 @@ import SeasonalRemedies from './pages/help-center/SeasonalRemedies';
 import ShippingIssues from './pages/help-center/ShippingIssues';
 import Certifications from './pages/help-center/Certifications';
 
-// Import health concern pages
+// Import health concern pages - these will now be disease pages
 import AnxietyStress from './pages/health-concerns/AnxietyStress';
 import InsomniaPage from './pages/health-concerns/InsomniaPage';
 import DigestiveIssues from './pages/health-concerns/DigestiveIssues';
@@ -93,6 +94,7 @@ function App() {
                   <Route path="/consultation" element={<Consultation />} />
                   <Route path="/homeopathy" element={<Homeopathy />} />
                   <Route path="/health-concerns" element={<HealthConcerns />} />
+                  <Route path="/diseases" element={<HealthConcerns />} />
                   <Route path="/help-center" element={<HelpCenter />} />
                   <Route path="/store-locator" element={<StoreLocator />} />
                   <Route path="/register" element={<Register />} />
@@ -122,7 +124,45 @@ function App() {
                   <Route path="/help/shipping-issues" element={<ShippingIssues />} />
                   <Route path="/help/certifications" element={<Certifications />} />
                   
-                  {/* Health Concern Routes */}
+                  {/* Disease Routes - Main categories */}
+                  <Route path="/diseases/mental-health" element={<CategoryPage />} />
+                  <Route path="/diseases/digestive-disorders" element={<CategoryPage />} />
+                  <Route path="/diseases/respiratory-diseases" element={<CategoryPage />} />
+                  <Route path="/diseases/skin-diseases" element={<CategoryPage />} />
+                  <Route path="/diseases/joint-muscle-disorders" element={<CategoryPage />} />
+                  <Route path="/diseases/womens-health" element={<CategoryPage />} />
+                  <Route path="/diseases/childrens-health" element={<CategoryPage />} />
+                  <Route path="/diseases/eye-problems" element={<CategoryPage />} />
+                  <Route path="/diseases/cardiovascular-disorders" element={<CategoryPage />} />
+                  <Route path="/diseases/metabolic-disorders" element={<CategoryPage />} />
+                  
+                  {/* Disease Routes - Subcategories following the structure */}
+                  <Route path="/diseases/mental-health/anxiety-stress" element={<AnxietyStress />} />
+                  <Route path="/diseases/mental-health/depression-mood" element={<DepressionMood />} />
+                  <Route path="/diseases/mental-health/insomnia-sleep-disorders" element={<InsomniaPage />} />
+                  
+                  <Route path="/diseases/digestive-disorders/digestive-issues" element={<DigestiveIssues />} />
+                  
+                  <Route path="/diseases/respiratory-diseases/allergies-hay-fever" element={<AllergiesHayFever />} />
+                  <Route path="/diseases/respiratory-diseases/cold-flu" element={<ColdFlu />} />
+                  
+                  <Route path="/diseases/skin-diseases/skin-conditions" element={<SkinConditions />} />
+                  
+                  <Route path="/diseases/joint-muscle-disorders/joint-pain-arthritis" element={<JointPainArthritis />} />
+                  
+                  <Route path="/diseases/womens-health/womens-health" element={<WomensHealth />} />
+                  
+                  <Route path="/diseases/childrens-health/childrens-health" element={<ChildrensHealth />} />
+                  
+                  <Route path="/diseases/eye-problems/eye-problems" element={<EyeProblems />} />
+                  
+                  <Route path="/diseases/cardiovascular-disorders/high-blood-pressure" element={<HighBloodPressure />} />
+                  <Route path="/diseases/cardiovascular-disorders/headaches-migraines" element={<HeadachesMigraines />} />
+                  
+                  <Route path="/diseases/metabolic-disorders/diabetes-support" element={<DiabetesSupport />} />
+                  <Route path="/diseases/metabolic-disorders/weight-management" element={<WeightManagement />} />
+                  
+                  {/* Legacy concern routes for backward compatibility */}
                   <Route path="/concern/anxiety-stress" element={<AnxietyStress />} />
                   <Route path="/concern/insomnia-sleep-disorders" element={<InsomniaPage />} />
                   <Route path="/concern/digestive-issues" element={<DigestiveIssues />} />
