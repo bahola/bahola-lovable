@@ -1,65 +1,41 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
 
 interface ProtectedDoctorRouteProps {
   children: ReactNode;
 }
 
 export const ProtectedDoctorRoute = ({ children }: ProtectedDoctorRouteProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isDoctor, setIsDoctor] = useState(false);
+  const { user, isAuthenticated, isLoading } = useERPNextAuth();
   const { toast } = useToast();
   const location = useLocation();
+  const [hasShownToast, setHasShownToast] = useState(false);
+
+  // Check if user is a doctor based on user_type
+  const isDoctor = user?.user_type === 'System User' || user?.user_type === 'Healthcare Professional';
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session) {
-          setIsAuthenticated(false);
-          setIsLoading(false);
-          return;
-        }
-
-        setIsAuthenticated(true);
-        
-        // Since we don't have a profiles table yet, we'll temporarily 
-        // assume all authenticated users can access doctor pages
-        // In a real implementation, we would check user_type in a profiles table
-        setIsDoctor(true);
-      } catch (error) {
-        console.error('Auth check error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  // Move toast calls outside of render cycle to avoid infinite loops
-  useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !hasShownToast) {
       if (!isAuthenticated) {
         toast({
           title: "Access Restricted",
           description: "Please sign in as a healthcare professional to access this resource.",
           variant: "destructive",
         });
+        setHasShownToast(true);
       } else if (!isDoctor) {
         toast({
           title: "Doctor Access Only",
           description: "This resource is only available to registered healthcare professionals.",
           variant: "destructive",
         });
+        setHasShownToast(true);
       }
     }
-  }, [isLoading, isAuthenticated, isDoctor, toast]);
+  }, [isLoading, isAuthenticated, isDoctor, toast, hasShownToast]);
 
   if (isLoading) {
     return (

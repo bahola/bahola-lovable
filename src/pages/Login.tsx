@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { z } from 'zod';
@@ -12,21 +11,23 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
+import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
 
-// Define login form schema
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
   remember: z.boolean().optional(),
 });
 
-// User type enum
 type UserType = 'customer' | 'doctor';
 
 const Login = () => {
   const [userType, setUserType] = useState<UserType>('customer');
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl');
+  const { login, isLoading } = useERPNextAuth();
   
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -39,14 +40,7 @@ const Login = () => {
   
   const handleSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     try {
-      // Here we would typically handle login with Supabase
-      console.log('Login submitted for', userType, values);
-      
-      // In a real implementation, you would authenticate with Supabase here
-      // const { data, error } = await supabase.auth.signInWithPassword({
-      //   email: values.email,
-      //   password: values.password,
-      // });
+      await login(values.email, values.password);
       
       toast({
         title: "Login Successful",
@@ -54,13 +48,13 @@ const Login = () => {
         duration: 3000,
       });
       
-      // Redirect to home page
-      navigate('/');
+      // Redirect to return URL or home page
+      navigate(returnUrl || '/');
     } catch (error) {
       console.error('Login error:', error);
       toast({
         title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
+        description: error instanceof Error ? error.message : "Invalid email or password. Please try again.",
         variant: "destructive",
         duration: 5000,
       });
@@ -91,7 +85,7 @@ const Login = () => {
                       <FormItem>
                         <FormLabel>Email Address</FormLabel>
                         <FormControl>
-                          <Input type="email" {...field} />
+                          <Input type="email" {...field} disabled={isLoading} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -110,7 +104,7 @@ const Login = () => {
                           </Link>
                         </div>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input type="password" {...field} disabled={isLoading} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -127,6 +121,7 @@ const Login = () => {
                             checked={field.value} 
                             onCheckedChange={field.onChange} 
                             id="remember"
+                            disabled={isLoading}
                           />
                         </FormControl>
                         <FormLabel htmlFor="remember" className="text-sm">
@@ -136,8 +131,8 @@ const Login = () => {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full">
-                    Sign In
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Signing In...' : 'Sign In'}
                   </Button>
                 </form>
               </Form>
