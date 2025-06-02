@@ -49,7 +49,7 @@ export const SearchActionBar = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild className="px-6 py-3 btn-bahola text-base font-medium font-helvetica whitespace-nowrap">
-                <Link to="/products">Find Your Remedy</Link>
+                <Link to="/health-concerns">Health Problems</Link>
               </Button>
               
               <Button 
