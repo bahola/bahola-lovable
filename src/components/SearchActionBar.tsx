@@ -50,9 +50,14 @@ export const SearchActionBar = () => {
             <div className="flex justify-center">
               <Link 
                 to="/health-concerns" 
-                className="btn-bahola text-base font-medium font-helvetica px-6 py-2 text-center inline-block whitespace-nowrap"
+                className="btn-bahola text-base font-medium font-helvetica px-8 py-2 text-center inline-block"
+                style={{ 
+                  whiteSpace: 'nowrap',
+                  minWidth: 'max-content',
+                  width: 'auto'
+                }}
               >
-                Health Problems
+                Health Issues
               </Link>
             </div>
           </div>
