@@ -37,24 +37,7 @@ export const clearERPNextConfig = (): void => {
 };
 
 /**
- * Generate authentication headers for ERPNext API requests
- */
-const getAuthHeaders = (): HeadersInit => {
-  if (!erpConfig) {
-    throw new Error("ERPNext is not initialized. Call initializeERPNext first.");
-  }
-
-  // For basic auth, encode username and password
-  const encodedAuth = btoa(`${erpConfig.username}:${erpConfig.password}`);
-  
-  return {
-    'Authorization': `Basic ${encodedAuth}`,
-    'Content-Type': 'application/json',
-  };
-};
-
-/**
- * Make a request to the ERPNext API
+ * Make a request to the ERPNext API using session-based authentication
  */
 export const erpRequest = async <T>(
   endpoint: string, 
@@ -70,7 +53,11 @@ export const erpRequest = async <T>(
   try {
     const response = await fetch(url, {
       method,
-      headers: getAuthHeaders(),
+      credentials: 'include', // Include session cookies
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: data ? JSON.stringify(data) : undefined,
     });
 

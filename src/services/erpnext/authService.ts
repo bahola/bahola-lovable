@@ -1,5 +1,5 @@
 
-import { erpRequest, getERPNextConfig } from './erpnextService';
+import { getERPNextConfig } from './erpnextService';
 
 export interface ERPNextLoginResponse {
   message: string;
@@ -41,8 +41,9 @@ export const loginToERPNext = async (email: string, password: string): Promise<E
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
-    credentials: 'include',
+    credentials: 'include', // Important for session cookies
     body: JSON.stringify({
       usr: email,
       pwd: password,
@@ -58,7 +59,9 @@ export const loginToERPNext = async (email: string, password: string): Promise<E
     );
   }
 
-  return await response.json();
+  const result = await response.json();
+  console.log('ERPNext login successful:', result);
+  return result;
 };
 
 /**
@@ -73,6 +76,9 @@ export const logoutFromERPNext = async (): Promise<void> => {
   await fetch(`${config.baseUrl}/api/method/logout`, {
     method: 'POST',
     credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 };
 
@@ -80,7 +86,26 @@ export const logoutFromERPNext = async (): Promise<void> => {
  * Get current user info from ERPNext
  */
 export const getCurrentUser = async (): Promise<ERPNextUser> => {
-  return await erpRequest<ERPNextUser>('/api/method/frappe.auth.get_logged_user', 'GET');
+  const config = getERPNextConfig();
+  if (!config) {
+    throw new Error("ERPNext is not initialized.");
+  }
+
+  const response = await fetch(`${config.baseUrl}/api/method/frappe.auth.get_logged_user`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get current user: ${response.status} ${response.statusText}`);
+  }
+
+  const result = await response.json();
+  return result.message;
 };
 
 /**
@@ -95,6 +120,11 @@ export const createERPNextCustomer = async (customerData: {
   customer_group?: string;
   territory?: string;
 }): Promise<ERPNextCustomer> => {
+  const config = getERPNextConfig();
+  if (!config) {
+    throw new Error("ERPNext is not initialized.");
+  }
+
   const data = {
     customer_name: customerData.customer_name,
     customer_type: customerData.customer_type || 'Individual',
@@ -106,7 +136,23 @@ export const createERPNextCustomer = async (customerData: {
     disabled: 0,
   };
 
-  return await erpRequest<ERPNextCustomer>('/api/resource/Customer', 'POST', data);
+  const response = await fetch(`${config.baseUrl}/api/resource/Customer`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(`Failed to create customer: ${response.status} ${response.statusText} - ${errorData?.message || 'Unknown error'}`);
+  }
+
+  const result = await response.json();
+  return result.data;
 };
 
 /**
@@ -114,11 +160,29 @@ export const createERPNextCustomer = async (customerData: {
  */
 export const getCustomerByEmail = async (email: string): Promise<ERPNextCustomer | null> => {
   try {
-    const customers = await erpRequest<ERPNextCustomer[]>(
-      `/api/resource/Customer?filters=[["email_id","=","${email}"]]`,
-      'GET'
+    const config = getERPNextConfig();
+    if (!config) {
+      throw new Error("ERPNext is not initialized.");
+    }
+
+    const response = await fetch(
+      `${config.baseUrl}/api/resource/Customer?filters=[["email_id","=","${email}"]]`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      }
     );
-    return customers.length > 0 ? customers[0] : null;
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch customer: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.data && result.data.length > 0 ? result.data[0] : null;
   } catch (error) {
     console.error('Error fetching customer:', error);
     return null;
@@ -135,6 +199,11 @@ export const createERPNextUser = async (userData: {
   password: string;
   user_type?: string;
 }): Promise<ERPNextUser> => {
+  const config = getERPNextConfig();
+  if (!config) {
+    throw new Error("ERPNext is not initialized.");
+  }
+
   const data = {
     email: userData.email,
     first_name: userData.first_name,
@@ -145,5 +214,21 @@ export const createERPNextUser = async (userData: {
     send_welcome_email: 0,
   };
 
-  return await erpRequest<ERPNextUser>('/api/resource/User', 'POST', data);
+  const response = await fetch(`${config.baseUrl}/api/resource/User`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(`Failed to create user: ${response.status} ${response.statusText} - ${errorData?.message || 'Unknown error'}`);
+  }
+
+  const result = await response.json();
+  return result.data;
 };

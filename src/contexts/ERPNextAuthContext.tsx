@@ -8,7 +8,7 @@ import {
   createERPNextCustomer,
   ERPNextUser 
 } from '@/services/erpnext/authService';
-import { getERPNextConfig } from '@/services/erpnext/erpnextService';
+import { initializeERPNext, getERPNextConfig } from '@/services/erpnext/erpnextService';
 
 interface ERPNextAuthContextType {
   user: ERPNextUser | null;
@@ -48,6 +48,13 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    // Initialize ERPNext connection
+    initializeERPNext({
+      baseUrl: 'https://bahola.net',
+      username: '', // Will be set during login
+      password: '', // Will be set during login
+    });
+
     const checkAuthStatus = async () => {
       try {
         const config = getERPNextConfig();
