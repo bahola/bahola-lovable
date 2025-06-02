@@ -11,7 +11,7 @@ export const SearchActionBar = () => {
   return (
     <div className="bg-white py-8 border-b border-bahola-neutral-200">
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center justify-center gap-6 lg:gap-8">
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="w-full max-w-md lg:max-w-lg relative">
@@ -47,7 +47,7 @@ export const SearchActionBar = () => {
             </form>
             
             {/* Action Buttons */}
-            <div className="flex justify-center">
+            <div className="flex justify-start w-full max-w-md lg:max-w-lg">
               <Link 
                 to="/health-concerns" 
                 className="bg-bahola-blue-600 hover:bg-bahola-blue-700 text-white font-medium font-helvetica rounded-full transition-colors duration-200 text-base px-10 py-3 inline-block"
