@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { SEO } from '@/components/SEO';
-import { HeroSection } from '@/components/HeroSection';
+import { ShopHeroCarousel } from '@/components/shop/ShopHeroCarousel';
+import { SearchActionBar } from '@/components/SearchActionBar';
 import { 
   ConsultSection, 
   DiscoverSection, 
@@ -86,7 +87,8 @@ const Index = () => {
         url="/"
         structuredData={structuredData}
       />
-      <HeroSection />
+      <ShopHeroCarousel />
+      <SearchActionBar />
       <ConsultSection />
       <DiscoverSection />
       <FeaturedProductsSection />

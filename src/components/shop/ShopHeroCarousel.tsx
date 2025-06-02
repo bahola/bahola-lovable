@@ -54,7 +54,7 @@ export const ShopHeroCarousel = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 2000); // Changed from 5000 to 2000 (2 seconds)
 
     return () => clearInterval(timer);
   }, []);
