@@ -58,8 +58,8 @@ const HealthConcerns = () => {
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 -mx-4 -mt-8 mb-8">
-          <div className="container mx-auto px-4">
+        <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 px-4 mb-8">
+          <div className="container mx-auto">
             <div className="max-w-4xl">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 Diseases & Homeopathic Solutions
@@ -86,7 +86,7 @@ const HealthConcerns = () => {
         </section>
 
         {/* Main Content */}
-        <div className="bg-gray-50 -mx-4 px-4 py-8">
+        <div className="bg-gray-50 px-4 py-8">
           <div className="container mx-auto">
             {/* Breadcrumb */}
             <nav className="text-sm text-gray-600 mb-6">
