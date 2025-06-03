@@ -166,8 +166,9 @@
     100% { background-position: -200% 0; }
   }
 
+  /* Fixed mega menu styles */
   .mega-menu {
-    @apply invisible absolute opacity-0 bg-white shadow-lg border border-gray-200 transition-all duration-300 transform translate-y-2 z-50;
+    @apply absolute opacity-0 invisible bg-white shadow-lg border border-gray-200 transition-all duration-300 transform translate-y-2 z-50;
     width: 400px;
     left: 0;
     top: 100%;
@@ -184,7 +185,13 @@
     z-index: 9999 !important;
   }
 
-  /* ... keep existing code (mega menu positioning rules) */
+  .mega-menu.mega-menu-open {
+    @apply opacity-100 visible translate-y-0;
+  }
+
+  .mega-menu-full.mega-menu-open {
+    transform: translateX(-50%) translateY(0) !important;
+  }
 
   .cloud-bg {
     @apply bg-white bg-cloud-pattern bg-repeat;
