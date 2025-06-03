@@ -17,30 +17,28 @@ import ProductShipping from '@/components/product/ProductShipping';
 import ProductTabs from '@/components/product/ProductTabs';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import ProductNotFound from '@/components/product/ProductNotFound';
-import { useProductData } from '@/components/product/useProductData';
 import { Skeleton } from '@/components/ui/skeleton';
 import ProductReviews from '@/components/product/ProductReviews';
 import { Shield, Truck, RotateCcw, Award } from 'lucide-react';
 
 const ProductPage = () => {
-  const { productId } = useParams<{ productId: string }>();
+  const { productSlug } = useParams<{ productSlug: string }>();
   const [quantity, setQuantity] = useState(1);
   const [selectedVariation, setSelectedVariation] = useState<any>(null);
   const { toast } = useToast();
   const { addToCart } = useCart();
   
-  // Modified product data hook to handle both ID and name-based lookups with ERPNext integration
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!productId) return;
+      if (!productSlug) return;
       
       try {
         setLoading(true);
+        console.log('Fetching product with slug/ID:', productSlug);
         
-        // First, try to get product from Supabase for fallback/cache
         let query = supabase
           .from('products')
           .select(`
@@ -49,27 +47,29 @@ const ProductPage = () => {
             product_variations(*)
           `);
         
-        // Check if productId is a UUID (for backward compatibility) or a slug
-        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId);
+        // Check if productSlug is a UUID (for direct ID lookups) or a slug
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productSlug);
         
         if (isUUID) {
-          query = query.eq('id', productId);
+          console.log('Looking up product by UUID:', productSlug);
+          query = query.eq('id', productSlug);
         } else {
           // Convert slug back to name for lookup
-          const productName = productId.replace(/-/g, ' ');
+          const productName = productSlug.replace(/-/g, ' ');
+          console.log('Looking up product by name:', productName);
           query = query.ilike('name', productName);
         }
         
         const { data, error } = await query.single();
           
         if (error) {
-          console.warn('Product not found in Supabase, checking for ERPNext fallback:', error);
-          // TODO: In future, implement ERPNext API call here as fallback
-          // For now, show product not found
+          console.error('Product not found:', error);
           throw error;
         }
         
-        // Fetch review count from Supabase (reviews will remain in Supabase)
+        console.log('Product found:', data);
+        
+        // Fetch review count from Supabase
         const { count, error: reviewError } = await supabase
           .from('product_reviews')
           .select('id', { count: 'exact', head: true })
@@ -95,12 +95,11 @@ const ProductPage = () => {
             }
           }
           
-          // Handle images - these should come from Supabase bucket URLs
-          // ERPNext will only provide image references, actual images stored in Supabase
+          // Handle images
           const mainImage = data.image || '';
-          console.log('Product image from Supabase bucket:', mainImage);
+          console.log('Product image:', mainImage);
           
-          // Validate image URLs - they should be Supabase bucket URLs or valid external URLs
+          // Validate image URLs
           const isValidImageUrl = (url: string) => {
             return url && 
                    url.trim() !== '' && 
@@ -110,59 +109,54 @@ const ProductPage = () => {
                    (url.startsWith('http') || url.startsWith('https://vjkhsdwavbswcoyfgyvg.supabase.co/storage'));
           };
           
-          // Create array of images - prioritize Supabase bucket images
+          // Create array of images
           const imageArray = isValidImageUrl(mainImage) ? [mainImage] : [];
-          console.log('Image array created from Supabase bucket:', imageArray);
+          console.log('Image array created:', imageArray);
           
           // Calculate stock based on product type
-          // NOTE: Stock data will eventually come from ERPNext, but we maintain Supabase fallback
           let totalStock = 0;
           if (data.type === 'variable' && data.product_variations && data.product_variations.length > 0) {
-            // For variable products, sum up stock from all variations
             totalStock = data.product_variations.reduce((sum: number, variation: any) => sum + (variation.stock || 0), 0);
-            console.log('Variable product total stock (Supabase fallback):', totalStock, 'from variations:', data.product_variations);
+            console.log('Variable product total stock:', totalStock);
           } else {
-            // For simple products, use the product's stock
             totalStock = data.stock || 0;
-            console.log('Simple product stock (Supabase fallback):', totalStock);
+            console.log('Simple product stock:', totalStock);
           }
           
-          // Transform the data into the shape we need for the UI
-          // NOTE: Core product data will come from ERPNext in future, images from Supabase bucket
+          // Transform the data
           setProduct({
             id: data.id,
             name: data.name,
             description: data.description || '',
             shortDescription: data.short_description || '',
-            price: data.price, // Will come from ERPNext
-            originalPrice: data.price * 1.15, // Calculate from ERPNext price
-            discountPercentage: 14, // Will be calculated from ERPNext pricing
-            image: mainImage, // Supabase bucket URL
-            images: imageArray, // Array of Supabase bucket URLs
-            rating: avgRating, // Supabase reviews
-            reviewCount: count || 0, // Supabase reviews
-            stock: totalStock, // Will come from ERPNext
-            potency: data.product_variations?.[0]?.potency || '30C', // ERPNext data
-            brand: 'Bahola Labs', // ERPNext data
+            price: data.price,
+            originalPrice: data.price * 1.15,
+            discountPercentage: 14,
+            image: mainImage,
+            images: imageArray,
+            rating: avgRating,
+            reviewCount: count || 0,
+            stock: totalStock,
+            potency: data.product_variations?.[0]?.potency || '30C',
+            brand: 'Bahola Labs',
             benefits: data.benefits || [
               'Relieves pain and swelling from injuries',
               'Helps heal bruises and muscle soreness',
               'Useful for post-surgical recovery',
               'Reduces shock after trauma or accidents'
-            ], // ERPNext data
-            usage: data.usage_instructions || 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.', // ERPNext data
-            ingredients: data.ingredients || `${data.name} ${data.product_variations?.[0]?.potency || ''}, Sucrose (inactive)`, // ERPNext data
-            precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.', // ERPNext data
-            shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.', // ERPNext data
+            ],
+            usage: data.usage_instructions || 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.',
+            ingredients: data.ingredients || `${data.name} ${data.product_variations?.[0]?.potency || ''}, Sucrose (inactive)`,
+            precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
+            shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
             category: data.product_categories?.name || 'Uncategorized',
-            variations: data.product_variations || [], // Will come from ERPNext
-            tax_status: (data.tax_status === 'non-taxable' ? 'non-taxable' : 'taxable') as 'taxable' | 'non-taxable', // ERPNext data
-            tax_class: (data.tax_class === '0' || data.tax_class === '12' ? data.tax_class : '5') as '0' | '5' | '12' // ERPNext data
+            variations: data.product_variations || [],
+            tax_status: (data.tax_status === 'non-taxable' ? 'non-taxable' : 'taxable') as 'taxable' | 'non-taxable',
+            tax_class: (data.tax_class === '0' || data.tax_class === '12' ? data.tax_class : '5') as '0' | '5' | '12'
           });
         }
       } catch (error) {
         console.error('Error fetching product:', error);
-        // TODO: Add ERPNext fallback here in future implementation
         toast({
           title: "Failed to load product",
           description: "There was an error loading the product information.",
@@ -174,7 +168,7 @@ const ProductPage = () => {
     };
     
     fetchProduct();
-  }, [productId, toast]);
+  }, [productSlug, toast]);
 
   
   const handleAddToCart = () => {
