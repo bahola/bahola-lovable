@@ -297,26 +297,6 @@ const ProductPage = () => {
                   originalPrice={product.originalPrice}
                   discountPercentage={product.discountPercentage}
                 />
-
-                {/* Trust Badges */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
-                    <Shield className="h-4 w-4" />
-                    <span>100% Authentic</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-blue-600 bg-blue-50 p-3 rounded-lg">
-                    <Truck className="h-4 w-4" />
-                    <span>Free Delivery</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-purple-600 bg-purple-50 p-3 rounded-lg">
-                    <RotateCcw className="h-4 w-4" />
-                    <span>Easy Returns</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
-                    <Award className="h-4 w-4" />
-                    <span>Premium Quality</span>
-                  </div>
-                </div>
                 
                 {/* Short Description */}
                 <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-bahola-blue-500">
@@ -367,6 +347,26 @@ const ProductPage = () => {
               {/* Shipping Info Card */}
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-6">
                 <ProductShipping shippingInfo={product.shipping} />
+                
+                {/* Trust Badges moved here below shipping */}
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                    <Shield className="h-4 w-4" />
+                    <span>100% Authentic</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-blue-600 bg-blue-50 p-3 rounded-lg">
+                    <Truck className="h-4 w-4" />
+                    <span>Free Delivery</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-purple-600 bg-purple-50 p-3 rounded-lg">
+                    <RotateCcw className="h-4 w-4" />
+                    <span>Easy Returns</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
+                    <Award className="h-4 w-4" />
+                    <span>Premium Quality</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
