@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
 
@@ -12,7 +11,8 @@ const generalizedAnxietyData = {
   trending: false,
   searchVolume: 11000,
   lastUpdated: '2024-01-15',
-  commonRemedies: ['Arsenicum Album', 'Kali Phosphoricum', 'Phosphorus', 'Calcarea Carbonica']
+  commonRemedies: ['Arsenicum Album', 'Kali Phosphoricum', 'Phosphorus', 'Calcarea Carbonica'],
+  keywords: ['generalized anxiety', 'chronic worry', 'persistent anxiety', 'excessive worry', 'anxiety disorder']
 };
 
 const GeneralizedAnxietyPage = () => {

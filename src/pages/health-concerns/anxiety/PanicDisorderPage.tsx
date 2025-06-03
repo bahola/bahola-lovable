@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
 
@@ -12,7 +11,8 @@ const panicDisorderData = {
   trending: true,
   searchVolume: 9500,
   lastUpdated: '2024-01-15',
-  commonRemedies: ['Aconitum', 'Argentum Nitricum', 'Gelsemium', 'Ignatia']
+  commonRemedies: ['Aconitum', 'Argentum Nitricum', 'Gelsemium', 'Ignatia'],
+  keywords: ['panic disorder', 'panic attacks', 'anxiety attacks', 'sudden anxiety', 'intense fear']
 };
 
 const PanicDisorderPage = () => {

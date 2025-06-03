@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
 
@@ -12,7 +11,8 @@ const eczemaData = {
   trending: false,
   searchVolume: 12000,
   lastUpdated: '2024-01-15',
-  commonRemedies: ['Graphites', 'Sulphur', 'Petroleum', 'Hepar Sulph']
+  commonRemedies: ['Graphites', 'Sulphur', 'Petroleum', 'Hepar Sulph'],
+  keywords: ['eczema', 'atopic dermatitis', 'skin rash', 'itchy skin', 'dry skin']
 };
 
 const EczemaPage = () => {

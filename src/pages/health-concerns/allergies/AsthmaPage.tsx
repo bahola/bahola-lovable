@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
 
@@ -12,7 +11,8 @@ const asthmaData = {
   trending: true,
   searchVolume: 15000,
   lastUpdated: '2024-01-15',
-  commonRemedies: ['Arsenicum Album', 'Antimonium Tartaricum', 'Blatta Orientalis', 'Lobelia']
+  commonRemedies: ['Arsenicum Album', 'Antimonium Tartaricum', 'Blatta Orientalis', 'Lobelia'],
+  keywords: ['asthma', 'wheezing', 'breathing problems', 'respiratory allergies', 'chest tightness']
 };
 
 const AsthmaPage = () => {

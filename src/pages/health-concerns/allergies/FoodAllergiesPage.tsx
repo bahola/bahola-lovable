@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
 
@@ -12,7 +11,8 @@ const foodAllergiesData = {
   trending: true,
   searchVolume: 8500,
   lastUpdated: '2024-01-15',
-  commonRemedies: ['Arsenicum Album', 'Nux Vomica', 'Carbo Vegetabilis', 'Lycopodium']
+  commonRemedies: ['Arsenicum Album', 'Nux Vomica', 'Carbo Vegetabilis', 'Lycopodium'],
+  keywords: ['food allergies', 'food sensitivities', 'digestive allergies', 'food intolerance', 'allergic reactions']
 };
 
 const FoodAllergiesPage = () => {

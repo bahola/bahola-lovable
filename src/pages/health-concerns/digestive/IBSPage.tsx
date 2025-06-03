@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
 
@@ -12,7 +11,8 @@ const ibsData = {
   trending: true,
   searchVolume: 13500,
   lastUpdated: '2024-01-15',
-  commonRemedies: ['Nux Vomica', 'Colocynthis', 'Lycopodium', 'Aloe Socotrina']
+  commonRemedies: ['Nux Vomica', 'Colocynthis', 'Lycopodium', 'Aloe Socotrina'],
+  keywords: ['IBS', 'irritable bowel syndrome', 'digestive problems', 'bowel disorders', 'stomach issues']
 };
 
 const IBSPage = () => {
