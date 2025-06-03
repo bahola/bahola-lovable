@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -87,6 +86,14 @@ const BachFlowerConcerns = React.lazy(() => import('./pages/BachFlowerConcerns')
 
 // Add the new lazy import for AllergiesProductsPage
 const AllergiesProductsPage = React.lazy(() => import('./pages/AllergiesProductsPage'));
+
+// Add new lazy imports for disease-specific pages
+const AsthmaPage = React.lazy(() => import('./pages/health-concerns/allergies/AsthmaPage'));
+const EczemaPage = React.lazy(() => import('./pages/health-concerns/allergies/EczemaPage'));
+const FoodAllergiesPage = React.lazy(() => import('./pages/health-concerns/allergies/FoodAllergiesPage'));
+const PanicDisorderPage = React.lazy(() => import('./pages/health-concerns/anxiety/PanicDisorderPage'));
+const GeneralizedAnxietyPage = React.lazy(() => import('./pages/health-concerns/anxiety/GeneralizedAnxietyPage'));
+const IBSPage = React.lazy(() => import('./pages/health-concerns/digestive/IBSPage'));
 
 const queryClient = new QueryClient();
 
@@ -187,6 +194,14 @@ function App() {
                       <Route path="/concern/eye-problems" element={<EyeProblems />} />
                       <Route path="/concern/high-blood-pressure" element={<HighBloodPressure />} />
                       <Route path="/concern/diabetes-support" element={<DiabetesSupport />} />
+                      
+                      {/* Disease-specific routes under concerns */}
+                      <Route path="/concern/allergies-hay-fever/asthma" element={<AsthmaPage />} />
+                      <Route path="/concern/allergies-hay-fever/eczema" element={<EczemaPage />} />
+                      <Route path="/concern/allergies-hay-fever/food-allergies" element={<FoodAllergiesPage />} />
+                      <Route path="/concern/anxiety-stress/panic-disorder" element={<PanicDisorderPage />} />
+                      <Route path="/concern/anxiety-stress/generalized-anxiety" element={<GeneralizedAnxietyPage />} />
+                      <Route path="/concern/digestive-issues/ibs" element={<IBSPage />} />
                       
                       {/* Search routes with dynamic parameters */}
                       <Route path="/search" element={<Shop />} />
