@@ -20,6 +20,7 @@ import ProductNotFound from '@/components/product/ProductNotFound';
 import { useProductData } from '@/components/product/useProductData';
 import { Skeleton } from '@/components/ui/skeleton';
 import ProductReviews from '@/components/product/ProductReviews';
+import { Shield, Truck, RotateCcw, Award } from 'lucide-react';
 
 const ProductPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -226,19 +227,23 @@ const ProductPage = () => {
   };
 
   
-  // Loading state
+  // Loading state with enhanced skeleton
   if (loading) {
     return (
       <PageLayout title="Loading Product..." description="Please wait while we load the product details">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ProductImagesLoading />
-          <div className="space-y-4">
-            <Skeleton className="h-10 w-3/4" />
-            <Skeleton className="h-6 w-1/2" />
-            <Skeleton className="h-6 w-1/4" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+        <div className="bg-gradient-to-br from-gray-50 to-white min-h-screen">
+          <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <ProductImagesLoading />
+              <div className="space-y-6">
+                <Skeleton className="h-12 w-3/4" />
+                <Skeleton className="h-6 w-1/2" />
+                <Skeleton className="h-8 w-1/4" />
+                <Skeleton className="h-32 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </div>
           </div>
         </div>
       </PageLayout>
@@ -254,88 +259,141 @@ const ProductPage = () => {
   
   return (
     <PageLayout title={product.name} description={product.description}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Product Images */}
-        <ProductImages 
-          image={product.image} 
-          images={product.images} 
-          productName={product.name}
-        />
-        
-        {/* Product Details */}
-        <div>
-          <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+      {/* Enhanced gradient background */}
+      <div className="bg-gradient-to-br from-gray-50 via-blue-50/30 to-white min-h-screen">
+        <div className="container mx-auto px-4 py-8">
           
-          <ProductRating 
-            rating={product.rating}
-            reviewCount={product.reviewCount}
-            stock={currentStock}
-          />
-          
-          <ProductPrice 
-            price={product.price}
-            selectedPrice={selectedVariation?.price}
-            originalPrice={product.originalPrice}
-            discountPercentage={product.discountPercentage}
-          />
-          
-          {/* Short Description */}
-          <div className="mb-6">
-            <p className="text-bahola-neutral-700">{product.shortDescription}</p>
+          {/* Breadcrumb Navigation */}
+          <nav className="text-sm text-gray-600 mb-8 flex items-center space-x-2">
+            <span className="hover:text-bahola-blue-600 cursor-pointer transition-colors">Home</span>
+            <span>/</span>
+            <span className="hover:text-bahola-blue-600 cursor-pointer transition-colors">Products</span>
+            <span>/</span>
+            <span className="hover:text-bahola-blue-600 cursor-pointer transition-colors">{product.category}</span>
+            <span>/</span>
+            <span className="text-gray-900 font-medium">{product.name}</span>
+          </nav>
+
+          {/* Main Product Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            {/* Enhanced Product Images with hover effects */}
+            <div className="transform transition-all duration-300 hover:scale-[1.02]">
+              <ProductImages 
+                image={product.image} 
+                images={product.images} 
+                productName={product.name}
+              />
+            </div>
+            
+            {/* Enhanced Product Details with modern cards */}
+            <div className="space-y-8">
+              {/* Product Header Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all duration-300">
+                <h1 className="text-4xl font-bold mb-4 text-gray-900 leading-tight">{product.name}</h1>
+                
+                <ProductRating 
+                  rating={product.rating}
+                  reviewCount={product.reviewCount}
+                  stock={currentStock}
+                />
+                
+                <ProductPrice 
+                  price={product.price}
+                  selectedPrice={selectedVariation?.price}
+                  originalPrice={product.originalPrice}
+                  discountPercentage={product.discountPercentage}
+                />
+
+                {/* Trust Badges */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                    <Shield className="h-4 w-4" />
+                    <span>100% Authentic</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-blue-600 bg-blue-50 p-3 rounded-lg">
+                    <Truck className="h-4 w-4" />
+                    <span>Free Delivery</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-purple-600 bg-purple-50 p-3 rounded-lg">
+                    <RotateCcw className="h-4 w-4" />
+                    <span>Easy Returns</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
+                    <Award className="h-4 w-4" />
+                    <span>Premium Quality</span>
+                  </div>
+                </div>
+                
+                {/* Short Description */}
+                <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-bahola-blue-500">
+                  <p className="text-gray-700 leading-relaxed">{product.shortDescription}</p>
+                </div>
+              </div>
+
+              {/* Product Options Card */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all duration-300">
+                <div className="mb-6">
+                  <h2 className="font-semibold mb-4 text-lg text-gray-900">Product Details</h2>
+                  <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                </div>
+                
+                {/* Only show ProductSpecs if there are variations (variable product) */}
+                {product.variations && product.variations.length > 0 && (
+                  <ProductSpecs potency={product.potency} brand={product.brand} />
+                )}
+                
+                <ProductVariations 
+                  variations={product.variations} 
+                  onVariationSelect={handleVariationSelect}
+                />
+                
+                <ProductQuantity 
+                  quantity={quantity} 
+                  stock={currentStock}
+                  setQuantity={setQuantity}
+                />
+                
+                <ProductActions 
+                  product={{
+                    id: String(product.id),
+                    name: product.name,
+                    price: selectedVariation?.price || product.price,
+                    originalPrice: product.originalPrice,
+                    discountPercentage: product.discountPercentage,
+                    image: product.image,
+                    stock: currentStock
+                  }}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  handleAddToCart={handleAddToCart}
+                  isOutOfStock={currentStock <= 0}
+                />
+              </div>
+
+              {/* Shipping Info Card */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-6">
+                <ProductShipping shippingInfo={product.shipping} />
+              </div>
+            </div>
           </div>
           
-          <div className="mb-6">
-            <h2 className="font-semibold mb-2">Description</h2>
-            <p className="text-bahola-neutral-700">{product.description}</p>
+          {/* Enhanced Product Details Tabs */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-16 hover:shadow-xl transition-all duration-300">
+            <ProductTabs 
+              benefits={product.benefits}
+              usage={product.usage}
+              ingredients={product.ingredients}
+              reviewCount={product.reviewCount}
+              productId={product.id}
+            />
           </div>
           
-          {/* Only show ProductSpecs if there are variations (variable product) */}
-          {product.variations && product.variations.length > 0 && (
-            <ProductSpecs potency={product.potency} brand={product.brand} />
-          )}
-          
-          <ProductVariations 
-            variations={product.variations} 
-            onVariationSelect={handleVariationSelect}
-          />
-          
-          <ProductQuantity 
-            quantity={quantity} 
-            stock={currentStock}
-            setQuantity={setQuantity}
-          />
-          
-          <ProductActions 
-            product={{
-              id: String(product.id),
-              name: product.name,
-              price: selectedVariation?.price || product.price,
-              originalPrice: product.originalPrice,
-              discountPercentage: product.discountPercentage,
-              image: product.image,
-              stock: currentStock
-            }}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            handleAddToCart={handleAddToCart}
-            isOutOfStock={currentStock <= 0}
-          />
-          
-          <ProductShipping shippingInfo={product.shipping} />
+          {/* Enhanced Related Products Section */}
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-2xl p-8">
+            <RelatedProducts />
+          </div>
         </div>
       </div>
-      
-      {/* Product Details Tabs */}
-      <ProductTabs 
-        benefits={product.benefits}
-        usage={product.usage}
-        ingredients={product.ingredients}
-        reviewCount={product.reviewCount}
-        productId={product.id}
-      />
-      
-      {/* Related Products Section */}
-      <RelatedProducts />
     </PageLayout>
   );
 };
