@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ImageOff } from 'lucide-react';
@@ -23,14 +22,16 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
     setThumbnailErrors(prev => ({ ...prev, [index]: true }));
   };
 
-  // Check if we have a valid image URL - be more specific about what's invalid
+  // Enhanced validation for Supabase bucket URLs and external URLs
   const isValidImageUrl = (url: string) => {
     return url && 
            url.trim() !== '' && 
            url !== '/placeholder.svg' && 
            url !== 'null' && 
            url !== 'undefined' &&
-           url.startsWith('http');
+           (url.startsWith('http') || 
+            url.startsWith('https://vjkhsdwavbswcoyfgyvg.supabase.co/storage') ||
+            url.startsWith('https://'));
   };
 
   const hasValidImage = isValidImageUrl(image);
@@ -38,11 +39,12 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
   // Use the main image if it's valid, otherwise show placeholder
   const displayImage = hasValidImage ? image : null;
   
-  // For thumbnails, only show if we have valid images
+  // For thumbnails, only show if we have valid images (prioritize Supabase bucket URLs)
   const validImages = images?.filter(img => isValidImageUrl(img)) || [];
   const displayImages = hasValidImage ? [image, ...validImages.slice(0, 2)] : validImages.slice(0, 3);
 
   console.log('ProductImages - image:', image, 'hasValidImage:', hasValidImage, 'displayImage:', displayImage);
+  console.log('ProductImages - valid images from bucket:', validImages);
 
   return (
     <div>
@@ -52,7 +54,9 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
             <ImageOff className="h-16 w-16 text-gray-400 mb-2" />
             <p className="text-sm text-gray-500">Image not available</p>
             {image && !hasValidImage && (
-              <p className="text-xs text-gray-400 mt-1">Invalid image URL: {image}</p>
+              <p className="text-xs text-gray-400 mt-1 text-center px-2">
+                {image.includes('supabase.co') ? 'Bucket image not found' : 'Invalid image URL'}
+              </p>
             )}
           </div>
         ) : (
@@ -61,6 +65,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
             alt={productName} 
             className="w-full h-full object-contain"
             onError={handleMainImageError}
+            loading="lazy"
           />
         )}
       </div>
@@ -80,6 +85,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({ image, images, productNam
                   alt={`${productName} view ${index + 1}`} 
                   className="w-full h-full object-contain"
                   onError={() => handleThumbnailError(index)}
+                  loading="lazy"
                 />
               )}
             </div>
