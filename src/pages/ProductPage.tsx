@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/contexts/CartContext';
+import { supabase } from '@/integrations/supabase/client';
 
 // Import refactored components
 import ProductImages, { ProductImagesLoading } from '@/components/product/ProductImages';
