@@ -166,14 +166,22 @@
     100% { background-position: -200% 0; }
   }
 
-  /* Fixed mega menu styles */
+  /* Enhanced mega menu styles with better visibility */
   .mega-menu {
-    @apply absolute opacity-0 invisible bg-white shadow-lg border border-gray-200 transition-all duration-300 transform translate-y-2 z-50;
-    width: 400px;
-    left: 0;
+    position: absolute;
     top: 100%;
-    /* Optimize for better performance */
-    will-change: transform, opacity;
+    left: 0;
+    width: 400px;
+    background: white;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s ease-out;
+    z-index: 9999;
+    pointer-events: none;
   }
 
   .mega-menu.mega-menu-full {
@@ -181,12 +189,15 @@
     width: 90vw !important;
     max-width: 1200px !important;
     left: 50% !important;
-    transform: translateX(-50%) translateY(2px) !important;
+    transform: translateX(-50%) translateY(10px) !important;
     z-index: 9999 !important;
   }
 
   .mega-menu.mega-menu-open {
-    @apply opacity-100 visible translate-y-0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   .mega-menu-full.mega-menu-open {
