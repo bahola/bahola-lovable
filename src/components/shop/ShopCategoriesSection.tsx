@@ -1,63 +1,117 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Package, Droplets, Heart, Pill, Leaf, Users } from 'lucide-react';
+import { ArrowRight, Brain, Wheat, Bug, Heart, Droplets, Users, Dumbbell, Baby, Eye, Activity, Thermometer, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const categories = [
   {
-    id: 'mother-tinctures',
-    name: 'Mother Tinctures',
-    description: 'Foundation remedies prepared from finest raw materials',
-    icon: Droplets,
-    count: 120,
-    color: 'bg-blue-50 text-blue-600',
-    link: '/products/mother-tinctures'
-  },
-  {
-    id: 'dilutions',
-    name: 'Dilutions',
-    description: 'Potentized remedies for various therapeutic needs',
-    icon: Package,
-    count: 230,
-    color: 'bg-green-50 text-green-600',
-    link: '/products/dilutions'
-  },
-  {
-    id: 'biochemics',
-    name: 'Biochemics',
-    description: 'Cell salts for optimal cellular function',
-    icon: Pill,
-    count: 35,
-    color: 'bg-purple-50 text-purple-600',
-    link: '/products/biochemics'
-  },
-  {
-    id: 'bach-flower',
-    name: 'Bach Flower',
-    description: 'Natural solutions for emotional wellbeing',
-    icon: Heart,
-    count: 38,
-    color: 'bg-pink-50 text-pink-600',
-    link: '/products/bach-flower'
-  },
-  {
-    id: 'combinations',
-    name: 'Combinations',
-    description: 'Specially formulated remedy combinations',
-    icon: Leaf,
+    id: 'anxiety-stress',
+    name: 'Anxiety & Stress',
+    description: 'Natural remedies for managing anxiety and stress-related conditions',
+    icon: Brain,
     count: 45,
-    color: 'bg-emerald-50 text-emerald-600',
-    link: '/products/combinations'
+    color: 'bg-blue-50 text-blue-600',
+    link: '/concern/anxiety-stress'
   },
   {
-    id: 'family-care',
-    name: 'Family Care',
-    description: 'Complete health solutions for the entire family',
-    icon: Users,
-    count: 60,
+    id: 'digestive-issues',
+    name: 'Digestive Issues',
+    description: 'Homeopathic solutions for digestive health and gut wellness',
+    icon: Wheat,
+    count: 52,
+    color: 'bg-green-50 text-green-600',
+    link: '/concern/digestive-issues'
+  },
+  {
+    id: 'allergies-hay-fever',
+    name: 'Allergies & Hay Fever',
+    description: 'Effective remedies for allergic reactions and seasonal allergies',
+    icon: Bug,
+    count: 38,
+    color: 'bg-purple-50 text-purple-600',
+    link: '/concern/allergies-hay-fever'
+  },
+  {
+    id: 'cold-flu',
+    name: 'Cold & Flu',
+    description: 'Natural immune support for cold and flu symptoms',
+    icon: Heart,
+    count: 42,
+    color: 'bg-pink-50 text-pink-600',
+    link: '/concern/cold-flu'
+  },
+  {
+    id: 'skin-conditions',
+    name: 'Skin Conditions',
+    description: 'Gentle remedies for various skin health concerns',
+    icon: Droplets,
+    count: 35,
+    color: 'bg-emerald-50 text-emerald-600',
+    link: '/concern/skin-conditions'
+  },
+  {
+    id: 'joint-pain-arthritis',
+    name: 'Joint Pain & Arthritis',
+    description: 'Pain relief and mobility support for joint health',
+    icon: Dumbbell,
+    count: 40,
     color: 'bg-orange-50 text-orange-600',
-    link: '/products/family-care'
+    link: '/concern/joint-pain-arthritis'
+  },
+  {
+    id: 'womens-health',
+    name: 'Women\'s Health',
+    description: 'Specialized care for women\'s health concerns',
+    icon: Users,
+    count: 48,
+    color: 'bg-rose-50 text-rose-600',
+    link: '/concern/womens-health'
+  },
+  {
+    id: 'childrens-health',
+    name: 'Children\'s Health',
+    description: 'Safe and gentle remedies for children\'s wellness',
+    icon: Baby,
+    count: 33,
+    color: 'bg-cyan-50 text-cyan-600',
+    link: '/concern/childrens-health'
+  },
+  {
+    id: 'insomnia-sleep-disorders',
+    name: 'Sleep Disorders',
+    description: 'Natural solutions for better sleep and rest',
+    icon: Shield,
+    count: 28,
+    color: 'bg-indigo-50 text-indigo-600',
+    link: '/concern/insomnia-sleep-disorders'
+  },
+  {
+    id: 'eye-problems',
+    name: 'Eye Problems',
+    description: 'Gentle care for various eye health concerns',
+    icon: Eye,
+    count: 25,
+    color: 'bg-teal-50 text-teal-600',
+    link: '/concern/eye-problems'
+  },
+  {
+    id: 'high-blood-pressure',
+    name: 'High Blood Pressure',
+    description: 'Natural support for cardiovascular health',
+    icon: Activity,
+    count: 30,
+    color: 'bg-red-50 text-red-600',
+    link: '/concern/high-blood-pressure'
+  },
+  {
+    id: 'headaches-migraines',
+    name: 'Headaches & Migraines',
+    description: 'Relief for headaches and migraine symptoms',
+    icon: Thermometer,
+    count: 32,
+    color: 'bg-yellow-50 text-yellow-600',
+    link: '/concern/headaches-migraines'
   }
 ];
 
@@ -67,10 +121,10 @@ export const ShopCategoriesSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-bahola-navy-950 mb-4">
-            Shop by Category
+            Shop by Health Concern
           </h2>
           <p className="text-lg text-bahola-neutral-600 max-w-2xl mx-auto">
-            Explore our comprehensive range of homeopathic products, each carefully crafted to support your health and wellness journey.
+            Find targeted homeopathic solutions for your specific health concerns. Our remedies are carefully selected to support your wellness journey.
           </p>
         </div>
 
@@ -88,7 +142,7 @@ export const ShopCategoriesSection = () => {
                     <IconComponent size={24} />
                   </div>
                   <span className="text-sm text-bahola-neutral-500 bg-bahola-neutral-100 px-2 py-1 rounded-full">
-                    {category.count} products
+                    {category.count} remedies
                   </span>
                 </div>
                 
@@ -101,7 +155,7 @@ export const ShopCategoriesSection = () => {
                 </p>
                 
                 <div className="flex items-center text-bahola-blue-600 font-medium group-hover:translate-x-1 transition-transform">
-                  <span className="mr-2">Shop Now</span>
+                  <span className="mr-2">Explore Remedies</span>
                   <ArrowRight size={16} />
                 </div>
               </Link>
@@ -111,8 +165,8 @@ export const ShopCategoriesSection = () => {
 
         <div className="text-center">
           <Button asChild className="btn-bahola text-lg px-8 py-3">
-            <Link to="/products">
-              View All Categories
+            <Link to="/health-concerns">
+              View All Health Concerns
               <ArrowRight size={18} className="ml-2" />
             </Link>
           </Button>

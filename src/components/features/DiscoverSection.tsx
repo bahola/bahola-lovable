@@ -1,16 +1,16 @@
 
 import React from 'react';
-import { Bug, Wheat, Brain, Pill, Droplets, Heart, Dumbbell, Baby } from 'lucide-react';
+import { Brain, Wheat, Bug, Heart, Droplets, Dumbbell, Users, Baby, Eye, Activity, Thermometer, Shield } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 
 export const DiscoverSection = () => {
   const concerns = [
     { 
-      name: 'Allergies & Hay Fever', 
-      icon: <Bug size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
-      route: '/concern/allergies-hay-fever'
+      name: 'Anxiety & Stress', 
+      icon: <Brain size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+      route: '/concern/anxiety-stress'
     },
     { 
       name: 'Digestive Issues', 
@@ -19,28 +19,22 @@ export const DiscoverSection = () => {
       route: '/concern/digestive-issues'
     },
     { 
-      name: 'Anxiety & Stress', 
-      icon: <Brain size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
-      route: '/concern/anxiety-stress'
-    },
-    { 
-      name: 'Sleep Disorders', 
-      icon: <Pill size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
-      route: '/concern/insomnia-sleep-disorders'
-    },
-    { 
-      name: 'Skin Conditions', 
-      icon: <Droplets size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
-      route: '/concern/skin-conditions'
+      name: 'Allergies & Hay Fever', 
+      icon: <Bug size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
+      route: '/concern/allergies-hay-fever'
     },
     { 
       name: 'Cold & Flu', 
       icon: <Heart size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
       route: '/concern/cold-flu'
+    },
+    { 
+      name: 'Skin Conditions', 
+      icon: <Droplets size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
+      route: '/concern/skin-conditions'
     },
     { 
       name: 'Joint Pain & Arthritis', 
@@ -50,10 +44,40 @@ export const DiscoverSection = () => {
     },
     { 
       name: 'Women\'s Health', 
-      icon: <Baby size={32} className="mb-2" />, 
+      icon: <Users size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
       route: '/concern/womens-health'
     },
+    { 
+      name: 'Children\'s Health', 
+      icon: <Baby size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+      route: '/concern/childrens-health'
+    },
+    { 
+      name: 'Sleep Disorders', 
+      icon: <Shield size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+      route: '/concern/insomnia-sleep-disorders'
+    },
+    { 
+      name: 'Eye Problems', 
+      icon: <Eye size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
+      route: '/concern/eye-problems'
+    },
+    { 
+      name: 'High Blood Pressure', 
+      icon: <Activity size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+      route: '/concern/high-blood-pressure'
+    },
+    { 
+      name: 'Headaches & Migraines', 
+      icon: <Thermometer size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+      route: '/concern/headaches-migraines'
+    }
   ];
   
   return (
@@ -61,7 +85,7 @@ export const DiscoverSection = () => {
       <div className="container mx-auto px-4">
         <h2 className="section-title">Discover Homeopathic Remedies by Condition</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {concerns.map((concern) => (
+          {concerns.slice(0, 8).map((concern) => (
             <Link 
               key={concern.name}
               to={concern.route}
