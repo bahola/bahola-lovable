@@ -1,79 +1,79 @@
 
 import React from 'react';
-import { Brain, Wheat, Bug, Heart, Droplets, Dumbbell, Users, Baby, Eye, Activity, Thermometer, Shield } from 'lucide-react';
+import { Brain, Wheat, Bug, Heart, Droplets, Dumbbell, Users, Baby, Eye, Activity, Thermometer, Shield, Pill, Ear, Flower, BadgePlus, BugPlay, Apple, Wind, Banana, Smile } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 
 export const DiscoverSection = () => {
   const concerns = [
     { 
-      name: 'Anxiety & Stress', 
-      icon: <Brain size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
-      route: '/concern/anxiety-stress'
-    },
-    { 
-      name: 'Digestive Issues', 
-      icon: <Wheat size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
-      route: '/concern/digestive-issues'
-    },
-    { 
-      name: 'Allergies & Hay Fever', 
+      name: 'Allergies', 
       icon: <Bug size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
       route: '/concern/allergies-hay-fever'
     },
     { 
-      name: 'Cold & Flu', 
+      name: 'Cancer', 
+      icon: <Pill size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+      route: '/concern/cancer'
+    },
+    { 
+      name: 'Heart Health', 
       icon: <Heart size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-      route: '/concern/cold-flu'
+      route: '/concern/high-blood-pressure'
     },
     { 
-      name: 'Skin Conditions', 
-      icon: <Droplets size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
-      route: '/concern/skin-conditions'
-    },
-    { 
-      name: 'Joint Pain & Arthritis', 
-      icon: <Dumbbell size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
-      route: '/concern/joint-pain-arthritis'
-    },
-    { 
-      name: 'Women\'s Health', 
-      icon: <Users size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
-      route: '/concern/womens-health'
-    },
-    { 
-      name: 'Children\'s Health', 
+      name: 'Child Care', 
       icon: <Baby size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
       route: '/concern/childrens-health'
     },
     { 
-      name: 'Sleep Disorders', 
-      icon: <Shield size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
-      route: '/concern/insomnia-sleep-disorders'
+      name: 'Ear Nose Throat', 
+      icon: <Ear size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+      route: '/concern/cold-flu'
     },
     { 
-      name: 'Eye Problems', 
+      name: 'Eye Care', 
       icon: <Eye size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
       route: '/concern/eye-problems'
     },
     { 
-      name: 'High Blood Pressure', 
-      icon: <Activity size={32} className="mb-2" />, 
-      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
-      route: '/concern/high-blood-pressure'
+      name: 'Gut Health', 
+      icon: <Wheat size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+      route: '/concern/digestive-issues'
     },
     { 
-      name: 'Headaches & Migraines', 
+      name: 'Womens Care', 
+      icon: <Users size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07",
+      route: '/concern/womens-health'
+    },
+    { 
+      name: 'Hair Care', 
+      icon: <Flower size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
+      route: '/concern/hair-care'
+    },
+    { 
+      name: 'Mental health', 
+      icon: <Brain size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b",
+      route: '/concern/anxiety-stress'
+    },
+    { 
+      name: 'Muscle & Joint Care', 
+      icon: <Dumbbell size={32} className="mb-2" />, 
+      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
+      route: '/concern/joint-pain-arthritis'
+    },
+    { 
+      name: 'Pain Care', 
       icon: <Thermometer size={32} className="mb-2" />, 
       image: "https://images.unsplash.com/photo-1472396961693-142e6e269027",
       route: '/concern/headaches-migraines'
