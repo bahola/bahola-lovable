@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -76,15 +75,17 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 1rem; /* Updated to 16pt equivalent */
+    font-size: 1rem;
     line-height: 1.5;
+    font-display: swap; /* Improve font loading */
   }
 
-  /* Brand Book Typography Implementation */
+  /* Brand Book Typography Implementation with font-display: swap */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    font-display: swap;
   }
 
   /* H1 - Large Headlines & Elegant Emphasis (Helvetica Neue Light 300) */
@@ -206,12 +207,13 @@
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  /* Brand Book Typography Classes with specific sizing */
+  /* Brand Book Typography Classes with font-display: swap */
   .brand-headline {
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 300;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    font-display: swap;
   }
 
   .brand-title {
@@ -219,6 +221,7 @@
     font-weight: 400;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    font-display: swap;
   }
 
   .brand-subtitle {
@@ -226,6 +229,7 @@
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    font-display: swap;
   }
 
   .brand-emphasis {
@@ -233,19 +237,22 @@
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    font-display: swap;
   }
 
-  /* Proxima Nova body text with brand book specifications - Updated to 16pt */
+  /* Proxima Nova body text with font-display: swap */
   .brand-body {
     font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 1rem; /* Updated to 16pt equivalent */
-    line-height: 1.5; /* 1.4-1.6 for optimal readability */
+    font-size: 1rem;
+    line-height: 1.5;
+    font-display: swap;
   }
   
   .brand-body-fine {
     font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 0.875rem; /* 14pt for fine print */
-    line-height: 1.4; /* 1.4-1.6 for optimal readability */
+    font-size: 0.875rem;
+    line-height: 1.4;
+    font-display: swap;
   }
 
   .section-title {

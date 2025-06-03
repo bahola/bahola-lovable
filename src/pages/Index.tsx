@@ -3,13 +3,12 @@ import React from 'react';
 import { SEO } from '@/components/SEO';
 import { ShopHeroCarousel } from '@/components/shop/ShopHeroCarousel';
 import { SearchActionBar } from '@/components/SearchActionBar';
+import { ConsultSection, DiscoverSection } from '@/components/features';
 import { 
-  ConsultSection, 
-  DiscoverSection, 
-  FeaturedProductsSection, 
-  AboutSection,
-  TestimonialsSection 
-} from '@/components/features';
+  LazyFeaturedProductsSection, 
+  LazyTestimonialsSection, 
+  LazyAboutSection 
+} from '@/components/LazyFeatures';
 
 const Index = () => {
   const structuredData = {
@@ -87,13 +86,17 @@ const Index = () => {
         url="/"
         structuredData={structuredData}
       />
+      
+      {/* Critical above-the-fold content loads immediately */}
       <ShopHeroCarousel />
       <SearchActionBar />
       <ConsultSection />
       <DiscoverSection />
-      <FeaturedProductsSection />
-      <AboutSection />
-      <TestimonialsSection />
+      
+      {/* Heavy components load lazily */}
+      <LazyFeaturedProductsSection />
+      <LazyAboutSection />
+      <LazyTestimonialsSection />
     </>
   );
 };
