@@ -40,8 +40,8 @@ const HealthConcerns = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "MedicalWebPage",
-    "name": "Health Concerns & Homeopathic Solutions",
-    "description": "Comprehensive guide to natural homeopathic treatments for various health conditions including anxiety, digestive issues, skin problems, and more.",
+    "name": "Diseases & Homeopathic Solutions",
+    "description": "Comprehensive guide to natural homeopathic treatments for various diseases and health conditions including anxiety, digestive issues, skin problems, and more.",
     "url": "https://bahola-labs.lovable.app/health-concerns",
     "medicalAudience": {
       "@type": "MedicalAudience",
@@ -56,10 +56,10 @@ const HealthConcerns = () => {
 
   return (
     <PageLayout 
-      title="Health Concerns & Homeopathic Solutions" 
-      description="Discover natural remedies for your health concerns with our comprehensive guide to homeopathic treatments for anxiety, digestive issues, skin conditions, and more."
+      title="Diseases & Homeopathic Solutions" 
+      description="Discover natural remedies for diseases with our comprehensive guide to homeopathic treatments for anxiety, digestive issues, skin conditions, and more."
       keywords={[
-        'health concerns',
+        'diseases',
         'homeopathic solutions',
         'natural remedies',
         'anxiety treatment',
@@ -77,16 +77,16 @@ const HealthConcerns = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Health Concerns & Homeopathic Solutions
+              Diseases & Homeopathic Solutions
             </h1>
             <p className="text-xl md:text-2xl mb-6 text-blue-100">
-              Discover natural remedies for your health concerns with our comprehensive guide to homeopathic treatments
+              Discover natural remedies for diseases with our comprehensive guide to homeopathic treatments
             </p>
             <div className="flex flex-col md:flex-row gap-4 items-center">
               <div className="relative flex-1 max-w-md">
                 <Input
                   type="text"
-                  placeholder="Search health concerns..."
+                  placeholder="Search diseases..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-4 py-3 text-gray-900 rounded-lg"
@@ -105,7 +105,7 @@ const HealthConcerns = () => {
         <div className="container mx-auto">
           {/* Breadcrumb */}
           <nav className="text-sm text-gray-600 mb-6">
-            <span>Home</span> / <span className="text-gray-900">Health Concerns</span>
+            <span>Home</span> / <span className="text-gray-900">Diseases</span>
           </nav>
 
           <div className="flex flex-col lg:flex-row gap-8">
@@ -132,7 +132,7 @@ const HealthConcerns = () => {
                       Filters
                     </Button>
                     <span className="text-gray-600">
-                      {sortedConcerns.length} concerns found
+                      {sortedConcerns.length} diseases found
                     </span>
                   </div>
                   
@@ -191,7 +191,7 @@ const HealthConcerns = () => {
 
               {sortedConcerns.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No health concerns found matching your criteria.</p>
+                  <p className="text-gray-500 text-lg">No diseases found matching your criteria.</p>
                   <Button
                     variant="outline"
                     onClick={() => {
