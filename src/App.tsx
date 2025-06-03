@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -82,6 +81,9 @@ const EyeProblems = React.lazy(() => import('./pages/health-concerns/EyeProblems
 const HighBloodPressure = React.lazy(() => import('./pages/health-concerns/HighBloodPressure'));
 const DiabetesSupport = React.lazy(() => import('./pages/health-concerns/DiabetesSupport'));
 
+// Import BachFlowerConcerns component for new route
+const BachFlowerConcerns = React.lazy(() => import('./pages/BachFlowerConcerns'));
+
 const queryClient = new QueryClient();
 
 // Loading component for Suspense fallback
@@ -118,6 +120,7 @@ function App() {
                       <Route path="/book-appointment" element={<AppointmentBooking />} />
                       <Route path="/homeopathy" element={<Homeopathy />} />
                       <Route path="/health-concerns" element={<HealthConcerns />} />
+                      <Route path="/bach-flower-concerns" element={<BachFlowerConcerns />} />
                       <Route path="/help-center" element={<HelpCenter />} />
                       <Route path="/store-locator" element={<StoreLocator />} />
                       <Route path="/stores" element={<StoreLocator />} />
