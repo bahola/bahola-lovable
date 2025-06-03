@@ -21,6 +21,7 @@ import NotFound from './pages/NotFound';
 const Shop = React.lazy(() => import('./pages/Shop'));
 const About = React.lazy(() => import('./pages/About'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
+const CategoryOverview = React.lazy(() => import('./pages/CategoryOverview'));
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const Contact = React.lazy(() => import('./pages/Contact'));
 const Register = React.lazy(() => import('./pages/Register'));
@@ -44,6 +45,11 @@ const HelpCenterManagement = React.lazy(() => import('./pages/admin/HelpCenterMa
 const DoctorSchedule = React.lazy(() => import('./pages/DoctorSchedule'));
 const HealthConcerns = React.lazy(() => import('./pages/HealthConcerns'));
 const Sitemap = React.lazy(() => import('./pages/Sitemap'));
+const Cart = React.lazy(() => import('./pages/Cart'));
+const Wishlist = React.lazy(() => import('./pages/Wishlist'));
+const OrderTracking = React.lazy(() => import('./pages/OrderTracking'));
+const Reviews = React.lazy(() => import('./pages/Reviews'));
+const PromoOffers = React.lazy(() => import('./pages/PromoOffers'));
 
 // Lazy load help center pages
 const GettingStarted = React.lazy(() => import('./pages/help-center/GettingStarted'));
@@ -103,6 +109,8 @@ function App() {
                       <Route path="/about" element={<About />} />
                       <Route path="/products" element={<CategoryPage />} />
                       <Route path="/products/:categorySlug" element={<CategoryPage />} />
+                      <Route path="/categories" element={<CategoryOverview />} />
+                      <Route path="/category/:categorySlug" element={<CategoryPage />} />
                       <Route path="/product/:productSlug" element={<ProductPage />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/consultation" element={<Consultation />} />
@@ -110,16 +118,33 @@ function App() {
                       <Route path="/health-concerns" element={<HealthConcerns />} />
                       <Route path="/help-center" element={<HelpCenter />} />
                       <Route path="/store-locator" element={<StoreLocator />} />
+                      <Route path="/stores" element={<StoreLocator />} />
                       <Route path="/register" element={<Register />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/account" element={<UserAccount />} />
                       <Route path="/video-consultation" element={<VideoConsultation />} />
                       <Route path="/appointment-booking" element={<AppointmentBooking />} />
+                      
+                      {/* Policy pages with multiple route aliases */}
                       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                      <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/terms-conditions" element={<TermsConditions />} />
+                      <Route path="/terms" element={<TermsConditions />} />
                       <Route path="/returns-policy" element={<ReturnPolicy />} />
+                      <Route path="/return-policy" element={<ReturnPolicy />} />
                       <Route path="/shipping-policy" element={<ShippingInfo />} />
+                      <Route path="/shipping-info" element={<ShippingInfo />} />
+                      <Route path="/shipping" element={<ShippingInfo />} />
+                      
+                      {/* Cart and user-related pages */}
+                      <Route path="/cart" element={<Cart />} />
+                      <Route path="/my-list" element={<Wishlist />} />
+                      <Route path="/wishlist" element={<Wishlist />} />
+                      <Route path="/track-order" element={<OrderTracking />} />
+                      <Route path="/reviews" element={<Reviews />} />
+                      <Route path="/promo-pocket" element={<PromoOffers />} />
+                      
                       <Route path="/sitemap" element={<Sitemap />} />
                       <Route path="/join-consultation/:appointmentId" element={<></>} />
                       <Route path="/video-room/:roomId" element={<></>} />
@@ -154,6 +179,9 @@ function App() {
                       <Route path="/concern/eye-problems" element={<EyeProblems />} />
                       <Route path="/concern/high-blood-pressure" element={<HighBloodPressure />} />
                       <Route path="/concern/diabetes-support" element={<DiabetesSupport />} />
+                      
+                      {/* Search routes with dynamic parameters */}
+                      <Route path="/search" element={<Shop />} />
                       
                       {/* Doctor Routes */}
                       <Route path="/doctor/schedule" element={

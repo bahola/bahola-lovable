@@ -32,14 +32,14 @@ export const TopBar: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <a href="/my-list" className="top-menu-item flex items-center space-x-1">
+          <Link to="/my-list" className="top-menu-item flex items-center space-x-1">
             <Heart size={14} />
             <span>My List</span>
-          </a>
-          <a href="/promo-pocket" className="top-menu-item flex items-center space-x-1">
+          </Link>
+          <Link to="/promo-pocket" className="top-menu-item flex items-center space-x-1">
             <Gift size={14} />
             <span>Promo Pocket</span>
-          </a>
+          </Link>
           <Link to="/register" className="top-menu-item flex items-center space-x-1">
             <Mail size={14} />
             <span>Email Signup</span>

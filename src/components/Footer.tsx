@@ -45,12 +45,12 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4 text-bahola-navy-950">Shop By Concern</h3>
             <ul className="space-y-2">
-              <li><Link to="/search?concern=Allergies" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Allergies</Link></li>
-              <li><Link to="/search?concern=Digestive%20Health" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Digestive Health</Link></li>
-              <li><Link to="/search?concern=Respiratory%20Care" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Respiratory Care</Link></li>
-              <li><Link to="/search?concern=Skin%20Care" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Skin Care</Link></li>
-              <li><Link to="/search?concern=Sleep%20%26%20Stress" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Sleep & Stress</Link></li>
-              <li><Link to="/search?concern=Immunity%20Support" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Immunity Support</Link></li>
+              <li><Link to="/concern/allergies-hay-fever" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Allergies</Link></li>
+              <li><Link to="/concern/digestive-issues" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Digestive Health</Link></li>
+              <li><Link to="/concern/cold-flu" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Respiratory Care</Link></li>
+              <li><Link to="/concern/skin-conditions" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Skin Care</Link></li>
+              <li><Link to="/concern/anxiety-stress" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Sleep & Stress</Link></li>
+              <li><Link to="/concern/cold-flu" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Immunity Support</Link></li>
               <li><Link to="/categories" className="hover:text-bahola-blue-600 text-bahola-neutral-700">View All Concerns</Link></li>
             </ul>
           </div>
@@ -73,10 +73,10 @@ export const Footer = () => {
               <li><Link to="/reviews" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Customer Reviews</Link></li>
               <li><Link to="/faq" className="hover:text-bahola-blue-600 text-bahola-neutral-700">FAQs</Link></li>
               <li><Link to="/help-center" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Help Center</Link></li>
-              <li><Link to="/shipping" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Shipping Policy</Link></li>
-              <li><Link to="/return-policy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Refund Policy</Link></li>
-              <li><Link to="/terms" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Terms & Conditions</Link></li>
-              <li><Link to="/privacy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Privacy Policy</Link></li>
+              <li><Link to="/shipping-policy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Shipping Policy</Link></li>
+              <li><Link to="/returns-policy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Refund Policy</Link></li>
+              <li><Link to="/terms-conditions" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Terms & Conditions</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-bahola-blue-600 text-bahola-neutral-700">Privacy Policy</Link></li>
             </ul>
           </div>
           
@@ -93,11 +93,11 @@ export const Footer = () => {
                 Subscribe
               </Button>
             </div>
-            <p className="text-sm text-bahola-neutral-600">By subscribing, you agree to our <Link to="/privacy" className="underline hover:text-bahola-blue-600">Privacy Policy</Link> and consent to receive updates from Bahola Labs.</p>
+            <p className="text-sm text-bahola-neutral-600">By subscribing, you agree to our <Link to="/privacy-policy" className="underline hover:text-bahola-blue-600">Privacy Policy</Link> and consent to receive updates from Bahola Labs.</p>
             
             <div className="mt-6">
               <h3 className="text-lg font-bold mb-2 text-bahola-navy-950">Find Us</h3>
-              <Link to="/stores" className="flex items-center text-bahola-blue-600 hover:underline">
+              <Link to="/store-locator" className="flex items-center text-bahola-blue-600 hover:underline">
                 <MapPin size={16} className="mr-1" /> Store Locations
               </Link>
             </div>
@@ -108,8 +108,8 @@ export const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p>© 2025 Bahola Labs. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link to="/privacy" className="hover:text-bahola-blue-600">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-bahola-blue-600">Terms of Service</Link>
+              <Link to="/privacy-policy" className="hover:text-bahola-blue-600">Privacy Policy</Link>
+              <Link to="/terms-conditions" className="hover:text-bahola-blue-600">Terms of Service</Link>
               <Link to="/contact" className="hover:text-bahola-blue-600">Contact Us</Link>
             </div>
           </div>
