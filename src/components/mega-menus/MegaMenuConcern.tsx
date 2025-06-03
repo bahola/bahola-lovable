@@ -43,12 +43,27 @@ const getConcernIcon = (name: string) => {
 // Shop by Concern Mega Menu
 export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const concerns = [
-    'Allergies', 'Cancer', 'Heart Health', 'Child Care', 
-    'Ear Nose Throat', 'Eye Care', 'Gut Health', 'Womens Care',
-    'Hair Care', 'Immune boosters', 'Infection', 'Lifestyle',
-    'Muscle & Joint Care', 'Mental health', 'Nutritive', 'Pain Care',
-    'Reproductive care', 'Respiratory Care', 'Skin Care', 'Tooth Care',
-    'Urinary care'
+    { name: 'Allergies', route: '/concern/allergies-hay-fever' },
+    { name: 'Cancer', route: '/concern/cancer' },
+    { name: 'Heart Health', route: '/concern/high-blood-pressure' },
+    { name: 'Child Care', route: '/concern/childrens-health' },
+    { name: 'Ear Nose Throat', route: '/concern/cold-flu' },
+    { name: 'Eye Care', route: '/concern/eye-problems' },
+    { name: 'Gut Health', route: '/concern/digestive-issues' },
+    { name: 'Womens Care', route: '/concern/womens-health' },
+    { name: 'Hair Care', route: '/concern/hair-care' },
+    { name: 'Immune boosters', route: '/concern/cold-flu' },
+    { name: 'Infection', route: '/concern/cold-flu' },
+    { name: 'Lifestyle', route: '/concern/weight-management' },
+    { name: 'Muscle & Joint Care', route: '/concern/joint-pain-arthritis' },
+    { name: 'Mental health', route: '/concern/anxiety-stress' },
+    { name: 'Nutritive', route: '/concern/weight-management' },
+    { name: 'Pain Care', route: '/concern/headaches-migraines' },
+    { name: 'Reproductive care', route: '/concern/womens-health' },
+    { name: 'Respiratory Care', route: '/concern/cold-flu' },
+    { name: 'Skin Care', route: '/concern/skin-conditions' },
+    { name: 'Tooth Care', route: '/concern/cold-flu' },
+    { name: 'Urinary care', route: '/concern/cold-flu' }
   ];
 
   return (
@@ -58,15 +73,15 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
         <div className="grid grid-cols-3 gap-4 max-w-6xl">
           {concerns.map((concern) => (
             <a 
-              key={concern} 
-              href={`/concern/${concern.toLowerCase().replace(/\s+/g, '-')}`}
+              key={concern.name} 
+              href={concern.route}
               className="flex items-center p-3 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-gray-700 hover:text-blue-600 min-w-0 bg-white/70 hover:bg-blue-100 shadow-sm"
             >
               <div className="mr-3 text-blue-500 flex-shrink-0">
-                {getConcernIcon(concern)}
+                {getConcernIcon(concern.name)}
               </div>
               <span className="text-sm font-medium truncate">
-                {concern}
+                {concern.name}
               </span>
             </a>
           ))}
