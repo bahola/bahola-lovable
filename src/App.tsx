@@ -114,6 +114,8 @@ function App() {
                       <Route path="/product/:productSlug" element={<ProductPage />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/consultation" element={<Consultation />} />
+                      <Route path="/appointment-booking" element={<AppointmentBooking />} />
+                      <Route path="/book-appointment" element={<AppointmentBooking />} />
                       <Route path="/homeopathy" element={<Homeopathy />} />
                       <Route path="/health-concerns" element={<HealthConcerns />} />
                       <Route path="/help-center" element={<HelpCenter />} />
@@ -124,7 +126,6 @@ function App() {
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/account" element={<UserAccount />} />
                       <Route path="/video-consultation" element={<VideoConsultation />} />
-                      <Route path="/appointment-booking" element={<AppointmentBooking />} />
                       
                       {/* Policy pages with multiple route aliases */}
                       <Route path="/privacy-policy" element={<PrivacyPolicy />} />

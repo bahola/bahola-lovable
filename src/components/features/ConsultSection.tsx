@@ -43,8 +43,8 @@ export const ConsultSection = () => {
                   Meet with our expert homeopaths for a personalized consultation in our Chennai clinic.
                 </p>
                 <Button className="w-full btn-bahola mt-auto" asChild>
-                  <Link to="/consultation">
-                    Choose Consultation
+                  <Link to="/appointment-booking">
+                    Book In-Person Appointment
                   </Link>
                 </Button>
               </div>
@@ -58,8 +58,8 @@ export const ConsultSection = () => {
                   Connect with our homeopaths from anywhere through secure video consultations.
                 </p>
                 <Button className="w-full btn-bahola mt-auto" asChild>
-                  <Link to="/consultation">
-                    Choose Consultation
+                  <Link to="/video-consultation">
+                    Book Video Consultation
                   </Link>
                 </Button>
               </div>
