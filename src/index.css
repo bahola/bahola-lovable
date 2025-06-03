@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -78,22 +77,15 @@
     font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1rem;
     line-height: 1.5;
-    font-display: swap;
-    /* Prevent layout shift during font loading */
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-display: swap; /* Improve font loading */
   }
 
-  /* Brand Book Typography Implementation with improved font loading */
+  /* Brand Book Typography Implementation with font-display: swap */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     letter-spacing: -0.02em;
     line-height: 1.2;
     font-display: swap;
-    /* Reduce layout shift */
-    font-synthesis: none;
   }
 
   /* H1 - Large Headlines & Elegant Emphasis (Helvetica Neue Light 300) */
@@ -120,68 +112,31 @@
     font-size: 1.25rem;
   }
 
-  /* Body text follows Proxima Nova guidelines with improved loading */
+  /* Body text follows Proxima Nova guidelines with specific line heights and sizes */
   p, li, span {
     font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.5;
-    font-display: swap;
+    line-height: 1.5; /* Within 1.4-1.6 range for optimal readability */
   }
   
   /* Standard body text - Updated to 16pt */
   .text-body {
-    font-size: 1rem;
+    font-size: 1rem; /* 16px = 16pt */
     line-height: 1.5;
   }
   
-  /* Fine print - 12-14pt */
+  /* Fine print - 12-14pt (equivalent to 0.75rem-0.875rem) */
   .text-fine {
-    font-size: 0.875rem;
+    font-size: 0.875rem; /* 14px = ~10.5pt */
     line-height: 1.4;
-  }
-
-  /* Image optimization to prevent layout shift */
-  img {
-    height: auto;
-    max-width: 100%;
-  }
-
-  /* Optimize for better loading performance */
-  .loading-optimized {
-    content-visibility: auto;
-    contain-intrinsic-size: 200px;
   }
 }
 
 @layer components {
-  /* Performance-optimized skeleton loader */
-  .skeleton-loader {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    will-change: background-position;
-  }
-
-  @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Enhanced mega menu styles with better visibility */
   .mega-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
+    @apply invisible absolute opacity-0 bg-white shadow-lg border border-gray-200 transition-all duration-300 transform translate-y-2 z-50;
     width: 400px;
-    background: white;
-    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: all 0.2s ease-out;
-    z-index: 9999;
-    pointer-events: none;
+    left: 0;
+    top: 100%;
   }
 
   .mega-menu.mega-menu-full {
@@ -189,19 +144,58 @@
     width: 90vw !important;
     max-width: 1200px !important;
     left: 50% !important;
-    transform: translateX(-50%) translateY(10px) !important;
+    transform: translateX(-50%) translateY(2px) !important;
     z-index: 9999 !important;
   }
 
-  .mega-menu.mega-menu-open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
+  /* Position mega menu correctly based on scroll state */
+  .sticky-subheader .mega-menu.mega-menu-full {
+    top: 60px !important; /* Position relative to sticky subheader */
   }
 
-  .mega-menu-full.mega-menu-open {
+  .mega-menu.mega-menu-full:not(.sticky-subheader .mega-menu.mega-menu-full) {
+    top: 180px !important; /* Original position when not sticky */
+  }
+
+  /* Ensure mega menus don't overflow on smaller screens */
+  @media (max-width: 1200px) {
+    .mega-menu.mega-menu-full {
+      width: 95vw !important;
+      max-width: 1000px !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mega-menu.mega-menu-full {
+      width: 98vw !important;
+      max-width: none !important;
+    }
+    
+    .sticky-subheader .mega-menu.mega-menu-full {
+      top: 50px !important;
+    }
+    
+    .mega-menu.mega-menu-full:not(.sticky-subheader .mega-menu.mega-menu-full) {
+      top: 200px !important;
+    }
+  }
+
+  .mega-menu-open {
+    @apply visible opacity-100;
+  }
+
+  .mega-menu-open.mega-menu-full {
     transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .mega-menu-open:not(.mega-menu-full) {
+    transform: translateY(0) !important;
+  }
+
+  @media (max-width: 768px) {
+    .mega-menu-open.mega-menu-full {
+      transform: translateX(-50%) translateY(0) !important;
+    }
   }
 
   .cloud-bg {
@@ -211,11 +205,9 @@
   .btn-bahola {
     @apply px-6 py-2 bg-gradient-to-r from-bahola-blue-500 to-bahola-navy-950 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:from-bahola-blue-600 hover:to-bahola-navy-900;
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    /* Optimize button interactions */
-    will-change: transform, box-shadow;
   }
 
-  /* Brand Book Typography Classes with improved performance */
+  /* Brand Book Typography Classes with font-display: swap */
   .brand-headline {
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 300;
@@ -248,7 +240,7 @@
     font-display: swap;
   }
 
-  /* Proxima Nova body text with optimized loading */
+  /* Proxima Nova body text with font-display: swap */
   .brand-body {
     font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1rem;
@@ -291,10 +283,9 @@
     @apply bg-white/95 backdrop-blur-md;
   }
 
-  /* Mobile menu styles with performance optimizations */
+  /* Mobile menu styles */
   .mobile-menu {
     @apply fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto;
-    will-change: transform;
   }
 
   .mobile-menu-open {

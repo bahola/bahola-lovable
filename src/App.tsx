@@ -1,3 +1,4 @@
+
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -11,7 +12,6 @@ import { LazyHeader } from './components/LazyHeader';
 import { Footer } from './components/Footer';
 import { AuthModals } from './components/AuthModals';
 import { ProtectedDoctorRoute } from './components/auth/ProtectedDoctorRoute';
-import { CriticalLoader } from './components/CriticalLoader';
 
 // Critical pages loaded immediately
 import Index from './pages/Index';
@@ -50,7 +50,6 @@ const Wishlist = React.lazy(() => import('./pages/Wishlist'));
 const OrderTracking = React.lazy(() => import('./pages/OrderTracking'));
 const Reviews = React.lazy(() => import('./pages/Reviews'));
 const PromoOffers = React.lazy(() => import('./pages/PromoOffers'));
-const BachFlowerConcerns = React.lazy(() => import('./pages/BachFlowerConcerns'));
 
 // Lazy load help center pages
 const GettingStarted = React.lazy(() => import('./pages/help-center/GettingStarted'));
@@ -83,17 +82,14 @@ const EyeProblems = React.lazy(() => import('./pages/health-concerns/EyeProblems
 const HighBloodPressure = React.lazy(() => import('./pages/health-concerns/HighBloodPressure'));
 const DiabetesSupport = React.lazy(() => import('./pages/health-concerns/DiabetesSupport'));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-// Enhanced loading component for better UX
-const PageLoader = () => <CriticalLoader />;
+// Loading component for Suspense fallback
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-bahola-blue-500"></div>
+  </div>
+);
 
 function App() {
   return (
@@ -130,9 +126,6 @@ function App() {
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/account" element={<UserAccount />} />
                       <Route path="/video-consultation" element={<VideoConsultation />} />
-                      
-                      {/* Bach Flower Concerns Route */}
-                      <Route path="/bach-flower-concerns" element={<BachFlowerConcerns />} />
                       
                       {/* Policy pages with multiple route aliases */}
                       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
