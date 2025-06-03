@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -51,6 +50,7 @@ const Wishlist = React.lazy(() => import('./pages/Wishlist'));
 const OrderTracking = React.lazy(() => import('./pages/OrderTracking'));
 const Reviews = React.lazy(() => import('./pages/Reviews'));
 const PromoOffers = React.lazy(() => import('./pages/PromoOffers'));
+const BachFlowerConcerns = React.lazy(() => import('./pages/BachFlowerConcerns'));
 
 // Lazy load help center pages
 const GettingStarted = React.lazy(() => import('./pages/help-center/GettingStarted'));
@@ -130,6 +130,9 @@ function App() {
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/account" element={<UserAccount />} />
                       <Route path="/video-consultation" element={<VideoConsultation />} />
+                      
+                      {/* Bach Flower Concerns Route */}
+                      <Route path="/bach-flower-concerns" element={<BachFlowerConcerns />} />
                       
                       {/* Policy pages with multiple route aliases */}
                       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
