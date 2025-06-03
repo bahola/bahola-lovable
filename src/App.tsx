@@ -84,6 +84,9 @@ const DiabetesSupport = React.lazy(() => import('./pages/health-concerns/Diabete
 // Import BachFlowerConcerns component for new route
 const BachFlowerConcerns = React.lazy(() => import('./pages/BachFlowerConcerns'));
 
+// Add the new lazy import for AllergiesProductsPage
+const AllergiesProductsPage = React.lazy(() => import('./pages/AllergiesProductsPage'));
+
 const queryClient = new QueryClient();
 
 // Loading component for Suspense fallback
@@ -104,7 +107,7 @@ function App() {
               <div className="min-h-screen flex flex-col">
                 <LazyHeader />
                 <main className="flex-1">
-                  <Suspense fallback={<PageLoader />}>
+                  <Suspense fallback={<PageLoader />}}>
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/shop" element={<Shop />} />
@@ -201,6 +204,9 @@ function App() {
                         <Route path="help-center" element={<HelpCenterManagement />} />
                       </Route>
 
+                      {/* Add the new allergies products route */}
+                      <Route path="/products/allergies" element={<AllergiesProductsPage />} />
+                      
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Suspense>

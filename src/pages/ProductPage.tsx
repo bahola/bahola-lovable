@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -24,9 +24,138 @@ const ProductPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const [quantity, setQuantity] = useState(1);
   const [selectedVariation, setSelectedVariation] = useState<any>(null);
-  const { product, loading } = useProductData(productId);
   const { toast } = useToast();
   const { addToCart } = useCart();
+  
+  // Modified product data hook to handle both ID and name-based lookups
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) return;
+      
+      try {
+        setLoading(true);
+        
+        let query = supabase
+          .from('products')
+          .select(`
+            *,
+            product_categories(name),
+            product_variations(*)
+          `);
+        
+        // Check if productId is a UUID (for backward compatibility) or a slug
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId);
+        
+        if (isUUID) {
+          query = query.eq('id', productId);
+        } else {
+          // Convert slug back to name for lookup
+          const productName = productId.replace(/-/g, ' ');
+          query = query.ilike('name', productName);
+        }
+        
+        const { data, error } = await query.single();
+          
+        if (error) {
+          throw error;
+        }
+        
+        // Fetch review count
+        const { count, error: reviewError } = await supabase
+          .from('product_reviews')
+          .select('id', { count: 'exact', head: true })
+          .eq('product_id', data.id);
+          
+        if (reviewError) {
+          console.error('Error fetching review count:', reviewError);
+        }
+        
+        if (data) {
+          // Calculate average rating if there are reviews
+          let avgRating = 4.8; // Default value
+          
+          if (count && count > 0) {
+            const { data: reviewData, error: ratingError } = await supabase
+              .from('product_reviews')
+              .select('rating')
+              .eq('product_id', data.id);
+              
+            if (!ratingError && reviewData && reviewData.length > 0) {
+              const sum = reviewData.reduce((acc, review) => acc + review.rating, 0);
+              avgRating = parseFloat((sum / reviewData.length).toFixed(1));
+            }
+          }
+          
+          // Handle the main image - use the image from database if available
+          const mainImage = data.image || '';
+          console.log('Product image from database:', mainImage);
+          
+          // Create array of images - only include valid image URLs
+          const imageArray = mainImage && mainImage.trim() !== '' && mainImage.startsWith('http') ? [mainImage] : [];
+          console.log('Image array created:', imageArray);
+          
+          // Calculate stock based on product type
+          let totalStock = 0;
+          if (data.type === 'variable' && data.product_variations && data.product_variations.length > 0) {
+            // For variable products, sum up stock from all variations
+            totalStock = data.product_variations.reduce((sum: number, variation: any) => sum + (variation.stock || 0), 0);
+            console.log('Variable product total stock:', totalStock, 'from variations:', data.product_variations);
+          } else {
+            // For simple products, use the product's stock
+            totalStock = data.stock || 0;
+            console.log('Simple product stock:', totalStock);
+          }
+          
+          // Transform the data into the shape we need for the UI
+          setProduct({
+            id: data.id,
+            name: data.name,
+            description: data.description || '',
+            shortDescription: data.short_description || '',
+            price: data.price,
+            originalPrice: data.price * 1.15, // Example: calculate original price before discount
+            discountPercentage: 14, // Example: hardcoded discount
+            image: mainImage,
+            images: imageArray,
+            rating: avgRating,
+            reviewCount: count || 0,
+            stock: totalStock,
+            potency: data.product_variations?.[0]?.potency || '30C',
+            brand: 'Bahola Labs', // Example: hardcoded brand
+            benefits: data.benefits || [
+              'Relieves pain and swelling from injuries',
+              'Helps heal bruises and muscle soreness',
+              'Useful for post-surgical recovery',
+              'Reduces shock after trauma or accidents'
+            ],
+            usage: data.usage_instructions || 'Take 3-5 pellets under the tongue 3 times daily or as directed by your homeopathic practitioner.',
+            ingredients: data.ingredients || `${data.name} ${data.product_variations?.[0]?.potency || ''}, Sucrose (inactive)`,
+            precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
+            shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
+            category: data.product_categories?.name || 'Uncategorized',
+            variations: data.product_variations || [],
+            tax_status: (data.tax_status === 'non-taxable' ? 'non-taxable' : 'taxable') as 'taxable' | 'non-taxable',
+            tax_class: (data.tax_class === '0' || data.tax_class === '12' ? data.tax_class : '5') as '0' | '5' | '12'
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        toast({
+          title: "Failed to load product",
+          description: "There was an error loading the product information.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProduct();
+  }, [productId, toast]);
+
   
   const handleAddToCart = () => {
     if (!product) {
@@ -77,6 +206,7 @@ const ProductPage = () => {
     return product?.stock || 0;
   };
 
+  
   // Loading state
   if (loading) {
     return (
