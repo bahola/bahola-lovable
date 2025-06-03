@@ -1,14 +1,38 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { SEO } from '@/components/SEO';
 import { ShopHeroCarousel } from '@/components/shop/ShopHeroCarousel';
 import { SearchActionBar } from '@/components/SearchActionBar';
 import { ConsultSection, DiscoverSection } from '@/components/features';
-import { 
-  LazyFeaturedProductsSection, 
-  LazyTestimonialsSection, 
-  LazyAboutSection 
-} from '@/components/LazyFeatures';
+
+// Lazy load heavy components with higher priority
+const LazyFeaturedProductsSection = React.lazy(() => 
+  import('@/components/LazyFeatures').then(module => ({
+    default: module.LazyFeaturedProductsSection
+  }))
+);
+
+const LazyTestimonialsSection = React.lazy(() => 
+  import('@/components/LazyFeatures').then(module => ({
+    default: module.LazyTestimonialsSection
+  }))
+);
+
+const LazyAboutSection = React.lazy(() => 
+  import('@/components/LazyFeatures').then(module => ({
+    default: module.LazyAboutSection
+  }))
+);
+
+// Lightweight skeleton for deferred sections
+const DeferredSkeleton = () => (
+  <div className="w-full h-64 bg-gray-50 animate-pulse flex items-center justify-center">
+    <div className="text-center space-y-4">
+      <div className="h-8 w-48 bg-gray-200 rounded mx-auto"></div>
+      <div className="h-4 w-96 bg-gray-200 rounded mx-auto"></div>
+    </div>
+  </div>
+);
 
 const Index = () => {
   const structuredData = {
@@ -93,10 +117,18 @@ const Index = () => {
       <ConsultSection />
       <DiscoverSection />
       
-      {/* Heavy components load lazily */}
-      <LazyFeaturedProductsSection />
-      <LazyAboutSection />
-      <LazyTestimonialsSection />
+      {/* Heavy components load lazily with improved skeletons */}
+      <Suspense fallback={<DeferredSkeleton />}>
+        <LazyFeaturedProductsSection />
+      </Suspense>
+      
+      <Suspense fallback={<DeferredSkeleton />}>
+        <LazyAboutSection />
+      </Suspense>
+      
+      <Suspense fallback={<DeferredSkeleton />}>
+        <LazyTestimonialsSection />
+      </Suspense>
     </>
   );
 };

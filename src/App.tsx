@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,6 +11,7 @@ import { LazyHeader } from './components/LazyHeader';
 import { Footer } from './components/Footer';
 import { AuthModals } from './components/AuthModals';
 import { ProtectedDoctorRoute } from './components/auth/ProtectedDoctorRoute';
+import { CriticalLoader } from './components/CriticalLoader';
 
 // Critical pages loaded immediately
 import Index from './pages/Index';
@@ -82,14 +82,17 @@ const EyeProblems = React.lazy(() => import('./pages/health-concerns/EyeProblems
 const HighBloodPressure = React.lazy(() => import('./pages/health-concerns/HighBloodPressure'));
 const DiabetesSupport = React.lazy(() => import('./pages/health-concerns/DiabetesSupport'));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+  },
+});
 
-// Loading component for Suspense fallback
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-bahola-blue-500"></div>
-  </div>
-);
+// Enhanced loading component for better UX
+const PageLoader = () => <CriticalLoader />;
 
 function App() {
   return (
