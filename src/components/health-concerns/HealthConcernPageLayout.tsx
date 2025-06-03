@@ -4,7 +4,7 @@ import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, Users, TrendingUp, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, Users, TrendingUp, ArrowLeft, Package } from 'lucide-react';
 import { HealthConcern } from '@/data/healthConcernsData';
 
 interface HealthConcernPageLayoutProps {
@@ -16,6 +16,31 @@ export const HealthConcernPageLayout: React.FC<HealthConcernPageLayoutProps> = (
   concern, 
   children 
 }) => {
+  // Mock combination products data - this will be replaced with actual data later
+  const combinationProducts = [
+    {
+      id: 1,
+      name: `${concern.name} Relief Combo`,
+      description: `Complete homeopathic solution for ${concern.name.toLowerCase()}`,
+      price: 299,
+      image: concern.image
+    },
+    {
+      id: 2,
+      name: `Advanced ${concern.name} Support`,
+      description: `Enhanced formula for comprehensive ${concern.name.toLowerCase()} management`,
+      price: 399,
+      image: concern.image
+    },
+    {
+      id: 3,
+      name: `Natural ${concern.name} Kit`,
+      description: `All-in-one kit for natural ${concern.name.toLowerCase()} treatment`,
+      price: 499,
+      image: concern.image
+    }
+  ];
+
   return (
     <PageLayout title={concern.name} description={concern.description}>
       {/* Breadcrumb */}
@@ -97,6 +122,41 @@ export const HealthConcernPageLayout: React.FC<HealthConcernPageLayoutProps> = (
               />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Combination Products Section */}
+      <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Package className="text-bahola-blue-600" size={24} />
+          <h2 className="text-2xl font-semibold text-bahola-navy-950 font-helvetica">
+            Combination Products for {concern.name}
+          </h2>
+        </div>
+        <p className="text-bahola-neutral-700 mb-6">
+          Our specially formulated combination products offer comprehensive support for {concern.name.toLowerCase()}. 
+          These expert-curated blends combine multiple remedies for enhanced effectiveness.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {combinationProducts.map((product) => (
+            <div key={product.id} className="border border-bahola-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div className="aspect-square rounded-lg overflow-hidden mb-3">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-semibold text-bahola-navy-950 mb-2">{product.name}</h3>
+              <p className="text-sm text-bahola-neutral-600 mb-3">{product.description}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold text-bahola-blue-600">₹{product.price}</span>
+                <Button size="sm" className="bg-bahola-blue-600 hover:bg-bahola-blue-700">
+                  Add to Cart
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
