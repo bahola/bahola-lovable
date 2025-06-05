@@ -4,7 +4,20 @@ import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConc
 import { healthConcernsData } from '@/data/healthConcernsData';
 
 const SkinConditions = () => {
-  const concern = healthConcernsData.find(c => c.id === 'skin-conditions')!;
+  // Use the correct id that exists in the data - 'eczema-dermatitis' or create a custom concern object
+  const concern = healthConcernsData.find(c => c.id === 'eczema-dermatitis') || {
+    id: 'skin-conditions',
+    name: 'Skin Conditions',
+    description: 'Comprehensive natural treatments for various skin conditions including eczema, dermatitis, and other skin disorders.',
+    category: 'skin-care',
+    icon: '🧴',
+    image: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=400&h=300&fit=crop',
+    searchVolume: 35000,
+    commonRemedies: ['Sulphur', 'Graphites', 'Arsenicum Album', 'Hepar Sulph'],
+    keywords: ['skin conditions', 'eczema', 'dermatitis', 'skin rash', 'itching', 'skin care'],
+    lastUpdated: '2024-01-11',
+    trending: true,
+  };
 
   return (
     <HealthConcernPageLayout concern={concern}>
