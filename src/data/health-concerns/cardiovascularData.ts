@@ -4,7 +4,7 @@ import { HealthConcern } from './types';
 export const cardiovascularData: HealthConcern[] = [
   {
     id: 'high-blood-pressure',
-    name: 'High Blood Pressure',
+    name: 'High Blood Pressure (Hypertension)',
     description: 'Natural homeopathic support for managing high blood pressure and promoting cardiovascular health.',
     category: 'Heart Health',
     icon: '❤️',
@@ -16,7 +16,7 @@ export const cardiovascularData: HealthConcern[] = [
   },
   {
     id: 'high-cholesterol',
-    name: 'High Cholesterol',
+    name: 'High Cholesterol (Hyperlipidemia)',
     description: 'Natural support for managing cholesterol levels and cardiovascular health.',
     category: 'Heart Health',
     icon: '🩸',
@@ -27,8 +27,8 @@ export const cardiovascularData: HealthConcern[] = [
     lastUpdated: '2024-01-12'
   },
   {
-    id: 'heart-palpitations',
-    name: 'Heart Palpitations',
+    id: 'palpitations',
+    name: 'Palpitations',
     description: 'Gentle remedies for heart palpitations, irregular heartbeat, and cardiac anxiety.',
     category: 'Heart Health',
     icon: '💓',
@@ -40,7 +40,7 @@ export const cardiovascularData: HealthConcern[] = [
   },
   {
     id: 'angina-pectoris',
-    name: 'Angina Pectoris',
+    name: 'Angina Pectoris (Chest Pain)',
     description: 'Natural support for chest pain and angina symptoms.',
     category: 'Heart Health',
     icon: '💔',
@@ -76,7 +76,7 @@ export const cardiovascularData: HealthConcern[] = [
   },
   {
     id: 'arrhythmias',
-    name: 'Arrhythmias',
+    name: 'Arrhythmias (Irregular Heartbeat)',
     description: 'Support for irregular heartbeat and cardiac rhythm disorders.',
     category: 'Heart Health',
     icon: '💓',
@@ -88,7 +88,7 @@ export const cardiovascularData: HealthConcern[] = [
   },
   {
     id: 'post-heart-attack-recovery',
-    name: 'Post-Heart Attack Recovery',
+    name: 'Post-Heart Attack Recovery Support',
     description: 'Supportive care during recovery after heart attack.',
     category: 'Heart Health',
     icon: '❤️‍🩹',

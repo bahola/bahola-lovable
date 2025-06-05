@@ -3,20 +3,8 @@ import { HealthConcern } from './types';
 
 export const cancerSupportData: HealthConcern[] = [
   {
-    id: 'cancer-support',
-    name: 'Cancer Support',
-    description: 'Supportive homeopathic care during cancer treatment to help manage side effects and boost overall well-being.',
-    category: 'Cancer',
-    icon: '🎗️',
-    image: '/lovable-uploads/0108ad38-606a-475c-a72b-c841b9ba5dae.png',
-    searchVolume: 35000,
-    commonRemedies: ['Carcinosinum', 'Thuya', 'Cadmium Sulphuricum', 'Arsenicum Album'],
-    keywords: ['cancer support', 'chemotherapy side effects', 'radiation support', 'oncology support'],
-    lastUpdated: '2024-01-15'
-  },
-  {
-    id: 'chemotherapy-support',
-    name: 'Chemotherapy Support',
+    id: 'chemotherapy-side-effects',
+    name: 'Chemotherapy Side Effects (nausea, fatigue)',
     description: 'Natural support to manage chemotherapy side effects including nausea, fatigue, and immune weakness.',
     category: 'Cancer',
     icon: '💉',
@@ -27,8 +15,8 @@ export const cancerSupportData: HealthConcern[] = [
     lastUpdated: '2024-01-12'
   },
   {
-    id: 'radiation-support',
-    name: 'Radiation Support',
+    id: 'radiation-skin-reactions',
+    name: 'Radiation Skin Reactions',
     description: 'Homeopathic remedies to help manage radiation therapy side effects and skin reactions.',
     category: 'Cancer',
     icon: '☢️',
@@ -51,8 +39,8 @@ export const cancerSupportData: HealthConcern[] = [
     lastUpdated: '2024-01-15'
   },
   {
-    id: 'immune-weakness-cancer',
-    name: 'Immune Weakness in Cancer',
+    id: 'immune-weakness-cancer-patients',
+    name: 'Immune Weakness in Cancer Patients',
     description: 'Support for immune system during cancer treatment and recovery.',
     category: 'Cancer',
     icon: '🛡️',
@@ -64,7 +52,7 @@ export const cancerSupportData: HealthConcern[] = [
   },
   {
     id: 'loss-of-appetite-cancer',
-    name: 'Loss of Appetite (Cancer)',
+    name: 'Loss of Appetite',
     description: 'Natural remedies to stimulate appetite during cancer treatment.',
     category: 'Cancer',
     icon: '🍽️',
@@ -100,7 +88,7 @@ export const cancerSupportData: HealthConcern[] = [
   },
   {
     id: 'anxiety-sleep-disorders-cancer',
-    name: 'Anxiety & Sleep Disorders (Cancer)',
+    name: 'Anxiety or Sleep Disorders during Cancer',
     description: 'Support for anxiety and sleep issues during cancer journey.',
     category: 'Cancer',
     icon: '😟',
