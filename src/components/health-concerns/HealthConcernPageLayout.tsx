@@ -16,6 +16,18 @@ export const HealthConcernPageLayout: React.FC<HealthConcernPageLayoutProps> = (
   concern, 
   children 
 }) => {
+  // Add defensive check to prevent undefined errors
+  if (!concern) {
+    console.error('HealthConcernPageLayout: concern prop is undefined');
+    return (
+      <PageLayout title="Health Concern" description="Loading health concern information...">
+        <div className="text-center py-8">
+          <p className="text-gray-500">Loading health concern information...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
   // Mock combination products data - this will be replaced with actual data later
   const combinationProducts = [
     {

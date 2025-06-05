@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConcernPageLayout';
-import { healthConcernsData } from '@/data/healthConcernsData';
+import { healthConcernsData, type HealthConcern } from '@/data/healthConcernsData';
 
 const SkinConditions = () => {
-  // Use the correct id that exists in the data - 'eczema-dermatitis' or create a custom concern object
-  const concern = healthConcernsData.find(c => c.id === 'eczema-dermatitis') || {
+  // Create a default skin conditions concern object that matches the HealthConcern interface
+  const defaultSkinConcern: HealthConcern = {
     id: 'skin-conditions',
     name: 'Skin Conditions',
     description: 'Comprehensive natural treatments for various skin conditions including eczema, dermatitis, and other skin disorders.',
@@ -18,6 +18,13 @@ const SkinConditions = () => {
     lastUpdated: '2024-01-11',
     trending: true,
   };
+
+  // Try to find existing skin-related concern or use the default
+  const concern = healthConcernsData.find(c => 
+    c.id === 'eczema-dermatitis' || 
+    c.id === 'acne-pimples' || 
+    c.category === 'skin-care'
+  ) || defaultSkinConcern;
 
   return (
     <HealthConcernPageLayout concern={concern}>
