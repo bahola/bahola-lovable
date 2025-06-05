@@ -1,7 +1,15 @@
 
 import React from 'react';
-import { Filter, Grid3X3, List, ChevronDown } from 'lucide-react';
+import { Filter, Grid, List, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface HealthConcernsToolbarProps {
   showFilters: boolean;
@@ -10,7 +18,9 @@ interface HealthConcernsToolbarProps {
   viewMode: 'grid' | 'list';
   onViewModeChange: (mode: 'grid' | 'list') => void;
   sortBy: string;
-  onSortChange: (value: string) => void;
+  onSortChange: (sort: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
 export const HealthConcernsToolbar: React.FC<HealthConcernsToolbarProps> = ({
@@ -21,57 +31,69 @@ export const HealthConcernsToolbar: React.FC<HealthConcernsToolbarProps> = ({
   onViewModeChange,
   sortBy,
   onSortChange,
+  searchQuery = '',
+  onSearchChange
 }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+    <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex items-center gap-4 flex-1">
           <Button
             variant="outline"
+            size="sm"
             onClick={onToggleFilters}
             className="lg:hidden"
           >
-            <Filter size={18} className="mr-2" />
+            <Filter size={16} className="mr-2" />
             Filters
           </Button>
-          <span className="text-gray-600">
-            {concernsCount} diseases found
+          
+          {onSearchChange && (
+            <div className="relative flex-1 max-w-md">
+              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                placeholder="Search health concerns..."
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          )}
+          
+          <span className="text-sm text-gray-600 whitespace-nowrap">
+            {concernsCount} result{concernsCount !== 1 ? 's' : ''}
           </span>
         </div>
         
-        <div className="flex items-center gap-4">
-          {/* View Mode Toggle */}
-          <div className="hidden md:flex items-center border rounded-lg">
+        <div className="flex items-center gap-3">
+          <Select value={sortBy} onValueChange={onSortChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="popular">Most Popular</SelectItem>
+              <SelectItem value="alphabetical">Alphabetical</SelectItem>
+              <SelectItem value="newest">Newest</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center border rounded-md">
             <Button
-              variant="ghost"
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => onViewModeChange('grid')}
-              className={viewMode === 'grid' ? 'bg-gray-100' : ''}
+              className="rounded-r-none"
             >
-              <Grid3X3 size={16} />
+              <Grid size={16} />
             </Button>
             <Button
-              variant="ghost"
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => onViewModeChange('list')}
-              className={viewMode === 'list' ? 'bg-gray-100' : ''}
+              className="rounded-l-none"
             >
               <List size={16} />
             </Button>
-          </div>
-
-          {/* Sort Dropdown */}
-          <div className="relative">
-            <select
-              value={sortBy}
-              onChange={(e) => onSortChange(e.target.value)}
-              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-bahola-blue-500"
-            >
-              <option value="popular">Most Popular</option>
-              <option value="alphabetical">A-Z</option>
-              <option value="newest">Newest</option>
-            </select>
-            <ChevronDown size={16} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
         </div>
       </div>

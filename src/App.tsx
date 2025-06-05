@@ -125,6 +125,13 @@ const FibroidsSupportive = React.lazy(() => import('./pages/health-concerns/Fibr
 const GeneralWeakness = React.lazy(() => import('./pages/health-concerns/GeneralWeakness'));
 const ConvalescenceRemedies = React.lazy(() => import('./pages/health-concerns/ConvalescenceRemedies'));
 
+// Add new lazy imports for category pages
+const AllergyCare = React.lazy(() => import('./pages/health-concerns/AllergyCare'));
+const GutHealth = React.lazy(() => import('./pages/health-concerns/GutHealth'));
+const HeartHealth = React.lazy(() => import('./pages/health-concerns/HeartHealth'));
+const ChildCare = React.lazy(() => import('./pages/health-concerns/ChildCare'));
+const CancerSupport = React.lazy(() => import('./pages/health-concerns/CancerSupport'));
+
 function App() {
   return (
     <HelmetProvider>
@@ -333,6 +340,13 @@ function App() {
                       <Route path="/concern/post-illness-recovery" element={<></>} />
                       <Route path="/concern/childrens-immunity-drops" element={<></>} />
                       <Route path="/concern/elderly-immune-support" element={<></>} />
+                      
+                      {/* Add new health concern category routes */}
+                      <Route path="/health-concerns/allergy-care" element={<AllergyCare />} />
+                      <Route path="/health-concerns/gut-health" element={<GutHealth />} />
+                      <Route path="/health-concerns/heart-health" element={<HeartHealth />} />
+                      <Route path="/health-concerns/child-care" element={<ChildCare />} />
+                      <Route path="/health-concerns/cancer-support" element={<CancerSupport />} />
                       
                       <Route path="*" element={<NotFound />} />
                     </Routes>

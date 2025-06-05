@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { HealthConcernCard } from './HealthConcernCard';
 import { categoryInfo } from '@/data/healthConcernsData';
 
@@ -22,6 +23,32 @@ interface HealthConcernsCategoryViewProps {
   viewMode: 'grid' | 'list';
 }
 
+const categoryRoutes: Record<string, string> = {
+  'Allergy Care': '/health-concerns/allergy-care',
+  'Gut Health': '/health-concerns/gut-health',
+  'Heart Health': '/health-concerns/heart-health',
+  'Child Care': '/health-concerns/child-care',
+  'Cancer': '/health-concerns/cancer-support',
+  'Anxiety & Mental Health': '/health-concerns/anxiety-mental-health',
+  'ENT Care': '/health-concerns/ent-care',
+  'Eye Care': '/health-concerns/eye-care',
+  'Hair Care': '/health-concerns/hair-care',
+  'Immune Boosters': '/health-concerns/immune-boosters',
+  'Infection Care': '/health-concerns/infection-care',
+  'Lifestyle Care': '/health-concerns/lifestyle-care',
+  'Mental Health': '/health-concerns/mental-health',
+  'Muscle Care': '/health-concerns/muscle-care',
+  'Nutritive Care': '/health-concerns/nutritive-care',
+  'Pain Care': '/health-concerns/pain-care',
+  'Reproductive Care': '/health-concerns/reproductive-care',
+  'Respiratory Care': '/health-concerns/respiratory-care',
+  'Skin Care': '/health-concerns/skin-care',
+  'Specialty Care': '/health-concerns/specialty-care',
+  'Tooth Care': '/health-concerns/tooth-care',
+  'Urology Care': '/health-concerns/urology-care',
+  'Women\'s Health': '/health-concerns/womens-health'
+};
+
 export const HealthConcernsCategoryView: React.FC<HealthConcernsCategoryViewProps> = ({
   concernsByCategory,
   viewMode,
@@ -30,13 +57,23 @@ export const HealthConcernsCategoryView: React.FC<HealthConcernsCategoryViewProp
     <div className="space-y-12">
       {Object.entries(concernsByCategory).map(([categoryKey, concerns]) => (
         <div key={categoryKey} className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-bahola-navy-950 mb-2">
-              {categoryInfo[categoryKey as keyof typeof categoryInfo].name}
-            </h2>
-            <p className="text-bahola-neutral-600">
-              {categoryInfo[categoryKey as keyof typeof categoryInfo].description}
-            </p>
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-bahola-navy-950 mb-2">
+                {categoryInfo[categoryKey as keyof typeof categoryInfo].name}
+              </h2>
+              <p className="text-bahola-neutral-600">
+                {categoryInfo[categoryKey as keyof typeof categoryInfo].description}
+              </p>
+            </div>
+            {categoryRoutes[categoryKey] && (
+              <Link
+                to={categoryRoutes[categoryKey]}
+                className="text-bahola-blue-600 hover:text-bahola-blue-700 font-medium text-sm"
+              >
+                View All →
+              </Link>
+            )}
           </div>
           <div className={`grid gap-4 ${
             viewMode === 'grid' 
