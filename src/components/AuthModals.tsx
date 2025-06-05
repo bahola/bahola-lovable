@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,7 +72,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ modalType, onClose }) =>
                 <div className="flex items-start space-x-2">
                   <Checkbox id="terms" className="mt-1" required />
                   <Label htmlFor="terms" className="text-sm leading-tight">
-                    I agree to receive marketing emails and accept the <a href="#" className="text-bahola-blue-500 hover:underline">Terms of Service</a> and <a href="#" className="text-bahola-blue-500 hover:underline">Privacy Policy</a>.
+                    I agree to receive marketing emails and accept the <Link to="/terms-conditions" className="text-bahola-blue-500 hover:underline">Terms of Service</Link> and <Link to="/privacy-policy" className="text-bahola-blue-500 hover:underline">Privacy Policy</Link>.
                   </Label>
                 </div>
                 
@@ -96,7 +97,7 @@ export const AuthModals: React.FC<AuthModalsProps> = ({ modalType, onClose }) =>
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <Label htmlFor="password">Password</Label>
-                    <a href="#" className="text-sm text-bahola-blue-500 hover:underline">Forgot password?</a>
+                    <Link to="/forgot-password" className="text-sm text-bahola-blue-500 hover:underline">Forgot password?</Link>
                   </div>
                   <Input id="password" type="password" required />
                 </div>

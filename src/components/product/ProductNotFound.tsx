@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { PageLayout } from '@/components/PageLayout';
 
@@ -10,7 +11,7 @@ const ProductNotFound: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
         <p className="mb-6">The product you're looking for may have been removed or is temporarily unavailable.</p>
         <Button asChild>
-          <a href="/categories">Browse All Products</a>
+          <Link to="/categories">Browse All Products</Link>
         </Button>
       </div>
     </PageLayout>
