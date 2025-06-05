@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ export const SearchActionBar = () => {
     <div className="bg-white py-8 border-b border-bahola-neutral-200">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col items-center justify-center gap-6 lg:gap-8">
+          <div className="flex flex-col items-start justify-start gap-6 lg:gap-8">
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="w-full max-w-md lg:max-w-lg relative">
               <div className="relative">
