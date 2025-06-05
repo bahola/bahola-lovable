@@ -18,13 +18,31 @@ const HealthConcerns = () => {
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
-  // Category route mapping
+  // Updated category route mapping to match the routes in AppRoutes.tsx
   const categoryRoutes: Record<string, string> = {
     'Allergy Care': '/health-concerns/allergy-care',
     'Gut Health': '/health-concerns/gut-health',
     'Heart Health': '/health-concerns/heart-health',
     'Child Care': '/health-concerns/child-care',
     'Cancer': '/health-concerns/cancer-support',
+    'Anxiety & Mental Health': '/health-concerns/anxiety-mental-health',
+    'ENT Care': '/health-concerns/ent-care',
+    'Eye Care': '/health-concerns/eye-care',
+    'Hair Care': '/health-concerns/hair-care',
+    'Immune Boosters': '/health-concerns/immune-boosters',
+    'Infection Care': '/health-concerns/infection-care',
+    'Lifestyle Care': '/health-concerns/lifestyle-care',
+    'Mental Health': '/health-concerns/mental-health',
+    'Muscle Care': '/health-concerns/muscle-care',
+    'Nutritive Care': '/health-concerns/nutritive-care',
+    'Pain Care': '/health-concerns/pain-care',
+    'Reproductive Care': '/health-concerns/reproductive-care',
+    'Respiratory Care': '/health-concerns/respiratory-care',
+    'Skin Care': '/health-concerns/skin-care',
+    'Specialty Care': '/health-concerns/specialty-care',
+    'Tooth Care': '/health-concerns/tooth-care',
+    'Urology Care': '/health-concerns/urology-care',
+    'Women\'s Health': '/health-concerns/womens-health'
   };
 
   // Handle category change - navigate to specific category page

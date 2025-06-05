@@ -191,22 +191,28 @@ const AppRoutes = () => {
         <Route path="/help/shipping-issues" element={<ShippingIssues />} />
         <Route path="/help/certifications" element={<Certifications />} />
         
-        {/* Health Concern Category Routes - Fixed to match actual category names */}
+        {/* Health Concern Category Routes - Updated to match exact category names */}
         <Route path="/health-concerns/allergy-care" element={<AllergyCare />} />
         <Route path="/health-concerns/gut-health" element={<GutHealth />} />
         <Route path="/health-concerns/heart-health" element={<HeartHealth />} />
         <Route path="/health-concerns/child-care" element={<ChildCare />} />
         <Route path="/health-concerns/cancer-support" element={<CancerSupport />} />
+        <Route path="/health-concerns/cancer" element={<CancerSupport />} />
         <Route path="/health-concerns/anxiety-mental-health" element={<AnxietyMentalHealth />} />
         <Route path="/health-concerns/ent-care" element={<ENTCare />} />
+        <Route path="/health-concerns/ear-nose-throat" element={<ENTCare />} />
         <Route path="/health-concerns/eye-care" element={<EyeCare />} />
         <Route path="/health-concerns/hair-care" element={<HairCare />} />
         <Route path="/health-concerns/immune-boosters" element={<ImmuneBoosters />} />
         <Route path="/health-concerns/infection-care" element={<InfectionCare />} />
+        <Route path="/health-concerns/infection" element={<InfectionCare />} />
         <Route path="/health-concerns/lifestyle-care" element={<LifestyleCare />} />
+        <Route path="/health-concerns/lifestyle" element={<LifestyleCare />} />
         <Route path="/health-concerns/mental-health" element={<MentalHealth />} />
         <Route path="/health-concerns/muscle-care" element={<MuscleCare />} />
+        <Route path="/health-concerns/muscle-joint-care" element={<MuscleCare />} />
         <Route path="/health-concerns/nutritive-care" element={<NutritiveCare />} />
+        <Route path="/health-concerns/nutritive" element={<NutritiveCare />} />
         <Route path="/health-concerns/pain-care" element={<PainCare />} />
         <Route path="/health-concerns/reproductive-care" element={<ReproductiveCare />} />
         <Route path="/health-concerns/respiratory-care" element={<RespiratoryCare />} />
@@ -214,7 +220,9 @@ const AppRoutes = () => {
         <Route path="/health-concerns/specialty-care" element={<SpecialtyCare />} />
         <Route path="/health-concerns/tooth-care" element={<ToothCare />} />
         <Route path="/health-concerns/urology-care" element={<UrologyCare />} />
+        <Route path="/health-concerns/urinary-care" element={<UrologyCare />} />
         <Route path="/health-concerns/womens-health" element={<WomensHealth />} />
+        <Route path="/health-concerns/womens-care" element={<WomensHealth />} />
 
         {/* Individual Health Concern Pages */}
         <Route path="/health-concerns/anxiety-stress" element={<AnxietyStress />} />
