@@ -1,3 +1,4 @@
+
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
@@ -196,7 +197,6 @@ const AppRoutes = () => {
         <Route path="/health-concerns/heart-health" element={<HeartHealth />} />
         <Route path="/health-concerns/child-care" element={<ChildCare />} />
         <Route path="/health-concerns/cancer-support" element={<CancerSupport />} />
-        <Route path="/health-concerns/anxiety-mental-health" element={<AnxietyMentalHealth />} />
         <Route path="/health-concerns/ent-care" element={<ENTCare />} />
         <Route path="/health-concerns/ear-nose-throat" element={<ENTCare />} />
         <Route path="/health-concerns/eye-care" element={<EyeCare />} />
