@@ -27,4 +27,5 @@ export type HealthConcernCategory =
   | 'Weight & Metabolism'
   | 'Pain Management'
   | 'Sensory Health'
-  | 'Skin Health';
+  | 'Skin Health'
+  | 'Infection';

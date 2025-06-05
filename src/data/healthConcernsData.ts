@@ -60,5 +60,9 @@ export const categoryInfo = {
   'Skin Health': {
     name: 'Skin Health',
     description: 'Natural treatments for skin conditions and dermatological health'
+  },
+  'Infection': {
+    name: 'Infection',
+    description: 'Comprehensive treatment for bacterial, viral, and fungal infections'
   }
 };
