@@ -40,30 +40,30 @@ const getConcernIcon = (name: string) => {
   return iconMap[name] || <Pill size={24} />;
 };
 
-// Shop by Concern Mega Menu
+// Shop by Concern Mega Menu - Updated to link to product categories instead of health concern pages
 export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const concerns = [
-    { name: 'Allergies', route: '/concern/allergies-hay-fever' },
-    { name: 'Cancer', route: '/concern/cancer' },
-    { name: 'Heart Health', route: '/concern/high-blood-pressure' },
-    { name: 'Child Care', route: '/concern/childrens-health' },
-    { name: 'Ear Nose Throat', route: '/concern/cold-flu' },
-    { name: 'Eye Care', route: '/concern/eye-problems' },
-    { name: 'Gut Health', route: '/concern/digestive-issues' },
-    { name: 'Womens Care', route: '/concern/womens-health' },
-    { name: 'Hair Care', route: '/concern/hair-care' },
-    { name: 'Immune boosters', route: '/concern/cold-flu' },
-    { name: 'Infection', route: '/concern/cold-flu' },
-    { name: 'Lifestyle', route: '/concern/weight-management' },
-    { name: 'Muscle & Joint Care', route: '/concern/joint-pain-arthritis' },
-    { name: 'Mental health', route: '/concern/anxiety-stress' },
-    { name: 'Nutritive', route: '/concern/weight-management' },
-    { name: 'Pain Care', route: '/concern/headaches-migraines' },
-    { name: 'Reproductive care', route: '/concern/womens-health' },
-    { name: 'Respiratory Care', route: '/concern/cold-flu' },
-    { name: 'Skin Care', route: '/concern/skin-conditions' },
-    { name: 'Tooth Care', route: '/concern/cold-flu' },
-    { name: 'Urinary care', route: '/concern/cold-flu' }
+    { name: 'Allergies', route: '/products/allergies' },
+    { name: 'Cancer', route: '/products/cancer-support' },
+    { name: 'Heart Health', route: '/products/heart-health' },
+    { name: 'Child Care', route: '/products/childrens-health' },
+    { name: 'Ear Nose Throat', route: '/products/ent-care' },
+    { name: 'Eye Care', route: '/products/eye-care' },
+    { name: 'Gut Health', route: '/products/digestive-health' },
+    { name: 'Womens Care', route: '/products/womens-health' },
+    { name: 'Hair Care', route: '/products/hair-care' },
+    { name: 'Immune boosters', route: '/products/immune-support' },
+    { name: 'Infection', route: '/products/infection-care' },
+    { name: 'Lifestyle', route: '/products/lifestyle' },
+    { name: 'Muscle & Joint Care', route: '/products/joint-muscle-care' },
+    { name: 'Mental health', route: '/products/mental-health' },
+    { name: 'Nutritive', route: '/products/nutritional-supplements' },
+    { name: 'Pain Care', route: '/products/pain-relief' },
+    { name: 'Reproductive care', route: '/products/reproductive-health' },
+    { name: 'Respiratory Care', route: '/products/respiratory-health' },
+    { name: 'Skin Care', route: '/products/skin-care' },
+    { name: 'Tooth Care', route: '/products/dental-care' },
+    { name: 'Urinary care', route: '/products/urinary-health' }
   ];
 
   return (

@@ -7,6 +7,7 @@ interface CategoryBreadcrumbsProps {
   categoryId?: string;
   subcategoryId?: string;
   isConcernPage: boolean;
+  isProductPage?: boolean;
   formattedName: string;
 }
 
@@ -14,6 +15,7 @@ export const CategoryBreadcrumbs: React.FC<CategoryBreadcrumbsProps> = ({
   categoryId,
   subcategoryId,
   isConcernPage,
+  isProductPage = false,
   formattedName
 }) => {
   return (
@@ -23,8 +25,19 @@ export const CategoryBreadcrumbs: React.FC<CategoryBreadcrumbsProps> = ({
       
       {isConcernPage ? (
         <>
-          <Link to="/categories" className="hover:text-bahola-blue-600">Health Concerns</Link>
+          <Link to="/health-concerns" className="hover:text-bahola-blue-600">Health Concerns</Link>
           <ChevronRight size={14} className="mx-1" />
+        </>
+      ) : isProductPage ? (
+        <>
+          <Link to="/products" className="hover:text-bahola-blue-600">Products</Link>
+          <ChevronRight size={14} className="mx-1" />
+          {subcategoryId && (
+            <>
+              <Link to={`/products/${categoryId}`} className="hover:text-bahola-blue-600">{formattedName}</Link>
+              <ChevronRight size={14} className="mx-1" />
+            </>
+          )}
         </>
       ) : (
         <>
