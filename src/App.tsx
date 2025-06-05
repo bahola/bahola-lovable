@@ -1,3 +1,4 @@
+
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -94,6 +95,16 @@ const FoodAllergiesPage = React.lazy(() => import('./pages/health-concerns/aller
 const PanicDisorderPage = React.lazy(() => import('./pages/health-concerns/anxiety/PanicDisorderPage'));
 const GeneralizedAnxietyPage = React.lazy(() => import('./pages/health-concerns/anxiety/GeneralizedAnxietyPage'));
 const IBSPage = React.lazy(() => import('./pages/health-concerns/digestive/IBSPage'));
+
+// Add lazy imports for infection-related pages
+const BacterialInfections = React.lazy(() => import('./pages/health-concerns/BacterialInfections'));
+const ViralInfections = React.lazy(() => import('./pages/health-concerns/ViralInfections'));
+const FungalInfections = React.lazy(() => import('./pages/health-concerns/FungalInfections'));
+const UrinaryTractInfections = React.lazy(() => import('./pages/health-concerns/UrinaryTractInfections'));
+const SkinInfections = React.lazy(() => import('./pages/health-concerns/SkinInfections'));
+const EarSinusInfections = React.lazy(() => import('./pages/health-concerns/EarSinusInfections'));
+const RecurrentFevers = React.lazy(() => import('./pages/health-concerns/RecurrentFevers'));
+const FeverWithChills = React.lazy(() => import('./pages/health-concerns/FeverWithChills'));
 
 const queryClient = new QueryClient();
 
@@ -206,6 +217,16 @@ function App() {
                       <Route path="/concern/anxiety-stress/panic-disorder" element={<PanicDisorderPage />} />
                       <Route path="/concern/anxiety-stress/generalized-anxiety" element={<GeneralizedAnxietyPage />} />
                       <Route path="/concern/digestive-issues/ibs" element={<IBSPage />} />
+                      
+                      {/* Infection-related routes */}
+                      <Route path="/concern/bacterial-infections" element={<BacterialInfections />} />
+                      <Route path="/concern/viral-infections" element={<ViralInfections />} />
+                      <Route path="/concern/fungal-infections" element={<FungalInfections />} />
+                      <Route path="/concern/urinary-tract-infections" element={<UrinaryTractInfections />} />
+                      <Route path="/concern/skin-infections" element={<SkinInfections />} />
+                      <Route path="/concern/ear-sinus-infections" element={<EarSinusInfections />} />
+                      <Route path="/concern/recurrent-fevers" element={<RecurrentFevers />} />
+                      <Route path="/concern/fever-with-chills" element={<FeverWithChills />} />
                       
                       {/* Search routes with dynamic parameters */}
                       <Route path="/search" element={<Shop />} />

@@ -1,88 +1,42 @@
 
-export const respiratoryData = [
+import { HealthConcern } from './types';
+
+export const respiratoryData: HealthConcern[] = [
   {
     id: 'cold-flu',
     name: 'Cold & Flu',
-    description: 'Natural immune support and symptom relief for common cold and flu',
-    category: 'Respiratory Health',
+    description: 'Natural immune support and symptom relief for common cold, flu, and upper respiratory infections.',
+    category: 'Respiratory Care',
     icon: '🤧',
-    image: '/lovable-uploads/cold-flu.jpg',
-    searchVolume: 45200,
-    commonRemedies: ['Oscillococcinum', 'Aconitum', 'Belladonna', 'Gelsemium'],
-    keywords: ['cold', 'flu', 'common cold', 'viral infection'],
+    image: '/lovable-uploads/0108ad38-606a-475c-a72b-c841b9ba5dae.png',
+    searchVolume: 65000,
+    commonRemedies: ['Oscillococcinum', 'Belladonna', 'Gelsemium', 'Bryonia'],
+    keywords: ['cold', 'flu', 'cough', 'fever', 'respiratory infection', 'immune support'],
     lastUpdated: '2024-01-15',
     trending: true
   },
   {
-    id: 'chronic-rhinitis',
-    name: 'Chronic Rhinitis',
-    description: 'Long-term relief for persistent nasal inflammation and congestion',
-    category: 'Respiratory Health',
-    icon: '👃',
-    image: '/lovable-uploads/chronic-rhinitis.jpg',
-    searchVolume: 8900,
-    commonRemedies: ['Kali Bichromicum', 'Pulsatilla', 'Silicea', 'Hepar Sulph'],
-    keywords: ['chronic rhinitis', 'nasal congestion', 'persistent runny nose', 'sinus problems'],
-    lastUpdated: '2024-01-15'
+    id: 'asthma',
+    name: 'Asthma',
+    description: 'Comprehensive homeopathic support for asthma, breathing difficulties, and respiratory allergies.',
+    category: 'Respiratory Care',
+    icon: '🫁',
+    image: '/lovable-uploads/730d1598-271f-4c89-b882-c14cbc238a19.png',
+    searchVolume: 43000,
+    commonRemedies: ['Arsenicum Album', 'Ipecacuanha', 'Natrum Sulphuricum', 'Blatta Orientalis'],
+    keywords: ['asthma', 'breathing problems', 'wheezing', 'respiratory allergies', 'shortness of breath'],
+    lastUpdated: '2024-01-12'
   },
   {
-    id: 'sore-throat',
-    name: 'Sore Throat',
-    description: 'Fast relief for throat pain, inflammation, and irritation',
-    category: 'Respiratory Health',
-    icon: '🗣️',
-    image: '/lovable-uploads/sore-throat.jpg',
-    searchVolume: 26800,
-    commonRemedies: ['Belladonna', 'Mercurius', 'Hepar Sulph', 'Apis Mellifica'],
-    keywords: ['sore throat', 'throat pain', 'pharyngitis', 'throat infection'],
-    lastUpdated: '2024-01-15'
-  },
-  {
-    id: 'tonsillitis',
-    name: 'Tonsillitis',
-    description: 'Gentle treatment for inflamed tonsils and recurrent throat infections',
-    category: 'Respiratory Health',
-    icon: '🦠',
-    image: '/lovable-uploads/tonsillitis.jpg',
-    searchVolume: 15600,
-    commonRemedies: ['Belladonna', 'Mercurius', 'Hepar Sulph', 'Baryta Carbonica'],
-    keywords: ['tonsillitis', 'inflamed tonsils', 'throat infection', 'recurrent tonsillitis'],
-    lastUpdated: '2024-01-15'
-  },
-  {
-    id: 'loss-of-voice',
-    name: 'Loss of Voice (Laryngitis)',
-    description: 'Natural restoration of voice and treatment for laryngeal inflammation',
-    category: 'Respiratory Health',
-    icon: '🔇',
-    image: '/lovable-uploads/voice-loss.jpg',
-    searchVolume: 11200,
-    commonRemedies: ['Argentum Nitricum', 'Causticum', 'Phosphorus', 'Carbo Vegetabilis'],
-    keywords: ['loss of voice', 'laryngitis', 'hoarseness', 'voice problems'],
-    lastUpdated: '2024-01-15'
-  },
-  {
-    id: 'nose-bleeds',
-    name: 'Nose Bleeds (Epistaxis)',
-    description: 'Effective treatment for frequent nosebleeds and nasal bleeding tendencies',
-    category: 'Respiratory Health',
-    icon: '🩸',
-    image: '/lovable-uploads/nosebleeds.jpg',
-    searchVolume: 9800,
-    commonRemedies: ['Phosphorus', 'Arnica Montana', 'Ferrum Phosphoricum', 'Ipecacuanha'],
-    keywords: ['nosebleeds', 'epistaxis', 'nasal bleeding', 'bloody nose'],
-    lastUpdated: '2024-01-15'
-  },
-  {
-    id: 'nasal-polyps',
-    name: 'Nasal Polyps',
-    description: 'Natural treatment for nasal polyps and associated breathing difficulties',
-    category: 'Respiratory Health',
-    icon: '👃',
-    image: '/lovable-uploads/nasal-polyps.jpg',
-    searchVolume: 7600,
-    commonRemedies: ['Teucrium Marum', 'Calcarea Carbonica', 'Sanguinaria', 'Lemna Minor'],
-    keywords: ['nasal polyps', 'nasal obstruction', 'breathing problems', 'sinus blockage'],
-    lastUpdated: '2024-01-15'
+    id: 'chronic-cough',
+    name: 'Chronic Cough',
+    description: 'Natural treatment for persistent cough, bronchitis, and chronic respiratory conditions.',
+    category: 'Respiratory Care',
+    icon: '😷',
+    image: '/lovable-uploads/a824791e-2dc7-4e18-b909-67012e2997d7.png',
+    searchVolume: 38000,
+    commonRemedies: ['Drosera', 'Rumex Crispus', 'Spongia', 'Antimonium Tartaricum'],
+    keywords: ['chronic cough', 'persistent cough', 'bronchitis', 'respiratory conditions'],
+    lastUpdated: '2024-01-10'
   }
 ];

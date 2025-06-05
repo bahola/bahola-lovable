@@ -15,17 +15,23 @@ export interface HealthConcern {
 
 export type HealthConcernCategory = 
   | 'Allergies'
-  | 'Anxiety & Mental Health'
-  | 'Digestive Health'
-  | 'Respiratory Health'
-  | "Women's Care"
+  | 'Cancer'
+  | 'Heart Health'
+  | 'Child Care'
+  | 'Ear Nose Throat'
+  | 'Eye Care'
+  | 'Gut Health'
+  | 'Womens Care'
   | 'Hair Care'
-  | 'Immune Boosters'
-  | 'Heart & Circulation'
-  | 'Cancer Support'
-  | "Children's Health"
-  | 'Weight & Metabolism'
-  | 'Pain Management'
-  | 'Sensory Health'
-  | 'Skin Health'
-  | 'Infection';
+  | 'Immune boosters'
+  | 'Infection'
+  | 'Lifestyle'
+  | 'Muscle & Joint Care'
+  | 'Mental health'
+  | 'Nutritive'
+  | 'Pain Care'
+  | 'Reproductive care'
+  | 'Respiratory Care'
+  | 'Skin Care'
+  | 'Tooth Care'
+  | 'Urinary care';

@@ -1,76 +1,42 @@
 
-export const anxietyData = [
+import { HealthConcern } from './types';
+
+export const anxietyData: HealthConcern[] = [
   {
     id: 'anxiety-stress',
     name: 'Anxiety & Stress',
-    description: 'Natural relief for anxiety, stress, and emotional imbalances',
-    category: 'Anxiety & Mental Health',
+    description: 'Natural homeopathic remedies for anxiety, stress, panic attacks, and nervous tension to restore emotional balance.',
+    category: 'Mental health',
     icon: '🧠',
-    image: '/lovable-uploads/anxiety-relief.jpg',
-    searchVolume: 28500,
-    commonRemedies: ['Arsenicum Album', 'Aconitum', 'Gelsemium', 'Ignatia'],
-    keywords: ['anxiety', 'stress', 'panic attacks', 'nervousness'],
+    image: '/lovable-uploads/0108ad38-606a-475c-a72b-c841b9ba5dae.png',
+    searchVolume: 52000,
+    commonRemedies: ['Aconitum Napellus', 'Argentum Nitricum', 'Gelsemium', 'Ignatia'],
+    keywords: ['anxiety', 'stress', 'panic attacks', 'nervousness', 'worry', 'tension'],
     lastUpdated: '2024-01-15',
     trending: true
   },
   {
-    id: 'generalized-anxiety',
-    name: 'Generalized Anxiety Disorder',
-    description: 'Comprehensive support for persistent worry and anxiety',
-    category: 'Anxiety & Mental Health',
-    icon: '😰',
-    image: '/lovable-uploads/gad-support.jpg',
-    searchVolume: 15200,
-    commonRemedies: ['Arsenicum Album', 'Lycopodium', 'Phosphorus'],
-    keywords: ['generalized anxiety', 'persistent worry', 'chronic anxiety'],
-    lastUpdated: '2024-01-10'
-  },
-  {
-    id: 'panic-disorder',
-    name: 'Panic Disorder',
-    description: 'Natural treatment for panic attacks and acute anxiety episodes',
-    category: 'Anxiety & Mental Health',
-    icon: '💓',
-    image: '/lovable-uploads/panic-support.jpg',
-    searchVolume: 12800,
-    commonRemedies: ['Aconitum', 'Arsenicum Album', 'Gelsemium'],
-    keywords: ['panic attacks', 'panic disorder', 'acute anxiety'],
-    lastUpdated: '2024-01-12'
-  },
-  {
     id: 'depression-mood',
-    name: 'Depression & Mood Disorders',
-    description: 'Supportive care for depression, mood swings, and emotional wellness',
-    category: 'Anxiety & Mental Health',
+    name: 'Depression & Mood',
+    description: 'Gentle homeopathic support for depression, mood swings, and emotional imbalances to promote mental wellness.',
+    category: 'Mental health',
     icon: '💭',
-    image: '/lovable-uploads/mood-support.jpg',
-    searchVolume: 19600,
-    commonRemedies: ['Ignatia', 'Natrum Muriaticum', 'Aurum Metallicum', 'Sepia'],
-    keywords: ['depression', 'mood disorders', 'emotional wellness', 'sadness'],
-    lastUpdated: '2024-01-15'
+    image: '/lovable-uploads/730d1598-271f-4c89-b882-c14cbc238a19.png',
+    searchVolume: 41000,
+    commonRemedies: ['Aurum Metallicum', 'Natrum Muriaticum', 'Sepia', 'Pulsatilla'],
+    keywords: ['depression', 'mood swings', 'sadness', 'emotional imbalance', 'melancholy'],
+    lastUpdated: '2024-01-12'
   },
   {
     id: 'insomnia-sleep-disorders',
     name: 'Insomnia & Sleep Disorders',
-    description: 'Natural solutions for sleep problems and restful nights',
-    category: 'Anxiety & Mental Health',
+    description: 'Natural sleep aids and remedies for insomnia, restless sleep, and sleep disturbances.',
+    category: 'Mental health',
     icon: '😴',
-    image: '/lovable-uploads/sleep-support.jpg',
-    searchVolume: 24300,
-    commonRemedies: ['Coffea Cruda', 'Nux Vomica', 'Passiflora', 'Chamomilla'],
-    keywords: ['insomnia', 'sleep disorders', 'sleep problems', 'restless sleep'],
-    lastUpdated: '2024-01-15'
-  },
-  {
-    id: 'anxiety-sleep-disorders-cancer',
-    name: 'Anxiety & Sleep Disorders (Cancer)',
-    description: 'Specialized support for anxiety and sleep issues during cancer treatment',
-    category: 'Cancer Support',
-    icon: '🌙',
-    image: '/lovable-uploads/cancer-anxiety.jpg',
-    searchVolume: 5600,
-    commonRemedies: ['Arsenicum Album', 'Ignatia', 'Coffea Cruda', 'Gelsemium'],
-    keywords: ['cancer anxiety', 'treatment anxiety', 'cancer sleep problems', 'oncology support'],
-    lastUpdated: '2024-01-15'
+    image: '/lovable-uploads/a824791e-2dc7-4e18-b909-67012e2997d7.png',
+    searchVolume: 39000,
+    commonRemedies: ['Coffea Cruda', 'Passiflora', 'Kali Phosphoricum', 'Nux Vomica'],
+    keywords: ['insomnia', 'sleep disorders', 'restless sleep', 'sleeplessness', 'sleep problems'],
+    lastUpdated: '2024-01-10'
   }
 ];

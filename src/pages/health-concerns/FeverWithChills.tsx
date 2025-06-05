@@ -11,31 +11,31 @@ const FeverWithChills = () => {
       <div className="space-y-8">
         <div className="bg-white rounded-lg shadow-sm border p-6">
           <h2 className="text-2xl font-semibold text-bahola-navy-950 mb-4 font-helvetica">
-            Treatment for Fever with Chills
+            Natural Treatment for Fever with Chills
           </h2>
           <p className="text-bahola-neutral-700 mb-4">
-            Homeopathy provides targeted treatment for fevers accompanied by chills and 
-            intermittent patterns, addressing the complete symptom picture for faster recovery.
+            Homeopathy provides effective treatment for fever with chills by addressing the 
+            underlying cause and supporting the body's natural healing mechanisms.
           </p>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-semibold text-bahola-navy-950 mb-2">Symptoms Addressed:</h3>
+              <h3 className="text-lg font-semibold text-bahola-navy-950 mb-2">Fever Symptoms:</h3>
               <ul className="space-y-1 text-bahola-neutral-700">
-                <li>• Alternating fever and chills</li>
-                <li>• Shivering with high temperature</li>
-                <li>• Intermittent fever patterns</li>
-                <li>• Malaria-like symptoms</li>
-                <li>• Sweating stages</li>
-                <li>• Periodic temperature spikes</li>
+                <li>• Sudden onset of high fever</li>
+                <li>• Alternating chills and heat</li>
+                <li>• Shivering and sweating</li>
+                <li>• Body aches and weakness</li>
+                <li>• Headache with fever</li>
+                <li>• Restlessness during fever</li>
               </ul>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-bahola-navy-950 mb-2">Key Remedies:</h3>
               <ul className="space-y-1 text-bahola-neutral-700">
-                <li>• <strong>China:</strong> For intermittent fever patterns</li>
-                <li>• <strong>Arsenicum Album:</strong> For chills with anxiety</li>
-                <li>• <strong>Nux Vomica:</strong> For chills without thirst</li>
-                <li>• <strong>Ignatia:</strong> For emotional fever patterns</li>
+                <li>• <strong>Aconitum:</strong> For sudden onset with restlessness</li>
+                <li>• <strong>Belladonna:</strong> For high fever with throbbing</li>
+                <li>• <strong>Bryonia:</strong> For fever with body aches</li>
+                <li>• <strong>Gelsemium:</strong> For fever with weakness</li>
               </ul>
             </div>
           </div>
