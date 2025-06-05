@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, Users, TrendingUp, ArrowLeft, Package } from 'lucide-react';
-import { HealthConcern } from '@/data/healthConcernsData';
+import { HealthConcern } from '@/data/health-concerns/types';
 
 interface HealthConcernPageLayoutProps {
   concern: HealthConcern;
