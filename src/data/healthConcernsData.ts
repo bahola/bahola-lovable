@@ -1,4 +1,3 @@
-
 export interface HealthConcern {
   id: string;
   name: string;
@@ -14,7 +13,7 @@ export interface HealthConcern {
 }
 
 export const healthConcernsData: HealthConcern[] = [
-  // Allergies
+  // Allergies - Updated with all sub-conditions
   {
     id: 'seasonal-allergies',
     name: 'Seasonal Allergies (Hay Fever)',
@@ -51,6 +50,90 @@ export const healthConcernsData: HealthConcern[] = [
     commonRemedies: ['Natrum Muriaticum', 'Lycopodium', 'Carbo Vegetabilis'],
     keywords: ['food allergies', 'milk allergy', 'gluten', 'nut allergies'],
     lastUpdated: '2024-01-08',
+  },
+  {
+    id: 'drug-allergies',
+    name: 'Drug Allergies',
+    description: 'Homeopathic approach to managing drug allergy reactions and sensitivities.',
+    category: 'allergies',
+    icon: '💊',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 18000,
+    commonRemedies: ['Apis Mellifica', 'Urtica Urens', 'Sulphur'],
+    keywords: ['drug allergies', 'medication allergy', 'pharmaceutical sensitivity'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'skin-allergies',
+    name: 'Skin Allergies (Hives, Eczema, Urticaria)',
+    description: 'Natural treatment for skin allergic reactions including hives and urticaria.',
+    category: 'allergies',
+    icon: '🔴',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 30000,
+    commonRemedies: ['Apis Mellifica', 'Urtica Urens', 'Graphites', 'Sulphur'],
+    keywords: ['skin allergies', 'hives', 'urticaria', 'eczema', 'skin rash'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'allergic-rhinitis',
+    name: 'Allergic Rhinitis',
+    description: 'Comprehensive treatment for allergic rhinitis and nasal congestion.',
+    category: 'allergies',
+    icon: '👃',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 25000,
+    commonRemedies: ['Allium Cepa', 'Arsenicum Album', 'Euphrasia'],
+    keywords: ['allergic rhinitis', 'nasal allergy', 'runny nose', 'congestion'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'pet-dander-allergy',
+    name: 'Pet Dander Allergy',
+    description: 'Natural relief from pet dander and animal hair allergies.',
+    category: 'allergies',
+    icon: '🐕',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 22000,
+    commonRemedies: ['Arsenicum Album', 'Histaminum', 'Natrum Muriaticum'],
+    keywords: ['pet allergy', 'dander allergy', 'animal hair allergy', 'cat allergy', 'dog allergy'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'mold-allergy',
+    name: 'Mold Allergy',
+    description: 'Homeopathic treatment for mold and fungal allergies.',
+    category: 'allergies',
+    icon: '🍄',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 15000,
+    commonRemedies: ['Arsenicum Album', 'Sulphur', 'Thuja'],
+    keywords: ['mold allergy', 'fungal allergy', 'dampness allergy'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'latex-allergy',
+    name: 'Latex Allergy',
+    description: 'Natural approach to latex sensitivity and allergic reactions.',
+    category: 'allergies',
+    icon: '🧤',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 12000,
+    commonRemedies: ['Apis Mellifica', 'Urtica Urens', 'Rhus Toxicodendron'],
+    keywords: ['latex allergy', 'rubber allergy', 'contact allergy'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'sinus-allergy',
+    name: 'Sinus Allergy',
+    description: 'Comprehensive care for sinus allergies and chronic sinusitis.',
+    category: 'allergies',
+    icon: '😤',
+    image: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=400&h=300&fit=crop',
+    searchVolume: 28000,
+    commonRemedies: ['Kali Bichromicum', 'Silicea', 'Pulsatilla'],
+    keywords: ['sinus allergy', 'chronic sinusitis', 'sinus congestion'],
+    lastUpdated: '2024-01-15',
   },
 
   // Cancer Support
