@@ -191,7 +191,7 @@ const AppRoutes = () => {
         <Route path="/help/shipping-issues" element={<ShippingIssues />} />
         <Route path="/help/certifications" element={<Certifications />} />
         
-        {/* Health Concern Category Routes - NEW STRUCTURE */}
+        {/* Health Concern Category Routes - Fixed to match actual category names */}
         <Route path="/health-concerns/allergy-care" element={<AllergyCare />} />
         <Route path="/health-concerns/gut-health" element={<GutHealth />} />
         <Route path="/health-concerns/heart-health" element={<HeartHealth />} />
@@ -216,7 +216,7 @@ const AppRoutes = () => {
         <Route path="/health-concerns/urology-care" element={<UrologyCare />} />
         <Route path="/health-concerns/womens-health" element={<WomensHealth />} />
 
-        {/* Individual Health Concern Pages - NEW STRUCTURE */}
+        {/* Individual Health Concern Pages */}
         <Route path="/health-concerns/anxiety-stress" element={<AnxietyStress />} />
         <Route path="/health-concerns/insomnia-sleep-disorders" element={<InsomniaPage />} />
         <Route path="/health-concerns/digestive-issues" element={<DigestiveIssues />} />
@@ -240,7 +240,7 @@ const AppRoutes = () => {
         <Route path="/health-concerns/anxiety-stress/generalized-anxiety" element={<GeneralizedAnxietyPage />} />
         <Route path="/health-concerns/digestive-issues/ibs" element={<IBSPage />} />
         
-        {/* Infection-related routes - NEW STRUCTURE */}
+        {/* Infection-related routes */}
         <Route path="/health-concerns/bacterial-infections" element={<BacterialInfections />} />
         <Route path="/health-concerns/viral-infections" element={<ViralInfections />} />
         <Route path="/health-concerns/fungal-infections" element={<FungalInfections />} />
@@ -250,7 +250,7 @@ const AppRoutes = () => {
         <Route path="/health-concerns/recurrent-fevers" element={<RecurrentFevers />} />
         <Route path="/health-concerns/fever-with-chills" element={<FeverWithChills />} />
         
-        {/* Additional health concern routes - NEW STRUCTURE */}
+        {/* Additional health concern routes */}
         <Route path="/health-concerns/seasonal-allergies" element={<SeasonalAllergies />} />
         <Route path="/health-concerns/teething-troubles" element={<Teething />} />
         <Route path="/health-concerns/acne-pimples" element={<Acne />} />
@@ -261,70 +261,6 @@ const AppRoutes = () => {
         <Route path="/health-concerns/fibroids-supportive" element={<FibroidsSupportive />} />
         <Route path="/health-concerns/general-weakness" element={<GeneralWeakness />} />
         <Route path="/health-concerns/convalescence-remedies" element={<ConvalescenceRemedies />} />
-        
-        {/* Placeholder routes for future health concerns - NEW STRUCTURE */}
-        <Route path="/health-concerns/dust-allergy" element={<></>} />
-        <Route path="/health-concerns/drug-allergies" element={<></>} />
-        <Route path="/health-concerns/allergic-rhinitis" element={<></>} />
-        <Route path="/health-concerns/pet-dander-allergy" element={<></>} />
-        <Route path="/health-concerns/mold-allergy" element={<></>} />
-        <Route path="/health-concerns/latex-allergy" element={<></>} />
-        <Route path="/health-concerns/sinus-allergy" element={<></>} />
-        
-        <Route path="/health-concerns/cancer-related-fatigue" element={<></>} />
-        <Route path="/health-concerns/immune-weakness-cancer" element={<></>} />
-        <Route path="/health-concerns/loss-of-appetite-cancer" element={<></>} />
-        <Route path="/health-concerns/mouth-ulcers-cancer-treatment" element={<></>} />
-        <Route path="/health-concerns/lymphedema-support" element={<></>} />
-        <Route path="/health-concerns/anxiety-sleep-disorders-cancer" element={<></>} />
-        
-        <Route path="/health-concerns/high-cholesterol" element={<></>} />
-        <Route path="/health-concerns/angina-pectoris" element={<></>} />
-        <Route path="/health-concerns/varicose-veins" element={<></>} />
-        <Route path="/health-concerns/arrhythmias" element={<></>} />
-        <Route path="/health-concerns/post-heart-attack-recovery" element={<></>} />
-        
-        <Route path="/health-concerns/colic" element={<></>} />
-        <Route path="/health-concerns/diaper-rash" element={<></>} />
-        <Route path="/health-concerns/childhood-constipation" element={<></>} />
-        <Route path="/health-concerns/growth-appetite-issues" element={<></>} />
-        <Route path="/health-concerns/bedwetting" element={<></>} />
-        <Route path="/health-concerns/childhood-allergies" element={<></>} />
-        <Route path="/health-concerns/worms" element={<></>} />
-        <Route path="/health-concerns/temper-tantrums" element={<></>} />
-        
-        <Route path="/health-concerns/earache-otitis-media" element={<></>} />
-        <Route path="/health-concerns/sinusitis" element={<></>} />
-        <Route path="/health-concerns/tonsillitis" element={<></>} />
-        <Route path="/health-concerns/sore-throat" element={<></>} />
-        <Route path="/health-concerns/nasal-polyps" element={<></>} />
-        <Route path="/health-concerns/nose-bleeds-epistaxis" element={<></>} />
-        <Route path="/health-concerns/tinnitus" element={<></>} />
-        <Route path="/health-concerns/loss-of-voice-laryngitis" element={<></>} />
-        
-        <Route path="/health-concerns/eye-strain-digital-fatigue" element={<></>} />
-        <Route path="/health-concerns/dry-eyes" element={<></>} />
-        <Route path="/health-concerns/conjunctivitis" element={<></>} />
-        <Route path="/health-concerns/eye-redness-itching" element={<></>} />
-        <Route path="/health-concerns/stye-chalazion" element={<></>} />
-        <Route path="/health-concerns/vision-weakness" element={<></>} />
-        <Route path="/health-concerns/watering-eyes" element={<></>} />
-        <Route path="/health-concerns/light-sensitivity" element={<></>} />
-        
-        <Route path="/health-concerns/hair-fall-loss" element={<></>} />
-        <Route path="/health-concerns/dandruff" element={<></>} />
-        <Route path="/health-concerns/premature-greying" element={<></>} />
-        <Route path="/health-concerns/scalp-itching-infections" element={<></>} />
-        <Route path="/health-concerns/alopecia-areata" element={<></>} />
-        <Route path="/health-concerns/thinning-hair" element={<></>} />
-        <Route path="/health-concerns/postpartum-hair-fall" element={<></>} />
-        
-        <Route path="/health-concerns/recurrent-colds-cough" element={<></>} />
-        <Route path="/health-concerns/frequent-infections" element={<></>} />
-        <Route path="/health-concerns/low-energy-levels" element={<></>} />
-        <Route path="/health-concerns/post-illness-recovery" element={<></>} />
-        <Route path="/health-concerns/childrens-immunity-drops" element={<></>} />
-        <Route path="/health-concerns/elderly-immune-support" element={<></>} />
 
         {/* Search routes with dynamic parameters */}
         <Route path="/search" element={<Shop />} />
