@@ -6,7 +6,7 @@ export type { HealthConcern } from './health-concerns/types';
 // Create categoryInfo object based on the original categories
 export const categoryInfo = {
   'Allergies': {
-    name: 'Allergies',
+    name: 'Allergy Care',
     description: 'Natural relief for allergic reactions and hypersensitivities'
   },
   'Cancer': {
@@ -22,7 +22,7 @@ export const categoryInfo = {
     description: 'Safe and gentle remedies for pediatric care'
   },
   'Ear Nose Throat': {
-    name: 'Ear Nose Throat',
+    name: 'ENT Care',
     description: 'Natural treatments for ENT conditions'
   },
   'Eye Care': {

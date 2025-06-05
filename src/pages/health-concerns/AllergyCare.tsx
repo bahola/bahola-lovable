@@ -11,7 +11,8 @@ const AllergyCare = () => {
   const [sortBy, setSortBy] = useState('popular');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const categoryName = 'Allergy Care';
+  // Updated to match the actual category name in the data
+  const categoryName = 'Allergies';
   const filteredConcerns = healthConcernsData.filter(concern => {
     const matchesCategory = concern.category === categoryName;
     const matchesSearch = concern.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,7 +45,7 @@ const AllergyCare = () => {
         <div className="bg-bahola-blue-50 py-16">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-bahola-navy-950 mb-4">
-              {categoryName}
+              Allergy Care
             </h1>
             <p className="text-xl text-bahola-neutral-600 max-w-3xl mx-auto">
               Natural homeopathic solutions for allergies, hay fever, and immune system support
@@ -55,7 +56,7 @@ const AllergyCare = () => {
         <div className="bg-gray-50 px-4 py-8">
           <div className="container mx-auto">
             <HealthConcernsBreadcrumb 
-              categoryName={categoryName}
+              categoryName="Allergy Care"
               categoryPath="/health-concerns/allergy-care"
             />
 

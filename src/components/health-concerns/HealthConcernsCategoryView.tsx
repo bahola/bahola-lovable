@@ -24,29 +24,29 @@ interface HealthConcernsCategoryViewProps {
 }
 
 const categoryRoutes: Record<string, string> = {
-  'Allergy Care': '/health-concerns/allergy-care',
+  'Allergies': '/health-concerns/allergy-care',
   'Gut Health': '/health-concerns/gut-health',
   'Heart Health': '/health-concerns/heart-health',
   'Child Care': '/health-concerns/child-care',
   'Cancer': '/health-concerns/cancer-support',
   'Anxiety & Mental Health': '/health-concerns/anxiety-mental-health',
-  'ENT Care': '/health-concerns/ent-care',
+  'Ear Nose Throat': '/health-concerns/ent-care',
   'Eye Care': '/health-concerns/eye-care',
   'Hair Care': '/health-concerns/hair-care',
-  'Immune Boosters': '/health-concerns/immune-boosters',
-  'Infection Care': '/health-concerns/infection-care',
-  'Lifestyle Care': '/health-concerns/lifestyle-care',
-  'Mental Health': '/health-concerns/mental-health',
-  'Muscle Care': '/health-concerns/muscle-care',
-  'Nutritive Care': '/health-concerns/nutritive-care',
+  'Immune boosters': '/health-concerns/immune-boosters',
+  'Infection': '/health-concerns/infection-care',
+  'Lifestyle': '/health-concerns/lifestyle-care',
+  'Mental health': '/health-concerns/mental-health',
+  'Muscle & Joint Care': '/health-concerns/muscle-care',
+  'Nutritive': '/health-concerns/nutritive-care',
   'Pain Care': '/health-concerns/pain-care',
-  'Reproductive Care': '/health-concerns/reproductive-care',
+  'Reproductive care': '/health-concerns/reproductive-care',
   'Respiratory Care': '/health-concerns/respiratory-care',
   'Skin Care': '/health-concerns/skin-care',
   'Specialty Care': '/health-concerns/specialty-care',
   'Tooth Care': '/health-concerns/tooth-care',
-  'Urology Care': '/health-concerns/urology-care',
-  'Women\'s Health': '/health-concerns/womens-health'
+  'Urinary care': '/health-concerns/urology-care',
+  'Womens Care': '/health-concerns/womens-health'
 };
 
 export const HealthConcernsCategoryView: React.FC<HealthConcernsCategoryViewProps> = ({
