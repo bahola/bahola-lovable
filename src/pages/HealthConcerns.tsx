@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HealthConcernsHero } from '@/components/health-concerns/HealthConcernsHero';
 import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthConcernsBreadcrumb';
 import { HealthConcernsToolbar } from '@/components/health-concerns/HealthConcernsToolbar';
@@ -15,6 +16,25 @@ const HealthConcerns = () => {
   const [sortBy, setSortBy] = useState('popular');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
+
+  // Category route mapping
+  const categoryRoutes: Record<string, string> = {
+    'Allergy Care': '/health-concerns/allergy-care',
+    'Gut Health': '/health-concerns/gut-health',
+    'Heart Health': '/health-concerns/heart-health',
+    'Child Care': '/health-concerns/child-care',
+    'Cancer': '/health-concerns/cancer-support',
+  };
+
+  // Handle category change - navigate to specific category page
+  const handleCategoryChange = (category: string) => {
+    if (category !== 'all' && categoryRoutes[category]) {
+      navigate(categoryRoutes[category]);
+    } else {
+      setSelectedCategory(category);
+    }
+  };
 
   const filteredConcerns = healthConcernsData.filter(concern => {
     const matchesSearch = concern.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -87,7 +107,7 @@ const HealthConcerns = () => {
               <aside className={`lg:w-64 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                 <HealthConcernFilters
                   selectedCategory={selectedCategory}
-                  onCategoryChange={setSelectedCategory}
+                  onCategoryChange={handleCategoryChange}
                 />
               </aside>
 

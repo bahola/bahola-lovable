@@ -131,6 +131,23 @@ const GutHealth = React.lazy(() => import('./pages/health-concerns/GutHealth'));
 const HeartHealth = React.lazy(() => import('./pages/health-concerns/HeartHealth'));
 const ChildCare = React.lazy(() => import('./pages/health-concerns/ChildCare'));
 const CancerSupport = React.lazy(() => import('./pages/health-concerns/CancerSupport'));
+const AnxietyMentalHealth = React.lazy(() => import('./pages/health-concerns/AnxietyMentalHealth'));
+const ENTCare = React.lazy(() => import('./pages/health-concerns/ENTCare'));
+const EyeCare = React.lazy(() => import('./pages/health-concerns/EyeCare'));
+const HairCare = React.lazy(() => import('./pages/health-concerns/HairCare'));
+const ImmuneBoosters = React.lazy(() => import('./pages/health-concerns/ImmuneBoosters'));
+const InfectionCare = React.lazy(() => import('./pages/health-concerns/InfectionCare'));
+const LifestyleCare = React.lazy(() => import('./pages/health-concerns/LifestyleCare'));
+const MentalHealth = React.lazy(() => import('./pages/health-concerns/MentalHealth'));
+const MuscleCare = React.lazy(() => import('./pages/health-concerns/MuscleCare'));
+const NutritiveCare = React.lazy(() => import('./pages/health-concerns/NutritiveCare'));
+const PainCare = React.lazy(() => import('./pages/health-concerns/PainCare'));
+const ReproductiveCare = React.lazy(() => import('./pages/health-concerns/ReproductiveCare'));
+const RespiratoryCare = React.lazy(() => import('./pages/health-concerns/RespiratoryCare'));
+const SkinCare = React.lazy(() => import('./pages/health-concerns/SkinCare'));
+const SpecialtyCare = React.lazy(() => import('./pages/health-concerns/SpecialtyCare'));
+const ToothCare = React.lazy(() => import('./pages/health-concerns/ToothCare'));
+const UrologyCare = React.lazy(() => import('./pages/health-concerns/UrologyCare'));
 
 function App() {
   return (
@@ -347,6 +364,24 @@ function App() {
                       <Route path="/health-concerns/heart-health" element={<HeartHealth />} />
                       <Route path="/health-concerns/child-care" element={<ChildCare />} />
                       <Route path="/health-concerns/cancer-support" element={<CancerSupport />} />
+                      <Route path="/health-concerns/anxiety-mental-health" element={<AnxietyMentalHealth />} />
+                      <Route path="/health-concerns/ent-care" element={<ENTCare />} />
+                      <Route path="/health-concerns/eye-care" element={<EyeCare />} />
+                      <Route path="/health-concerns/hair-care" element={<HairCare />} />
+                      <Route path="/health-concerns/immune-boosters" element={<ImmuneBoosters />} />
+                      <Route path="/health-concerns/infection-care" element={<InfectionCare />} />
+                      <Route path="/health-concerns/lifestyle-care" element={<LifestyleCare />} />
+                      <Route path="/health-concerns/mental-health" element={<MentalHealth />} />
+                      <Route path="/health-concerns/muscle-care" element={<MuscleCare />} />
+                      <Route path="/health-concerns/nutritive-care" element={<NutritiveCare />} />
+                      <Route path="/health-concerns/pain-care" element={<PainCare />} />
+                      <Route path="/health-concerns/reproductive-care" element={<ReproductiveCare />} />
+                      <Route path="/health-concerns/respiratory-care" element={<RespiratoryCare />} />
+                      <Route path="/health-concerns/skin-care" element={<SkinCare />} />
+                      <Route path="/health-concerns/specialty-care" element={<SpecialtyCare />} />
+                      <Route path="/health-concerns/tooth-care" element={<ToothCare />} />
+                      <Route path="/health-concerns/urology-care" element={<UrologyCare />} />
+                      <Route path="/health-concerns/womens-health" element={<WomensHealth />} />
                       
                       <Route path="*" element={<NotFound />} />
                     </Routes>
