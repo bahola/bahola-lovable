@@ -15,6 +15,14 @@ import { lifestyleData } from './lifestyle';
 import { entData } from './entData';
 import { gutHealthData } from './gutHealthData';
 import { reproductiveData } from './reproductiveData';
+import { eyeCareData } from './eyeCareData';
+import { skinCareData } from './skinCareData';
+import { muscleCareData } from './muscleCareData';
+import { mentalHealthData } from './mentalHealthData';
+import { nutritiveData } from './nutritiveData';
+import { painCareData } from './painCareData';
+import { toothCareData } from './toothCareData';
+import { urologyCareData } from './urologyCareData';
 
 // Combine all health concerns data
 export const healthConcernsData = [
@@ -33,7 +41,15 @@ export const healthConcernsData = [
   ...specialtyData,
   ...infectionData,
   ...lifestyleData,
-  ...entData
+  ...entData,
+  ...eyeCareData,
+  ...skinCareData,
+  ...muscleCareData,
+  ...mentalHealthData,
+  ...nutritiveData,
+  ...painCareData,
+  ...toothCareData,
+  ...urologyCareData
 ];
 
 // Export individual category data for specific use cases
@@ -53,5 +69,13 @@ export {
   specialtyData,
   infectionData,
   lifestyleData,
-  entData
+  entData,
+  eyeCareData,
+  skinCareData,
+  muscleCareData,
+  mentalHealthData,
+  nutritiveData,
+  painCareData,
+  toothCareData,
+  urologyCareData
 };

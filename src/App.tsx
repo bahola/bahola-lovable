@@ -269,6 +269,72 @@ function App() {
                       <Route path="/concern/seasonal-allergies" element={<SeasonalAllergies />} />
                       <Route path="/concern/teething-troubles" element={<Teething />} />
                       <Route path="/concern/acne-pimples" element={<Acne />} />
+                      
+                      {/* Add new health concern routes for missing diseases */}
+                      <Route path="/concern/dust-allergy" element={<></>} />
+                      <Route path="/concern/drug-allergies" element={<></>} />
+                      <Route path="/concern/allergic-rhinitis" element={<></>} />
+                      <Route path="/concern/pet-dander-allergy" element={<></>} />
+                      <Route path="/concern/mold-allergy" element={<></>} />
+                      <Route path="/concern/latex-allergy" element={<></>} />
+                      <Route path="/concern/sinus-allergy" element={<></>} />
+                      
+                      <Route path="/concern/cancer-related-fatigue" element={<></>} />
+                      <Route path="/concern/immune-weakness-cancer" element={<></>} />
+                      <Route path="/concern/loss-of-appetite-cancer" element={<></>} />
+                      <Route path="/concern/mouth-ulcers-cancer-treatment" element={<></>} />
+                      <Route path="/concern/lymphedema-support" element={<></>} />
+                      <Route path="/concern/anxiety-sleep-disorders-cancer" element={<></>} />
+                      
+                      <Route path="/concern/high-cholesterol" element={<></>} />
+                      <Route path="/concern/angina-pectoris" element={<></>} />
+                      <Route path="/concern/varicose-veins" element={<></>} />
+                      <Route path="/concern/arrhythmias" element={<></>} />
+                      <Route path="/concern/post-heart-attack-recovery" element={<></>} />
+                      
+                      <Route path="/concern/colic" element={<></>} />
+                      <Route path="/concern/diaper-rash" element={<></>} />
+                      <Route path="/concern/childhood-constipation" element={<></>} />
+                      <Route path="/concern/growth-appetite-issues" element={<></>} />
+                      <Route path="/concern/bedwetting" element={<></>} />
+                      <Route path="/concern/childhood-allergies" element={<></>} />
+                      <Route path="/concern/worms" element={<></>} />
+                      <Route path="/concern/temper-tantrums" element={<></>} />
+                      
+                      <Route path="/concern/earache-otitis-media" element={<></>} />
+                      <Route path="/concern/sinusitis" element={<></>} />
+                      <Route path="/concern/tonsillitis" element={<></>} />
+                      <Route path="/concern/sore-throat" element={<></>} />
+                      <Route path="/concern/nasal-polyps" element={<></>} />
+                      <Route path="/concern/nose-bleeds-epistaxis" element={<></>} />
+                      <Route path="/concern/tinnitus" element={<></>} />
+                      <Route path="/concern/loss-of-voice-laryngitis" element={<></>} />
+                      
+                      <Route path="/concern/eye-strain-digital-fatigue" element={<></>} />
+                      <Route path="/concern/dry-eyes" element={<></>} />
+                      <Route path="/concern/conjunctivitis" element={<></>} />
+                      <Route path="/concern/eye-redness-itching" element={<></>} />
+                      <Route path="/concern/stye-chalazion" element={<></>} />
+                      <Route path="/concern/vision-weakness" element={<></>} />
+                      <Route path="/concern/watering-eyes" element={<></>} />
+                      <Route path="/concern/light-sensitivity" element={<></>} />
+                      
+                      <Route path="/concern/hair-fall-loss" element={<></>} />
+                      <Route path="/concern/dandruff" element={<></>} />
+                      <Route path="/concern/premature-greying" element={<></>} />
+                      <Route path="/concern/scalp-itching-infections" element={<></>} />
+                      <Route path="/concern/alopecia-areata" element={<></>} />
+                      <Route path="/concern/thinning-hair" element={<></>} />
+                      <Route path="/concern/postpartum-hair-fall" element={<></>} />
+                      
+                      <Route path="/concern/recurrent-colds-cough" element={<></>} />
+                      <Route path="/concern/frequent-infections" element={<></>} />
+                      <Route path="/concern/low-energy-levels" element={<></>} />
+                      <Route path="/concern/post-illness-recovery" element={<></>} />
+                      <Route path="/concern/childrens-immunity-drops" element={<></>} />
+                      <Route path="/concern/elderly-immune-support" element={<></>} />
+                      
+                      <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Suspense>
                 </main>
