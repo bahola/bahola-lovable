@@ -104,6 +104,10 @@ const PageLoader = () => (
   </div>
 );
 
+const SeasonalAllergies = React.lazy(() => import('./pages/health-concerns/SeasonalAllergies'));
+const Teething = React.lazy(() => import('./pages/health-concerns/Teething'));
+const Acne = React.lazy(() => import('./pages/health-concerns/Acne'));
+
 function App() {
   return (
     <HelmetProvider>
@@ -224,6 +228,11 @@ function App() {
                       <Route path="/products/allergies" element={<AllergiesProductsPage />} />
                       
                       <Route path="*" element={<NotFound />} />
+                      
+                      {/* Add new health concern routes */}
+                      <Route path="/concern/seasonal-allergies" element={<SeasonalAllergies />} />
+                      <Route path="/concern/teething-troubles" element={<Teething />} />
+                      <Route path="/concern/acne-pimples" element={<Acne />} />
                     </Routes>
                   </Suspense>
                 </main>

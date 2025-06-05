@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { HealthConcernCard } from '@/components/health-concerns/HealthConcernCard';
 import { HealthConcernFilters } from '@/components/health-concerns/HealthConcernFilters';
-import { healthConcernsData } from '@/data/healthConcernsData';
+import { healthConcernsData, categoryInfo } from '@/data/healthConcernsData';
 
 const HealthConcerns = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,6 +36,15 @@ const HealthConcerns = () => {
         return 0;
     }
   });
+
+  // Group concerns by category
+  const concernsByCategory = Object.keys(categoryInfo).reduce((acc, categoryKey) => {
+    const categoryConcerns = sortedConcerns.filter(concern => concern.category === categoryKey);
+    if (categoryConcerns.length > 0) {
+      acc[categoryKey] = categoryConcerns;
+    }
+    return acc;
+  }, {} as Record<string, typeof sortedConcerns>);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -159,20 +168,52 @@ const HealthConcerns = () => {
                   </div>
                 </div>
 
-                {/* Results Grid */}
-                <div className={`grid gap-6 ${
-                  viewMode === 'grid' 
-                    ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' 
-                    : 'grid-cols-1'
-                }`}>
-                  {sortedConcerns.map((concern) => (
-                    <HealthConcernCard
-                      key={concern.id}
-                      concern={concern}
-                      viewMode={viewMode}
-                    />
-                  ))}
-                </div>
+                {/* Results by Category */}
+                {selectedCategory === 'all' ? (
+                  // Show all categories
+                  <div className="space-y-12">
+                    {Object.entries(concernsByCategory).map(([categoryKey, concerns]) => (
+                      <div key={categoryKey} className="bg-white rounded-lg shadow-sm p-6">
+                        <div className="mb-6">
+                          <h2 className="text-2xl font-bold text-bahola-navy-950 mb-2">
+                            {categoryInfo[categoryKey as keyof typeof categoryInfo].name}
+                          </h2>
+                          <p className="text-bahola-neutral-600">
+                            {categoryInfo[categoryKey as keyof typeof categoryInfo].description}
+                          </p>
+                        </div>
+                        <div className={`grid gap-4 ${
+                          viewMode === 'grid' 
+                            ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' 
+                            : 'grid-cols-1'
+                        }`}>
+                          {concerns.map((concern) => (
+                            <HealthConcernCard
+                              key={concern.id}
+                              concern={concern}
+                              viewMode={viewMode}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  // Show selected category only
+                  <div className={`grid gap-6 ${
+                    viewMode === 'grid' 
+                      ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' 
+                      : 'grid-cols-1'
+                  }`}>
+                    {sortedConcerns.map((concern) => (
+                      <HealthConcernCard
+                        key={concern.id}
+                        concern={concern}
+                        viewMode={viewMode}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 {sortedConcerns.length === 0 && (
                   <div className="text-center py-12">
