@@ -1,4 +1,3 @@
-
 export interface HealthConcern {
   id: string;
   name: string;
@@ -567,6 +566,93 @@ export const healthConcernsData: HealthConcern[] = [
     lastUpdated: '2024-01-15',
   },
 
+  // Hair Care - All 7 conditions
+  {
+    id: 'hair-fall-loss',
+    name: 'Hair Fall / Hair Loss',
+    description: 'Natural treatment for excessive hair fall and hair loss conditions.',
+    category: 'hair-care',
+    icon: '💇',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 45000,
+    commonRemedies: ['Arnica Montana', 'Lycopodium', 'Phosphorus', 'Silicea'],
+    keywords: ['hair fall', 'hair loss', 'baldness', 'alopecia'],
+    lastUpdated: '2024-01-15',
+    trending: true,
+  },
+  {
+    id: 'dandruff',
+    name: 'Dandruff',
+    description: 'Natural treatment for scalp dandruff and flaky scalp conditions.',
+    category: 'hair-care',
+    icon: '❄️',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 38000,
+    commonRemedies: ['Sulphur', 'Graphites', 'Arsenicum Album', 'Kali Sulph'],
+    keywords: ['dandruff', 'flaky scalp', 'scalp irritation', 'dry scalp'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'premature-greying',
+    name: 'Premature Greying',
+    description: 'Natural support for premature greying and maintaining hair color.',
+    category: 'hair-care',
+    icon: '⚪',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 25000,
+    commonRemedies: ['Lycopodium', 'Phosphoric Acid', 'Sulphur', 'Natrum Muriaticum'],
+    keywords: ['premature greying', 'grey hair', 'white hair', 'hair pigmentation'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'scalp-itching-infections',
+    name: 'Scalp Itching / Infections',
+    description: 'Natural treatment for scalp itching, infections, and irritation.',
+    category: 'hair-care',
+    icon: '🔴',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 28000,
+    commonRemedies: ['Sulphur', 'Graphites', 'Mezereum', 'Arsenicum Album'],
+    keywords: ['scalp itching', 'scalp infection', 'scalp irritation', 'scalp fungus'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'alopecia-areata',
+    name: 'Alopecia Areata',
+    description: 'Natural support for alopecia areata and patchy hair loss.',
+    category: 'hair-care',
+    icon: '⭕',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 18000,
+    commonRemedies: ['Phosphorus', 'Fluoric Acid', 'Arsenicum Album', 'Silicea'],
+    keywords: ['alopecia areata', 'patchy hair loss', 'bald spots', 'autoimmune hair loss'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'thinning-hair',
+    name: 'Thinning Hair',
+    description: 'Natural treatment for hair thinning and weak hair strands.',
+    category: 'hair-care',
+    icon: '📉',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 32000,
+    commonRemedies: ['Lycopodium', 'Silicea', 'Phosphorus', 'Calcarea Carbonica'],
+    keywords: ['thinning hair', 'weak hair', 'fine hair', 'hair volume'],
+    lastUpdated: '2024-01-15',
+  },
+  {
+    id: 'postpartum-hair-fall',
+    name: 'Postpartum Hair Fall',
+    description: 'Natural support for hair fall after pregnancy and childbirth.',
+    category: 'hair-care',
+    icon: '👶',
+    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
+    searchVolume: 22000,
+    commonRemedies: ['Sepia', 'Lycopodium', 'Phosphorus', 'Calcarea Carbonica'],
+    keywords: ['postpartum hair fall', 'pregnancy hair loss', 'after childbirth', 'hormonal hair loss'],
+    lastUpdated: '2024-01-15',
+  },
+
   // Child Care
   {
     id: 'teething-troubles',
@@ -888,13 +974,13 @@ export const categoryInfo = {
     name: '🍽️ Gut Health',
     description: 'Digestive health and gastrointestinal wellness'
   },
-  'womens-care': {
-    name: '👩 Women\'s Care',
-    description: 'Specialized care for women\'s health concerns'
-  },
   'hair-care': {
     name: '💇 Hair Care',
     description: 'Natural solutions for hair and scalp health'
+  },
+  'womens-care': {
+    name: '👩 Women\'s Care',
+    description: 'Specialized care for women\'s health concerns'
   },
   'immune-boosters': {
     name: '🛡️ Immune Boosters',
