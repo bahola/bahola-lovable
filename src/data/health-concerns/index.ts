@@ -10,20 +10,30 @@ import { cardiovascularData } from './cardiovascularData';
 import { cancerSupportData } from './cancerSupportData';
 import { pediatricData } from './pediatricData';
 import { specialtyData } from './specialtyData';
+import { infectionData } from './infectionData';
+import { lifestyleData } from './lifestyle';
+import { entData } from './entData';
+import { gutHealthData } from './gutHealthData';
+import { reproductiveData } from './reproductiveData';
 
 // Combine all health concerns data
 export const healthConcernsData = [
   ...allergyData,
   ...anxietyData,
   ...digestiveData,
+  ...gutHealthData,
   ...respiratoryData,
   ...womensHealthData,
+  ...reproductiveData,
   ...hairCareData,
   ...immuneBoostersData,
   ...cardiovascularData,
   ...cancerSupportData,
   ...pediatricData,
-  ...specialtyData
+  ...specialtyData,
+  ...infectionData,
+  ...lifestyleData,
+  ...entData
 ];
 
 // Export individual category data for specific use cases
@@ -31,12 +41,17 @@ export {
   allergyData,
   anxietyData,
   digestiveData,
+  gutHealthData,
   respiratoryData,
   womensHealthData,
+  reproductiveData,
   hairCareData,
   immuneBoostersData,
   cardiovascularData,
   cancerSupportData,
   pediatricData,
-  specialtyData
+  specialtyData,
+  infectionData,
+  lifestyleData,
+  entData
 };

@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -118,6 +117,13 @@ const PageLoader = () => (
 const SeasonalAllergies = React.lazy(() => import('./pages/health-concerns/SeasonalAllergies'));
 const Teething = React.lazy(() => import('./pages/health-concerns/Teething'));
 const Acne = React.lazy(() => import('./pages/health-concerns/Acne'));
+const Diarrhoea = React.lazy(() => import('./pages/health-concerns/Diarrhoea'));
+const Gastritis = React.lazy(() => import('./pages/health-concerns/Gastritis'));
+const ChronicRhinitis = React.lazy(() => import('./pages/health-concerns/ChronicRhinitis'));
+const BreastTenderness = React.lazy(() => import('./pages/health-concerns/BreastTenderness'));
+const FibroidsSupportive = React.lazy(() => import('./pages/health-concerns/FibroidsSupportive'));
+const GeneralWeakness = React.lazy(() => import('./pages/health-concerns/GeneralWeakness'));
+const ConvalescenceRemedies = React.lazy(() => import('./pages/health-concerns/ConvalescenceRemedies'));
 
 function App() {
   return (
@@ -227,6 +233,15 @@ function App() {
                       <Route path="/concern/ear-sinus-infections" element={<EarSinusInfections />} />
                       <Route path="/concern/recurrent-fevers" element={<RecurrentFevers />} />
                       <Route path="/concern/fever-with-chills" element={<FeverWithChills />} />
+                      
+                      {/* Additional health concern routes */}
+                      <Route path="/concern/diarrhoea" element={<Diarrhoea />} />
+                      <Route path="/concern/gastritis" element={<Gastritis />} />
+                      <Route path="/concern/chronic-rhinitis" element={<ChronicRhinitis />} />
+                      <Route path="/concern/breast-tenderness" element={<BreastTenderness />} />
+                      <Route path="/concern/fibroids-supportive" element={<FibroidsSupportive />} />
+                      <Route path="/concern/general-weakness" element={<GeneralWeakness />} />
+                      <Route path="/concern/convalescence-remedies" element={<ConvalescenceRemedies />} />
                       
                       {/* Search routes with dynamic parameters */}
                       <Route path="/search" element={<Shop />} />
