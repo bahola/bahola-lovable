@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 
 interface HealthConcernsHeroProps {
   searchQuery: string;
@@ -12,6 +13,12 @@ export const HealthConcernsHero: React.FC<HealthConcernsHeroProps> = ({
   searchQuery,
   onSearchChange,
 }) => {
+  const navigate = useNavigate();
+
+  const handleFindRemedies = () => {
+    navigate('/diseases-conditions');
+  };
+
   return (
     <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 px-4 mb-8">
       <div className="container mx-auto">
@@ -32,7 +39,11 @@ export const HealthConcernsHero: React.FC<HealthConcernsHeroProps> = ({
                 className="w-full pl-4 pr-4 py-3 text-gray-900 bg-white rounded-lg border-0"
               />
             </div>
-            <Button variant="secondary" className="whitespace-nowrap bg-white text-bahola-blue-700 hover:bg-gray-100">
+            <Button 
+              variant="secondary" 
+              className="whitespace-nowrap bg-white text-bahola-blue-700 hover:bg-gray-100"
+              onClick={handleFindRemedies}
+            >
               Find Remedies
             </Button>
           </div>
