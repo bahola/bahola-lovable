@@ -1,4 +1,5 @@
 
+
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
@@ -143,7 +144,7 @@ const AppRoutes = () => {
         <Route path="/appointment-booking" element={<AppointmentBooking />} />
         <Route path="/book-appointment" element={<AppointmentBooking />} />
         <Route path="/homeopathy" element={<Homeopathy />} />
-        <Route path="/health-concerns" element={<HealthConcerns />} />
+        <Route path="/diseases-conditions" element={<HealthConcerns />} />
         <Route path="/bach-flower-concerns" element={<BachFlowerConcerns />} />
         <Route path="/help-center" element={<HelpCenter />} />
         <Route path="/store-locator" element={<StoreLocator />} />
@@ -192,81 +193,81 @@ const AppRoutes = () => {
         <Route path="/help/certifications" element={<Certifications />} />
         
         {/* Health Concern Category Routes - Updated to match exact category names */}
-        <Route path="/health-concerns/allergy-care" element={<AllergyCare />} />
-        <Route path="/health-concerns/gut-health" element={<GutHealth />} />
-        <Route path="/health-concerns/heart-health" element={<HeartHealth />} />
-        <Route path="/health-concerns/child-care" element={<ChildCare />} />
-        <Route path="/health-concerns/cancer-support" element={<CancerSupport />} />
-        <Route path="/health-concerns/ent-care" element={<ENTCare />} />
-        <Route path="/health-concerns/ear-nose-throat" element={<ENTCare />} />
-        <Route path="/health-concerns/eye-care" element={<EyeCare />} />
-        <Route path="/health-concerns/hair-care" element={<HairCare />} />
-        <Route path="/health-concerns/immune-boosters" element={<ImmuneBoosters />} />
-        <Route path="/health-concerns/infection-care" element={<InfectionCare />} />
-        <Route path="/health-concerns/infection" element={<InfectionCare />} />
-        <Route path="/health-concerns/lifestyle-care" element={<LifestyleCare />} />
-        <Route path="/health-concerns/lifestyle" element={<LifestyleCare />} />
-        <Route path="/health-concerns/mental-health" element={<MentalHealth />} />
-        <Route path="/health-concerns/muscle-care" element={<MuscleCare />} />
-        <Route path="/health-concerns/muscle-joint-care" element={<MuscleCare />} />
-        <Route path="/health-concerns/nutritive-care" element={<NutritiveCare />} />
-        <Route path="/health-concerns/nutritive" element={<NutritiveCare />} />
-        <Route path="/health-concerns/pain-care" element={<PainCare />} />
-        <Route path="/health-concerns/reproductive-care" element={<ReproductiveCare />} />
-        <Route path="/health-concerns/respiratory-care" element={<RespiratoryCare />} />
-        <Route path="/health-concerns/skin-care" element={<SkinCare />} />
-        <Route path="/health-concerns/specialty-care" element={<SpecialtyCare />} />
-        <Route path="/health-concerns/tooth-care" element={<ToothCare />} />
-        <Route path="/health-concerns/urology-care" element={<UrologyCare />} />
-        <Route path="/health-concerns/urinary-care" element={<UrologyCare />} />
-        <Route path="/health-concerns/womens-health" element={<WomensHealth />} />
-        <Route path="/health-concerns/womens-care" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/allergy-care" element={<AllergyCare />} />
+        <Route path="/diseases-conditions/gut-health" element={<GutHealth />} />
+        <Route path="/diseases-conditions/heart-health" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/child-care" element={<ChildCare />} />
+        <Route path="/diseases-conditions/cancer-support" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/ent-care" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear-nose-throat" element={<ENTCare />} />
+        <Route path="/diseases-conditions/eye-care" element={<EyeCare />} />
+        <Route path="/diseases-conditions/hair-care" element={<HairCare />} />
+        <Route path="/diseases-conditions/immune-boosters" element={<ImmuneBoosters />} />
+        <Route path="/diseases-conditions/infection-care" element={<InfectionCare />} />
+        <Route path="/diseases-conditions/infection" element={<InfectionCare />} />
+        <Route path="/diseases-conditions/lifestyle-care" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/mental-health" element={<MentalHealth />} />
+        <Route path="/diseases-conditions/muscle-care" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/nutritive-care" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/pain-care" element={<PainCare />} />
+        <Route path="/diseases-conditions/reproductive-care" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/respiratory-care" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/skin-care" element={<SkinCare />} />
+        <Route path="/diseases-conditions/specialty-care" element={<SpecialtyCare />} />
+        <Route path="/diseases-conditions/tooth-care" element={<ToothCare />} />
+        <Route path="/diseases-conditions/urology-care" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/womens-health" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/womens-care" element={<WomensHealth />} />
 
         {/* Individual Health Concern Pages */}
-        <Route path="/health-concerns/anxiety-stress" element={<AnxietyStress />} />
-        <Route path="/health-concerns/insomnia-sleep-disorders" element={<InsomniaPage />} />
-        <Route path="/health-concerns/digestive-issues" element={<DigestiveIssues />} />
-        <Route path="/health-concerns/allergies-hay-fever" element={<AllergiesHayFever />} />
-        <Route path="/health-concerns/headaches-migraines" element={<HeadachesMigraines />} />
-        <Route path="/health-concerns/skin-conditions" element={<SkinConditions />} />
-        <Route path="/health-concerns/cold-flu" element={<ColdFlu />} />
-        <Route path="/health-concerns/joint-pain-arthritis" element={<JointPainArthritis />} />
-        <Route path="/health-concerns/childrens-health" element={<ChildrensHealth />} />
-        <Route path="/health-concerns/depression-mood" element={<DepressionMood />} />
-        <Route path="/health-concerns/weight-management" element={<WeightManagement />} />
-        <Route path="/health-concerns/eye-problems" element={<EyeProblems />} />
-        <Route path="/health-concerns/high-blood-pressure" element={<HighBloodPressure />} />
-        <Route path="/health-concerns/diabetes-support" element={<DiabetesSupport />} />
+        <Route path="/diseases-conditions/anxiety-stress" element={<AnxietyStress />} />
+        <Route path="/diseases-conditions/insomnia-sleep-disorders" element={<InsomniaPage />} />
+        <Route path="/diseases-conditions/digestive-issues" element={<DigestiveIssues />} />
+        <Route path="/diseases-conditions/allergies-hay-fever" element={<AllergiesHayFever />} />
+        <Route path="/diseases-conditions/headaches-migraines" element={<HeadachesMigraines />} />
+        <Route path="/diseases-conditions/skin-conditions" element={<SkinConditions />} />
+        <Route path="/diseases-conditions/cold-flu" element={<ColdFlu />} />
+        <Route path="/diseases-conditions/joint-pain-arthritis" element={<JointPainArthritis />} />
+        <Route path="/diseases-conditions/childrens-health" element={<ChildrensHealth />} />
+        <Route path="/diseases-conditions/depression-mood" element={<DepressionMood />} />
+        <Route path="/diseases-conditions/weight-management" element={<WeightManagement />} />
+        <Route path="/diseases-conditions/eye-problems" element={<EyeProblems />} />
+        <Route path="/diseases-conditions/high-blood-pressure" element={<HighBloodPressure />} />
+        <Route path="/diseases-conditions/diabetes-support" element={<DiabetesSupport />} />
         
-        {/* Disease-specific routes under health concerns */}
-        <Route path="/health-concerns/allergies-hay-fever/asthma" element={<AsthmaPage />} />
-        <Route path="/health-concerns/allergies-hay-fever/eczema" element={<EczemaPage />} />
-        <Route path="/health-concerns/allergies-hay-fever/food-allergies" element={<FoodAllergiesPage />} />
-        <Route path="/health-concerns/anxiety-stress/panic-disorder" element={<PanicDisorderPage />} />
-        <Route path="/health-concerns/anxiety-stress/generalized-anxiety" element={<GeneralizedAnxietyPage />} />
-        <Route path="/health-concerns/digestive-issues/ibs" element={<IBSPage />} />
+        {/* Disease-specific routes under diseases-conditions */}
+        <Route path="/diseases-conditions/allergies-hay-fever/asthma" element={<AsthmaPage />} />
+        <Route path="/diseases-conditions/allergies-hay-fever/eczema" element={<EczemaPage />} />
+        <Route path="/diseases-conditions/allergies-hay-fever/food-allergies" element={<FoodAllergiesPage />} />
+        <Route path="/diseases-conditions/anxiety-stress/panic-disorder" element={<PanicDisorderPage />} />
+        <Route path="/diseases-conditions/anxiety-stress/generalized-anxiety" element={<GeneralizedAnxietyPage />} />
+        <Route path="/diseases-conditions/digestive-issues/ibs" element={<IBSPage />} />
         
         {/* Infection-related routes */}
-        <Route path="/health-concerns/bacterial-infections" element={<BacterialInfections />} />
-        <Route path="/health-concerns/viral-infections" element={<ViralInfections />} />
-        <Route path="/health-concerns/fungal-infections" element={<FungalInfections />} />
-        <Route path="/health-concerns/urinary-tract-infections" element={<UrinaryTractInfections />} />
-        <Route path="/health-concerns/skin-infections" element={<SkinInfections />} />
-        <Route path="/health-concerns/ear-sinus-infections" element={<EarSinusInfections />} />
-        <Route path="/health-concerns/recurrent-fevers" element={<RecurrentFevers />} />
-        <Route path="/health-concerns/fever-with-chills" element={<FeverWithChills />} />
+        <Route path="/diseases-conditions/bacterial-infections" element={<BacterialInfections />} />
+        <Route path="/diseases-conditions/viral-infections" element={<ViralInfections />} />
+        <Route path="/diseases-conditions/fungal-infections" element={<FungalInfections />} />
+        <Route path="/diseases-conditions/urinary-tract-infections" element={<UrinaryTractInfections />} />
+        <Route path="/diseases-conditions/skin-infections" element={<SkinInfections />} />
+        <Route path="/diseases-conditions/ear-sinus-infections" element={<EarSinusInfections />} />
+        <Route path="/diseases-conditions/recurrent-fevers" element={<RecurrentFevers />} />
+        <Route path="/diseases-conditions/fever-with-chills" element={<FeverWithChills />} />
         
         {/* Additional health concern routes */}
-        <Route path="/health-concerns/seasonal-allergies" element={<SeasonalAllergies />} />
-        <Route path="/health-concerns/teething-troubles" element={<Teething />} />
-        <Route path="/health-concerns/acne-pimples" element={<Acne />} />
-        <Route path="/health-concerns/diarrhoea" element={<Diarrhoea />} />
-        <Route path="/health-concerns/gastritis" element={<Gastritis />} />
-        <Route path="/health-concerns/chronic-rhinitis" element={<ChronicRhinitis />} />
-        <Route path="/health-concerns/breast-tenderness" element={<BreastTenderness />} />
-        <Route path="/health-concerns/fibroids-supportive" element={<FibroidsSupportive />} />
-        <Route path="/health-concerns/general-weakness" element={<GeneralWeakness />} />
-        <Route path="/health-concerns/convalescence-remedies" element={<ConvalescenceRemedies />} />
+        <Route path="/diseases-conditions/seasonal-allergies" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/teething-troubles" element={<Teething />} />
+        <Route path="/diseases-conditions/acne-pimples" element={<Acne />} />
+        <Route path="/diseases-conditions/diarrhoea" element={<Diarrhoea />} />
+        <Route path="/diseases-conditions/gastritis" element={<Gastritis />} />
+        <Route path="/diseases-conditions/chronic-rhinitis" element={<ChronicRhinitis />} />
+        <Route path="/diseases-conditions/breast-tenderness" element={<BreastTenderness />} />
+        <Route path="/diseases-conditions/fibroids-supportive" element={<FibroidsSupportive />} />
+        <Route path="/diseases-conditions/general-weakness" element={<GeneralWeakness />} />
+        <Route path="/diseases-conditions/convalescence-remedies" element={<ConvalescenceRemedies />} />
 
         {/* Search routes with dynamic parameters */}
         <Route path="/search" element={<Shop />} />
@@ -295,3 +296,4 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
