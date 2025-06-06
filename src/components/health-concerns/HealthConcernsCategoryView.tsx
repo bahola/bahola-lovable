@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { HealthConcernCard } from './HealthConcernCard';
@@ -24,29 +23,29 @@ interface HealthConcernsCategoryViewProps {
 }
 
 const categoryRoutes: Record<string, string> = {
-  'Allergies': '/health-concerns/allergy-care',
-  'Gut Health': '/health-concerns/gut-health',
-  'Heart Health': '/health-concerns/heart-health',
-  'Child Care': '/health-concerns/child-care',
-  'Cancer': '/health-concerns/cancer-support',
-  'Anxiety & Mental Health': '/health-concerns/anxiety-mental-health',
-  'Ear Nose Throat': '/health-concerns/ent-care',
-  'Eye Care': '/health-concerns/eye-care',
-  'Hair Care': '/health-concerns/hair-care',
-  'Immune boosters': '/health-concerns/immune-boosters',
-  'Infection': '/health-concerns/infection-care',
-  'Lifestyle': '/health-concerns/lifestyle-care',
-  'Mental health': '/health-concerns/mental-health',
-  'Muscle & Joint Care': '/health-concerns/muscle-care',
-  'Nutritive': '/health-concerns/nutritive-care',
-  'Pain Care': '/health-concerns/pain-care',
-  'Reproductive care': '/health-concerns/reproductive-care',
-  'Respiratory Care': '/health-concerns/respiratory-care',
-  'Skin Care': '/health-concerns/skin-care',
-  'Specialty Care': '/health-concerns/specialty-care',
-  'Tooth Care': '/health-concerns/tooth-care',
-  'Urinary care': '/health-concerns/urology-care',
-  'Womens Care': '/health-concerns/womens-health'
+  'Allergies': '/diseases-conditions/allergy-care',
+  'Gut Health': '/diseases-conditions/gut-health',
+  'Heart Health': '/diseases-conditions/heart-health',
+  'Child Care': '/diseases-conditions/child-care',
+  'Cancer': '/diseases-conditions/cancer-support',
+  'Anxiety & Mental Health': '/diseases-conditions/anxiety-mental-health',
+  'Ear Nose Throat': '/diseases-conditions/ent-care',
+  'Eye Care': '/diseases-conditions/eye-care',
+  'Hair Care': '/diseases-conditions/hair-care',
+  'Immune boosters': '/diseases-conditions/immune-boosters',
+  'Infection': '/diseases-conditions/infection-care',
+  'Lifestyle': '/diseases-conditions/lifestyle-care',
+  'Mental health': '/diseases-conditions/mental-health',
+  'Muscle & Joint Care': '/diseases-conditions/muscle-care',
+  'Nutritive': '/diseases-conditions/nutritive-care',
+  'Pain Care': '/diseases-conditions/pain-care',
+  'Reproductive care': '/diseases-conditions/reproductive-care',
+  'Respiratory Care': '/diseases-conditions/respiratory-care',
+  'Skin Care': '/diseases-conditions/skin-care',
+  'Specialty Care': '/diseases-conditions/specialty-care',
+  'Tooth Care': '/diseases-conditions/tooth-care',
+  'Urinary care': '/diseases-conditions/urology-care',
+  'Womens Care': '/diseases-conditions/womens-health'
 };
 
 export const HealthConcernsCategoryView: React.FC<HealthConcernsCategoryViewProps> = ({

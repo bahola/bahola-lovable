@@ -19,7 +19,7 @@ export const HealthConcernsBreadcrumb: React.FC<HealthConcernsBreadcrumbProps> =
       <div className="flex items-center">
         <Link to="/" className="hover:text-bahola-blue-600">Home</Link>
         <ChevronRight size={14} className="mx-1" />
-        <Link to="/health-concerns" className="hover:text-bahola-blue-600">Health Concerns</Link>
+        <Link to="/diseases-conditions" className="hover:text-bahola-blue-600">Health Concerns</Link>
         
         {categoryName && (
           <>

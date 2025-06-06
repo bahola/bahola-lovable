@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HealthConcernsHero } from '@/components/health-concerns/HealthConcernsHero';
@@ -20,29 +19,29 @@ const HealthConcerns = () => {
 
   // Updated category route mapping to match the routes in AppRoutes.tsx
   const categoryRoutes: Record<string, string> = {
-    'Allergy Care': '/health-concerns/allergy-care',
-    'Gut Health': '/health-concerns/gut-health',
-    'Heart Health': '/health-concerns/heart-health',
-    'Child Care': '/health-concerns/child-care',
-    'Cancer': '/health-concerns/cancer-support',
-    'Anxiety & Mental Health': '/health-concerns/anxiety-mental-health',
-    'ENT Care': '/health-concerns/ent-care',
-    'Eye Care': '/health-concerns/eye-care',
-    'Hair Care': '/health-concerns/hair-care',
-    'Immune Boosters': '/health-concerns/immune-boosters',
-    'Infection Care': '/health-concerns/infection-care',
-    'Lifestyle Care': '/health-concerns/lifestyle-care',
-    'Mental Health': '/health-concerns/mental-health',
-    'Muscle Care': '/health-concerns/muscle-care',
-    'Nutritive Care': '/health-concerns/nutritive-care',
-    'Pain Care': '/health-concerns/pain-care',
-    'Reproductive Care': '/health-concerns/reproductive-care',
-    'Respiratory Care': '/health-concerns/respiratory-care',
-    'Skin Care': '/health-concerns/skin-care',
-    'Specialty Care': '/health-concerns/specialty-care',
-    'Tooth Care': '/health-concerns/tooth-care',
-    'Urology Care': '/health-concerns/urology-care',
-    'Women\'s Health': '/health-concerns/womens-health'
+    'Allergy Care': '/diseases-conditions/allergy-care',
+    'Gut Health': '/diseases-conditions/gut-health',
+    'Heart Health': '/diseases-conditions/heart-health',
+    'Child Care': '/diseases-conditions/child-care',
+    'Cancer': '/diseases-conditions/cancer-support',
+    'Anxiety & Mental Health': '/diseases-conditions/anxiety-mental-health',
+    'ENT Care': '/diseases-conditions/ent-care',
+    'Eye Care': '/diseases-conditions/eye-care',
+    'Hair Care': '/diseases-conditions/hair-care',
+    'Immune Boosters': '/diseases-conditions/immune-boosters',
+    'Infection Care': '/diseases-conditions/infection-care',
+    'Lifestyle Care': '/diseases-conditions/lifestyle-care',
+    'Mental Health': '/diseases-conditions/mental-health',
+    'Muscle Care': '/diseases-conditions/muscle-care',
+    'Nutritive Care': '/diseases-conditions/nutritive-care',
+    'Pain Care': '/diseases-conditions/pain-care',
+    'Reproductive Care': '/diseases-conditions/reproductive-care',
+    'Respiratory Care': '/diseases-conditions/respiratory-care',
+    'Skin Care': '/diseases-conditions/skin-care',
+    'Specialty Care': '/diseases-conditions/specialty-care',
+    'Tooth Care': '/diseases-conditions/tooth-care',
+    'Urology Care': '/diseases-conditions/urology-care',
+    'Women\'s Health': '/diseases-conditions/womens-health'
   };
 
   // Handle category change - navigate to specific category page
@@ -96,7 +95,7 @@ const HealthConcerns = () => {
     "@type": "MedicalWebPage",
     "name": "Diseases & Homeopathic Solutions",
     "description": "Comprehensive guide to natural homeopathic treatments for various diseases and health conditions including anxiety, digestive issues, skin problems, and more.",
-    "url": "https://bahola-labs.lovable.app/health-concerns",
+    "url": "https://bahola-labs.lovable.app/diseases-conditions",
     "medicalAudience": {
       "@type": "MedicalAudience",
       "audienceType": "Patient"

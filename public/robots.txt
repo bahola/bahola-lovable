@@ -6,7 +6,7 @@ Allow: /
 Allow: /
 Allow: /about
 Allow: /products
-Allow: /health-concerns
+Allow: /diseases-conditions
 Allow: /consultation
 Allow: /homeopathy
 Allow: /help-center

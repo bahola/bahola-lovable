@@ -57,7 +57,7 @@ const AllergyCare = () => {
           <div className="container mx-auto">
             <HealthConcernsBreadcrumb 
               categoryName="Allergy Care"
-              categoryPath="/health-concerns/allergy-care"
+              categoryPath="/diseases-conditions/allergy-care"
             />
 
             <div className="flex-1">

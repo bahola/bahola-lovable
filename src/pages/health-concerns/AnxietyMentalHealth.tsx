@@ -56,7 +56,7 @@ const AnxietyMentalHealth = () => {
           <div className="container mx-auto">
             <HealthConcernsBreadcrumb 
               categoryName={categoryName}
-              categoryPath="/health-concerns/anxiety-mental-health"
+              categoryPath="/diseases-conditions/anxiety-mental-health"
             />
 
             <div className="flex-1">
