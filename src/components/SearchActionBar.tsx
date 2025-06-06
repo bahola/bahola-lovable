@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -50,7 +49,7 @@ export const SearchActionBar = () => {
             {/* Action Buttons */}
             <div className="flex justify-start">
               <Link 
-                to="/health-concerns" 
+                to="/diseases-conditions" 
                 className="bg-bahola-blue-600 hover:bg-bahola-blue-700 text-white font-medium font-helvetica rounded-full transition-colors duration-200 text-base px-12 py-3 inline-block whitespace-nowrap"
                 style={{ 
                   minWidth: 'fit-content',
@@ -66,4 +65,3 @@ export const SearchActionBar = () => {
     </div>
   );
 };
-
