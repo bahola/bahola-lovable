@@ -1,102 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { HealthConcernsHero } from '@/components/health-concerns/HealthConcernsHero';
-import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthConcernsBreadcrumb';
-import { HealthConcernsToolbar } from '@/components/health-concerns/HealthConcernsToolbar';
 import { HealthConcernFilters } from '@/components/health-concerns/HealthConcernFilters';
-import { HealthConcernsCategoryView } from '@/components/health-concerns/HealthConcernsCategoryView';
+import { HealthConcernsToolbar } from '@/components/health-concerns/HealthConcernsToolbar';
 import { HealthConcernsGrid } from '@/components/health-concerns/HealthConcernsGrid';
 import { NoResultsMessage } from '@/components/health-concerns/NoResultsMessage';
-import { healthConcernsData, categoryInfo } from '@/data/healthConcernsData';
+import { healthConcernsData } from '@/data/healthConcernsData';
+import { SEO } from '@/components/SEO';
 
 const HealthConcerns = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('popular');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
-  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // Complete category route mapping to match all routes in AppRoutes.tsx
-  const categoryRoutes: Record<string, string> = {
-    'Allergy Care': '/diseases-conditions/allergies/seasonal-allergies-hay-fever',
-    'Gut Health': '/diseases-conditions/gut-health',
-    'Heart Health': '/diseases-conditions/heart-health',
-    'Child Care': '/diseases-conditions/child-care',
-    'Cancer': '/diseases-conditions/cancer-support',
-    'Cancer Support': '/diseases-conditions/cancer-support',
-    'Anxiety & Mental Health': '/diseases-conditions/mental-health',
-    'ENT Care': '/diseases-conditions/ent-care',
-    'Ear, Nose, Throat': '/diseases-conditions/ent-care',
-    'Eye Care': '/diseases-conditions/eye-care',
-    'Hair Care': '/diseases-conditions/hair-care',
-    'Immune Boosters': '/diseases-conditions/immune-boosters',
-    'Infection Care': '/diseases-conditions/infection-care',
-    'Infection': '/diseases-conditions/infection-care',
-    'Lifestyle Care': '/diseases-conditions/lifestyle-care',
-    'Lifestyle': '/diseases-conditions/lifestyle-care',
-    'Mental Health': '/diseases-conditions/mental-health',
-    'Muscle Care': '/diseases-conditions/muscle-care',
-    'Muscle & Joint Care': '/diseases-conditions/muscle-care',
-    'Nutritive Care': '/diseases-conditions/nutritive-care',
-    'Nutritive': '/diseases-conditions/nutritive-care',
-    'Pain Care': '/diseases-conditions/pain-care',
-    'Reproductive Care': '/diseases-conditions/reproductive-care',
-    'Respiratory Care': '/diseases-conditions/respiratory-care',
-    'Skin Care': '/diseases-conditions/skin-care',
-    'Specialty Care': '/diseases-conditions/specialty-care',
-    'Tooth Care': '/diseases-conditions/tooth-care',
-    'Urology Care': '/diseases-conditions/urology-care',
-    'Urinary Care': '/diseases-conditions/urology-care',
-    'Women\'s Health': '/diseases-conditions/womens-health',
-    'Women\'s Care': '/diseases-conditions/womens-health',
-    'Womens Health': '/diseases-conditions/womens-health',
-    'Womens Care': '/diseases-conditions/womens-health'
-  };
+  // Get unique categories
+  const categories = Array.from(new Set(healthConcernsData.map(concern => concern.category)));
 
-  // Handle category change - always navigate to specific category page if route exists
-  const handleCategoryChange = (category: string) => {
-    if (category !== 'all') {
-      // Check if there's a route for this category
-      const route = categoryRoutes[category];
-      if (route) {
-        navigate(route);
-        return;
-      }
-      
-      // Fallback: try to find a matching route by checking variations
-      const categoryVariations = [
-        category,
-        category.replace(/'/g, ''),
-        category.replace(/&/g, 'and'),
-        category.replace(/\s+/g, '-').toLowerCase()
-      ];
-      
-      for (const variation of categoryVariations) {
-        const matchingRoute = Object.entries(categoryRoutes).find(
-          ([key]) => key.toLowerCase() === variation.toLowerCase()
-        );
-        if (matchingRoute) {
-          navigate(matchingRoute[1]);
-          return;
-        }
-      }
-    }
-    
-    // Only set local state if no route found and category is 'all'
-    setSelectedCategory(category);
-  };
-
+  // Filter concerns based on search query and selected categories
   const filteredConcerns = healthConcernsData.filter(concern => {
     const matchesSearch = concern.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          concern.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          concern.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()));
     
-    const matchesCategory = selectedCategory === 'all' || concern.category === selectedCategory;
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(concern.category);
     
     return matchesSearch && matchesCategory;
   });
 
+  // Sort concerns
   const sortedConcerns = [...filteredConcerns].sort((a, b) => {
     switch (sortBy) {
       case 'alphabetical':
@@ -110,59 +44,71 @@ const HealthConcerns = () => {
     }
   });
 
-  // Group concerns by category
-  const concernsByCategory = Object.keys(categoryInfo).reduce((acc, categoryKey) => {
-    const categoryConcerns = sortedConcerns.filter(concern => concern.category === categoryKey);
-    if (categoryConcerns.length > 0) {
-      acc[categoryKey] = categoryConcerns;
-    }
-    return acc;
-  }, {} as Record<string, typeof sortedConcerns>);
-
   const handleClearFilters = () => {
     setSearchQuery('');
-    setSelectedCategory('all');
+    setSelectedCategories([]);
   };
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "MedicalWebPage",
-    "name": "Diseases & Homeopathic Solutions",
-    "description": "Comprehensive guide to natural homeopathic treatments for various diseases and health conditions including anxiety, digestive issues, skin problems, and more.",
-    "url": "https://bahola-labs.lovable.app/diseases-conditions",
-    "medicalAudience": {
-      "@type": "MedicalAudience",
-      "audienceType": "Patient"
-    },
-    "about": healthConcernsData.map(concern => ({
-      "@type": "MedicalCondition",
-      "name": concern.name,
-      "description": concern.description
-    }))
-  };
+  const sidebarCategories = [
+    { name: 'Gut Health', path: '/diseases-conditions/gut-health', icon: '🦠' },
+    { name: 'Heart Health', path: '/diseases-conditions/heart-health', icon: '❤️' },
+    { name: 'Child Care', path: '/diseases-conditions/child-care', icon: '👶' },
+    { name: 'Cancer Support', path: '/diseases-conditions/cancer-support', icon: '🎗️' },
+    { name: 'ENT Care', path: '/diseases-conditions/ent-care', icon: '👂' },
+    { name: 'Eye Care', path: '/diseases-conditions/eye-care', icon: '👁️' },
+    { name: 'Allergy Care', path: '/diseases-conditions/allergies', icon: '🤧' },
+    { name: 'Hair Care', path: '/diseases-conditions/hair-care', icon: '💇' },
+    { name: 'Immune Boosters', path: '/diseases-conditions/immune-boosters', icon: '🛡️' },
+    { name: 'Infection Care', path: '/diseases-conditions/infection-care', icon: '🦠' },
+    { name: 'Lifestyle Care', path: '/diseases-conditions/lifestyle-care', icon: '🧘' },
+    { name: 'Mental Health', path: '/diseases-conditions/mental-health', icon: '🧠' },
+    { name: 'Muscle Care', path: '/diseases-conditions/muscle-care', icon: '💪' },
+    { name: 'Nutritive Care', path: '/diseases-conditions/nutritive-care', icon: '🥗' },
+    { name: 'Pain Care', path: '/diseases-conditions/pain-care', icon: '⚡' },
+    { name: 'Reproductive Care', path: '/diseases-conditions/reproductive-care', icon: '🌸' },
+    { name: 'Respiratory Care', path: '/diseases-conditions/respiratory-care', icon: '🫁' },
+    { name: 'Skin Care', path: '/diseases-conditions/skin-care', icon: '✨' },
+    { name: 'Tooth Care', path: '/diseases-conditions/tooth-care', icon: '🦷' },
+    { name: 'Urology Care', path: '/diseases-conditions/urology-care', icon: '💧' },
+    { name: 'Women\'s Health', path: '/diseases-conditions/womens-health', icon: '👩' },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">
-        <HealthConcernsHero
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
+    <>
+      <SEO
+        title="Health Conditions & Diseases - Natural Homeopathic Treatment"
+        description="Explore comprehensive information about various health conditions and diseases. Find natural homeopathic remedies and treatments for your health concerns."
+      />
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
+          <HealthConcernsHero />
+          
+          <div className="bg-gray-50 px-4 py-8">
+            <div className="container mx-auto flex gap-8">
+              {/* Sidebar */}
+              <div className="hidden lg:block w-64 flex-shrink-0">
+                <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-6">
+                  <h3 className="text-lg font-semibold text-bahola-navy-950 mb-4">
+                    Browse by Category
+                  </h3>
+                  <nav className="space-y-2">
+                    {sidebarCategories.map((category) => (
+                      <Link
+                        key={category.name}
+                        to={category.path}
+                        className="flex items-center space-x-3 p-2 rounded-lg hover:bg-bahola-blue-50 transition-colors group"
+                      >
+                        <span className="text-lg">{category.icon}</span>
+                        <span className="text-sm text-bahola-neutral-700 group-hover:text-bahola-blue-600">
+                          {category.name}
+                        </span>
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              </div>
 
-        <div className="bg-gray-50 px-4 py-8">
-          <div className="container mx-auto">
-            <HealthConcernsBreadcrumb />
-
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Sidebar Filters */}
-              <aside className={`lg:w-64 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-                <HealthConcernFilters
-                  selectedCategory={selectedCategory}
-                  onCategoryChange={handleCategoryChange}
-                />
-              </aside>
-
-              {/* Main Content Area */}
+              {/* Main Content */}
               <div className="flex-1">
                 <HealthConcernsToolbar
                   showFilters={showFilters}
@@ -172,20 +118,22 @@ const HealthConcerns = () => {
                   onViewModeChange={setViewMode}
                   sortBy={sortBy}
                   onSortChange={setSortBy}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
                 />
 
-                {/* Results by Category */}
-                {selectedCategory === 'all' ? (
-                  <HealthConcernsCategoryView
-                    concernsByCategory={concernsByCategory}
-                    viewMode={viewMode}
-                  />
-                ) : (
-                  <HealthConcernsGrid
-                    concerns={sortedConcerns}
-                    viewMode={viewMode}
+                {showFilters && (
+                  <HealthConcernFilters
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    onCategoriesChange={setSelectedCategories}
                   />
                 )}
+
+                <HealthConcernsGrid
+                  concerns={sortedConcerns}
+                  viewMode={viewMode}
+                />
 
                 {sortedConcerns.length === 0 && (
                   <NoResultsMessage onClearFilters={handleClearFilters} />
@@ -193,9 +141,9 @@ const HealthConcerns = () => {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 };
 
