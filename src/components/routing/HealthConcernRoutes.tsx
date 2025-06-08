@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -79,6 +78,15 @@ import AllergiesCategoryPage from '../../pages/health-concerns/AllergiesCategory
 import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategoryPage';
 import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
 import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
+import ENTCareCategoryPage from '../../pages/health-concerns/ENTCareCategoryPage';
+
+// Import individual ENT pages
+const Tonsillitis = React.lazy(() => import('@/pages/health-concerns/ENT/Tonsillitis'));
+const SoreThroat = React.lazy(() => import('@/pages/health-concerns/ENT/SoreThroat'));
+const NasalPolyps = React.lazy(() => import('@/pages/health-concerns/ENT/NasalPolyps'));
+const NoseBleedsEpistaxis = React.lazy(() => import('@/pages/health-concerns/ENT/NoseBleedsEpistaxis'));
+const Tinnitus = React.lazy(() => import('@/pages/health-concerns/ENT/Tinnitus'));
+const LossOfVoiceLaryngitis = React.lazy(() => import('@/pages/health-concerns/ENT/LossOfVoiceLaryngitis'));
 
 export const getHealthConcernRoutes = () => [
   // Main Category Routes with new hero section structure
@@ -86,12 +94,11 @@ export const getHealthConcernRoutes = () => [
   <Route key="gut-health-main" path="/diseases-conditions/gut-health" element={<GutHealthCategoryPage />} />,
   <Route key="heart-health-main" path="/diseases-conditions/heart-health" element={<HeartHealthCategoryPage />} />,
   <Route key="eye-care-main" path="/diseases-conditions/eye-care" element={<EyeCareCategoryPage />} />,
+  <Route key="ent-care-main" path="/diseases-conditions/ent-care" element={<ENTCareCategoryPage />} />,
   
   // Other category routes (will be updated to new structure later)
   <Route key="child-care" path="/diseases-conditions/child-care" element={<ChildCare />} />,
   <Route key="cancer-support" path="/diseases-conditions/cancer-support" element={<CancerSupport />} />,
-  <Route key="ent-care-1" path="/diseases-conditions/ent-care" element={<ENTCare />} />,
-  <Route key="ent-care-2" path="/diseases-conditions/ear-nose-throat" element={<ENTCare />} />,
   <Route key="hair-care" path="/diseases-conditions/hair-care" element={<HairCare />} />,
   <Route key="immune-boosters" path="/diseases-conditions/immune-boosters" element={<ImmuneBoosters />} />,
   <Route key="infection-care-1" path="/diseases-conditions/infection-care" element={<InfectionCare />} />,
@@ -152,6 +159,17 @@ export const getHealthConcernRoutes = () => [
   <Route key="vision-weakness" path="/diseases-conditions/eye-care/vision-weakness" element={<EyeProblems />} />,
   <Route key="watering-eyes" path="/diseases-conditions/eye-care/watering-eyes" element={<EyeProblems />} />,
   <Route key="light-sensitivity" path="/diseases-conditions/eye-care/light-sensitivity" element={<EyeProblems />} />,
+
+  // HIERARCHICAL ROUTES - ENT Care
+  <Route key="chronic-rhinitis-ent" path="/diseases-conditions/ent-care/chronic-rhinitis" element={<ChronicRhinitis />} />,
+  <Route key="earache-otitis-media" path="/diseases-conditions/ent-care/earache-otitis-media" element={<EarSinusInfections />} />,
+  <Route key="sinusitis-ent" path="/diseases-conditions/ent-care/sinusitis" element={<EarSinusInfections />} />,
+  <Route key="tonsillitis-ent" path="/diseases-conditions/ent-care/tonsillitis" element={<Tonsillitis />} />,
+  <Route key="sore-throat-ent" path="/diseases-conditions/ent-care/sore-throat" element={<SoreThroat />} />,
+  <Route key="nasal-polyps-ent" path="/diseases-conditions/ent-care/nasal-polyps" element={<NasalPolyps />} />,
+  <Route key="nosebleeds-ent" path="/diseases-conditions/ent-care/nose-bleeds-epistaxis" element={<NoseBleedsEpistaxis />} />,
+  <Route key="tinnitus-ent" path="/diseases-conditions/ent-care/tinnitus" element={<Tinnitus />} />,
+  <Route key="voice-loss-ent" path="/diseases-conditions/ent-care/loss-of-voice-laryngitis" element={<LossOfVoiceLaryngitis />} />,
 
   // HIERARCHICAL ROUTES - Cancer Support
   <Route key="chemotherapy-side-effects" path="/diseases-conditions/cancer-support/chemotherapy-side-effects-nausea-fatigue" element={<ChemotherapySideEffects />} />,

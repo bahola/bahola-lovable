@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // Lazy load health concern pages
@@ -84,3 +83,18 @@ export const ChemotherapySideEffects = React.lazy(() => import('@/pages/health-c
 
 // Add new heart health pages
 export const Palpitations = React.lazy(() => import('@/pages/health-concerns/Palpitations'));
+
+// Import category pages
+import AllergiesCategoryPage from '../../pages/health-concerns/AllergiesCategoryPage';
+import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategoryPage';
+import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
+import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
+import ENTCareCategoryPage from '../../pages/health-concerns/ENTCareCategoryPage';
+
+// Add new ENT pages
+const Tonsillitis = React.lazy(() => import('@/pages/health-concerns/ent/Tonsillitis'));
+const SoreThroat = React.lazy(() => import('@/pages/health-concerns/ent/SoreThroat'));
+const NasalPolyps = React.lazy(() => import('@/pages/health-concerns/ent/NasalPolyps'));
+const NoseBleedsEpistaxis = React.lazy(() => import('@/pages/health-concerns/ent/NoseBleedsEpistaxis'));
+const Tinnitus = React.lazy(() => import('@/pages/health-concerns/ent/Tinnitus'));
+const LossOfVoiceLaryngitis = React.lazy(() => import('@/pages/health-concerns/ent/LossOfVoiceLaryngitis'));
