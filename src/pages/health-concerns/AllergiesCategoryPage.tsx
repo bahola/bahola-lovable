@@ -48,6 +48,25 @@ const AllergiesCategoryPage = () => {
                     Book a Consultation
                   </Link>
                 </Button>
+
+                {/* Sub-diseases buttons */}
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold text-bahola-navy-950 mb-4">Browse Specific Allergies:</h3>
+                  <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
+                    {allergysConcerns.map((concern) => (
+                      <Button
+                        key={concern.id}
+                        asChild
+                        variant="outline"
+                        className="border-bahola-blue-200 text-bahola-blue-700 hover:bg-bahola-blue-50 hover:border-bahola-blue-300 rounded-full px-4 py-2 text-sm"
+                      >
+                        <Link to={`/health-concerns/${concern.id}`}>
+                          {concern.icon} {concern.name}
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
