@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BadgePlus, Pill, Stethoscope, GraduationCap, Users, BookOpen, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -76,7 +77,7 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen, onClose }) => 
     <div className="mega-menu mega-menu-full mega-menu-open">
       <div className="mega-menu-content">
         {/* Header with close button */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold">Professional Resources</h2>
             <p className="text-purple-100 text-sm mt-1">Tools and resources for healthcare professionals</p>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -88,7 +89,7 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen, onClose }) =>
     <div className="mega-menu mega-menu-full mega-menu-open">
       <div className="mega-menu-content">
         {/* Header with close button */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold">Health Concerns & Natural Solutions</h2>
             <p className="text-blue-100 text-sm mt-1">Find remedies tailored to your specific health needs</p>

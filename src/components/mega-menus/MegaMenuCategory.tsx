@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
@@ -79,7 +80,7 @@ export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen, onClose }) =
     <div className="mega-menu mega-menu-full mega-menu-open">
       <div className="mega-menu-content">
         {/* Header with close button */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold">Shop by Category</h2>
             <p className="text-green-100 text-sm mt-1">Browse our complete range of homeopathic medicines</p>

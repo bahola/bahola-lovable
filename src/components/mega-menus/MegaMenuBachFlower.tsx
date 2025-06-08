@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Flower, ChevronRight, Sparkles, Leaf, Sun, X } from 'lucide-react';
@@ -87,7 +88,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen, onClose })
     <div className="mega-menu mega-menu-full mega-menu-open">
       <div className="mega-menu-content">
         {/* Header with close button */}
-        <div className="bg-gradient-to-r from-pink-600 to-pink-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+        <div className="bg-gradient-to-r from-pink-600 to-pink-700 text-white px-8 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-semibold">Bach Flower Remedies</h2>
             <p className="text-pink-100 text-sm mt-1">Natural emotional healing through flower essences</p>
