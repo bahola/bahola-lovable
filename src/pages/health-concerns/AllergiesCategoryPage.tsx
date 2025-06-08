@@ -62,7 +62,7 @@ const AllergiesCategoryPage = () => {
                           variant="outline"
                           className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-600 hover:text-white hover:border-white/50 rounded-full px-4 py-2 text-sm"
                         >
-                          <Link to={`/diseases-conditions/${concern.id}`}>
+                          <Link to={`/diseases-conditions/allergies/${concern.id}`}>
                             {concern.icon} {concern.name}
                           </Link>
                         </Button>
