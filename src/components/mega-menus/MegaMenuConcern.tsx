@@ -42,7 +42,7 @@ const getConcernIcon = (name: string) => {
 
 // Shop by Concern Mega Menu - Sidebar layout with hover interactions
 export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
-  const [hoveredCategory, setHoveredCategory] = useState<'learn' | 'shop' | null>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<'learn' | 'shop' | null>('shop');
 
   const concerns = [
     { name: 'Allergies', infoRoute: '/diseases-conditions/allergies', shopRoute: '/category/allergies' },
@@ -78,27 +78,9 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
             <div className="p-4">
               <h2 className="text-sm font-semibold text-gray-700 mb-4">Browse by</h2>
               
-              {/* Learn About Button */}
+              {/* Shop Products Button - Now first */}
               <button
                 className={`w-full text-left p-3 rounded-lg mb-2 transition-all duration-200 ${
-                  hoveredCategory === 'learn' 
-                    ? 'bg-blue-100 text-blue-800 shadow-md' 
-                    : 'hover:bg-gray-200 text-gray-700'
-                }`}
-                onMouseEnter={() => setHoveredCategory('learn')}
-              >
-                <div className="flex items-center">
-                  <Book size={18} className="mr-2" />
-                  <div>
-                    <div className="font-medium text-sm">Learn About</div>
-                    <div className="text-xs opacity-75">Conditions</div>
-                  </div>
-                </div>
-              </button>
-
-              {/* Shop Products Button */}
-              <button
-                className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
                   hoveredCategory === 'shop' 
                     ? 'bg-green-100 text-green-800 shadow-md' 
                     : 'hover:bg-gray-200 text-gray-700'
@@ -113,40 +95,29 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
                   </div>
                 </div>
               </button>
+
+              {/* Learn About Button - Now second */}
+              <button
+                className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
+                  hoveredCategory === 'learn' 
+                    ? 'bg-blue-100 text-blue-800 shadow-md' 
+                    : 'hover:bg-gray-200 text-gray-700'
+                }`}
+                onMouseEnter={() => setHoveredCategory('learn')}
+              >
+                <div className="flex items-center">
+                  <Book size={18} className="mr-2" />
+                  <div>
+                    <div className="font-medium text-sm">Learn About</div>
+                    <div className="text-xs opacity-75">Conditions</div>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 
           {/* Right Content Area - 5/6 ratio */}
           <div className="col-span-5 p-6">
-            {hoveredCategory === 'learn' && (
-              <div>
-                <div className="flex items-center mb-4">
-                  <Book size={24} className="text-blue-600 mr-3" />
-                  <div>
-                    <h3 className="text-xl font-bold text-blue-800">Learn About Conditions</h3>
-                    <p className="text-sm text-blue-600">Discover causes, symptoms, and natural treatment approaches</p>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-4 gap-2">
-                  {concerns.map((concern) => (
-                    <a 
-                      key={`info-${concern.name}`}
-                      href={concern.infoRoute}
-                      className="flex items-center p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-blue-800 hover:text-blue-900 border border-blue-200 hover:border-blue-300"
-                    >
-                      <div className="mr-2 text-blue-600 flex-shrink-0">
-                        {getConcernIcon(concern.name)}
-                      </div>
-                      <span className="text-xs font-medium">
-                        {concern.name}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {hoveredCategory === 'shop' && (
               <div>
                 <div className="flex items-center mb-4">
@@ -165,6 +136,35 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
                       className="flex items-center p-2 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200 text-green-800 hover:text-green-900 border border-green-200 hover:border-green-300"
                     >
                       <div className="mr-2 text-green-600 flex-shrink-0">
+                        {getConcernIcon(concern.name)}
+                      </div>
+                      <span className="text-xs font-medium">
+                        {concern.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {hoveredCategory === 'learn' && (
+              <div>
+                <div className="flex items-center mb-4">
+                  <Book size={24} className="text-blue-600 mr-3" />
+                  <div>
+                    <h3 className="text-xl font-bold text-blue-800">Learn About Conditions</h3>
+                    <p className="text-sm text-blue-600">Discover causes, symptoms, and natural treatment approaches</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-4 gap-2">
+                  {concerns.map((concern) => (
+                    <a 
+                      key={`info-${concern.name}`}
+                      href={concern.infoRoute}
+                      className="flex items-center p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-blue-800 hover:text-blue-900 border border-blue-200 hover:border-blue-300"
+                    >
+                      <div className="mr-2 text-blue-600 flex-shrink-0">
                         {getConcernIcon(concern.name)}
                       </div>
                       <span className="text-xs font-medium">
