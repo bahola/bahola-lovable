@@ -42,6 +42,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         <MegaMenuCategory isOpen={activeMenu === 'category'} />
       </div>
 
+      <Link to="/diseases-conditions" className="main-menu-item">
+        <span className="text-gray-800 font-medium">Diseases & Conditions</span>
+      </Link>
+
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
         onMouseEnter={() => onMenuHover('doctors')}
