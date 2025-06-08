@@ -1,14 +1,16 @@
-
 import React from 'react';
-import { BadgePlus, Pill, Stethoscope, GraduationCap, Users, BookOpen } from 'lucide-react';
+import { BadgePlus, Pill, Stethoscope, GraduationCap, Users, BookOpen, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface MegaMenuProps {
   isOpen: boolean;
+  onClose: () => void;
 }
 
 // For Doctors Mega Menu - Mayo Clinic inspired design
-export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
+export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
   const professionalSections = [
     {
       title: "Professional Account",
@@ -71,12 +73,20 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
   ];
 
   return (
-    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="bg-white shadow-xl border border-gray-100">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4">
-          <h2 className="text-xl font-semibold">Professional Resources</h2>
-          <p className="text-purple-100 text-sm mt-1">Tools and resources for healthcare professionals</p>
+    <div className="mega-menu mega-menu-full mega-menu-open">
+      <div className="mega-menu-content">
+        {/* Header with close button */}
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Professional Resources</h2>
+            <p className="text-purple-100 text-sm mt-1">Tools and resources for healthcare professionals</p>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-white hover:text-purple-200 transition-colors"
+          >
+            <X size={24} />
+          </button>
         </div>
         
         {/* Content */}
@@ -103,6 +113,7 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
                           </div>
                           <Link 
                             to={item.link!} 
+                            onClick={onClose}
                             className="inline-flex items-center px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors duration-200 text-sm"
                           >
                             Sign Up Now
@@ -121,6 +132,7 @@ export const MegaMenuDoctor: React.FC<MegaMenuProps> = ({ isOpen }) => {
                       ) : (
                         <Link 
                           to={item.link!} 
+                          onClick={onClose}
                           className="flex items-start p-3 hover:bg-purple-50 rounded-lg transition-colors duration-200 group"
                         >
                           <div className="text-purple-600 group-hover:text-purple-700 mr-3 mt-1">

@@ -1,15 +1,15 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
   BadgePlus, Flower, BugPlay, Dumbbell, 
   Brain, Apple, Pill, Stethoscope, Wind, 
-  Banana, Smile, Droplets
+  Banana, Smile, Droplets, X
 } from 'lucide-react';
 
 interface MegaMenuProps {
   isOpen: boolean;
+  onClose: () => void;
 }
 
 // Utility function for concern icons
@@ -42,7 +42,7 @@ const getConcernIcon = (name: string) => {
 };
 
 // Shop by Concern Mega Menu - Mayo Clinic inspired design
-export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
+export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen, onClose }) => {
   const concernCategories = [
     {
       title: "Common Health Issues",
@@ -82,13 +82,23 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
     }
   ];
 
+  if (!isOpen) return null;
+
   return (
-    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="bg-white shadow-xl border border-gray-100">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4">
-          <h2 className="text-xl font-semibold">Health Concerns & Natural Solutions</h2>
-          <p className="text-blue-100 text-sm mt-1">Find remedies tailored to your specific health needs</p>
+    <div className="mega-menu mega-menu-full mega-menu-open">
+      <div className="mega-menu-content">
+        {/* Header with close button */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Health Concerns & Natural Solutions</h2>
+            <p className="text-blue-100 text-sm mt-1">Find remedies tailored to your specific health needs</p>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-white hover:text-blue-200 transition-colors"
+          >
+            <X size={24} />
+          </button>
         </div>
         
         {/* Content */}
@@ -104,6 +114,7 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
                     <Link 
                       key={concern.name} 
                       to={concern.route}
+                      onClick={onClose}
                       className="flex items-center p-2 hover:bg-blue-50 rounded-lg transition-colors duration-200 text-gray-700 hover:text-blue-700 group"
                     >
                       <div className="mr-3 text-blue-600 group-hover:text-blue-700 flex-shrink-0">
@@ -123,6 +134,7 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
           <div className="mt-8 pt-6 border-t border-gray-200 text-center">
             <Link 
               to="/health-concerns" 
+              onClick={onClose}
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
               View All Health Concerns

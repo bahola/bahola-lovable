@@ -1,14 +1,15 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Flower, ChevronRight, Sparkles, Leaf, Sun } from 'lucide-react';
+import { Heart, Flower, ChevronRight, Sparkles, Leaf, Sun, X } from 'lucide-react';
 
 interface MegaMenuProps {
   isOpen: boolean;
+  onClose: () => void;
 }
 
-// Bach Flower Mega Menu - Mayo Clinic inspired design
-export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
+export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
   const bachFlowerSections = [
     {
       title: "Shop Bach Flowers",
@@ -83,12 +84,20 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
   ];
 
   return (
-    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="bg-white shadow-xl border border-gray-100">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-pink-600 to-pink-700 text-white px-8 py-4">
-          <h2 className="text-xl font-semibold">Bach Flower Remedies</h2>
-          <p className="text-pink-100 text-sm mt-1">Natural emotional healing through flower essences</p>
+    <div className="mega-menu mega-menu-full mega-menu-open">
+      <div className="mega-menu-content">
+        {/* Header with close button */}
+        <div className="bg-gradient-to-r from-pink-600 to-pink-700 text-white px-8 py-4 rounded-t-lg flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Bach Flower Remedies</h2>
+            <p className="text-pink-100 text-sm mt-1">Natural emotional healing through flower essences</p>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-white hover:text-pink-200 transition-colors"
+          >
+            <X size={24} />
+          </button>
         </div>
         
         {/* Content */}
@@ -115,6 +124,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
                       ) : (
                         <Link 
                           to={item.link!} 
+                          onClick={onClose}
                           className="flex items-start p-3 hover:bg-pink-50 rounded-lg transition-colors duration-200 group"
                         >
                           <div className="text-pink-600 group-hover:text-pink-700 mr-3 mt-1">
@@ -142,6 +152,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
                 <Link
                   key={remedy.name}
                   to={remedy.link}
+                  onClick={onClose}
                   className="p-3 border border-gray-200 rounded-lg hover:border-pink-300 hover:bg-pink-50 transition-colors duration-200 text-center"
                 >
                   <h5 className="font-medium text-gray-800 text-sm">{remedy.name}</h5>
@@ -153,6 +164,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
             <div className="text-center">
               <Link 
                 to="/bach-flower-concerns" 
+                onClick={onClose}
                 className="inline-flex items-center px-6 py-3 bg-pink-600 text-white font-medium rounded-lg hover:bg-pink-700 transition-colors duration-200"
               >
                 Explore All Bach Flower Remedies
