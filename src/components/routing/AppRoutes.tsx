@@ -1,5 +1,4 @@
 
-
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
@@ -192,7 +191,7 @@ const AppRoutes = () => {
         <Route path="/help/shipping-issues" element={<ShippingIssues />} />
         <Route path="/help/certifications" element={<Certifications />} />
         
-        {/* Health Concern Category Routes - Updated to match exact category names */}
+        {/* Health Concern Category Routes */}
         <Route path="/diseases-conditions/allergy-care" element={<AllergyCare />} />
         <Route path="/diseases-conditions/gut-health" element={<GutHealth />} />
         <Route path="/diseases-conditions/heart-health" element={<HeartHealth />} />
@@ -223,7 +222,240 @@ const AppRoutes = () => {
         <Route path="/diseases-conditions/womens-health" element={<WomensHealth />} />
         <Route path="/diseases-conditions/womens-care" element={<WomensHealth />} />
 
-        {/* Individual Health Concern Pages */}
+        {/* NEW HIERARCHICAL ROUTES - Allergies */}
+        <Route path="/diseases-conditions/allergies/seasonal-allergies-hay-fever" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/dust-allergy" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/food-allergies-milk-gluten-nuts" element={<FoodAllergiesPage />} />
+        <Route path="/diseases-conditions/allergies/drug-allergies" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/skin-allergies-hives-eczema-urticaria" element={<EczemaPage />} />
+        <Route path="/diseases-conditions/allergies/allergic-rhinitis" element={<AllergiesHayFever />} />
+        <Route path="/diseases-conditions/allergies/pet-dander-allergy" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/mold-allergy" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/latex-allergy" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/sinus-allergy" element={<SeasonalAllergies />} />
+
+        {/* Cancer Routes */}
+        <Route path="/diseases-conditions/cancer/chemotherapy-side-effects-nausea-fatigue" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/radiation-skin-reactions" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/cancer-related-fatigue" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/immune-weakness-in-cancer-patients" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/loss-of-appetite" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/mouth-ulcers-from-cancer-treatment" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/lymphedema-support" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/anxiety-or-sleep-disorders-during-cancer" element={<CancerSupport />} />
+
+        {/* Heart Health Routes */}
+        <Route path="/diseases-conditions/heart-health/high-blood-pressure-hypertension" element={<HighBloodPressure />} />
+        <Route path="/diseases-conditions/heart-health/high-cholesterol-hyperlipidemia" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/palpitations" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/angina-pectoris-chest-pain" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/poor-circulation" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/varicose-veins" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/arrhythmias-irregular-heartbeat" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/post-heart-attack-recovery-support" element={<HeartHealth />} />
+
+        {/* Child Care Routes */}
+        <Route path="/diseases-conditions/child-care/teething-troubles" element={<Teething />} />
+        <Route path="/diseases-conditions/child-care/colic" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/diaper-rash" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/childhood-constipation" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/growth-and-appetite-issues" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/bedwetting-enuresis" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/childhood-allergies" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/recurrent-colds-and-cough" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/worm-infestation" element={<ChildCare />} />
+        <Route path="/diseases-conditions/child-care/temper-tantrums-hyperactivity" element={<ChildCare />} />
+
+        {/* Ear, Nose, Throat Routes */}
+        <Route path="/diseases-conditions/ear,-nose,-throat/earache-otitis-media" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/sinusitis" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/tonsillitis" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/sore-throat" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/nasal-polyps" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/chronic-rhinitis" element={<ChronicRhinitis />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/nose-bleeds-epistaxis" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/tinnitus" element={<ENTCare />} />
+        <Route path="/diseases-conditions/ear,-nose,-throat/loss-of-voice-laryngitis" element={<ENTCare />} />
+
+        {/* Eye Care Routes */}
+        <Route path="/diseases-conditions/eye-care/eye-strain-digital-eye-fatigue" element={<EyeProblems />} />
+        <Route path="/diseases-conditions/eye-care/dry-eyes" element={<EyeCare />} />
+        <Route path="/diseases-conditions/eye-care/conjunctivitis" element={<EyeCare />} />
+        <Route path="/diseases-conditions/eye-care/redness-and-itching-of-eyes" element={<EyeCare />} />
+        <Route path="/diseases-conditions/eye-care/stye-chalazion" element={<EyeCare />} />
+        <Route path="/diseases-conditions/eye-care/vision-weakness-supportive-care" element={<EyeCare />} />
+        <Route path="/diseases-conditions/eye-care/watering-eyes" element={<EyeCare />} />
+        <Route path="/diseases-conditions/eye-care/sensitivity-to-light" element={<EyeCare />} />
+
+        {/* Gut Health Routes */}
+        <Route path="/diseases-conditions/gut-health/acidity-gerd" element={<DigestiveIssues />} />
+        <Route path="/diseases-conditions/gut-health/constipation" element={<GutHealth />} />
+        <Route path="/diseases-conditions/gut-health/ibs-irritable-bowel-syndrome" element={<IBSPage />} />
+        <Route path="/diseases-conditions/gut-health/diarrhoea" element={<Diarrhoea />} />
+        <Route path="/diseases-conditions/gut-health/bloating-flatulence" element={<GutHealth />} />
+        <Route path="/diseases-conditions/gut-health/indigestion" element={<GutHealth />} />
+        <Route path="/diseases-conditions/gut-health/gastritis" element={<Gastritis />} />
+        <Route path="/diseases-conditions/gut-health/nausea-vomiting" element={<GutHealth />} />
+        <Route path="/diseases-conditions/gut-health/loss-of-appetite" element={<GutHealth />} />
+        <Route path="/diseases-conditions/gut-health/worms" element={<GutHealth />} />
+
+        {/* Women's Care Routes */}
+        <Route path="/diseases-conditions/women's-care/irregular-periods-menstrual-irregularities" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/pcos/pcod" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/menopause-support" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/premenstrual-syndrome-pms" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/leucorrhoea-vaginal-discharge" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/painful-periods-dysmenorrhoea" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/fibroids-supportive-care" element={<FibroidsSupportive />} />
+        <Route path="/diseases-conditions/women's-care/breast-tenderness" element={<BreastTenderness />} />
+        <Route path="/diseases-conditions/women's-care/infertility-supportive-role" element={<WomensHealth />} />
+        <Route path="/diseases-conditions/women's-care/lactation-issues" element={<WomensHealth />} />
+
+        {/* Hair Care Routes */}
+        <Route path="/diseases-conditions/hair-care/hair-fall-hair-loss" element={<HairCare />} />
+        <Route path="/diseases-conditions/hair-care/dandruff" element={<HairCare />} />
+        <Route path="/diseases-conditions/hair-care/premature-greying" element={<HairCare />} />
+        <Route path="/diseases-conditions/hair-care/scalp-itching-infections" element={<HairCare />} />
+        <Route path="/diseases-conditions/hair-care/alopecia-areata" element={<HairCare />} />
+        <Route path="/diseases-conditions/hair-care/thinning-hair" element={<HairCare />} />
+        <Route path="/diseases-conditions/hair-care/postpartum-hair-fall" element={<HairCare />} />
+
+        {/* Immune Boosters Routes */}
+        <Route path="/diseases-conditions/immune-boosters/recurrent-colds-cough" element={<ImmuneBoosters />} />
+        <Route path="/diseases-conditions/immune-boosters/frequent-infections" element={<ImmuneBoosters />} />
+        <Route path="/diseases-conditions/immune-boosters/low-energy-levels" element={<ImmuneBoosters />} />
+        <Route path="/diseases-conditions/immune-boosters/post-illness-recovery" element={<ImmuneBoosters />} />
+        <Route path="/diseases-conditions/immune-boosters/general-weakness" element={<GeneralWeakness />} />
+        <Route path="/diseases-conditions/immune-boosters/convalescence-remedies" element={<ConvalescenceRemedies />} />
+        <Route path="/diseases-conditions/immune-boosters/children's-immunity-drops" element={<ImmuneBoosters />} />
+        <Route path="/diseases-conditions/immune-boosters/elderly-immune-support" element={<ImmuneBoosters />} />
+
+        {/* Infection Routes */}
+        <Route path="/diseases-conditions/infection/bacterial-infections-boils-abscesses" element={<BacterialInfections />} />
+        <Route path="/diseases-conditions/infection/viral-infections-flu-warts-cold-sores" element={<ViralInfections />} />
+        <Route path="/diseases-conditions/infection/fungal-infections-ringworm-candidiasis" element={<FungalInfections />} />
+        <Route path="/diseases-conditions/infection/urinary-tract-infections-utis" element={<UrinaryTractInfections />} />
+        <Route path="/diseases-conditions/infection/skin-infections" element={<SkinInfections />} />
+        <Route path="/diseases-conditions/infection/ear-sinus-infections" element={<EarSinusInfections />} />
+        <Route path="/diseases-conditions/infection/recurrent-fevers" element={<RecurrentFevers />} />
+        <Route path="/diseases-conditions/infection/fever-with-chills-intermittent-fever" element={<FeverWithChills />} />
+
+        {/* Lifestyle Routes */}
+        <Route path="/diseases-conditions/lifestyle/obesity-weight-gain" element={<WeightManagement />} />
+        <Route path="/diseases-conditions/lifestyle/smoking-cessation-support" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle/fatigue-burnout" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle/jet-lag-recovery" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle/sleep-disorders" element={<InsomniaPage />} />
+        <Route path="/diseases-conditions/lifestyle/sedentary-lifestyle-issues" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle/travel-digestive-issues" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle/detox-liver-cleanse" element={<LifestyleCare />} />
+        <Route path="/diseases-conditions/lifestyle/chronic-inflammation" element={<LifestyleCare />} />
+
+        {/* Muscle & Joint Care Routes */}
+        <Route path="/diseases-conditions/muscle-joint-care/rheumatoid-arthritis" element={<JointPainArthritis />} />
+        <Route path="/diseases-conditions/muscle-joint-care/osteoarthritis" element={<JointPainArthritis />} />
+        <Route path="/diseases-conditions/muscle-joint-care/back-pain" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/neck-pain-spondylosis" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/muscle-cramps" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/fibromyalgia" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/sports-injuries" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/frozen-shoulder" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/gout" element={<MuscleCare />} />
+        <Route path="/diseases-conditions/muscle-joint-care/sciatica" element={<MuscleCare />} />
+
+        {/* Mental Health Routes */}
+        <Route path="/diseases-conditions/mental-health/anxiety" element={<AnxietyStress />} />
+        <Route path="/diseases-conditions/mental-health/depression" element={<DepressionMood />} />
+        <Route path="/diseases-conditions/mental-health/sleep-disorders-insomnia" element={<InsomniaPage />} />
+        <Route path="/diseases-conditions/mental-health/stress" element={<AnxietyStress />} />
+        <Route path="/diseases-conditions/mental-health/lack-of-concentration" element={<MentalHealth />} />
+        <Route path="/diseases-conditions/mental-health/panic-attacks" element={<PanicDisorderPage />} />
+        <Route path="/diseases-conditions/mental-health/restlessness-irritability" element={<MentalHealth />} />
+        <Route path="/diseases-conditions/mental-health/mood-swings" element={<DepressionMood />} />
+        <Route path="/diseases-conditions/mental-health/performance-anxiety" element={<AnxietyStress />} />
+        <Route path="/diseases-conditions/mental-health/exam-stress-in-children" element={<MentalHealth />} />
+
+        {/* Nutritive Routes */}
+        <Route path="/diseases-conditions/nutritive/general-debility" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/malnutrition" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/poor-appetite" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/post-illness-nutrition-support" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/protein-deficiency" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/vitamin-and-mineral-support" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/convalescence" element={<ConvalescenceRemedies />} />
+        <Route path="/diseases-conditions/nutritive/nutrition-in-pregnancy-and-lactation" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/growth-supplements-for-children" element={<NutritiveCare />} />
+        <Route path="/diseases-conditions/nutritive/menopausal-nutrition" element={<NutritiveCare />} />
+
+        {/* Pain Care Routes */}
+        <Route path="/diseases-conditions/pain-care/headaches-and-migraines" element={<HeadachesMigraines />} />
+        <Route path="/diseases-conditions/pain-care/joint-pain" element={<JointPainArthritis />} />
+        <Route path="/diseases-conditions/pain-care/sciatic-pain" element={<PainCare />} />
+        <Route path="/diseases-conditions/pain-care/menstrual-cramps" element={<PainCare />} />
+        <Route path="/diseases-conditions/pain-care/dental-pain" element={<PainCare />} />
+        <Route path="/diseases-conditions/pain-care/muscle-pain-myalgia" element={<PainCare />} />
+        <Route path="/diseases-conditions/pain-care/back-pain" element={<PainCare />} />
+        <Route path="/diseases-conditions/pain-care/fibromyalgia" element={<PainCare />} />
+        <Route path="/diseases-conditions/pain-care/chronic-pain-syndrome" element={<PainCare />} />
+
+        {/* Reproductive Care Routes */}
+        <Route path="/diseases-conditions/reproductive-care/male-infertility-low-sperm-count-libido" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/female-infertility-irregular-ovulation-pcos" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/erectile-dysfunction" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/premature-ejaculation" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/menstrual-health" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/painful-intercourse" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/hormonal-imbalances" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/sexual-debility" element={<ReproductiveCare />} />
+        <Route path="/diseases-conditions/reproductive-care/libido-enhancers-both-genders" element={<ReproductiveCare />} />
+
+        {/* Respiratory Care Routes */}
+        <Route path="/diseases-conditions/respiratory-care/asthma" element={<AsthmaPage />} />
+        <Route path="/diseases-conditions/respiratory-care/chronic-bronchitis" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/respiratory-care/allergic-rhinitis" element={<AllergiesHayFever />} />
+        <Route path="/diseases-conditions/respiratory-care/sinusitis" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/respiratory-care/wheezing" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/respiratory-care/dry-cough-wet-cough" element={<ColdFlu />} />
+        <Route path="/diseases-conditions/respiratory-care/copd-supportive-care" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/respiratory-care/breathlessness" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/respiratory-care/recurrent-cold-and-cough" element={<RespiratoryCare />} />
+        <Route path="/diseases-conditions/respiratory-care/nasal-block-deviated-septum-support" element={<RespiratoryCare />} />
+
+        {/* Skin Care Routes */}
+        <Route path="/diseases-conditions/skin-care/acne-pimples" element={<Acne />} />
+        <Route path="/diseases-conditions/skin-care/eczema-dermatitis" element={<EczemaPage />} />
+        <Route path="/diseases-conditions/skin-care/psoriasis-supportive-care" element={<SkinConditions />} />
+        <Route path="/diseases-conditions/skin-care/fungal-infections" element={<FungalInfections />} />
+        <Route path="/diseases-conditions/skin-care/skin-allergy-itching" element={<SkinConditions />} />
+        <Route path="/diseases-conditions/skin-care/urticaria" element={<SkinConditions />} />
+        <Route path="/diseases-conditions/skin-care/warts" element={<SkinConditions />} />
+        <Route path="/diseases-conditions/skin-care/pigmentation" element={<SkinCare />} />
+        <Route path="/diseases-conditions/skin-care/dry-skin" element={<SkinCare />} />
+        <Route path="/diseases-conditions/skin-care/corns-calluses" element={<SkinCare />} />
+
+        {/* Tooth Care Routes */}
+        <Route path="/diseases-conditions/tooth-care/toothache" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/bleeding-gums" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/pyorrhoea" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/dental-abscess" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/mouth-ulcers" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/bad-breath-halitosis" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/sensitive-teeth" element={<ToothCare />} />
+        <Route path="/diseases-conditions/tooth-care/teeth-grinding-bruxism" element={<ToothCare />} />
+
+        {/* Urinary Care Routes */}
+        <Route path="/diseases-conditions/urinary-care/urinary-tract-infection-uti" element={<UrinaryTractInfections />} />
+        <Route path="/diseases-conditions/urinary-care/bedwetting" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/frequent-urination" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/burning-urination" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/kidney-stone-support" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/bladder-spasms" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/incontinence" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/prostate-enlargement-bph" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/cystitis" element={<UrologyCare />} />
+        <Route path="/diseases-conditions/urinary-care/nephrotic-syndrome-supportive" element={<UrologyCare />} />
+
+        {/* Legacy routes for backward compatibility */}
         <Route path="/diseases-conditions/anxiety-stress" element={<AnxietyStress />} />
         <Route path="/diseases-conditions/insomnia-sleep-disorders" element={<InsomniaPage />} />
         <Route path="/diseases-conditions/digestive-issues" element={<DigestiveIssues />} />
@@ -238,36 +470,6 @@ const AppRoutes = () => {
         <Route path="/diseases-conditions/eye-problems" element={<EyeProblems />} />
         <Route path="/diseases-conditions/high-blood-pressure" element={<HighBloodPressure />} />
         <Route path="/diseases-conditions/diabetes-support" element={<DiabetesSupport />} />
-        
-        {/* Disease-specific routes under diseases-conditions */}
-        <Route path="/diseases-conditions/allergies-hay-fever/asthma" element={<AsthmaPage />} />
-        <Route path="/diseases-conditions/allergies-hay-fever/eczema" element={<EczemaPage />} />
-        <Route path="/diseases-conditions/allergies-hay-fever/food-allergies" element={<FoodAllergiesPage />} />
-        <Route path="/diseases-conditions/anxiety-stress/panic-disorder" element={<PanicDisorderPage />} />
-        <Route path="/diseases-conditions/anxiety-stress/generalized-anxiety" element={<GeneralizedAnxietyPage />} />
-        <Route path="/diseases-conditions/digestive-issues/ibs" element={<IBSPage />} />
-        
-        {/* Infection-related routes */}
-        <Route path="/diseases-conditions/bacterial-infections" element={<BacterialInfections />} />
-        <Route path="/diseases-conditions/viral-infections" element={<ViralInfections />} />
-        <Route path="/diseases-conditions/fungal-infections" element={<FungalInfections />} />
-        <Route path="/diseases-conditions/urinary-tract-infections" element={<UrinaryTractInfections />} />
-        <Route path="/diseases-conditions/skin-infections" element={<SkinInfections />} />
-        <Route path="/diseases-conditions/ear-sinus-infections" element={<EarSinusInfections />} />
-        <Route path="/diseases-conditions/recurrent-fevers" element={<RecurrentFevers />} />
-        <Route path="/diseases-conditions/fever-with-chills" element={<FeverWithChills />} />
-        
-        {/* Additional health concern routes */}
-        <Route path="/diseases-conditions/seasonal-allergies" element={<SeasonalAllergies />} />
-        <Route path="/diseases-conditions/teething-troubles" element={<Teething />} />
-        <Route path="/diseases-conditions/acne-pimples" element={<Acne />} />
-        <Route path="/diseases-conditions/diarrhoea" element={<Diarrhoea />} />
-        <Route path="/diseases-conditions/gastritis" element={<Gastritis />} />
-        <Route path="/diseases-conditions/chronic-rhinitis" element={<ChronicRhinitis />} />
-        <Route path="/diseases-conditions/breast-tenderness" element={<BreastTenderness />} />
-        <Route path="/diseases-conditions/fibroids-supportive" element={<FibroidsSupportive />} />
-        <Route path="/diseases-conditions/general-weakness" element={<GeneralWeakness />} />
-        <Route path="/diseases-conditions/convalescence-remedies" element={<ConvalescenceRemedies />} />
 
         {/* Search routes with dynamic parameters */}
         <Route path="/search" element={<Shop />} />
@@ -296,4 +498,3 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
-
