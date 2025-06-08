@@ -5,35 +5,34 @@ import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthCon
 import { healthConcernsData } from '@/data/healthConcernsData';
 import { SEO } from '@/components/SEO';
 
-const AllergiesCategoryPage = () => {
-  // Filter health concerns to only show allergy-related ones
-  const allergysConcerns = healthConcernsData.filter(concern => 
-    concern.category === 'Allergies'
+const GutHealthCategoryPage = () => {
+  const gutHealthConcerns = healthConcernsData.filter(concern => 
+    concern.category === 'Gut Health'
   );
 
   const concernsByCategory = {
-    'Allergies': allergysConcerns
+    'Gut Health': gutHealthConcerns
   };
 
   return (
     <>
       <SEO
-        title="Allergies - Natural Homeopathic Treatment"
-        description="Discover natural homeopathic remedies for various types of allergies including seasonal allergies, food allergies, skin allergies and more."
+        title="Gut Health - Natural Homeopathic Treatment"
+        description="Discover natural homeopathic remedies for digestive issues, gut health problems, and gastrointestinal conditions."
       />
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow">
           <div className="container mx-auto px-4">
             <HealthConcernsBreadcrumb 
-              categoryName="Allergies"
-              categoryPath="/diseases-conditions/allergies"
+              categoryName="Gut Health"
+              categoryPath="/diseases-conditions/gut-health"
             />
           </div>
 
           <HealthConcernsCategoryView
             concernsByCategory={concernsByCategory}
             viewMode="grid"
-            categoryKey="Allergies"
+            categoryKey="Gut Health"
             showAsHeroSection={true}
           />
         </main>
@@ -42,4 +41,4 @@ const AllergiesCategoryPage = () => {
   );
 };
 
-export default AllergiesCategoryPage;
+export default GutHealthCategoryPage;

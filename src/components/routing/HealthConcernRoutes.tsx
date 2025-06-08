@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -74,13 +73,18 @@ import {
   Palpitations
 } from './HealthConcernImports';
 
-// Import the new AllergiesCategoryPage with correct path
+// Import category pages
 import AllergiesCategoryPage from '../../pages/health-concerns/AllergiesCategoryPage';
+import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategoryPage';
+import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
 
 export const getHealthConcernRoutes = () => [
-  // Health Concern Category Routes
-  <Route key="gut-health" path="/diseases-conditions/gut-health" element={<GutHealth />} />,
-  <Route key="heart-health" path="/diseases-conditions/heart-health" element={<HeartHealth />} />,
+  // Main Category Routes with new hero section structure
+  <Route key="allergies-main" path="/diseases-conditions/allergies" element={<AllergiesCategoryPage />} />,
+  <Route key="gut-health-main" path="/diseases-conditions/gut-health" element={<GutHealthCategoryPage />} />,
+  <Route key="heart-health-main" path="/diseases-conditions/heart-health" element={<HeartHealthCategoryPage />} />,
+  
+  // Other category routes (will be updated to new structure later)
   <Route key="child-care" path="/diseases-conditions/child-care" element={<ChildCare />} />,
   <Route key="cancer-support" path="/diseases-conditions/cancer-support" element={<CancerSupport />} />,
   <Route key="ent-care-1" path="/diseases-conditions/ent-care" element={<ENTCare />} />,
@@ -108,10 +112,7 @@ export const getHealthConcernRoutes = () => [
   <Route key="womens-health-1" path="/diseases-conditions/womens-health" element={<WomensHealth />} />,
   <Route key="womens-health-2" path="/diseases-conditions/womens-care" element={<WomensHealth />} />,
 
-  // NEW MAIN CATEGORY ROUTE - Allergies Overview
-  <Route key="allergies-main" path="/diseases-conditions/allergies" element={<AllergiesCategoryPage />} />,
-
-  // NEW HIERARCHICAL ROUTES - Allergies (moved from allergy-care to allergies)
+  // HIERARCHICAL ROUTES - Allergies
   <Route key="seasonal-allergies" path="/diseases-conditions/allergies/seasonal-allergies-hay-fever" element={<SeasonalAllergies />} />,
   <Route key="dust-allergy" path="/diseases-conditions/allergies/dust-allergy" element={<DustAllergy />} />,
   <Route key="food-allergies" path="/diseases-conditions/allergies/food-allergies-milk-gluten-nuts" element={<FoodAllergiesPage />} />,
@@ -123,17 +124,14 @@ export const getHealthConcernRoutes = () => [
   <Route key="latex-allergy" path="/diseases-conditions/allergies/latex-allergy" element={<LatexAllergy />} />,
   <Route key="sinus-allergy" path="/diseases-conditions/allergies/sinus-allergy" element={<SinusAllergy />} />,
 
-  // Cancer Routes
-  <Route key="chemotherapy-side-effects" path="/diseases-conditions/cancer/chemotherapy-side-effects-nausea-fatigue" element={<ChemotherapySideEffects />} />,
-  <Route key="radiation-skin-reactions" path="/diseases-conditions/cancer/radiation-skin-reactions" element={<CancerSupport />} />,
-  <Route key="cancer-related-fatigue" path="/diseases-conditions/cancer/cancer-related-fatigue" element={<CancerSupport />} />,
-  <Route key="immune-weakness-cancer" path="/diseases-conditions/cancer/immune-weakness-in-cancer-patients" element={<CancerSupport />} />,
-  <Route key="loss-of-appetite-cancer" path="/diseases-conditions/cancer/loss-of-appetite" element={<CancerSupport />} />,
-  <Route key="mouth-ulcers-cancer" path="/diseases-conditions/cancer/mouth-ulcers-from-cancer-treatment" element={<CancerSupport />} />,
-  <Route key="lymphedema-support" path="/diseases-conditions/cancer/lymphedema-support" element={<CancerSupport />} />,
-  <Route key="anxiety-sleep-cancer" path="/diseases-conditions/cancer/anxiety-or-sleep-disorders-during-cancer" element={<CancerSupport />} />,
+  // HIERARCHICAL ROUTES - Gut Health
+  <Route key="ibs" path="/diseases-conditions/gut-health/irritable-bowel-syndrome-ibs" element={<IBSPage />} />,
+  <Route key="gastritis-gut" path="/diseases-conditions/gut-health/gastritis-stomach-inflammation" element={<Gastritis />} />,
+  <Route key="diarrhoea-gut" path="/diseases-conditions/gut-health/diarrhoea-loose-stools" element={<Diarrhoea />} />,
+  <Route key="indigestion" path="/diseases-conditions/gut-health/indigestion-dyspepsia" element={<DigestiveIssues />} />,
+  <Route key="loss-appetite-gut" path="/diseases-conditions/gut-health/loss-of-appetite" element={<DigestiveIssues />} />,
 
-  // Heart Health Routes
+  // HIERARCHICAL ROUTES - Heart Health
   <Route key="high-blood-pressure" path="/diseases-conditions/heart-health/high-blood-pressure-hypertension" element={<HighBloodPressure />} />,
   <Route key="high-cholesterol" path="/diseases-conditions/heart-health/high-cholesterol-hyperlipidemia" element={<HeartHealth />} />,
   <Route key="palpitations" path="/diseases-conditions/heart-health/palpitations" element={<Palpitations />} />,
@@ -142,6 +140,16 @@ export const getHealthConcernRoutes = () => [
   <Route key="varicose-veins" path="/diseases-conditions/heart-health/varicose-veins" element={<HeartHealth />} />,
   <Route key="arrhythmias" path="/diseases-conditions/heart-health/arrhythmias-irregular-heartbeat" element={<HeartHealth />} />,
   <Route key="post-heart-attack" path="/diseases-conditions/heart-health/post-heart-attack-recovery-support" element={<HeartHealth />} />,
+
+  // HIERARCHICAL ROUTES - Cancer Support
+  <Route key="chemotherapy-side-effects" path="/diseases-conditions/cancer-support/chemotherapy-side-effects-nausea-fatigue" element={<ChemotherapySideEffects />} />,
+  <Route key="radiation-skin-reactions" path="/diseases-conditions/cancer-support/radiation-skin-reactions" element={<CancerSupport />} />,
+  <Route key="cancer-related-fatigue" path="/diseases-conditions/cancer-support/cancer-related-fatigue" element={<CancerSupport />} />,
+  <Route key="immune-weakness-cancer" path="/diseases-conditions/cancer-support/immune-weakness-in-cancer-patients" element={<CancerSupport />} />,
+  <Route key="loss-of-appetite-cancer" path="/diseases-conditions/cancer-support/loss-of-appetite" element={<CancerSupport />} />,
+  <Route key="mouth-ulcers-cancer" path="/diseases-conditions/cancer-support/mouth-ulcers-from-cancer-treatment" element={<CancerSupport />} />,
+  <Route key="lymphedema-support" path="/diseases-conditions/cancer-support/lymphedema-support" element={<CancerSupport />} />,
+  <Route key="anxiety-sleep-cancer" path="/diseases-conditions/cancer-support/anxiety-or-sleep-disorders-during-cancer" element={<CancerSupport />} />,
 
   // Legacy routes for backward compatibility
   <Route key="anxiety-stress" path="/diseases-conditions/anxiety-stress" element={<AnxietyStress />} />,
