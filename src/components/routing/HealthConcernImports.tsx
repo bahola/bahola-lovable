@@ -70,3 +70,17 @@ export const SkinCare = React.lazy(() => import('@/pages/health-concerns/SkinCar
 export const SpecialtyCare = React.lazy(() => import('@/pages/health-concerns/SpecialtyCare'));
 export const ToothCare = React.lazy(() => import('@/pages/health-concerns/ToothCare'));
 export const UrologyCare = React.lazy(() => import('@/pages/health-concerns/UrologyCare'));
+
+// Add new missing allergy pages
+export const DustAllergy = React.lazy(() => import('@/pages/health-concerns/DustAllergy'));
+export const DrugAllergies = React.lazy(() => import('@/pages/health-concerns/DrugAllergies'));
+export const PetDanderAllergy = React.lazy(() => import('@/pages/health-concerns/PetDanderAllergy'));
+export const MoldAllergy = React.lazy(() => import('@/pages/health-concerns/MoldAllergy'));
+export const LatexAllergy = React.lazy(() => import('@/pages/health-concerns/LatexAllergy'));
+export const SinusAllergy = React.lazy(() => import('@/pages/health-concerns/SinusAllergy'));
+
+// Add new cancer pages
+export const ChemotherapySideEffects = React.lazy(() => import('@/pages/health-concerns/ChemotherapySideEffects'));
+
+// Add new heart health pages
+export const Palpitations = React.lazy(() => import('@/pages/health-concerns/Palpitations'));

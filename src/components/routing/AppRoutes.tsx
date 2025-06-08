@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
@@ -116,7 +115,15 @@ import {
   SkinCare,
   SpecialtyCare,
   ToothCare,
-  UrologyCare
+  UrologyCare,
+  DustAllergy,
+  DrugAllergies,
+  PetDanderAllergy,
+  MoldAllergy,
+  LatexAllergy,
+  SinusAllergy,
+  ChemotherapySideEffects,
+  Palpitations
 } from './HealthConcernImports';
 
 // Loading component for Suspense fallback
@@ -224,18 +231,18 @@ const AppRoutes = () => {
 
         {/* NEW HIERARCHICAL ROUTES - Allergies */}
         <Route path="/diseases-conditions/allergies/seasonal-allergies-hay-fever" element={<SeasonalAllergies />} />
-        <Route path="/diseases-conditions/allergies/dust-allergy" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/dust-allergy" element={<DustAllergy />} />
         <Route path="/diseases-conditions/allergies/food-allergies-milk-gluten-nuts" element={<FoodAllergiesPage />} />
-        <Route path="/diseases-conditions/allergies/drug-allergies" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/drug-allergies" element={<DrugAllergies />} />
         <Route path="/diseases-conditions/allergies/skin-allergies-hives-eczema-urticaria" element={<EczemaPage />} />
         <Route path="/diseases-conditions/allergies/allergic-rhinitis" element={<AllergiesHayFever />} />
-        <Route path="/diseases-conditions/allergies/pet-dander-allergy" element={<SeasonalAllergies />} />
-        <Route path="/diseases-conditions/allergies/mold-allergy" element={<SeasonalAllergies />} />
-        <Route path="/diseases-conditions/allergies/latex-allergy" element={<SeasonalAllergies />} />
-        <Route path="/diseases-conditions/allergies/sinus-allergy" element={<SeasonalAllergies />} />
+        <Route path="/diseases-conditions/allergies/pet-dander-allergy" element={<PetDanderAllergy />} />
+        <Route path="/diseases-conditions/allergies/mold-allergy" element={<MoldAllergy />} />
+        <Route path="/diseases-conditions/allergies/latex-allergy" element={<LatexAllergy />} />
+        <Route path="/diseases-conditions/allergies/sinus-allergy" element={<SinusAllergy />} />
 
         {/* Cancer Routes */}
-        <Route path="/diseases-conditions/cancer/chemotherapy-side-effects-nausea-fatigue" element={<CancerSupport />} />
+        <Route path="/diseases-conditions/cancer/chemotherapy-side-effects-nausea-fatigue" element={<ChemotherapySideEffects />} />
         <Route path="/diseases-conditions/cancer/radiation-skin-reactions" element={<CancerSupport />} />
         <Route path="/diseases-conditions/cancer/cancer-related-fatigue" element={<CancerSupport />} />
         <Route path="/diseases-conditions/cancer/immune-weakness-in-cancer-patients" element={<CancerSupport />} />
@@ -247,7 +254,7 @@ const AppRoutes = () => {
         {/* Heart Health Routes */}
         <Route path="/diseases-conditions/heart-health/high-blood-pressure-hypertension" element={<HighBloodPressure />} />
         <Route path="/diseases-conditions/heart-health/high-cholesterol-hyperlipidemia" element={<HeartHealth />} />
-        <Route path="/diseases-conditions/heart-health/palpitations" element={<HeartHealth />} />
+        <Route path="/diseases-conditions/heart-health/palpitations" element={<Palpitations />} />
         <Route path="/diseases-conditions/heart-health/angina-pectoris-chest-pain" element={<HeartHealth />} />
         <Route path="/diseases-conditions/heart-health/poor-circulation" element={<HeartHealth />} />
         <Route path="/diseases-conditions/heart-health/varicose-veins" element={<HeartHealth />} />
