@@ -74,8 +74,8 @@ import {
   Palpitations
 } from './HealthConcernImports';
 
-// Import the new AllergiesCategoryPage
-import AllergiesCategoryPage from '../pages/health-concerns/AllergiesCategoryPage';
+// Import the new AllergiesCategoryPage with correct path
+import AllergiesCategoryPage from '../../pages/health-concerns/AllergiesCategoryPage';
 
 export const getHealthConcernRoutes = () => [
   // Health Concern Category Routes
