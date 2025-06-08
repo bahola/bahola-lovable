@@ -17,23 +17,29 @@ const HealthConcerns = () => {
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
-  // Updated category route mapping to match the routes in AppRoutes.tsx
+  // Complete category route mapping to match all routes in AppRoutes.tsx
   const categoryRoutes: Record<string, string> = {
     'Allergy Care': '/diseases-conditions/allergy-care',
     'Gut Health': '/diseases-conditions/gut-health',
     'Heart Health': '/diseases-conditions/heart-health',
     'Child Care': '/diseases-conditions/child-care',
     'Cancer': '/diseases-conditions/cancer-support',
-    'Anxiety & Mental Health': '/diseases-conditions/anxiety-mental-health',
+    'Cancer Support': '/diseases-conditions/cancer-support',
+    'Anxiety & Mental Health': '/diseases-conditions/mental-health',
     'ENT Care': '/diseases-conditions/ent-care',
+    'Ear, Nose, Throat': '/diseases-conditions/ent-care',
     'Eye Care': '/diseases-conditions/eye-care',
     'Hair Care': '/diseases-conditions/hair-care',
     'Immune Boosters': '/diseases-conditions/immune-boosters',
     'Infection Care': '/diseases-conditions/infection-care',
+    'Infection': '/diseases-conditions/infection-care',
     'Lifestyle Care': '/diseases-conditions/lifestyle-care',
+    'Lifestyle': '/diseases-conditions/lifestyle-care',
     'Mental Health': '/diseases-conditions/mental-health',
     'Muscle Care': '/diseases-conditions/muscle-care',
+    'Muscle & Joint Care': '/diseases-conditions/muscle-care',
     'Nutritive Care': '/diseases-conditions/nutritive-care',
+    'Nutritive': '/diseases-conditions/nutritive-care',
     'Pain Care': '/diseases-conditions/pain-care',
     'Reproductive Care': '/diseases-conditions/reproductive-care',
     'Respiratory Care': '/diseases-conditions/respiratory-care',
@@ -41,16 +47,44 @@ const HealthConcerns = () => {
     'Specialty Care': '/diseases-conditions/specialty-care',
     'Tooth Care': '/diseases-conditions/tooth-care',
     'Urology Care': '/diseases-conditions/urology-care',
-    'Women\'s Health': '/diseases-conditions/womens-health'
+    'Urinary Care': '/diseases-conditions/urology-care',
+    'Women\'s Health': '/diseases-conditions/womens-health',
+    'Women\'s Care': '/diseases-conditions/womens-health',
+    'Womens Health': '/diseases-conditions/womens-health',
+    'Womens Care': '/diseases-conditions/womens-health'
   };
 
-  // Handle category change - navigate to specific category page
+  // Handle category change - always navigate to specific category page if route exists
   const handleCategoryChange = (category: string) => {
-    if (category !== 'all' && categoryRoutes[category]) {
-      navigate(categoryRoutes[category]);
-    } else {
-      setSelectedCategory(category);
+    if (category !== 'all') {
+      // Check if there's a route for this category
+      const route = categoryRoutes[category];
+      if (route) {
+        navigate(route);
+        return;
+      }
+      
+      // Fallback: try to find a matching route by checking variations
+      const categoryVariations = [
+        category,
+        category.replace(/'/g, ''),
+        category.replace(/&/g, 'and'),
+        category.replace(/\s+/g, '-').toLowerCase()
+      ];
+      
+      for (const variation of categoryVariations) {
+        const matchingRoute = Object.entries(categoryRoutes).find(
+          ([key]) => key.toLowerCase() === variation.toLowerCase()
+        );
+        if (matchingRoute) {
+          navigate(matchingRoute[1]);
+          return;
+        }
+      }
     }
+    
+    // Only set local state if no route found and category is 'all'
+    setSelectedCategory(category);
   };
 
   const filteredConcerns = healthConcernsData.filter(concern => {
