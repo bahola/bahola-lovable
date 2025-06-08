@@ -67,10 +67,10 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
   ];
 
   return (
-    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="p-6 bg-gradient-to-br from-blue-50 to-white shadow-lg border-t-4 border-blue-500">
+    <div className={`mega-menu ${isOpen ? 'mega-menu-open' : ''}`}>
+      <div className="container mx-auto p-6 bg-gradient-to-br from-blue-50 to-white">
         <h2 className="text-xl font-bold mb-6 text-gray-800">Health Concerns & Natural Solutions</h2>
-        <div className="grid grid-cols-3 gap-4 max-w-6xl">
+        <div className="grid grid-cols-3 gap-4 max-w-6xl mx-auto">
           {concerns.map((concern) => (
             <a 
               key={concern.name} 

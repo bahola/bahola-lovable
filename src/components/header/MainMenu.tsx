@@ -20,12 +20,19 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   onMenuHover, 
   onMenuLeave 
 }) => {
+  const handleMenuClick = (menuName: string) => {
+    if (activeMenu === menuName) {
+      onMenuLeave();
+    } else {
+      onMenuHover(menuName);
+    }
+  };
+
   return (
     <nav className="hidden lg:flex items-center space-x-2">
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
-        onMouseEnter={() => onMenuHover('concern')}
-        onMouseLeave={onMenuLeave}
+        onClick={() => handleMenuClick('concern')}
       >
         <span className="text-gray-800 font-medium">Shop by Problem</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
@@ -34,8 +41,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
-        onMouseEnter={() => onMenuHover('category')}
-        onMouseLeave={onMenuLeave}
+        onClick={() => handleMenuClick('category')}
       >
         <span className="text-gray-800 font-medium">Shop by Category</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
@@ -48,8 +54,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
-        onMouseEnter={() => onMenuHover('doctors')}
-        onMouseLeave={onMenuLeave}
+        onClick={() => handleMenuClick('doctors')}
       >
         <span className="text-gray-800 font-medium">For Doctors</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
@@ -58,8 +63,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
       <div 
         className="main-menu-item flex items-center relative cursor-pointer"
-        onMouseEnter={() => onMenuHover('bachflower')}
-        onMouseLeave={onMenuLeave}
+        onClick={() => handleMenuClick('bachflower')}
       >
         <span className="text-gray-800 font-medium">Bach Flower</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
