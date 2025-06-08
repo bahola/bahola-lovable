@@ -74,6 +74,9 @@ import {
   Palpitations
 } from './HealthConcernImports';
 
+// Import the new AllergiesCategoryPage
+import AllergiesCategoryPage from '../pages/health-concerns/AllergiesCategoryPage';
+
 export const getHealthConcernRoutes = () => [
   // Health Concern Category Routes
   <Route key="gut-health" path="/diseases-conditions/gut-health" element={<GutHealth />} />,
@@ -104,6 +107,9 @@ export const getHealthConcernRoutes = () => [
   <Route key="urology-care-2" path="/diseases-conditions/urinary-care" element={<UrologyCare />} />,
   <Route key="womens-health-1" path="/diseases-conditions/womens-health" element={<WomensHealth />} />,
   <Route key="womens-health-2" path="/diseases-conditions/womens-care" element={<WomensHealth />} />,
+
+  // NEW MAIN CATEGORY ROUTE - Allergies Overview
+  <Route key="allergies-main" path="/diseases-conditions/allergies" element={<AllergiesCategoryPage />} />,
 
   // NEW HIERARCHICAL ROUTES - Allergies (moved from allergy-care to allergies)
   <Route key="seasonal-allergies" path="/diseases-conditions/allergies/seasonal-allergies-hay-fever" element={<SeasonalAllergies />} />,
