@@ -40,30 +40,30 @@ const getConcernIcon = (name: string) => {
   return iconMap[name] || <Pill size={24} />;
 };
 
-// Shop by Concern Mega Menu - Updated to link to diseases-conditions pages
+// Shop by Concern Mega Menu - Updated to link to product category pages
 export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const concerns = [
-    { name: 'Allergies', route: '/diseases-conditions/allergies/seasonal-allergies-hay-fever' },
-    { name: 'Cancer', route: '/diseases-conditions/cancer-support' },
-    { name: 'Heart Health', route: '/diseases-conditions/heart-health' },
-    { name: 'Child Care', route: '/diseases-conditions/child-care' },
-    { name: 'Ear Nose Throat', route: '/diseases-conditions/ent-care' },
-    { name: 'Eye Care', route: '/diseases-conditions/eye-care' },
-    { name: 'Gut Health', route: '/diseases-conditions/gut-health' },
-    { name: 'Womens Care', route: '/diseases-conditions/womens-health' },
-    { name: 'Hair Care', route: '/diseases-conditions/hair-care' },
-    { name: 'Immune boosters', route: '/diseases-conditions/immune-boosters' },
-    { name: 'Infection', route: '/diseases-conditions/infection-care' },
-    { name: 'Lifestyle', route: '/diseases-conditions/lifestyle-care' },
-    { name: 'Muscle & Joint Care', route: '/diseases-conditions/muscle-care' },
-    { name: 'Mental health', route: '/diseases-conditions/mental-health' },
-    { name: 'Nutritive', route: '/diseases-conditions/nutritive-care' },
-    { name: 'Pain Care', route: '/diseases-conditions/pain-care' },
-    { name: 'Reproductive care', route: '/diseases-conditions/reproductive-care' },
-    { name: 'Respiratory Care', route: '/diseases-conditions/respiratory-care' },
-    { name: 'Skin Care', route: '/diseases-conditions/skin-care' },
-    { name: 'Tooth Care', route: '/diseases-conditions/tooth-care' },
-    { name: 'Urinary care', route: '/diseases-conditions/urology-care' }
+    { name: 'Allergies', route: '/category/allergies' },
+    { name: 'Cancer', route: '/category/cancer-support' },
+    { name: 'Heart Health', route: '/category/heart-health' },
+    { name: 'Child Care', route: '/category/child-care' },
+    { name: 'Ear Nose Throat', route: '/category/ent-care' },
+    { name: 'Eye Care', route: '/category/eye-care' },
+    { name: 'Gut Health', route: '/category/gut-health' },
+    { name: 'Womens Care', route: '/category/womens-health' },
+    { name: 'Hair Care', route: '/category/hair-care' },
+    { name: 'Immune boosters', route: '/category/immune-boosters' },
+    { name: 'Infection', route: '/category/infection-care' },
+    { name: 'Lifestyle', route: '/category/lifestyle-care' },
+    { name: 'Muscle & Joint Care', route: '/category/muscle-care' },
+    { name: 'Mental health', route: '/category/mental-health' },
+    { name: 'Nutritive', route: '/category/nutritive-care' },
+    { name: 'Pain Care', route: '/category/pain-care' },
+    { name: 'Reproductive care', route: '/category/reproductive-care' },
+    { name: 'Respiratory Care', route: '/category/respiratory-care' },
+    { name: 'Skin Care', route: '/category/skin-care' },
+    { name: 'Tooth Care', route: '/category/tooth-care' },
+    { name: 'Urinary care', route: '/category/urology-care' }
   ];
 
   return (
