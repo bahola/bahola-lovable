@@ -12,6 +12,7 @@ import { SEO } from '@/components/SEO';
 const HealthConcerns = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popular');
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -47,6 +48,7 @@ const HealthConcerns = () => {
   const handleClearFilters = () => {
     setSearchQuery('');
     setSelectedCategories([]);
+    setSelectedCategory('all');
   };
 
   const sidebarCategories = [
@@ -81,7 +83,10 @@ const HealthConcerns = () => {
       />
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow">
-          <HealthConcernsHero />
+          <HealthConcernsHero 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
           
           <div className="bg-gray-50 px-4 py-8">
             <div className="container mx-auto flex gap-8">
@@ -124,9 +129,8 @@ const HealthConcerns = () => {
 
                 {showFilters && (
                   <HealthConcernFilters
-                    categories={categories}
-                    selectedCategories={selectedCategories}
-                    onCategoriesChange={setSelectedCategories}
+                    selectedCategory={selectedCategory}
+                    onCategoryChange={setSelectedCategory}
                   />
                 )}
 
