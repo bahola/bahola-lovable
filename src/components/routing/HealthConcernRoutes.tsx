@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route } from 'react-router-dom';
 
@@ -77,19 +78,20 @@ import {
 import AllergiesCategoryPage from '../../pages/health-concerns/AllergiesCategoryPage';
 import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategoryPage';
 import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
+import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
 
 export const getHealthConcernRoutes = () => [
   // Main Category Routes with new hero section structure
   <Route key="allergies-main" path="/diseases-conditions/allergies" element={<AllergiesCategoryPage />} />,
   <Route key="gut-health-main" path="/diseases-conditions/gut-health" element={<GutHealthCategoryPage />} />,
   <Route key="heart-health-main" path="/diseases-conditions/heart-health" element={<HeartHealthCategoryPage />} />,
+  <Route key="eye-care-main" path="/diseases-conditions/eye-care" element={<EyeCareCategoryPage />} />,
   
   // Other category routes (will be updated to new structure later)
   <Route key="child-care" path="/diseases-conditions/child-care" element={<ChildCare />} />,
   <Route key="cancer-support" path="/diseases-conditions/cancer-support" element={<CancerSupport />} />,
   <Route key="ent-care-1" path="/diseases-conditions/ent-care" element={<ENTCare />} />,
   <Route key="ent-care-2" path="/diseases-conditions/ear-nose-throat" element={<ENTCare />} />,
-  <Route key="eye-care" path="/diseases-conditions/eye-care" element={<EyeCare />} />,
   <Route key="hair-care" path="/diseases-conditions/hair-care" element={<HairCare />} />,
   <Route key="immune-boosters" path="/diseases-conditions/immune-boosters" element={<ImmuneBoosters />} />,
   <Route key="infection-care-1" path="/diseases-conditions/infection-care" element={<InfectionCare />} />,
@@ -140,6 +142,16 @@ export const getHealthConcernRoutes = () => [
   <Route key="varicose-veins" path="/diseases-conditions/heart-health/varicose-veins" element={<HeartHealth />} />,
   <Route key="arrhythmias" path="/diseases-conditions/heart-health/arrhythmias-irregular-heartbeat" element={<HeartHealth />} />,
   <Route key="post-heart-attack" path="/diseases-conditions/heart-health/post-heart-attack-recovery-support" element={<HeartHealth />} />,
+
+  // HIERARCHICAL ROUTES - Eye Care
+  <Route key="eye-strain" path="/diseases-conditions/eye-care/eye-strain-digital-fatigue" element={<EyeProblems />} />,
+  <Route key="dry-eyes" path="/diseases-conditions/eye-care/dry-eyes" element={<EyeProblems />} />,
+  <Route key="conjunctivitis" path="/diseases-conditions/eye-care/conjunctivitis" element={<EyeProblems />} />,
+  <Route key="eye-redness" path="/diseases-conditions/eye-care/eye-redness-itching" element={<EyeProblems />} />,
+  <Route key="stye-chalazion" path="/diseases-conditions/eye-care/stye-chalazion" element={<EyeProblems />} />,
+  <Route key="vision-weakness" path="/diseases-conditions/eye-care/vision-weakness" element={<EyeProblems />} />,
+  <Route key="watering-eyes" path="/diseases-conditions/eye-care/watering-eyes" element={<EyeProblems />} />,
+  <Route key="light-sensitivity" path="/diseases-conditions/eye-care/light-sensitivity" element={<EyeProblems />} />,
 
   // HIERARCHICAL ROUTES - Cancer Support
   <Route key="chemotherapy-side-effects" path="/diseases-conditions/cancer-support/chemotherapy-side-effects-nausea-fatigue" element={<ChemotherapySideEffects />} />,
