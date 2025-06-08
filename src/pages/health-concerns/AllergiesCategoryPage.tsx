@@ -45,21 +45,6 @@ const AllergiesCategoryPage = () => {
                 Book a Consultation
               </Link>
             </Button>
-
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              <span className="bg-bahola-blue-100 text-bahola-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                Seasonal Allergies
-              </span>
-              <span className="bg-bahola-blue-100 text-bahola-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                Food Allergies
-              </span>
-              <span className="bg-bahola-blue-100 text-bahola-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                Skin Allergies
-              </span>
-              <span className="bg-bahola-blue-100 text-bahola-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                Dust Allergies
-              </span>
-            </div>
           </div>
         </div>
       </div>
