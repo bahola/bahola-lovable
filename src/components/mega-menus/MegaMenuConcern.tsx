@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Bug, Heart, Baby, Ear, Eye, Wheat, 
   BadgePlus, Flower, BugPlay, Dumbbell, 
@@ -40,8 +40,10 @@ const getConcernIcon = (name: string) => {
   return iconMap[name] || <Pill size={20} />;
 };
 
-// Shop by Concern Mega Menu - Split design with Learn and Shop sections
+// Shop by Concern Mega Menu - Sidebar layout with hover interactions
 export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
+  const [hoveredCategory, setHoveredCategory] = useState<'learn' | 'shop' | null>(null);
+
   const concerns = [
     { name: 'Allergies', infoRoute: '/diseases-conditions/allergies', shopRoute: '/category/allergies' },
     { name: 'Cancer', infoRoute: '/diseases-conditions/cancer-support', shopRoute: '/category/cancer-support' },
@@ -68,59 +70,120 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
 
   return (
     <div className={`mega-menu ${isOpen ? 'mega-menu-open' : ''}`}>
-      <div className="container mx-auto p-6 bg-gradient-to-br from-blue-50 to-white">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="container mx-auto bg-white shadow-lg">
+        <div className="grid grid-cols-6 min-h-[400px]">
           
-          {/* Left Column - Learn About Conditions */}
-          <div className="bg-gradient-to-br from-blue-100 to-blue-50 p-6 rounded-lg">
-            <div className="flex items-center mb-4">
-              <Book size={24} className="text-blue-600 mr-2" />
-              <h2 className="text-xl font-bold text-blue-800">Learn About Conditions</h2>
-            </div>
-            <p className="text-sm text-blue-700 mb-4">Discover causes, symptoms, and natural treatment approaches</p>
-            
-            <div className="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto">
-              {concerns.map((concern) => (
-                <a 
-                  key={`info-${concern.name}`}
-                  href={concern.infoRoute}
-                  className="flex items-center p-2 hover:bg-blue-200/50 rounded-md transition-colors duration-200 text-blue-800 hover:text-blue-900 min-w-0 bg-white/50"
-                >
-                  <div className="mr-3 text-blue-600 flex-shrink-0">
-                    {getConcernIcon(concern.name)}
+          {/* Left Sidebar - 1/6 ratio */}
+          <div className="col-span-1 bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200">
+            <div className="p-4">
+              <h2 className="text-sm font-semibold text-gray-700 mb-4">Browse by</h2>
+              
+              {/* Learn About Button */}
+              <button
+                className={`w-full text-left p-3 rounded-lg mb-2 transition-all duration-200 ${
+                  hoveredCategory === 'learn' 
+                    ? 'bg-blue-100 text-blue-800 shadow-md' 
+                    : 'hover:bg-gray-200 text-gray-700'
+                }`}
+                onMouseEnter={() => setHoveredCategory('learn')}
+              >
+                <div className="flex items-center">
+                  <Book size={18} className="mr-2" />
+                  <div>
+                    <div className="font-medium text-sm">Learn About</div>
+                    <div className="text-xs opacity-75">Conditions</div>
                   </div>
-                  <span className="text-sm font-medium truncate">
-                    Learn about {concern.name}
-                  </span>
-                </a>
-              ))}
+                </div>
+              </button>
+
+              {/* Shop Products Button */}
+              <button
+                className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
+                  hoveredCategory === 'shop' 
+                    ? 'bg-green-100 text-green-800 shadow-md' 
+                    : 'hover:bg-gray-200 text-gray-700'
+                }`}
+                onMouseEnter={() => setHoveredCategory('shop')}
+              >
+                <div className="flex items-center">
+                  <ShoppingBag size={18} className="mr-2" />
+                  <div>
+                    <div className="font-medium text-sm">Shop Natural</div>
+                    <div className="text-xs opacity-75">Solutions</div>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 
-          {/* Right Column - Shop Products */}
-          <div className="bg-gradient-to-br from-green-100 to-green-50 p-6 rounded-lg">
-            <div className="flex items-center mb-4">
-              <ShoppingBag size={24} className="text-green-600 mr-2" />
-              <h2 className="text-xl font-bold text-green-800">Shop Natural Solutions</h2>
-            </div>
-            <p className="text-sm text-green-700 mb-4">Browse homeopathic remedies and natural products</p>
-            
-            <div className="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto">
-              {concerns.map((concern) => (
-                <a 
-                  key={`shop-${concern.name}`}
-                  href={concern.shopRoute}
-                  className="flex items-center p-2 hover:bg-green-200/50 rounded-md transition-colors duration-200 text-green-800 hover:text-green-900 min-w-0 bg-white/50"
-                >
-                  <div className="mr-3 text-green-600 flex-shrink-0">
-                    {getConcernIcon(concern.name)}
+          {/* Right Content Area - 5/6 ratio */}
+          <div className="col-span-5 p-6">
+            {hoveredCategory === 'learn' && (
+              <div>
+                <div className="flex items-center mb-4">
+                  <Book size={24} className="text-blue-600 mr-3" />
+                  <div>
+                    <h3 className="text-xl font-bold text-blue-800">Learn About Conditions</h3>
+                    <p className="text-sm text-blue-600">Discover causes, symptoms, and natural treatment approaches</p>
                   </div>
-                  <span className="text-sm font-medium truncate">
-                    Shop {concern.name} products
-                  </span>
-                </a>
-              ))}
-            </div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-3">
+                  {concerns.map((concern) => (
+                    <a 
+                      key={`info-${concern.name}`}
+                      href={concern.infoRoute}
+                      className="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-blue-800 hover:text-blue-900 border border-blue-200 hover:border-blue-300"
+                    >
+                      <div className="mr-3 text-blue-600 flex-shrink-0">
+                        {getConcernIcon(concern.name)}
+                      </div>
+                      <span className="text-sm font-medium">
+                        {concern.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {hoveredCategory === 'shop' && (
+              <div>
+                <div className="flex items-center mb-4">
+                  <ShoppingBag size={24} className="text-green-600 mr-3" />
+                  <div>
+                    <h3 className="text-xl font-bold text-green-800">Shop Natural Solutions</h3>
+                    <p className="text-sm text-green-600">Browse homeopathic remedies and natural products</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-3">
+                  {concerns.map((concern) => (
+                    <a 
+                      key={`shop-${concern.name}`}
+                      href={concern.shopRoute}
+                      className="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200 text-green-800 hover:text-green-900 border border-green-200 hover:border-green-300"
+                    >
+                      <div className="mr-3 text-green-600 flex-shrink-0">
+                        {getConcernIcon(concern.name)}
+                      </div>
+                      <span className="text-sm font-medium">
+                        {concern.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!hoveredCategory && (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                <div className="text-center">
+                  <div className="text-lg font-medium mb-2">Shop by Problem</div>
+                  <p className="text-sm">Hover over "Learn About" or "Shop Natural" to explore options</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
