@@ -20,14 +20,18 @@ interface HealthConcern {
 interface HealthConcernCardProps {
   concern: HealthConcern;
   viewMode: 'grid' | 'list';
+  categoryPrefix?: string;
 }
 
 export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({
   concern,
   viewMode,
+  categoryPrefix,
 }) => {
-  // Updated to use /diseases-conditions/ instead of /concern/
-  const concernPath = `/diseases-conditions/${concern.id}`;
+  // Use categoryPrefix if provided (for allergies), otherwise use the default structure
+  const concernPath = categoryPrefix 
+    ? `${categoryPrefix}/${concern.id}` 
+    : `/diseases-conditions/${concern.id}`;
 
   if (viewMode === 'list') {
     return (

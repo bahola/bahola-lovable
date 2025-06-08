@@ -24,7 +24,7 @@ interface HealthConcernsCategoryViewProps {
 }
 
 const categoryRoutes: Record<string, string> = {
-  'Allergies': '/diseases-conditions/allergies/seasonal-allergies-hay-fever',
+  'Allergies': '/diseases-conditions/allergies',
   'Gut Health': '/diseases-conditions/gut-health',
   'Heart Health': '/diseases-conditions/heart-health',
   'Child Care': '/diseases-conditions/child-care',
@@ -85,6 +85,7 @@ export const HealthConcernsCategoryView: React.FC<HealthConcernsCategoryViewProp
                 key={concern.id}
                 concern={concern}
                 viewMode={viewMode}
+                categoryPrefix={categoryKey === 'Allergies' ? '/diseases-conditions/allergies' : undefined}
               />
             ))}
           </div>
