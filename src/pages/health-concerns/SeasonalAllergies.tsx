@@ -4,7 +4,7 @@ import { HealthConcernPageLayout } from '@/components/health-concerns/HealthConc
 import { healthConcernsData } from '@/data/healthConcernsData';
 
 const SeasonalAllergies = () => {
-  const concern = healthConcernsData.find(c => c.id === 'seasonal-allergies')!;
+  const concern = healthConcernsData.find(c => c.id === 'seasonal-allergies-hay-fever')!;
 
   return (
     <HealthConcernPageLayout concern={concern}>
