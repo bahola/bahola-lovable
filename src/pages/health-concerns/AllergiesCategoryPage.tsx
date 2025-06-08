@@ -36,15 +36,15 @@ const AllergiesCategoryPage = () => {
           <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white px-4 mb-8 h-[300px] flex items-center">
             <div className="container mx-auto">
               <div className="max-w-4xl">
-                <div className="text-6xl mb-6">🤧</div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+                <div className="text-3xl mb-3">🤧</div>
+                <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">
                   Allergies
                 </h1>
-                <p className="text-xl md:text-2xl mb-6 text-white opacity-90">
+                <p className="text-base md:text-lg mb-4 text-white opacity-90">
                   Natural homeopathic solutions for various types of allergies and sensitivities
                 </p>
                 
-                <div className="space-y-8">
+                <div className="space-y-4">
                   <Button asChild variant="secondary" className="bg-white text-bahola-blue-700 hover:bg-gray-100">
                     <Link to="/consultation">
                       Book a Consultation
@@ -53,20 +53,25 @@ const AllergiesCategoryPage = () => {
 
                   {/* Sub-diseases buttons */}
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">Browse Specific Allergies:</h3>
-                    <div className="flex flex-wrap gap-3 max-w-4xl">
-                      {allergysConcerns.map((concern) => (
+                    <h3 className="text-sm font-semibold text-white mb-2">Browse Specific Allergies:</h3>
+                    <div className="flex flex-wrap gap-2 max-w-4xl">
+                      {allergysConcerns.slice(0, 6).map((concern) => (
                         <Button
                           key={concern.id}
                           asChild
                           variant="outline"
-                          className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-600 hover:text-white hover:border-white/50 rounded-full px-4 py-2 text-sm"
+                          className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-600 hover:text-white hover:border-white/50 rounded-full px-3 py-1 text-xs"
                         >
                           <Link to={`/diseases-conditions/allergies/${concern.id}`}>
                             {concern.icon} {concern.name}
                           </Link>
                         </Button>
                       ))}
+                      {allergysConcerns.length > 6 && (
+                        <span className="text-xs text-white/80 self-center">
+                          +{allergysConcerns.length - 6} more
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
