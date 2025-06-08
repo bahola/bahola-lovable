@@ -55,10 +55,10 @@ import {
   AllergiesProductsPage
 } from './LazyImports';
 
-// Import route components
-import { HealthConcernRoutes } from './HealthConcernRoutes';
-import { DetailedHealthRoutes } from './DetailedHealthRoutes';
-import { SpecialtyHealthRoutes } from './SpecialtyHealthRoutes';
+// Import route functions
+import { getHealthConcernRoutes } from './HealthConcernRoutes';
+import { getDetailedHealthRoutes } from './DetailedHealthRoutes';
+import { getSpecialtyHealthRoutes } from './SpecialtyHealthRoutes';
 
 // Loading component for Suspense fallback
 const PageLoader = () => (
@@ -132,10 +132,10 @@ const AppRoutes = () => {
         <Route path="/help/shipping-issues" element={<ShippingIssues />} />
         <Route path="/help/certifications" element={<Certifications />} />
         
-        {/* Health Concern Routes */}
-        <HealthConcernRoutes />
-        <DetailedHealthRoutes />
-        <SpecialtyHealthRoutes />
+        {/* Health Concern Routes - using spread operator to include all routes */}
+        {getHealthConcernRoutes()}
+        {getDetailedHealthRoutes()}
+        {getSpecialtyHealthRoutes()}
 
         {/* Search routes with dynamic parameters */}
         <Route path="/search" element={<Shop />} />
