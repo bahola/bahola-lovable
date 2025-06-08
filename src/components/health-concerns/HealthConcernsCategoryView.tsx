@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { HealthConcernCard } from './HealthConcernCard';
@@ -23,12 +24,12 @@ interface HealthConcernsCategoryViewProps {
 }
 
 const categoryRoutes: Record<string, string> = {
-  'Allergies': '/diseases-conditions/allergy-care',
+  'Allergies': '/diseases-conditions/allergies/seasonal-allergies-hay-fever',
   'Gut Health': '/diseases-conditions/gut-health',
   'Heart Health': '/diseases-conditions/heart-health',
   'Child Care': '/diseases-conditions/child-care',
   'Cancer': '/diseases-conditions/cancer-support',
-  'Anxiety & Mental Health': '/diseases-conditions/anxiety-mental-health',
+  'Anxiety & Mental Health': '/diseases-conditions/mental-health',
   'Ear Nose Throat': '/diseases-conditions/ent-care',
   'Eye Care': '/diseases-conditions/eye-care',
   'Hair Care': '/diseases-conditions/hair-care',

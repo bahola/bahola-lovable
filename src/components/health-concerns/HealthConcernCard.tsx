@@ -1,9 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users, TrendingUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Clock, TrendingUp } from 'lucide-react';
 
 interface HealthConcern {
   id: string;
@@ -24,124 +22,108 @@ interface HealthConcernCardProps {
   viewMode: 'grid' | 'list';
 }
 
-export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({ concern, viewMode }) => {
+export const HealthConcernCard: React.FC<HealthConcernCardProps> = ({
+  concern,
+  viewMode,
+}) => {
+  // Updated to use /diseases-conditions/ instead of /concern/
+  const concernPath = `/diseases-conditions/${concern.id}`;
+
   if (viewMode === 'list') {
     return (
-      <div className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow p-6">
-        <div className="flex items-start gap-6">
-          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-            <img
-              src={concern.image}
-              alt={concern.name}
-              className="w-full h-full object-cover"
-            />
+      <Link
+        to={concernPath}
+        className="block bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+      >
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
+            {concern.icon}
           </div>
-          
           <div className="flex-1">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <h3 className="text-xl font-semibold text-bahola-navy-950 mb-1 font-helvetica">{concern.name}</h3>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary" className="text-xs">
-                    {concern.category}
-                  </Badge>
-                  {concern.trending && (
-                    <Badge className="bg-bahola-orange-100 text-bahola-orange-700 text-xs">
-                      <TrendingUp size={12} className="mr-1" />
-                      Trending
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              <div className="text-right text-sm text-bahola-neutral-600">
-                <div className="flex items-center gap-1">
-                  <Users size={14} />
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">{concern.name}</h3>
+              <div className="flex items-center space-x-2">
+                {concern.trending && (
+                  <span className="flex items-center text-sm text-orange-600">
+                    <TrendingUp size={14} className="mr-1" />
+                    Trending
+                  </span>
+                )}
+                <span className="text-sm text-gray-500">
                   {concern.searchVolume.toLocaleString()} searches
-                </div>
+                </span>
               </div>
             </div>
-            
-            <p className="text-bahola-neutral-700 mb-4 font-serif">{concern.description}</p>
-            
-            <div className="flex items-center justify-between">
+            <p className="text-gray-600 mt-1">{concern.description}</p>
+            <div className="flex items-center justify-between mt-2">
               <div className="flex flex-wrap gap-1">
                 {concern.commonRemedies.slice(0, 3).map((remedy, index) => (
-                  <span key={index} className="text-xs bg-bahola-blue-50 text-bahola-blue-700 px-2 py-1 rounded">
+                  <span
+                    key={index}
+                    className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded"
+                  >
                     {remedy}
                   </span>
                 ))}
                 {concern.commonRemedies.length > 3 && (
-                  <span className="text-xs text-bahola-neutral-600">
+                  <span className="text-xs text-gray-500">
                     +{concern.commonRemedies.length - 3} more
                   </span>
                 )}
               </div>
-              
-              <Link to={`/concern/${concern.id}`}>
-                <Button variant="outline" size="sm" className="border-bahola-navy-950 text-bahola-navy-950 hover:bg-bahola-navy-950 hover:text-white font-helvetica">
-                  View Remedies
-                  <ArrowRight size={14} className="ml-1" />
-                </Button>
-              </Link>
+              <div className="flex items-center text-xs text-gray-500">
+                <Clock size={12} className="mr-1" />
+                Updated {new Date(concern.lastUpdated).toLocaleDateString()}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow overflow-hidden">
-      <div className="aspect-video bg-gray-100 relative overflow-hidden">
-        <img
-          src={concern.image}
-          alt={concern.name}
-          className="w-full h-full object-cover"
-        />
-        {concern.trending && (
-          <Badge className="absolute top-3 right-3 bg-bahola-orange-500">
-            <TrendingUp size={12} className="mr-1" />
-            Trending
-          </Badge>
-        )}
+    <Link
+      to={concernPath}
+      className="block bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+    >
+      <div className="aspect-video bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+        <span className="text-4xl">{concern.icon}</span>
       </div>
-      
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-2">
-          <Badge variant="secondary" className="text-xs mb-2">
-            {concern.category}
-          </Badge>
-          <div className="text-right text-sm text-bahola-neutral-600">
-            <div className="flex items-center gap-1">
-              <Users size={14} />
-              {(concern.searchVolume / 1000).toFixed(0)}k
-            </div>
-          </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-lg font-semibold text-gray-900">{concern.name}</h3>
+          {concern.trending && (
+            <span className="flex items-center text-sm text-orange-600">
+              <TrendingUp size={14} className="mr-1" />
+              Trending
+            </span>
+          )}
         </div>
-        
-        <h3 className="text-lg font-semibold text-bahola-navy-950 mb-2 font-helvetica">{concern.name}</h3>
-        <p className="text-bahola-neutral-700 text-sm mb-4 line-clamp-2 font-serif">{concern.description}</p>
-        
-        <div className="flex flex-wrap gap-1 mb-4">
+        <p className="text-gray-600 text-sm mb-3">{concern.description}</p>
+        <div className="flex flex-wrap gap-1 mb-3">
           {concern.commonRemedies.slice(0, 2).map((remedy, index) => (
-            <span key={index} className="text-xs bg-bahola-blue-50 text-bahola-blue-700 px-2 py-1 rounded">
+            <span
+              key={index}
+              className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded"
+            >
               {remedy}
             </span>
           ))}
           {concern.commonRemedies.length > 2 && (
-            <span className="text-xs text-bahola-neutral-600">
-              +{concern.commonRemedies.length - 2}
+            <span className="text-xs text-gray-500">
+              +{concern.commonRemedies.length - 2} more
             </span>
           )}
         </div>
-        
-        <Link to={`/concern/${concern.id}`} className="block">
-          <Button className="w-full bg-bahola-navy-950 hover:bg-bahola-navy-900 font-helvetica" variant="outline">
-            View Remedies
-            <ArrowRight size={14} className="ml-1" />
-          </Button>
-        </Link>
+        <div className="flex items-center justify-between text-xs text-gray-500">
+          <span>{concern.searchVolume.toLocaleString()} searches</span>
+          <div className="flex items-center">
+            <Clock size={12} className="mr-1" />
+            {new Date(concern.lastUpdated).toLocaleDateString()}
+          </div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };

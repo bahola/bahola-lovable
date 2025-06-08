@@ -40,36 +40,36 @@ const getConcernIcon = (name: string) => {
   return iconMap[name] || <Pill size={24} />;
 };
 
-// Shop by Concern Mega Menu - Updated to link to product categories instead of health concern pages
+// Shop by Concern Mega Menu - Updated to link to diseases-conditions pages
 export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const concerns = [
-    { name: 'Allergies', route: '/products/allergies' },
-    { name: 'Cancer', route: '/products/cancer-support' },
-    { name: 'Heart Health', route: '/products/heart-health' },
-    { name: 'Child Care', route: '/products/childrens-health' },
-    { name: 'Ear Nose Throat', route: '/products/ent-care' },
-    { name: 'Eye Care', route: '/products/eye-care' },
-    { name: 'Gut Health', route: '/products/digestive-health' },
-    { name: 'Womens Care', route: '/products/womens-health' },
-    { name: 'Hair Care', route: '/products/hair-care' },
-    { name: 'Immune boosters', route: '/products/immune-support' },
-    { name: 'Infection', route: '/products/infection-care' },
-    { name: 'Lifestyle', route: '/products/lifestyle' },
-    { name: 'Muscle & Joint Care', route: '/products/joint-muscle-care' },
-    { name: 'Mental health', route: '/products/mental-health' },
-    { name: 'Nutritive', route: '/products/nutritional-supplements' },
-    { name: 'Pain Care', route: '/products/pain-relief' },
-    { name: 'Reproductive care', route: '/products/reproductive-health' },
-    { name: 'Respiratory Care', route: '/products/respiratory-health' },
-    { name: 'Skin Care', route: '/products/skin-care' },
-    { name: 'Tooth Care', route: '/products/dental-care' },
-    { name: 'Urinary care', route: '/products/urinary-health' }
+    { name: 'Allergies', route: '/diseases-conditions/allergies/seasonal-allergies-hay-fever' },
+    { name: 'Cancer', route: '/diseases-conditions/cancer-support' },
+    { name: 'Heart Health', route: '/diseases-conditions/heart-health' },
+    { name: 'Child Care', route: '/diseases-conditions/child-care' },
+    { name: 'Ear Nose Throat', route: '/diseases-conditions/ent-care' },
+    { name: 'Eye Care', route: '/diseases-conditions/eye-care' },
+    { name: 'Gut Health', route: '/diseases-conditions/gut-health' },
+    { name: 'Womens Care', route: '/diseases-conditions/womens-health' },
+    { name: 'Hair Care', route: '/diseases-conditions/hair-care' },
+    { name: 'Immune boosters', route: '/diseases-conditions/immune-boosters' },
+    { name: 'Infection', route: '/diseases-conditions/infection-care' },
+    { name: 'Lifestyle', route: '/diseases-conditions/lifestyle-care' },
+    { name: 'Muscle & Joint Care', route: '/diseases-conditions/muscle-care' },
+    { name: 'Mental health', route: '/diseases-conditions/mental-health' },
+    { name: 'Nutritive', route: '/diseases-conditions/nutritive-care' },
+    { name: 'Pain Care', route: '/diseases-conditions/pain-care' },
+    { name: 'Reproductive care', route: '/diseases-conditions/reproductive-care' },
+    { name: 'Respiratory Care', route: '/diseases-conditions/respiratory-care' },
+    { name: 'Skin Care', route: '/diseases-conditions/skin-care' },
+    { name: 'Tooth Care', route: '/diseases-conditions/tooth-care' },
+    { name: 'Urinary care', route: '/diseases-conditions/urology-care' }
   ];
 
   return (
     <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
       <div className="p-6 bg-gradient-to-br from-blue-50 to-white shadow-lg border-t-4 border-blue-500">
-        <h2 className="text-xl font-bold mb-6 text-gray-800">Shop by Health Concern</h2>
+        <h2 className="text-xl font-bold mb-6 text-gray-800">Health Concerns & Natural Solutions</h2>
         <div className="grid grid-cols-3 gap-4 max-w-6xl">
           {concerns.map((concern) => (
             <a 
