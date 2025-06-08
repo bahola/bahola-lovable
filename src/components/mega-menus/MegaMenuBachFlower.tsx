@@ -66,7 +66,7 @@ export const MegaMenuBachFlower: React.FC<MegaMenuProps> = ({ isOpen }) => {
               <Link to="/product/white-chestnut" className="block p-3 border-l-4 border-bahola-neutral-200 pl-4 hover:bg-bahola-blue-50 hover:border-l-bahola-blue-500 bg-white/70 rounded-r shadow-sm">
                 <h4 className="font-semibold text-bahola-neutral-800">White Chestnut</h4>
                 <p className="text-sm text-bahola-neutral-600">For unwanted thoughts and mental arguments</p>
-              </div>
+              </Link>
               <div className="mt-4">
                 <Link to="/bach-flower-concerns" className="text-bahola-blue-500 font-semibold hover:text-bahola-blue-700 flex items-center">
                   View all Bach Flower remedies
