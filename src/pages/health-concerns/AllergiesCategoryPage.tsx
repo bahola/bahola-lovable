@@ -32,39 +32,42 @@ const AllergiesCategoryPage = () => {
             />
           </div>
 
-          <div className="bg-gradient-to-br from-bahola-blue-50 to-white py-16">
-            <div className="container mx-auto px-4">
+          {/* Hero Container */}
+          <div className="container mx-auto px-4 py-16">
+            <div className="bg-gradient-to-br from-bahola-blue-50 to-white rounded-2xl p-8 md:p-12">
               <div className="max-w-4xl mx-auto text-center">
                 <div className="text-6xl mb-6">🤧</div>
                 <h1 className="text-4xl md:text-5xl font-bold text-bahola-navy-950 mb-4 font-helvetica">
                   Allergies
                 </h1>
-                <p className="text-xl text-bahola-neutral-600 mb-6">
+                <p className="text-xl text-bahola-neutral-600 mb-8">
                   Natural homeopathic solutions for various types of allergies and sensitivities
                 </p>
                 
-                <Button asChild className="mb-8 bg-bahola-blue-600 hover:bg-bahola-blue-700 text-white px-8 py-3 rounded-full text-lg font-medium">
-                  <Link to="/consultation">
-                    Book a Consultation
-                  </Link>
-                </Button>
+                <div className="space-y-8">
+                  <Button asChild className="bg-bahola-blue-600 hover:bg-bahola-blue-700 text-white px-8 py-3 rounded-full text-lg font-medium">
+                    <Link to="/consultation">
+                      Book a Consultation
+                    </Link>
+                  </Button>
 
-                {/* Sub-diseases buttons */}
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold text-bahola-navy-950 mb-4">Browse Specific Allergies:</h3>
-                  <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
-                    {allergysConcerns.map((concern) => (
-                      <Button
-                        key={concern.id}
-                        asChild
-                        variant="outline"
-                        className="border-bahola-blue-200 text-bahola-blue-700 hover:bg-bahola-blue-50 hover:border-bahola-blue-300 rounded-full px-4 py-2 text-sm"
-                      >
-                        <Link to={`/health-concerns/${concern.id}`}>
-                          {concern.icon} {concern.name}
-                        </Link>
-                      </Button>
-                    ))}
+                  {/* Sub-diseases buttons */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-bahola-navy-950 mb-4">Browse Specific Allergies:</h3>
+                    <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
+                      {allergysConcerns.map((concern) => (
+                        <Button
+                          key={concern.id}
+                          asChild
+                          variant="outline"
+                          className="border-bahola-blue-200 text-bahola-blue-700 hover:bg-bahola-blue-50 hover:border-bahola-blue-300 rounded-full px-4 py-2 text-sm"
+                        >
+                          <Link to={`/health-concerns/${concern.id}`}>
+                            {concern.icon} {concern.name}
+                          </Link>
+                        </Button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
