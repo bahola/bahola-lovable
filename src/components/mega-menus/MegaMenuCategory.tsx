@@ -1,159 +1,147 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 interface MegaMenuProps {
   isOpen: boolean;
-  onClose: () => void;
 }
 
-export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
-
+// Shop by Category Mega Menu
+export const MegaMenuCategory: React.FC<MegaMenuProps> = ({ isOpen }) => {
   const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
   
-  const categoryGroups = [
+  const categories = [
     {
-      title: "Homeopathic Medicines",
-      categories: [
-        {
-          id: "mother-tinctures",
-          name: "Mother Tinctures",
-          description: "Concentrated liquid extracts",
-          subcategories: alphabet.slice(0, 13).map(letter => ({ 
-            id: letter.toLowerCase(), 
-            name: letter 
-          }))
-        },
-        {
-          id: "dilutions",
-          name: "Dilutions",
-          description: "Various potencies available",
-          subcategories: alphabet.slice(13).map(letter => ({ 
-            id: letter.toLowerCase(), 
-            name: letter 
-          }))
-        }
-      ]
+      id: "mother-tinctures",
+      name: "Mother Tinctures",
+      subcategories: alphabet.map(letter => ({ 
+        id: letter.toLowerCase(), 
+        name: letter,
+        textColor: "text-green-700" // Green text color for the letters
+      })),
+      colorClass: "text-green-600 hover:text-green-800", // Light green color
+      subColorClass: "hover:bg-green-50 hover:border-green-200" // Light green highlight
     },
     {
-      title: "Specialized Formulations",
-      categories: [
-        {
-          id: "lm-potencies",
-          name: "LM Potencies",
-          description: "50 Millesimal potencies",
-          subcategories: alphabet.slice(0, 13).map(letter => ({ 
-            id: letter.toLowerCase(), 
-            name: letter 
-          }))
-        },
-        {
-          id: "bio-chemics",
-          name: "Bio Chemics",
-          description: "Tissue salts and minerals",
-          subcategories: []
-        }
-      ]
+      id: "dilutions",
+      name: "Dilutions",
+      subcategories: alphabet.map(letter => ({ id: letter.toLowerCase(), name: letter })),
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800", // Same blue color
+      subColorClass: "hover:bg-bahola-blue-50 hover:border-bahola-blue-200" // Same blue highlight
     },
     {
-      title: "Combination Remedies",
-      categories: [
-        {
-          id: "bio-combinations",
-          name: "Bio Combinations",
-          description: "Synergistic formulas",
-          subcategories: []
-        },
-        {
-          id: "triturations",
-          name: "Triturations",
-          description: "Powdered preparations",
-          subcategories: []
-        }
-      ]
+      id: "lm-potencies",
+      name: "LM Potencies",
+      subcategories: alphabet.map(letter => ({ id: letter.toLowerCase(), name: letter })),
+      colorClass: "text-blue-800 hover:text-blue-900", // Darker blue color
+      subColorClass: "hover:bg-blue-100 hover:border-blue-300" // Darker blue highlight
+    },
+    { 
+      id: "bio-chemics", 
+      name: "Bio Chemics", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    },
+    { 
+      id: "bio-combinations", 
+      name: "Bio Combinations", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    },
+    { 
+      id: "triturations", 
+      name: "Triturations", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
+    },
+    { 
+      id: "single-remedies", 
+      name: "Single Remedies", 
+      subcategories: [],
+      colorClass: "text-bahola-blue-600 hover:text-bahola-blue-800"
     }
   ];
   
   return (
-    <div className="mega-menu mega-menu-full mega-menu-open">
-      <div className="mega-menu-content">
-        {/* Header with close button */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">Shop by Category</h2>
-            <p className="text-green-100 text-sm mt-1">Browse our complete range of homeopathic medicines</p>
-          </div>
-          <button 
-            onClick={onClose}
-            className="text-white hover:text-green-200 transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
-        
-        {/* Content */}
-        <div className="p-8">
-          <div className="grid grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {categoryGroups.map((group) => (
-              <div key={group.title}>
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
-                  {group.title}
-                </h3>
-                <div className="space-y-4">
-                  {group.categories.map((category) => (
-                    <div key={category.id}>
-                      <Link 
-                        to={`/category/${category.id}`} 
-                        onClick={onClose}
-                        className="block group"
-                      >
-                        <h4 className="font-semibold text-green-700 hover:text-green-800 transition-colors duration-200 mb-1">
-                          {category.name}
-                        </h4>
-                        <p className="text-xs text-gray-600 mb-3">{category.description}</p>
-                      </Link>
-                      
-                      {category.subcategories.length > 0 && (
-                        <div className="grid grid-cols-4 gap-1 mb-2">
-                          {category.subcategories.map((subcategory) => (
-                            <Link
-                              key={subcategory.id}
-                              to={`/category/${category.id}/${subcategory.id}`}
-                              onClick={onClose}
-                              className="px-2 py-1 text-center text-xs border border-gray-200 rounded hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-colors duration-200 bg-gray-50"
-                            >
-                              {subcategory.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
+    <div className={`mega-menu mega-menu-full ${isOpen ? 'mega-menu-open' : ''}`}>
+      <div className="p-6 bg-gradient-to-br from-blue-50 to-white shadow-lg border-t-4 border-blue-500">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              {categories.slice(0, 2).map((category, index) => (
+                <div key={category.id} className={index > 0 ? "mt-6" : ""}>
+                  <Link 
+                    to={`/category/${category.id}`} 
+                    className={`block text-lg font-semibold mb-4 ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"}`}
+                  >
+                    {category.name}
+                  </Link>
+                  {category.subcategories.length > 0 && (
+                    <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                      {category.subcategories.map((subcategory) => (
+                        <Link
+                          key={subcategory.id}
+                          to={`/category/${category.id}/${subcategory.id}`}
+                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm transition-colors`}
+                        >
+                          {subcategory.name}
+                        </Link>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Single Remedies Section */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="text-center">
-              <Link
-                to="/category/single-remedies"
-                onClick={onClose}
-                className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200 mr-4"
-              >
-                Single Remedies
-              </Link>
-              <Link
-                to="/categories"
-                onClick={onClose}
-                className="inline-flex items-center px-6 py-3 border border-green-600 text-green-600 font-medium rounded-lg hover:bg-green-50 transition-colors duration-200"
-              >
-                View All Categories
-              </Link>
+              ))}
             </div>
+            
+            <div>
+              {categories.slice(2, 3).map((category, index) => (
+                <div key={category.id} className={index > 0 ? "mt-6" : ""}>
+                  <Link 
+                    to={`/category/${category.id}`} 
+                    className={`block text-lg font-semibold mb-4 ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"}`}
+                  >
+                    {category.name}
+                  </Link>
+                  {category.subcategories.length > 0 && (
+                    <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                      {category.subcategories.map((subcategory) => (
+                        <Link
+                          key={subcategory.id}
+                          to={`/category/${category.id}/${subcategory.id}`}
+                          className={`px-2 py-1 text-center border border-bahola-neutral-200 rounded bg-white/70 ${category.subColorClass || "hover:bg-bahola-blue-50 hover:border-bahola-blue-200"} ${subcategory.textColor || ""} shadow-sm transition-colors`}
+                        >
+                          {subcategory.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              <div className="mt-6 grid grid-cols-1 gap-3">
+                {categories.slice(3).map((category) => (
+                  <Link 
+                    key={category.id}
+                    to={`/category/${category.id}`}
+                    className={`text-lg font-semibold ${category.colorClass || "text-bahola-blue-600 hover:text-bahola-blue-800"} transition-colors`}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <Separator className="my-4" />
+          
+          <div className="text-center">
+            <Link
+              to="/categories"
+              className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-800 font-medium transition-colors"
+            >
+              View All Categories
+            </Link>
           </div>
         </div>
       </div>

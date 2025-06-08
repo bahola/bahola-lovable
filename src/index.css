@@ -134,25 +134,47 @@
 
 @layer components {
   .mega-menu {
-    @apply invisible absolute opacity-0 transition-all duration-300 transform translate-y-2 z-50;
-    position: absolute;
-    width: 100vw;
-    left: 50%;
-    transform: translateX(-50%) translateY(8px);
+    @apply invisible absolute opacity-0 bg-white shadow-lg border border-gray-200 transition-all duration-300 transform translate-y-2 z-50;
+    width: 400px;
+    left: 0;
     top: 100%;
   }
 
   .mega-menu.mega-menu-full {
-    @apply bg-white shadow-2xl border-t border-gray-200;
-  }
-
-  .mega-menu-content {
-    @apply bg-white max-w-none w-full;
+    position: absolute !important;
+    width: 95vw !important;
+    max-width: 1200px !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(2px) !important;
+    z-index: 9999 !important;
+    top: 100% !important;
   }
 
   .mega-menu-open {
     @apply visible opacity-100;
+  }
+
+  .mega-menu-open.mega-menu-full {
     transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .mega-menu-open:not(.mega-menu-full) {
+    transform: translateY(0) !important;
+  }
+
+  /* Ensure mega menus don't overflow on smaller screens */
+  @media (max-width: 1200px) {
+    .mega-menu.mega-menu-full {
+      width: 90vw !important;
+      max-width: 1000px !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mega-menu.mega-menu-full {
+      width: 95vw !important;
+      max-width: none !important;
+    }
   }
 
   .cloud-bg {

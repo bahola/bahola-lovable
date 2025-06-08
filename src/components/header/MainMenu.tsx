@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { 
   MegaMenuConcern, 
   MegaMenuCategory, 
@@ -19,62 +20,50 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   onMenuHover, 
   onMenuLeave 
 }) => {
-  const handleMenuClick = (menuName: string) => {
-    if (activeMenu === menuName) {
-      onMenuLeave();
-    } else {
-      onMenuHover(menuName);
-    }
-  };
-
   return (
     <nav className="hidden lg:flex items-center space-x-2">
-      <div className="main-menu-item flex items-center relative cursor-pointer">
-        <button 
-          onClick={() => handleMenuClick('concern')}
-          className="flex items-center text-gray-800 font-medium"
-        >
-          <span>Shop by Problem</span>
-          <ChevronDown size={16} className="ml-1 text-gray-600" />
-        </button>
-        <MegaMenuConcern isOpen={activeMenu === 'concern'} onClose={onMenuLeave} />
+      <div
+        className="main-menu-item flex items-center relative cursor-pointer"
+        onMouseEnter={() => onMenuHover('concern')}
+        onMouseLeave={onMenuLeave}
+      >
+        <span className="text-gray-800 font-medium">Shop by Problem</span>
+        <ChevronDown size={16} className="ml-1 text-gray-600" />
+        <MegaMenuConcern isOpen={activeMenu === 'concern'} />
       </div>
 
-      <div className="main-menu-item flex items-center relative cursor-pointer">
-        <button 
-          onClick={() => handleMenuClick('category')}
-          className="flex items-center text-gray-800 font-medium"
-        >
-          <span>Shop by Category</span>
-          <ChevronDown size={16} className="ml-1 text-gray-600" />
-        </button>
-        <MegaMenuCategory isOpen={activeMenu === 'category'} onClose={onMenuLeave} />
+      <div
+        className="main-menu-item flex items-center relative cursor-pointer"
+        onMouseEnter={() => onMenuHover('category')}
+        onMouseLeave={onMenuLeave}
+      >
+        <span className="text-gray-800 font-medium">Shop by Category</span>
+        <ChevronDown size={16} className="ml-1 text-gray-600" />
+        <MegaMenuCategory isOpen={activeMenu === 'category'} />
       </div>
 
       <Link to="/diseases-conditions" className="main-menu-item">
         <span className="text-gray-800 font-medium">Diseases & Conditions</span>
       </Link>
 
-      <div className="main-menu-item flex items-center relative cursor-pointer">
-        <button 
-          onClick={() => handleMenuClick('doctors')}
-          className="flex items-center text-gray-800 font-medium"
-        >
-          <span>For Doctors</span>
-          <ChevronDown size={16} className="ml-1 text-gray-600" />
-        </button>
-        <MegaMenuDoctor isOpen={activeMenu === 'doctors'} onClose={onMenuLeave} />
+      <div
+        className="main-menu-item flex items-center relative cursor-pointer"
+        onMouseEnter={() => onMenuHover('doctors')}
+        onMouseLeave={onMenuLeave}
+      >
+        <span className="text-gray-800 font-medium">For Doctors</span>
+        <ChevronDown size={16} className="ml-1 text-gray-600" />
+        <MegaMenuDoctor isOpen={activeMenu === 'doctors'} />
       </div>
 
-      <div className="main-menu-item flex items-center relative cursor-pointer">
-        <button 
-          onClick={() => handleMenuClick('bachflower')}
-          className="flex items-center text-gray-800 font-medium"
-        >
-          <span>Bach Flower</span>
-          <ChevronDown size={16} className="ml-1 text-gray-600" />
-        </button>
-        <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} onClose={onMenuLeave} />
+      <div 
+        className="main-menu-item flex items-center relative cursor-pointer"
+        onMouseEnter={() => onMenuHover('bachflower')}
+        onMouseLeave={onMenuLeave}
+      >
+        <span className="text-gray-800 font-medium">Bach Flower</span>
+        <ChevronDown size={16} className="ml-1 text-gray-600" />
+        <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
       </div>
 
       <a 
