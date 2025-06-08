@@ -32,8 +32,8 @@ const AllergiesCategoryPage = () => {
             />
           </div>
 
-          {/* Hero Section - matching diseases-conditions page style */}
-          <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 px-4 mb-8">
+          {/* Hero Section - set to 300px height */}
+          <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white px-4 mb-8 h-[300px] flex items-center">
             <div className="container mx-auto">
               <div className="max-w-4xl">
                 <div className="text-6xl mb-6">🤧</div>
