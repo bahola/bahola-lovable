@@ -32,20 +32,20 @@ const AllergiesCategoryPage = () => {
             />
           </div>
 
-          {/* Hero Container */}
-          <div className="container mx-auto px-4 py-8">
-            <div className="bg-gradient-to-br from-bahola-blue-50 to-white rounded-2xl p-6 md:p-8">
-              <div className="max-w-4xl mx-auto text-center">
+          {/* Hero Section - matching diseases-conditions page style */}
+          <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white py-12 px-4 mb-8">
+            <div className="container mx-auto">
+              <div className="max-w-4xl">
                 <div className="text-6xl mb-6">🤧</div>
-                <h1 className="text-4xl md:text-5xl font-bold text-bahola-navy-950 mb-4 font-helvetica">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
                   Allergies
                 </h1>
-                <p className="text-xl text-bahola-neutral-600 mb-8">
+                <p className="text-xl md:text-2xl mb-6 text-white opacity-90">
                   Natural homeopathic solutions for various types of allergies and sensitivities
                 </p>
                 
                 <div className="space-y-8">
-                  <Button asChild className="bg-bahola-blue-600 hover:bg-bahola-blue-700 text-white px-8 py-3 rounded-full text-lg font-medium">
+                  <Button asChild variant="secondary" className="bg-white text-bahola-blue-700 hover:bg-gray-100">
                     <Link to="/consultation">
                       Book a Consultation
                     </Link>
@@ -53,14 +53,14 @@ const AllergiesCategoryPage = () => {
 
                   {/* Sub-diseases buttons */}
                   <div>
-                    <h3 className="text-lg font-semibold text-bahola-navy-950 mb-4">Browse Specific Allergies:</h3>
-                    <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
+                    <h3 className="text-lg font-semibold text-white mb-4">Browse Specific Allergies:</h3>
+                    <div className="flex flex-wrap gap-3 max-w-4xl">
                       {allergysConcerns.map((concern) => (
                         <Button
                           key={concern.id}
                           asChild
                           variant="outline"
-                          className="border-bahola-blue-200 text-bahola-blue-700 hover:bg-bahola-blue-50 hover:border-bahola-blue-300 rounded-full px-4 py-2 text-sm"
+                          className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 rounded-full px-4 py-2 text-sm"
                         >
                           <Link to={`/health-concerns/${concern.id}`}>
                             {concern.icon} {concern.name}
@@ -72,7 +72,7 @@ const AllergiesCategoryPage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <div className="bg-gray-50 px-4 py-12">
             <div className="container mx-auto max-w-6xl">
