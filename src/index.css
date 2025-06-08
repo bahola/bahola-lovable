@@ -134,16 +134,17 @@
 
 @layer components {
   .mega-menu {
-    @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-blue-500 transition-all duration-300 transform translate-y-2 z-50;
-    position: fixed;
+    @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-blue-500 transition-all duration-300 z-50;
+    position: absolute;
     width: 100vw;
-    left: 0;
+    left: 50%;
     top: 100%;
+    transform: translateX(-50%) translateY(10px);
   }
 
   .mega-menu-open {
     @apply visible opacity-100;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
 
   .cloud-bg {
