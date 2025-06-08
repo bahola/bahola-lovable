@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 // Lazy load health concern pages
@@ -91,10 +92,10 @@ import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCate
 import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
 import ENTCareCategoryPage from '../../pages/health-concerns/ENTCareCategoryPage';
 
-// Add new ENT pages
-const Tonsillitis = React.lazy(() => import('@/pages/health-concerns/ent/Tonsillitis'));
-const SoreThroat = React.lazy(() => import('@/pages/health-concerns/ent/SoreThroat'));
-const NasalPolyps = React.lazy(() => import('@/pages/health-concerns/ent/NasalPolyps'));
-const NoseBleedsEpistaxis = React.lazy(() => import('@/pages/health-concerns/ent/NoseBleedsEpistaxis'));
-const Tinnitus = React.lazy(() => import('@/pages/health-concerns/ent/Tinnitus'));
-const LossOfVoiceLaryngitis = React.lazy(() => import('@/pages/health-concerns/ent/LossOfVoiceLaryngitis'));
+// Add ENT pages - corrected paths to point to the root health-concerns directory
+export const Tonsillitis = React.lazy(() => import('@/pages/health-concerns/Tonsillitis'));
+export const SoreThroat = React.lazy(() => import('@/pages/health-concerns/SoreThroat'));
+export const NasalPolyps = React.lazy(() => import('@/pages/health-concerns/NasalPolyps'));
+export const NoseBleedsEpistaxis = React.lazy(() => import('@/pages/health-concerns/NoseBleedsEpistaxis'));
+export const Tinnitus = React.lazy(() => import('@/pages/health-concerns/Tinnitus'));
+export const LossOfVoiceLaryngitis = React.lazy(() => import('@/pages/health-concerns/LossOfVoiceLaryngitis'));

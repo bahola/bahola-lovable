@@ -70,7 +70,13 @@ import {
   LatexAllergy,
   SinusAllergy,
   ChemotherapySideEffects,
-  Palpitations
+  Palpitations,
+  Tonsillitis,
+  SoreThroat,
+  NasalPolyps,
+  NoseBleedsEpistaxis,
+  Tinnitus,
+  LossOfVoiceLaryngitis
 } from './HealthConcernImports';
 
 // Import category pages
@@ -79,14 +85,6 @@ import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategory
 import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
 import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
 import ENTCareCategoryPage from '../../pages/health-concerns/ENTCareCategoryPage';
-
-// Import individual ENT pages
-const Tonsillitis = React.lazy(() => import('@/pages/health-concerns/ENT/Tonsillitis'));
-const SoreThroat = React.lazy(() => import('@/pages/health-concerns/ENT/SoreThroat'));
-const NasalPolyps = React.lazy(() => import('@/pages/health-concerns/ENT/NasalPolyps'));
-const NoseBleedsEpistaxis = React.lazy(() => import('@/pages/health-concerns/ENT/NoseBleedsEpistaxis'));
-const Tinnitus = React.lazy(() => import('@/pages/health-concerns/ENT/Tinnitus'));
-const LossOfVoiceLaryngitis = React.lazy(() => import('@/pages/health-concerns/ENT/LossOfVoiceLaryngitis'));
 
 export const getHealthConcernRoutes = () => [
   // Main Category Routes with new hero section structure
