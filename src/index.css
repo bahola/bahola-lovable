@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -140,44 +141,13 @@
   }
 
   .mega-menu.mega-menu-full {
-    position: fixed !important;
-    width: 90vw !important;
+    position: absolute !important;
+    width: 95vw !important;
     max-width: 1200px !important;
     left: 50% !important;
     transform: translateX(-50%) translateY(2px) !important;
     z-index: 9999 !important;
-  }
-
-  /* Position mega menu correctly based on scroll state */
-  .sticky-subheader .mega-menu.mega-menu-full {
-    top: 60px !important; /* Position relative to sticky subheader */
-  }
-
-  .mega-menu.mega-menu-full:not(.sticky-subheader .mega-menu.mega-menu-full) {
-    top: 180px !important; /* Original position when not sticky */
-  }
-
-  /* Ensure mega menus don't overflow on smaller screens */
-  @media (max-width: 1200px) {
-    .mega-menu.mega-menu-full {
-      width: 95vw !important;
-      max-width: 1000px !important;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .mega-menu.mega-menu-full {
-      width: 98vw !important;
-      max-width: none !important;
-    }
-    
-    .sticky-subheader .mega-menu.mega-menu-full {
-      top: 50px !important;
-    }
-    
-    .mega-menu.mega-menu-full:not(.sticky-subheader .mega-menu.mega-menu-full) {
-      top: 200px !important;
-    }
+    top: 100% !important;
   }
 
   .mega-menu-open {
@@ -192,9 +162,18 @@
     transform: translateY(0) !important;
   }
 
+  /* Ensure mega menus don't overflow on smaller screens */
+  @media (max-width: 1200px) {
+    .mega-menu.mega-menu-full {
+      width: 90vw !important;
+      max-width: 1000px !important;
+    }
+  }
+
   @media (max-width: 768px) {
-    .mega-menu-open.mega-menu-full {
-      transform: translateX(-50%) translateY(0) !important;
+    .mega-menu.mega-menu-full {
+      width: 95vw !important;
+      max-width: none !important;
     }
   }
 
