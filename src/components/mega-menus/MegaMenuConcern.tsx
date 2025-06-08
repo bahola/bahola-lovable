@@ -128,17 +128,17 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-4 gap-2">
                   {concerns.map((concern) => (
                     <a 
                       key={`info-${concern.name}`}
                       href={concern.infoRoute}
-                      className="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-blue-800 hover:text-blue-900 border border-blue-200 hover:border-blue-300"
+                      className="flex items-center p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 text-blue-800 hover:text-blue-900 border border-blue-200 hover:border-blue-300"
                     >
-                      <div className="mr-3 text-blue-600 flex-shrink-0">
+                      <div className="mr-2 text-blue-600 flex-shrink-0">
                         {getConcernIcon(concern.name)}
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-xs font-medium">
                         {concern.name}
                       </span>
                     </a>
@@ -157,17 +157,17 @@ export const MegaMenuConcern: React.FC<MegaMenuProps> = ({ isOpen }) => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-4 gap-2">
                   {concerns.map((concern) => (
                     <a 
                       key={`shop-${concern.name}`}
                       href={concern.shopRoute}
-                      className="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200 text-green-800 hover:text-green-900 border border-green-200 hover:border-green-300"
+                      className="flex items-center p-2 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200 text-green-800 hover:text-green-900 border border-green-200 hover:border-green-300"
                     >
-                      <div className="mr-3 text-green-600 flex-shrink-0">
+                      <div className="mr-2 text-green-600 flex-shrink-0">
                         {getConcernIcon(concern.name)}
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-xs font-medium">
                         {concern.name}
                       </span>
                     </a>
