@@ -19,7 +19,7 @@ const HealthConcerns = () => {
 
   // Complete category route mapping to match all routes in AppRoutes.tsx
   const categoryRoutes: Record<string, string> = {
-    'Allergy Care': '/diseases-conditions/allergy-care',
+    'Allergy Care': '/diseases-conditions/allergies/seasonal-allergies-hay-fever',
     'Gut Health': '/diseases-conditions/gut-health',
     'Heart Health': '/diseases-conditions/heart-health',
     'Child Care': '/diseases-conditions/child-care',

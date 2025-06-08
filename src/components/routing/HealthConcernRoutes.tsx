@@ -76,7 +76,6 @@ import {
 
 export const getHealthConcernRoutes = () => [
   // Health Concern Category Routes
-  <Route key="allergy-care" path="/diseases-conditions/allergy-care" element={<AllergyCare />} />,
   <Route key="gut-health" path="/diseases-conditions/gut-health" element={<GutHealth />} />,
   <Route key="heart-health" path="/diseases-conditions/heart-health" element={<HeartHealth />} />,
   <Route key="child-care" path="/diseases-conditions/child-care" element={<ChildCare />} />,
@@ -106,7 +105,7 @@ export const getHealthConcernRoutes = () => [
   <Route key="womens-health-1" path="/diseases-conditions/womens-health" element={<WomensHealth />} />,
   <Route key="womens-health-2" path="/diseases-conditions/womens-care" element={<WomensHealth />} />,
 
-  // NEW HIERARCHICAL ROUTES - Allergies
+  // NEW HIERARCHICAL ROUTES - Allergies (moved from allergy-care to allergies)
   <Route key="seasonal-allergies" path="/diseases-conditions/allergies/seasonal-allergies-hay-fever" element={<SeasonalAllergies />} />,
   <Route key="dust-allergy" path="/diseases-conditions/allergies/dust-allergy" element={<DustAllergy />} />,
   <Route key="food-allergies" path="/diseases-conditions/allergies/food-allergies-milk-gluten-nuts" element={<FoodAllergiesPage />} />,
