@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -134,16 +135,15 @@
 @layer components {
   .mega-menu {
     @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-blue-500 transition-all duration-300 transform translate-y-2 z-50;
-    position: absolute;
+    position: fixed;
     width: 100vw;
-    left: 50%;
-    transform: translateX(-50%) translateY(2px);
+    left: 0;
     top: 100%;
   }
 
   .mega-menu-open {
     @apply visible opacity-100;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 
   .cloud-bg {

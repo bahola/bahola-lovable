@@ -29,14 +29,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   };
 
   return (
-    <nav className="hidden lg:flex items-center space-x-2">
+    <nav className="hidden lg:flex items-center space-x-2 relative">
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
         onClick={() => handleMenuClick('concern')}
       >
         <span className="text-gray-800 font-medium">Shop by Problem</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
-        <MegaMenuConcern isOpen={activeMenu === 'concern'} />
       </div>
 
       <div
@@ -45,7 +44,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       >
         <span className="text-gray-800 font-medium">Shop by Category</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
-        <MegaMenuCategory isOpen={activeMenu === 'category'} />
       </div>
 
       <Link to="/diseases-conditions" className="main-menu-item">
@@ -58,7 +56,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       >
         <span className="text-gray-800 font-medium">For Doctors</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
-        <MegaMenuDoctor isOpen={activeMenu === 'doctors'} />
       </div>
 
       <div 
@@ -67,7 +64,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       >
         <span className="text-gray-800 font-medium">Bach Flower</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
-        <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
       </div>
 
       <a 
@@ -84,6 +80,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       <Link to="/homeopathy" className="main-menu-item">
         <span className="text-gray-800 font-medium">Why Homeopathy</span>
       </Link>
+
+      {/* Mega menus positioned at the end of the nav */}
+      <MegaMenuConcern isOpen={activeMenu === 'concern'} />
+      <MegaMenuCategory isOpen={activeMenu === 'category'} />
+      <MegaMenuDoctor isOpen={activeMenu === 'doctors'} />
+      <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
     </nav>
   );
 };
