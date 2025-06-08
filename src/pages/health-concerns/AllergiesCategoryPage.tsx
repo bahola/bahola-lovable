@@ -35,44 +35,45 @@ const AllergiesCategoryPage = () => {
           {/* Hero Section - set to 300px height */}
           <section className="bg-gradient-to-r from-bahola-blue-600 to-bahola-blue-800 text-white px-4 mb-8 h-[300px] flex items-center">
             <div className="container mx-auto">
-              <div className="max-w-4xl">
-                <div className="text-3xl mb-3">🤧</div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-                  Allergies
-                </h1>
-                <p className="text-base md:text-lg mb-4 text-white opacity-90">
-                  Natural homeopathic solutions for various types of allergies and sensitivities
-                </p>
-                
-                <div className="space-y-4">
+              <div className="max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                {/* Left Column - Main Content */}
+                <div>
+                  <div className="text-3xl mb-3">🤧</div>
+                  <h1 className="text-2xl md:text-3xl font-bold mb-2 text-white">
+                    Allergies
+                  </h1>
+                  <p className="text-base md:text-lg mb-4 text-white opacity-90">
+                    Natural homeopathic solutions for various types of allergies and sensitivities
+                  </p>
+                  
                   <Button asChild variant="secondary" className="bg-white text-bahola-blue-700 hover:bg-gray-100">
                     <Link to="/consultation">
                       Book a Consultation
                     </Link>
                   </Button>
+                </div>
 
-                  {/* Sub-diseases buttons */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-white mb-2">Browse Specific Allergies:</h3>
-                    <div className="flex flex-wrap gap-2 max-w-4xl">
-                      {allergysConcerns.slice(0, 6).map((concern) => (
-                        <Button
-                          key={concern.id}
-                          asChild
-                          variant="outline"
-                          className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-600 hover:text-white hover:border-white/50 rounded-full px-3 py-1 text-xs"
-                        >
-                          <Link to={`/diseases-conditions/allergies/${concern.id}`}>
-                            {concern.icon} {concern.name}
-                          </Link>
-                        </Button>
-                      ))}
-                      {allergysConcerns.length > 6 && (
-                        <span className="text-xs text-white/80 self-center">
-                          +{allergysConcerns.length - 6} more
-                        </span>
-                      )}
-                    </div>
+                {/* Right Column - Browse Specific Allergies */}
+                <div>
+                  <h3 className="text-sm font-semibold text-white mb-2">Browse Specific Allergies:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {allergysConcerns.slice(0, 6).map((concern) => (
+                      <Button
+                        key={concern.id}
+                        asChild
+                        variant="outline"
+                        className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-600 hover:text-white hover:border-white/50 rounded-full px-3 py-1 text-xs"
+                      >
+                        <Link to={`/diseases-conditions/allergies/${concern.id}`}>
+                          {concern.icon} {concern.name}
+                        </Link>
+                      </Button>
+                    ))}
+                    {allergysConcerns.length > 6 && (
+                      <span className="text-xs text-white/80 self-center">
+                        +{allergysConcerns.length - 6} more
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
