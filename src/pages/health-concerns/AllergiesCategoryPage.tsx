@@ -1,8 +1,11 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { HealthConcernsCategoryView } from '@/components/health-concerns/HealthConcernsCategoryView';
+import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthConcernsBreadcrumb';
 import { healthConcernsData } from '@/data/healthConcernsData';
 import { PageLayout } from '@/components/PageLayout';
+import { Button } from '@/components/ui/button';
 
 const AllergiesCategoryPage = () => {
   // Filter health concerns to only show allergy-related ones
@@ -19,6 +22,13 @@ const AllergiesCategoryPage = () => {
       title="Allergies - Natural Homeopathic Treatment" 
       description="Discover natural homeopathic remedies for various types of allergies including seasonal allergies, food allergies, skin allergies and more."
     >
+      <div className="container mx-auto px-4">
+        <HealthConcernsBreadcrumb 
+          categoryName="Allergies"
+          categoryPath="/diseases-conditions/allergies"
+        />
+      </div>
+
       <div className="bg-gradient-to-br from-bahola-blue-50 to-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -29,6 +39,13 @@ const AllergiesCategoryPage = () => {
             <p className="text-xl text-bahola-neutral-600 mb-6">
               Natural homeopathic solutions for various types of allergies and sensitivities
             </p>
+            
+            <Button asChild className="mb-8 bg-bahola-blue-600 hover:bg-bahola-blue-700 text-white px-8 py-3 rounded-full text-lg font-medium">
+              <Link to="/consultation">
+                Book a Consultation
+              </Link>
+            </Button>
+
             <div className="flex flex-wrap justify-center gap-2 mb-8">
               <span className="bg-bahola-blue-100 text-bahola-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                 Seasonal Allergies
