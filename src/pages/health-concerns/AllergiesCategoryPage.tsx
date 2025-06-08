@@ -60,7 +60,7 @@ const AllergiesCategoryPage = () => {
                           key={concern.id}
                           asChild
                           variant="outline"
-                          className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-50 hover:border-white/50 rounded-full px-4 py-2 text-sm"
+                          className="border-white/30 text-bahola-blue-800 bg-white/90 hover:bg-bahola-blue-600 hover:text-white hover:border-white/50 rounded-full px-4 py-2 text-sm"
                         >
                           <Link to={`/health-concerns/${concern.id}`}>
                             {concern.icon} {concern.name}
