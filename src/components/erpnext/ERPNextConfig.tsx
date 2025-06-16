@@ -10,6 +10,7 @@ import {
   clearERPNextConfig,
   getDocTypes 
 } from '@/services/erpnext/erpnextService';
+import { loginToERPNext } from '@/services/erpnext/authService';
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
@@ -55,22 +56,30 @@ const ERPNextConfig: React.FC = () => {
     setError(null);
 
     try {
-      // Initialize the connection
+      // Initialize the connection first
       initializeERPNext({
         baseUrl: formattedBaseUrl,
         username,
         password
       });
 
+      console.log('Attempting to login to ERPNext...');
+      
+      // Perform actual login to establish session
+      await loginToERPNext(username, password);
+      
+      console.log('Login successful, testing API access...');
+      
       // Test the connection by fetching doctypes
       await getDocTypes();
       
       setIsConnected(true);
       toast({
         title: "Connection successful",
-        description: "Connected to ERPNext instance.",
+        description: "Authenticated and connected to ERPNext instance.",
       });
     } catch (err) {
+      console.error('ERPNext connection failed:', err);
       clearERPNextConfig();
       setIsConnected(false);
       setError(err instanceof Error ? err.message : 'Failed to connect to ERPNext');
@@ -99,7 +108,7 @@ const ERPNextConfig: React.FC = () => {
       <CardHeader>
         <CardTitle>ERPNext Integration</CardTitle>
         <CardDescription>
-          Connect to your ERPNext instance running on Frappe
+          Connect to your ERPNext instance with username and password authentication
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -117,11 +126,11 @@ const ERPNextConfig: React.FC = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">Username/Email</Label>
             <Input 
               id="username"
               type="text"
-              placeholder="administrator"
+              placeholder="administrator or user@example.com"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={isConnecting || isConnected}
@@ -149,7 +158,7 @@ const ERPNextConfig: React.FC = () => {
           {isConnected && (
             <div className="text-sm text-green-500 flex items-center">
               <CheckCircle className="h-4 w-4 mr-2" />
-              Connected to ERPNext
+              Authenticated and connected to ERPNext
             </div>
           )}
         </form>
@@ -164,10 +173,10 @@ const ERPNextConfig: React.FC = () => {
             {isConnecting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Connecting...
+                Connecting & Authenticating...
               </>
             ) : (
-              'Connect'
+              'Connect & Login'
             )}
           </Button>
         )}

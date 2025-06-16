@@ -51,6 +51,8 @@ export const erpRequest = async <T>(
   const url = `${erpConfig.baseUrl}${endpoint}`;
   
   try {
+    console.log(`Making ERPNext API request: ${method} ${url}`);
+    
     const response = await fetch(url, {
       method,
       credentials: 'include', // Include session cookies
@@ -61,7 +63,15 @@ export const erpRequest = async <T>(
       body: data ? JSON.stringify(data) : undefined,
     });
 
+    console.log(`ERPNext API response status: ${response.status}`);
+
     if (!response.ok) {
+      // If we get a 403/401, it might mean our session expired
+      if (response.status === 403 || response.status === 401) {
+        console.warn('ERPNext session may have expired, authentication required');
+        throw new Error('Authentication required. Please reconnect to ERPNext.');
+      }
+      
       const errorData = await response.json().catch(() => null);
       throw new Error(
         `ERPNext API error: ${response.status} ${response.statusText} - ${
@@ -70,7 +80,9 @@ export const erpRequest = async <T>(
       );
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('ERPNext API request successful');
+    return result;
   } catch (error) {
     console.error("ERPNext API request failed:", error);
     throw error;
