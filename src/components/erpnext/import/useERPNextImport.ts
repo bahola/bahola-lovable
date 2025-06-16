@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -7,9 +6,10 @@ import {
   ImportResult,
   CategoryMappingRule,
   ImportPreviewItem
-} from '@/services/erpnext/productService';
+} from '@/services/erpnext/types';
 import { ERPNextItem } from '@/types/erpnext';
 import { erpnextAPI } from '@/services/erpnext/api';
+import { applyCategoryMappingRules } from '@/services/erpnext/mapping';
 
 export const useERPNextImport = () => {
   const { toast } = useToast();
