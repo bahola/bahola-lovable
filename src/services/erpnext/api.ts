@@ -1,5 +1,6 @@
 
 import { ERPNextItem } from '@/types/erpnext';
+import { supabase } from '@/integrations/supabase/client';
 
 // Base API configuration
 const ERPNEXT_URL = 'https://bahola.net';
@@ -18,7 +19,6 @@ export interface LoginResponse {
 
 export class ERPNextAPI {
   private config: ERPNextConfig;
-  private cookies: string = '';
   private isAuthenticated: boolean = false;
 
   constructor(config: ERPNextConfig) {
@@ -29,7 +29,6 @@ export class ERPNextAPI {
     this.config.username = username;
     this.config.password = password;
     this.isAuthenticated = false;
-    this.cookies = '';
   }
 
   async login(): Promise<{ success: boolean; error?: string }> {
@@ -41,32 +40,29 @@ export class ERPNextAPI {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('cmd', 'login');
-      formData.append('usr', this.config.username);
-      formData.append('pwd', this.config.password);
-      formData.append('use_jwt', '1');
-
-      const response = await fetch(`${this.config.url}/api/method/login`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
+      console.log('Attempting ERPNext login via proxy...');
+      
+      const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+        body: {
+          baseUrl: this.config.url,
+          endpoint: '/api/method/login',
+          method: 'POST',
+          username: this.config.username,
+          password: this.config.password,
+        },
       });
 
-      if (!response.ok) {
-        throw new Error(`Login failed: ${response.status} ${response.statusText}`);
+      if (error) {
+        console.error('Supabase function error during login:', error);
+        throw new Error(`ERPNext login error: ${error.message}`);
       }
 
-      // Store cookies for subsequent requests
-      const setCookie = response.headers.get('set-cookie');
-      if (setCookie) {
-        this.cookies = setCookie;
-        this.isAuthenticated = true;
+      if (result?.error) {
+        throw new Error(result.error);
       }
 
-      const data = await response.json();
-      console.log('Login successful:', data);
-      
+      console.log('ERPNext login successful via proxy');
+      this.isAuthenticated = true;
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
@@ -91,12 +87,12 @@ export class ERPNextAPI {
     }
 
     try {
-      // Build filter string for ERPNext API
-      const filterParams = new URLSearchParams();
+      console.log('Fetching ERPNext items via proxy...');
       
-      // Add basic filters
-      filterParams.append('doctype', 'Item');
-      filterParams.append('fields', JSON.stringify([
+      // Build the endpoint with query parameters
+      const params = new URLSearchParams();
+      params.append('doctype', 'Item');
+      params.append('fields', JSON.stringify([
         'item_code',
         'item_name', 
         'item_group',
@@ -112,33 +108,36 @@ export class ERPNextAPI {
 
       // Add custom filters if provided
       if (Object.keys(filters).length > 0) {
-        filterParams.append('filters', JSON.stringify(filters));
+        params.append('filters', JSON.stringify(filters));
       }
 
-      const response = await fetch(`${this.config.url}/api/resource/Item?${filterParams.toString()}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': this.cookies
+      const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+        body: {
+          baseUrl: this.config.url,
+          endpoint: `/api/resource/Item?${params.toString()}`,
+          method: 'GET',
         },
-        credentials: 'include',
       });
 
-      if (!response.ok) {
-        // If unauthorized, try to login again
-        if (response.status === 401 || response.status === 403) {
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(`ERPNext proxy error: ${error.message}`);
+      }
+
+      if (result?.error) {
+        // Handle ERPNext-specific errors
+        if (result.code === 'SESSION_EXPIRED') {
           this.isAuthenticated = false;
+          // Try to login again and retry
           const loginResult = await this.login();
           if (loginResult.success) {
-            // Retry the request after login
             return this.fetchItems(filters);
           }
         }
-        throw new Error(`Failed to fetch items: ${response.status} ${response.statusText}`);
+        throw new Error(result.error);
       }
 
-      const result = await response.json();
-      console.log('Items fetched successfully:', result.data?.length || 0, 'items');
+      console.log('Items fetched successfully via proxy:', result.data?.length || 0, 'items');
       
       return { 
         success: true, 
@@ -155,13 +154,20 @@ export class ERPNextAPI {
 
   async testConnection(): Promise<{ success: boolean; error?: string }> {
     try {
-      const response = await fetch(`${this.config.url}/api/method/ping`, {
-        method: 'GET',
-        credentials: 'include',
+      const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+        body: {
+          baseUrl: this.config.url,
+          endpoint: '/api/method/ping',
+          method: 'GET',
+        },
       });
 
-      if (!response.ok) {
-        throw new Error(`Connection test failed: ${response.status} ${response.statusText}`);
+      if (error) {
+        throw new Error(`Connection test failed: ${error.message}`);
+      }
+
+      if (result?.error) {
+        throw new Error(result.error);
       }
 
       return { success: true };
