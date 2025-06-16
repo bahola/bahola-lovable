@@ -1,3 +1,4 @@
+
 import { ERPNextItem } from '@/types/erpnext';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -74,17 +75,6 @@ export class ERPNextAPI {
   }
 
   async fetchItems(filters: Record<string, any> = {}): Promise<{ success: boolean; data?: ERPNextItem[]; error?: string }> {
-    // Ensure we're authenticated before making requests
-    if (!this.isAuthenticated) {
-      const loginResult = await this.login();
-      if (!loginResult.success) {
-        return {
-          success: false,
-          error: `Authentication failed: ${loginResult.error}`
-        };
-      }
-    }
-
     try {
       console.log('Fetching ERPNext items from Drops item group...');
       
@@ -125,6 +115,8 @@ export class ERPNextAPI {
           baseUrl: this.config.url,
           endpoint: `/api/resource/Item?${params.toString()}`,
           method: 'GET',
+          username: this.config.username,
+          password: this.config.password,
         },
       });
 

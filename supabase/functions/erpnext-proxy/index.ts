@@ -35,10 +35,11 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const sessionKey = baseUrl;
+    const sessionKey = `${baseUrl}_${username}`;
     let sessionCookie = sessionStore.get(sessionKey);
 
     console.log(`ERPNext Proxy: ${method} ${baseUrl}${endpoint}`);
+    console.log(`Session key: ${sessionKey}, Has session: ${!!sessionCookie}`);
 
     // Special handling for login endpoint
     if (endpoint === '/api/method/login' && username && password) {
@@ -69,7 +70,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (setCookieHeaders.length > 0) {
         sessionCookie = setCookieHeaders.join('; ');
         sessionStore.set(sessionKey, sessionCookie);
-        console.log('Session cookies stored successfully');
+        console.log('Session cookies stored successfully for key:', sessionKey);
       }
 
       const result = await loginResponse.json();
@@ -77,6 +78,35 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
+    }
+
+    // For non-login requests, ensure we have a session
+    if (!sessionCookie && username) {
+      console.log('No session found, attempting to login first...');
+      
+      // Attempt login first
+      const loginResponse = await fetch(`${baseUrl}/api/method/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: new URLSearchParams({
+          usr: username,
+          pwd: password || '',
+        }),
+      });
+
+      if (loginResponse.ok) {
+        const setCookieHeaders = loginResponse.headers.getSetCookie();
+        if (setCookieHeaders.length > 0) {
+          sessionCookie = setCookieHeaders.join('; ');
+          sessionStore.set(sessionKey, sessionCookie);
+          console.log('Auto-login successful, session stored');
+        }
+      } else {
+        console.error('Auto-login failed:', loginResponse.status);
+      }
     }
 
     // Special handling for logout endpoint
