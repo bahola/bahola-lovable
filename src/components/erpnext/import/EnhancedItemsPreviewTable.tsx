@@ -46,10 +46,10 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
     try {
       console.log('Fetching categories and subcategories...');
       
+      // Fetch all categories (no type filter since we don't know the exact constraint)
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('product_categories')
-        .select('id, name')
-        .eq('type', 'category');
+        .select('id, name, type');
 
       if (categoriesError) {
         console.error('Error fetching categories:', categoriesError);
@@ -115,10 +115,14 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   const requiresManualCount = itemsWithProposedCategories.filter(item => item.requiresManualSelection).length;
   const uncategorizedCount = itemsWithProposedCategories.length - categorizedCount;
 
-  // Get specialty products subcategories for bulk assignment
-  const specialtyCategory = categories.find(c => c.name === 'Specialty Products');
+  // Find any category that contains health condition subcategories for bulk assignment
+  const categoryWithHealthConditions = categories.find(c => 
+    c.subcategories.some(sub => 
+      ['Digestive Health', 'Respiratory Health', 'Heart Health', 'Mental Health & Anxiety', 'Skin Care'].includes(sub.name)
+    )
+  );
   
-  console.log('Specialty Products category found:', specialtyCategory);
+  console.log('Category with health conditions found:', categoryWithHealthConditions);
   console.log('Available categories:', categories.map(c => c.name));
 
   return (
@@ -153,23 +157,23 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
         </div>
       </div>
 
-      {specialtyCategory && specialtyCategory.subcategories.length > 0 && requiresManualCount > 0 && (
+      {categoryWithHealthConditions && categoryWithHealthConditions.subcategories.length > 0 && requiresManualCount > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
           <h4 className="text-sm font-medium mb-2">Quick Bulk Assignment</h4>
           <p className="text-xs text-gray-600 mb-2">
             Assign all Drops/Specialties products to a health condition subcategory:
           </p>
           <BulkSubcategoryAssigner 
-            subcategories={specialtyCategory.subcategories}
+            subcategories={categoryWithHealthConditions.subcategories}
             items={itemsWithProposedCategories.filter(item => 
               item.requiresManualSelection && 
-              item.proposedCategoryId === specialtyCategory.id
+              item.proposedCategoryId === categoryWithHealthConditions.id
             )}
             onBulkAssign={(subcategoryId) => {
               itemsWithProposedCategories
-                .filter(item => item.requiresManualSelection && item.proposedCategoryId === specialtyCategory.id)
+                .filter(item => item.requiresManualSelection && item.proposedCategoryId === categoryWithHealthConditions.id)
                 .forEach(item => {
-                  onCategoryAssignmentChange(item.item_code, specialtyCategory.id, subcategoryId);
+                  onCategoryAssignmentChange(item.item_code, categoryWithHealthConditions.id, subcategoryId);
                 });
             }}
           />
