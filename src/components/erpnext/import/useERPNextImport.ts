@@ -1,12 +1,13 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { 
-  importProductsFromERPNext, 
   ProductImportConfig,
   ImportResult,
   CategoryMappingRule,
   ImportPreviewItem
 } from '@/services/erpnext/types';
+import { importProductsFromERPNext } from '@/services/erpnext/importer';
 import { ERPNextItem } from '@/types/erpnext';
 import { erpnextAPI } from '@/services/erpnext/api';
 import { applyCategoryMappingRules } from '@/services/erpnext/mapping';
