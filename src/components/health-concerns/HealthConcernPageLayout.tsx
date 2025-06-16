@@ -19,7 +19,7 @@ interface HealthConcern {
 }
 
 interface HealthConcernPageLayoutProps {
-  concern: HealthConcern;
+  concern?: HealthConcern;
   children: React.ReactNode;
 }
 
@@ -27,6 +27,49 @@ export const HealthConcernPageLayout: React.FC<HealthConcernPageLayoutProps> = (
   concern,
   children,
 }) => {
+  // Add loading state when concern data is not available
+  if (!concern) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
+          <div className="bg-gradient-to-br from-bahola-blue-50 to-white py-16">
+            <div className="container mx-auto px-4">
+              <div className="mb-6">
+                <Link
+                  to="/diseases-conditions"
+                  className="inline-flex items-center text-bahola-blue-600 hover:text-bahola-blue-700 font-medium"
+                >
+                  <ArrowLeft size={20} className="mr-2" />
+                  Back to Health Concerns
+                </Link>
+              </div>
+
+              <div className="max-w-4xl mx-auto text-center">
+                <div className="text-6xl mb-6">⚕️</div>
+                <h1 className="text-4xl md:text-5xl font-bold text-bahola-navy-950 mb-4 font-helvetica">
+                  Loading Health Concern...
+                </h1>
+                <p className="text-xl text-bahola-neutral-600 mb-6">
+                  Please wait while we load the health concern information.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 px-4 py-12">
+            <div className="container mx-auto max-w-4xl">
+              <div className="animate-pulse space-y-4">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow">
@@ -69,7 +112,7 @@ export const HealthConcernPageLayout: React.FC<HealthConcernPageLayoutProps> = (
               </div>
 
               <div className="flex flex-wrap justify-center gap-2">
-                {concern.commonRemedies.map((remedy, index) => (
+                {concern.commonRemedies?.map((remedy, index) => (
                   <span
                     key={index}
                     className="bg-bahola-blue-100 text-bahola-blue-800 px-3 py-1 rounded-full text-sm font-medium"
