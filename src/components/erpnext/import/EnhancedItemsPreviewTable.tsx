@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -34,7 +33,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   onCategoryAssignmentChange
 }) => {
   const [categories, setCategories] = useState<CategoryOption[]>([]);
-  const [editingItem, setEditingItem] = useState<string | null>(null);
+  const [editingItems, setEditingItems] = useState<Set<string>>(new Set());
   const [loadingCategories, setLoadingCategories] = useState(false);
 
   React.useEffect(() => {
@@ -108,7 +107,27 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
 
   const handleSaveCategoryAssignment = (item: ImportPreviewItem, categoryId: string, subcategoryId?: string) => {
     onCategoryAssignmentChange(item.item_code, categoryId, subcategoryId);
-    setEditingItem(null);
+    setEditingItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(item.item_code);
+      return newSet;
+    });
+  };
+
+  const handleEditItem = (itemCode: string) => {
+    setEditingItems(prev => {
+      const newSet = new Set(prev);
+      newSet.add(itemCode);
+      return newSet;
+    });
+  };
+
+  const handleCancelEdit = (itemCode: string) => {
+    setEditingItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(itemCode);
+      return newSet;
+    });
   };
 
   const categorizedCount = itemsWithProposedCategories.filter(item => item.proposedCategoryId && item.proposedSubcategoryId).length;
@@ -213,12 +232,12 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
                 <TableCell>{item.gst_hsn_code || item.hsn_code || '-'}</TableCell>
                 <TableCell>₹{item.standard_rate || 0}</TableCell>
                 <TableCell>
-                  {editingItem === item.item_code ? (
+                  {editingItems.has(item.item_code) ? (
                     <CategoryEditor
                       item={item}
                       categories={categories}
                       onSave={handleSaveCategoryAssignment}
-                      onCancel={() => setEditingItem(null)}
+                      onCancel={() => handleCancelEdit(item.item_code)}
                     />
                   ) : (
                     <div className="space-y-1">
@@ -247,11 +266,11 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
                   )}
                 </TableCell>
                 <TableCell>
-                  {editingItem === item.item_code ? null : (
+                  {editingItems.has(item.item_code) ? null : (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setEditingItem(item.item_code)}
+                      onClick={() => handleEditItem(item.item_code)}
                     >
                       <Edit3 className="h-3 w-3" />
                     </Button>
