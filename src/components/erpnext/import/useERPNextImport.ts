@@ -55,9 +55,9 @@ export const useERPNextImport = () => {
 
     setIsLoading(true);
     try {
-      console.log('Fetching ERPNext items from Drops item group...');
+      console.log('Fetching ERPNext items from Drops and Specialties item groups...');
       
-      // Build filters - only fetch enabled items unless config says otherwise
+      // Build filters - fetch both Drops and Specialties
       const filters = config.importDisabled ? {} : { disabled: 0 };
       
       const result = await erpnextAPI.fetchItems(filters);
@@ -66,15 +66,23 @@ export const useERPNextImport = () => {
         throw new Error(result.error || 'Failed to fetch items');
       }
       
-      // Convert to ImportPreviewItem format
-      const previewItems: ImportPreviewItem[] = (result.data || []).map(item => ({
-        ...item,
-        proposedCategoryId: undefined,
-        proposedSubcategoryId: undefined,
-        proposedCategoryName: undefined,
-        proposedSubcategoryName: undefined,
-        mappingRule: undefined
-      }));
+      // Convert to ImportPreviewItem format and apply initial mapping
+      const previewItems: ImportPreviewItem[] = await Promise.all(
+        (result.data || []).map(async (item) => {
+          // Apply mapping rules including health condition analysis
+          const mappingResult = await applyCategoryMappingRules(item, config.mappingRules || [], []);
+          
+          return {
+            ...item,
+            proposedCategoryId: mappingResult.categoryId,
+            proposedSubcategoryId: mappingResult.subcategoryId,
+            proposedCategoryName: undefined,
+            proposedSubcategoryName: undefined,
+            mappingRule: mappingResult.ruleName,
+            suggestedSubcategories: mappingResult.suggestedSubcategories
+          };
+        })
+      );
       
       setItems(previewItems);
       setSelectedItems(new Set(previewItems.map(item => item.item_code)));
@@ -82,7 +90,7 @@ export const useERPNextImport = () => {
       
       toast({
         title: "Items loaded",
-        description: `Successfully loaded ${previewItems.length} items from Drops item group.`,
+        description: `Successfully loaded ${previewItems.length} items with intelligent health condition mapping.`,
       });
     } catch (error) {
       console.error('Error fetching items:', error);

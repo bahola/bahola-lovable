@@ -1,8 +1,8 @@
-
 import { ERPNextItem } from '@/types/erpnext';
 import { Product } from '@/types/product';
 import { CategoryMappingRule, ImportPreviewItem } from './types';
 import { supabase } from '@/integrations/supabase/client';
+import { analyzeHealthConditions } from './healthConditionMatcher';
 
 /**
  * Map ERPNext item to local product format with enhanced category mapping
@@ -144,12 +144,14 @@ export const getAlphabeticalSubcategory = async (categoryId: string, itemName: s
 };
 
 /**
- * Apply category mapping rules to determine category assignment
+ * Apply category mapping rules to determine category assignment with health condition analysis
  */
-export const applyCategoryMappingRules = (
+export const applyCategoryMappingRules = async (
   item: ERPNextItem, 
-  rules: CategoryMappingRule[]
-): { categoryId?: string; subcategoryId?: string; ruleName?: string } => {
+  rules: CategoryMappingRule[],
+  subcategories: Array<{id: string, name: string, category_id: string}>
+): Promise<{ categoryId?: string; subcategoryId?: string; ruleName?: string; suggestedSubcategories?: Array<{id: string, name: string, confidence: number}> }> => {
+  
   // Find the highest priority matching rule
   const matchingRule = rules
     .filter(rule => rule.isActive)
@@ -164,14 +166,54 @@ export const applyCategoryMappingRules = (
           return false;
         }
       }
+      
+      if (rule.type === 'erpnext-group' && rule.erpnextItemGroup) {
+        return item.item_group === rule.erpnextItemGroup;
+      }
+      
       return false;
     });
 
   if (matchingRule) {
+    let suggestedSubcategories: Array<{id: string, name: string, confidence: number}> = [];
+    
+    // If this maps to specialty products, analyze for health conditions
+    if (matchingRule.type === 'erpnext-group' && 
+        (matchingRule.erpnextItemGroup === 'Drops' || matchingRule.erpnextItemGroup === 'Specialties')) {
+      
+      const healthSuggestions = analyzeHealthConditions(item.item_name, item.description);
+      
+      // Match health suggestions with actual subcategories
+      suggestedSubcategories = healthSuggestions
+        .map(suggestion => {
+          const matchedSubcat = subcategories.find(sub => 
+            sub.category_id === matchingRule.targetCategoryId && 
+            sub.name.toLowerCase().includes(suggestion.name.toLowerCase())
+          );
+          
+          if (matchedSubcat) {
+            return {
+              id: matchedSubcat.id,
+              name: matchedSubcat.name,
+              confidence: suggestion.confidence
+            };
+          }
+          
+          // If no exact match, return the suggestion without ID for manual selection
+          return {
+            id: '',
+            name: suggestion.name,
+            confidence: suggestion.confidence
+          };
+        })
+        .filter(Boolean);
+    }
+    
     return {
       categoryId: matchingRule.targetCategoryId,
       subcategoryId: matchingRule.targetSubcategoryId,
-      ruleName: matchingRule.name
+      ruleName: matchingRule.name,
+      suggestedSubcategories
     };
   }
 

@@ -33,7 +33,55 @@ const CategoryMappingManager: React.FC<CategoryMappingManagerProps> = ({
 
   React.useEffect(() => {
     fetchCategoriesAndSubcategories();
+    // Auto-create ERPNext group mapping rules if they don't exist
+    initializeERPNextGroupRules();
   }, []);
+
+  const initializeERPNextGroupRules = async () => {
+    const hasDropsRule = rules.some(rule => rule.type === 'erpnext-group' && rule.erpnextItemGroup === 'Drops');
+    const hasSpecialtiesRule = rules.some(rule => rule.type === 'erpnext-group' && rule.erpnextItemGroup === 'Specialties');
+    
+    if (!hasDropsRule || !hasSpecialtiesRule) {
+      // Find "Specialty Products" category (or similar)
+      const specialtyCategory = categories.find(cat => 
+        cat.name.toLowerCase().includes('specialty') || 
+        cat.name.toLowerCase().includes('problem') ||
+        cat.name.toLowerCase().includes('health')
+      );
+      
+      if (specialtyCategory) {
+        const newRules = [];
+        
+        if (!hasDropsRule) {
+          newRules.push({
+            id: `erpnext-drops-${Date.now()}`,
+            name: 'ERPNext Drops → Health Conditions',
+            type: 'erpnext-group' as const,
+            erpnextItemGroup: 'Drops',
+            targetCategoryId: specialtyCategory.id,
+            priority: 10,
+            isActive: true
+          });
+        }
+        
+        if (!hasSpecialtiesRule) {
+          newRules.push({
+            id: `erpnext-specialties-${Date.now()}`,
+            name: 'ERPNext Specialties → Health Conditions',
+            type: 'erpnext-group' as const,
+            erpnextItemGroup: 'Specialties', 
+            targetCategoryId: specialtyCategory.id,
+            priority: 10,
+            isActive: true
+          });
+        }
+        
+        if (newRules.length > 0) {
+          onRulesChange([...rules, ...newRules]);
+        }
+      }
+    }
+  };
 
   const fetchCategoriesAndSubcategories = async () => {
     try {
@@ -65,6 +113,7 @@ const CategoryMappingManager: React.FC<CategoryMappingManagerProps> = ({
       name: newRule.name,
       type: newRule.type || 'pattern',
       pattern: newRule.pattern,
+      erpnextItemGroup: newRule.erpnextItemGroup,
       targetCategoryId: newRule.targetCategoryId,
       targetSubcategoryId: newRule.targetSubcategoryId,
       priority: newRule.priority || 1,
@@ -103,7 +152,8 @@ const CategoryMappingManager: React.FC<CategoryMappingManagerProps> = ({
         <CardHeader>
           <CardTitle>Category Mapping Rules</CardTitle>
           <CardDescription>
-            Create rules to automatically assign ERPNext items to website categories based on patterns
+            Create rules to automatically assign ERPNext items to website categories. 
+            Drops and Specialties will be automatically mapped to health condition subcategories.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -122,13 +172,54 @@ const CategoryMappingManager: React.FC<CategoryMappingManagerProps> = ({
               </div>
               
               <div className="space-y-2">
-                <Label>Pattern (Regex)</Label>
-                <Input
-                  placeholder="e.g., .*drops.*"
-                  value={newRule.pattern || ''}
-                  onChange={(e) => setNewRule({ ...newRule, pattern: e.target.value })}
-                />
+                <Label>Rule Type</Label>
+                <Select
+                  value={newRule.type || 'pattern'}
+                  onValueChange={(value) => setNewRule({ ...newRule, type: value as any })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select rule type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pattern">Pattern Matching</SelectItem>
+                    <SelectItem value="erpnext-group">ERPNext Item Group</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+              
+              {newRule.type === 'pattern' && (
+                <div className="space-y-2">
+                  <Label>Pattern (Regex)</Label>
+                  <Input
+                    placeholder="e.g., .*drops.*"
+                    value={newRule.pattern || ''}
+                    onChange={(e) => setNewRule({ ...newRule, pattern: e.target.value })}
+                  />
+                </div>
+              )}
+              
+              {newRule.type === 'erpnext-group' && (
+                <div className="space-y-2">
+                  <Label>ERPNext Item Group</Label>
+                  <Select
+                    value={newRule.erpnextItemGroup || 'select-group'}
+                    onValueChange={(value) => {
+                      setNewRule({ ...newRule, erpnextItemGroup: value === 'select-group' ? '' : value });
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select item group" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="select-group">Select item group</SelectItem>
+                      <SelectItem value="Drops">Drops</SelectItem>
+                      <SelectItem value="Specialties">Specialties</SelectItem>
+                      <SelectItem value="Mother Tinctures">Mother Tinctures</SelectItem>
+                      <SelectItem value="Bach Flower">Bach Flower</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
               
               <div className="space-y-2">
                 <Label>Target Category</Label>
@@ -229,10 +320,18 @@ const CategoryMappingManager: React.FC<CategoryMappingManagerProps> = ({
                             {rule.isActive ? "Active" : "Inactive"}
                           </Badge>
                           <Badge variant="outline">Priority: {rule.priority}</Badge>
+                          <Badge variant="secondary">{rule.type}</Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground">
-                          Pattern: <code>{rule.pattern}</code>
-                        </p>
+                        {rule.type === 'pattern' && rule.pattern && (
+                          <p className="text-sm text-muted-foreground">
+                            Pattern: <code>{rule.pattern}</code>
+                          </p>
+                        )}
+                        {rule.type === 'erpnext-group' && rule.erpnextItemGroup && (
+                          <p className="text-sm text-muted-foreground">
+                            ERPNext Group: <code>{rule.erpnextItemGroup}</code>
+                          </p>
+                        )}
                         <p className="text-sm text-muted-foreground">
                           Target: {categories.find(c => c.id === rule.targetCategoryId)?.name}
                           {rule.targetSubcategoryId && (
@@ -306,12 +405,53 @@ const EditRuleForm: React.FC<EditRuleFormProps> = ({
         </div>
         
         <div className="space-y-2">
-          <Label>Pattern (Regex)</Label>
-          <Input
-            value={editedRule.pattern || ''}
-            onChange={(e) => setEditedRule({ ...editedRule, pattern: e.target.value })}
-          />
+          <Label>Rule Type</Label>
+          <Select
+            value={editedRule.type}
+            onValueChange={(value) => setEditedRule({ ...editedRule, type: value as any })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select rule type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pattern">Pattern Matching</SelectItem>
+              <SelectItem value="erpnext-group">ERPNext Item Group</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+        
+        {editedRule.type === 'pattern' && (
+          <div className="space-y-2">
+            <Label>Pattern (Regex)</Label>
+            <Input
+              value={editedRule.pattern || ''}
+              onChange={(e) => setEditedRule({ ...editedRule, pattern: e.target.value })}
+            />
+          </div>
+        )}
+        
+        {editedRule.type === 'erpnext-group' && (
+          <div className="space-y-2">
+            <Label>ERPNext Item Group</Label>
+            <Select
+              value={editedRule.erpnextItemGroup || 'select-group'}
+              onValueChange={(value) => {
+                setEditedRule({ ...editedRule, erpnextItemGroup: value === 'select-group' ? '' : value });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select item group" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="select-group">Select item group</SelectItem>
+                <SelectItem value="Drops">Drops</SelectItem>
+                <SelectItem value="Specialties">Specialties</SelectItem>
+                <SelectItem value="Mother Tinctures">Mother Tinctures</SelectItem>
+                <SelectItem value="Bach Flower">Bach Flower</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         
         <div className="space-y-2">
           <Label>Target Category</Label>

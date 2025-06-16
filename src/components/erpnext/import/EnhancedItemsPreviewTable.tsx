@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -73,7 +72,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
     }
   };
 
-  // Apply mapping rules to determine proposed categories
+  // Apply mapping rules to determine proposed categories with health condition analysis
   const itemsWithProposedCategories = useMemo(() => {
     return items.map(item => {
       // Find the highest priority matching rule
@@ -90,20 +89,55 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
               return false;
             }
           }
+          
+          if (rule.type === 'erpnext-group' && rule.erpnextItemGroup) {
+            return item.item_group === rule.erpnextItemGroup;
+          }
+          
           return false;
         });
 
       let proposedCategoryId = item.proposedCategoryId;
       let proposedSubcategoryId = item.proposedSubcategoryId;
       let mappingRuleName = item.mappingRule;
+      let suggestedSubcategories: Array<{id: string, name: string, confidence: number}> = [];
 
       if (matchingRule) {
         proposedCategoryId = matchingRule.targetCategoryId;
         proposedSubcategoryId = matchingRule.targetSubcategoryId;
         mappingRuleName = matchingRule.name;
 
-        // Auto-assign subcategory based on first letter if not specified
-        if (!proposedSubcategoryId && proposedCategoryId) {
+        // For ERPNext groups (Drops/Specialties), provide health condition suggestions
+        if (matchingRule.type === 'erpnext-group' && 
+            (matchingRule.erpnextItemGroup === 'Drops' || matchingRule.erpnextItemGroup === 'Specialties')) {
+          
+          // Import health condition analyzer
+          import('@/services/erpnext/healthConditionMatcher').then(({ analyzeHealthConditions }) => {
+            const healthSuggestions = analyzeHealthConditions(item.item_name, item.description);
+            
+            // Match with actual subcategories
+            const category = categories.find(c => c.id === proposedCategoryId);
+            if (category) {
+              suggestedSubcategories = healthSuggestions
+                .map(suggestion => {
+                  const matchedSubcat = category.subcategories.find(sub => 
+                    sub.name.toLowerCase().includes(suggestion.name.toLowerCase()) ||
+                    suggestion.name.toLowerCase().includes(sub.name.toLowerCase())
+                  );
+                  
+                  return matchedSubcat ? {
+                    id: matchedSubcat.id,
+                    name: matchedSubcat.name,
+                    confidence: suggestion.confidence
+                  } : null;
+                })
+                .filter(Boolean) as Array<{id: string, name: string, confidence: number}>;
+            }
+          });
+        }
+
+        // Auto-assign subcategory based on first letter if not specified and no health suggestions
+        if (!proposedSubcategoryId && proposedCategoryId && suggestedSubcategories.length === 0) {
           const category = categories.find(c => c.id === proposedCategoryId);
           if (category) {
             const firstLetter = item.item_name.charAt(0).toUpperCase();
@@ -126,7 +160,8 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
         proposedSubcategoryId,
         proposedCategoryName: proposedCategory?.name,
         proposedSubcategoryName: proposedSubcategory?.name,
-        mappingRule: mappingRuleName
+        mappingRule: mappingRuleName,
+        suggestedSubcategories
       };
     });
   }, [items, mappingRules, categories]);
@@ -175,6 +210,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
               <TableHead>HSN Code</TableHead>
               <TableHead>Rate</TableHead>
               <TableHead>Proposed Category</TableHead>
+              <TableHead>Health Suggestions</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -217,6 +253,24 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
                         <Badge variant="destructive">Uncategorized</Badge>
                       )}
                     </div>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {item.suggestedSubcategories && item.suggestedSubcategories.length > 0 ? (
+                    <div className="space-y-1">
+                      {item.suggestedSubcategories.slice(0, 2).map((suggestion, idx) => (
+                        <Badge 
+                          key={idx} 
+                          variant="secondary" 
+                          className="text-xs"
+                          title={`Confidence: ${Math.round(suggestion.confidence * 100)}%`}
+                        >
+                          {suggestion.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground text-xs">No suggestions</span>
                   )}
                 </TableCell>
                 <TableCell>
