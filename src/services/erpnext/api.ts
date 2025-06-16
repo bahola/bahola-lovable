@@ -19,12 +19,27 @@ export interface LoginResponse {
 export class ERPNextAPI {
   private config: ERPNextConfig;
   private cookies: string = '';
+  private isAuthenticated: boolean = false;
 
   constructor(config: ERPNextConfig) {
     this.config = config;
   }
 
+  updateCredentials(username: string, password: string) {
+    this.config.username = username;
+    this.config.password = password;
+    this.isAuthenticated = false;
+    this.cookies = '';
+  }
+
   async login(): Promise<{ success: boolean; error?: string }> {
+    if (!this.config.username || !this.config.password) {
+      return { 
+        success: false, 
+        error: 'Username and password are required' 
+      };
+    }
+
     try {
       const formData = new FormData();
       formData.append('cmd', 'login');
@@ -46,6 +61,7 @@ export class ERPNextAPI {
       const setCookie = response.headers.get('set-cookie');
       if (setCookie) {
         this.cookies = setCookie;
+        this.isAuthenticated = true;
       }
 
       const data = await response.json();
@@ -54,6 +70,7 @@ export class ERPNextAPI {
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
+      this.isAuthenticated = false;
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown login error' 
@@ -62,6 +79,17 @@ export class ERPNextAPI {
   }
 
   async fetchItems(filters: Record<string, any> = {}): Promise<{ success: boolean; data?: ERPNextItem[]; error?: string }> {
+    // Ensure we're authenticated before making requests
+    if (!this.isAuthenticated) {
+      const loginResult = await this.login();
+      if (!loginResult.success) {
+        return {
+          success: false,
+          error: `Authentication failed: ${loginResult.error}`
+        };
+      }
+    }
+
     try {
       // Build filter string for ERPNext API
       const filterParams = new URLSearchParams();
@@ -97,6 +125,15 @@ export class ERPNextAPI {
       });
 
       if (!response.ok) {
+        // If unauthorized, try to login again
+        if (response.status === 401 || response.status === 403) {
+          this.isAuthenticated = false;
+          const loginResult = await this.login();
+          if (loginResult.success) {
+            // Retry the request after login
+            return this.fetchItems(filters);
+          }
+        }
         throw new Error(`Failed to fetch items: ${response.status} ${response.statusText}`);
       }
 
@@ -135,6 +172,10 @@ export class ERPNextAPI {
         error: error instanceof Error ? error.message : 'Connection failed' 
       };
     }
+  }
+
+  isConfigured(): boolean {
+    return !!(this.config.username && this.config.password);
   }
 }
 

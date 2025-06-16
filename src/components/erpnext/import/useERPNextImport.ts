@@ -2,13 +2,12 @@
 import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { 
-  fetchERPNextItems, 
   importProductsFromERPNext, 
   ProductImportConfig,
   ImportResult
 } from '@/services/erpnext/productService';
 import { ERPNextItem } from '@/types/erpnext';
-import { getERPNextConfig } from '@/services/erpnext/erpnextService';
+import { erpnextAPI } from '@/services/erpnext/api';
 
 export const useERPNextImport = () => {
   const { toast } = useToast();
@@ -20,6 +19,7 @@ export const useERPNextImport = () => {
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
   
   // Import configuration
   const [config, setConfig] = useState<ProductImportConfig>({
@@ -28,17 +28,22 @@ export const useERPNextImport = () => {
     importDisabled: false,
   });
 
-  // Check ERPNext connection status
+  // Check if credentials are configured
   useEffect(() => {
-    const erpConfig = getERPNextConfig();
-    setIsConnected(!!erpConfig);
-  }, []);
+    setIsConnected(erpnextAPI.isConfigured());
+  }, [credentials]);
+
+  const handleCredentialsUpdate = (username: string, password: string) => {
+    setCredentials({ username, password });
+    erpnextAPI.updateCredentials(username, password);
+    setIsConnected(erpnextAPI.isConfigured());
+  };
 
   const handleFetchItems = async () => {
     if (!isConnected) {
       toast({
-        title: "Not connected",
-        description: "Please configure ERPNext connection first.",
+        title: "Credentials required",
+        description: "Please enter your ERPNext username and password first.",
         variant: "destructive"
       });
       return;
@@ -48,16 +53,20 @@ export const useERPNextImport = () => {
     try {
       console.log('Fetching ERPNext items...');
       
-      const filters = config.importDisabled ? undefined : [['disabled', '=', 0]];
-      const fetchedItems = await fetchERPNextItems(filters);
+      const filters = config.importDisabled ? undefined : { disabled: 0 };
+      const result = await erpnextAPI.fetchItems(filters);
       
-      setItems(fetchedItems);
-      setSelectedItems(new Set(fetchedItems.map(item => item.item_code)));
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to fetch items');
+      }
+      
+      setItems(result.data || []);
+      setSelectedItems(new Set((result.data || []).map(item => item.item_code)));
       setShowPreview(true);
       
       toast({
         title: "Items loaded",
-        description: `Successfully loaded ${fetchedItems.length} items from ERPNext.`,
+        description: `Successfully loaded ${result.data?.length || 0} items from ERPNext.`,
       });
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -160,9 +169,11 @@ export const useERPNextImport = () => {
     importResult,
     showPreview,
     isConnected,
+    credentials,
     config,
     setConfig,
     setShowPreview,
+    handleCredentialsUpdate,
     handleFetchItems,
     handleSelectAll,
     handleSelectItem,
