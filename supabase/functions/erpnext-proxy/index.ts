@@ -47,22 +47,21 @@ const handler = async (req: Request): Promise<Response> => {
       const loginResponse = await fetch(`${baseUrl}${endpoint}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({
+        body: new URLSearchParams({
           usr: username,
           pwd: password,
         }),
       });
 
+      console.log(`Login response status: ${loginResponse.status}`);
+
       if (!loginResponse.ok) {
-        const errorData = await loginResponse.json().catch(() => null);
-        throw new Error(
-          `ERPNext login failed: ${loginResponse.status} ${loginResponse.statusText} - ${
-            errorData?.message || 'Invalid credentials'
-          }`
-        );
+        const errorText = await loginResponse.text();
+        console.error('Login failed:', errorText);
+        throw new Error(`ERPNext login failed: ${loginResponse.status} ${loginResponse.statusText}`);
       }
 
       // Extract and store session cookies
@@ -108,50 +107,54 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (sessionCookie) {
       headers['Cookie'] = sessionCookie;
+      console.log('Using stored session cookie for API call');
+    } else {
+      console.warn('No session cookie available for API call');
     }
 
-    // For GET requests, don't set Content-Type
-    if (method !== 'GET' && data) {
+    // Only set Content-Type for POST/PUT requests with data
+    if ((method === 'POST' || method === 'PUT') && data) {
       headers['Content-Type'] = 'application/json';
     }
 
     const response = await fetch(`${baseUrl}${endpoint}`, {
       method,
       headers,
-      body: data && method !== 'GET' ? JSON.stringify(data) : undefined,
+      body: data && (method === 'POST' || method === 'PUT') ? JSON.stringify(data) : undefined,
     });
 
     console.log(`ERPNext API response status: ${response.status}`);
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('ERPNext API error response:', errorText);
+      
       // If we get a 403/401, session might have expired
       if (response.status === 403 || response.status === 401) {
         sessionStore.delete(sessionKey);
         console.warn('ERPNext session expired, clearing stored session');
         
-        const errorData = await response.json().catch(() => null);
         return new Response(
           JSON.stringify({ 
             error: 'Authentication required. Please reconnect to ERPNext.',
             code: 'SESSION_EXPIRED',
-            details: errorData 
+            details: errorText 
           }),
           { status: 401, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
         );
       }
       
-      const errorData = await response.json().catch(() => null);
       return new Response(
         JSON.stringify({ 
           error: `ERPNext API error: ${response.status} ${response.statusText}`,
-          details: errorData 
+          details: errorText 
         }),
         { status: response.status, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }
 
     const result = await response.json();
-    console.log('ERPNext API request successful');
+    console.log('ERPNext API request successful, data length:', result?.data?.length || 'no data array');
     
     return new Response(JSON.stringify(result), {
       status: 200,
