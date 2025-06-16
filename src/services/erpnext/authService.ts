@@ -99,15 +99,22 @@ export const logoutFromERPNext = async (): Promise<void> => {
 };
 
 /**
- * Get current user info from ERPNext via proxy
+ * Get current user info from ERPNext via proxy - using User doctype instead
  */
 export const getCurrentUser = async (): Promise<ERPNextUser> => {
   try {
-    const response = await erpRequest<{message: ERPNextUser}>('/api/method/frappe.auth.get_logged_user', 'GET');
-    return response.message;
+    // Try to get user info via the User doctype API instead of auth method
+    const response = await erpRequest<{message: ERPNextUser[]}>('/api/resource/User?fields=["name","email","full_name","user_type","enabled"]&filters=[["enabled","=",1]]&limit=1', 'GET');
+    
+    if (response.message && response.message.length > 0) {
+      return response.message[0];
+    }
+    
+    throw new Error('No user data found');
   } catch (error) {
     console.error("Failed to get current user:", error);
-    throw error;
+    // If that fails, create a mock user object from login session
+    throw new Error('Unable to fetch user details. You may still be logged in to ERPNext.');
   }
 };
 

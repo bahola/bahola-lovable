@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { 
   loginToERPNext, 
@@ -63,11 +62,10 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
           return;
         }
 
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
-        setIsAuthenticated(true);
+        // Don't try to get current user on initial load as we might not be logged in
+        console.log('ERPNext config initialized, ready for login');
       } catch (error) {
-        console.log('User not authenticated');
+        console.log('ERPNext not configured or user not authenticated');
         setUser(null);
         setIsAuthenticated(false);
       } finally {
@@ -81,10 +79,29 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      await loginToERPNext(email, password);
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
+      const loginResult = await loginToERPNext(email, password);
+      
+      // Create a user object from login result since getCurrentUser might not work
+      const userFromLogin: ERPNextUser = {
+        name: loginResult.user || email,
+        email: email,
+        full_name: loginResult.full_name || email,
+        user_type: 'System User',
+        enabled: 1
+      };
+      
+      setUser(userFromLogin);
       setIsAuthenticated(true);
+      
+      // Try to get additional user details, but don't fail if it doesn't work
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.log('Could not fetch detailed user info, using basic info from login');
+        // Keep the basic user info from login
+      }
+      
     } catch (error) {
       console.error('Login failed:', error);
       throw error;
