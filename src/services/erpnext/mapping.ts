@@ -1,22 +1,36 @@
 
 import { ERPNextItem } from '@/types/erpnext';
 import { Product } from '@/types/product';
+import { CategoryMappingRule, ImportPreviewItem } from './types';
 import { supabase } from '@/integrations/supabase/client';
 
 /**
- * Map ERPNext item to local product format
+ * Map ERPNext item to local product format with enhanced category mapping
  */
-export const mapERPNextToLocal = async (erpItem: ERPNextItem, categoryMapping?: Record<string, string>): Promise<Partial<Product>> => {
-  // Get or create category
-  let categoryId: string | null = null;
-  let subcategoryId: string | null = null;
+export const mapERPNextToLocal = async (
+  erpItem: ImportPreviewItem, 
+  categoryMapping?: Record<string, string>
+): Promise<Partial<Product>> => {
+  // Use proposed categories if available, otherwise try to map
+  let categoryId: string | null = erpItem.proposedCategoryId || null;
+  let subcategoryId: string | null = erpItem.proposedSubcategoryId || null;
   
-  if (erpItem.item_group) {
+  // If no proposed category, try legacy mapping
+  if (!categoryId && erpItem.item_group) {
     const mappedCategory = categoryMapping?.[erpItem.item_group] || erpItem.item_group;
     try {
       categoryId = await getOrCreateCategory(mappedCategory);
     } catch (error) {
       console.warn(`Failed to create category ${mappedCategory}:`, error);
+    }
+  }
+
+  // Auto-assign subcategory based on first letter if category exists but no subcategory
+  if (categoryId && !subcategoryId) {
+    try {
+      subcategoryId = await getAlphabeticalSubcategory(categoryId, erpItem.item_name);
+    } catch (error) {
+      console.warn('Failed to auto-assign subcategory:', error);
     }
   }
 
@@ -82,7 +96,84 @@ export const getOrCreateCategory = async (categoryName: string): Promise<string>
     return newCategory.id;
   } catch (error) {
     console.error(`Error handling category ${categoryName}:`, error);
-    // Return null to fall back to category name
     throw error;
   }
+};
+
+/**
+ * Auto-assign subcategory based on first letter of item name
+ */
+export const getAlphabeticalSubcategory = async (categoryId: string, itemName: string): Promise<string | null> => {
+  try {
+    const firstLetter = itemName.charAt(0).toUpperCase();
+    
+    // Try to find existing subcategory with this letter
+    const { data: existingSubcategory } = await supabase
+      .from('product_subcategories')
+      .select('id')
+      .eq('category_id', categoryId)
+      .eq('name', firstLetter)
+      .maybeSingle();
+
+    if (existingSubcategory) {
+      return existingSubcategory.id;
+    }
+
+    // Create new alphabetical subcategory
+    const { data: newSubcategory, error } = await supabase
+      .from('product_subcategories')
+      .insert({
+        name: firstLetter,
+        slug: firstLetter.toLowerCase(),
+        category_id: categoryId
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error('Error creating alphabetical subcategory:', error);
+      return null;
+    }
+
+    console.log(`Created new alphabetical subcategory: ${firstLetter}`);
+    return newSubcategory.id;
+  } catch (error) {
+    console.error('Error handling alphabetical subcategory:', error);
+    return null;
+  }
+};
+
+/**
+ * Apply category mapping rules to determine category assignment
+ */
+export const applyCategoryMappingRules = (
+  item: ERPNextItem, 
+  rules: CategoryMappingRule[]
+): { categoryId?: string; subcategoryId?: string; ruleName?: string } => {
+  // Find the highest priority matching rule
+  const matchingRule = rules
+    .filter(rule => rule.isActive)
+    .sort((a, b) => b.priority - a.priority)
+    .find(rule => {
+      if (rule.type === 'pattern' && rule.pattern) {
+        try {
+          const regex = new RegExp(rule.pattern, 'i');
+          return regex.test(item.item_name) || regex.test(item.item_code);
+        } catch (e) {
+          console.warn('Invalid regex pattern:', rule.pattern);
+          return false;
+        }
+      }
+      return false;
+    });
+
+  if (matchingRule) {
+    return {
+      categoryId: matchingRule.targetCategoryId,
+      subcategoryId: matchingRule.targetSubcategoryId,
+      ruleName: matchingRule.name
+    };
+  }
+
+  return {};
 };

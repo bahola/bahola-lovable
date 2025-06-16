@@ -1,14 +1,14 @@
 
 import { ERPNextItem } from '@/types/erpnext';
-import { ProductImportConfig, ImportResult } from './types';
+import { ProductImportConfig, ImportResult, ImportPreviewItem } from './types';
 import { mapERPNextToLocal } from './mapping';
 import { supabase } from '@/integrations/supabase/client';
 
 /**
- * Import products from ERPNext to local database
+ * Import products from ERPNext to local database with enhanced category mapping
  */
 export const importProductsFromERPNext = async (
-  items: ERPNextItem[],
+  items: ImportPreviewItem[],
   config: ProductImportConfig
 ): Promise<ImportResult> => {
   const result: ImportResult = {
@@ -29,10 +29,10 @@ export const importProductsFromERPNext = async (
         continue;
       }
 
-      // Map ERPNext item to local format
+      // Map ERPNext item to local format (now includes category assignments)
       const mappedProduct = await mapERPNextToLocal(erpItem, config.categoryMapping);
 
-      // Ensure required fields are present and properly typed
+      // Build the final product data
       const localProduct = {
         name: mappedProduct.name || erpItem.item_name,
         type: mappedProduct.type || 'simple',
@@ -43,13 +43,16 @@ export const importProductsFromERPNext = async (
         weight: mappedProduct.weight || 0,
         dimensions: mappedProduct.dimensions || '',
         image: mappedProduct.image,
-        category_id: mappedProduct.category ? undefined : null,
-        subcategory_id: mappedProduct.subcategory ? undefined : null,
+        // Use the mapped category IDs
+        category_id: erpItem.proposedCategoryId || config.defaultCategoryId || null,
+        subcategory_id: erpItem.proposedSubcategoryId || config.defaultSubcategoryId || null,
         pack_sizes: mappedProduct.packSizes || null,
         potencies: mappedProduct.potencies || null,
         tax_status: mappedProduct.tax_status || 'taxable',
         tax_class: mappedProduct.tax_class || '5'
       };
+
+      console.log(`Processing item: ${erpItem.item_name}, Category: ${localProduct.category_id}, Subcategory: ${localProduct.subcategory_id}`);
 
       // Check if product already exists (by HSN code or name)
       const { data: existingProduct } = await supabase
@@ -70,6 +73,7 @@ export const importProductsFromERPNext = async (
           result.success = false;
         } else {
           result.updated++;
+          console.log(`Updated product: ${erpItem.item_name}`);
         }
       } else if (!existingProduct) {
         // Create new product
@@ -82,10 +86,12 @@ export const importProductsFromERPNext = async (
           result.success = false;
         } else {
           result.imported++;
+          console.log(`Created product: ${erpItem.item_name}`);
         }
       } else {
         // Product exists but update not enabled
         result.skipped++;
+        console.log(`Skipped existing product: ${erpItem.item_name}`);
       }
     } catch (error) {
       result.errors.push(`Error processing item ${erpItem.item_name}: ${error instanceof Error ? error.message : 'Unknown error'}`);

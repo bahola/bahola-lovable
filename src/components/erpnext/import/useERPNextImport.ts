@@ -4,28 +4,32 @@ import { useToast } from "@/hooks/use-toast";
 import { 
   importProductsFromERPNext, 
   ProductImportConfig,
-  ImportResult
+  ImportResult,
+  CategoryMappingRule,
+  ImportPreviewItem
 } from '@/services/erpnext/productService';
 import { ERPNextItem } from '@/types/erpnext';
 import { erpnextAPI } from '@/services/erpnext/api';
 
 export const useERPNextImport = () => {
   const { toast } = useToast();
-  const [items, setItems] = useState<ERPNextItem[]>([]);
+  const [items, setItems] = useState<ImportPreviewItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [importProgress, setImportProgress] = useState(0);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showCategoryMapping, setShowCategoryMapping] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   
-  // Import configuration
+  // Import configuration with mapping rules
   const [config, setConfig] = useState<ProductImportConfig>({
     updateExisting: true,
     createCategories: true,
     importDisabled: false,
+    mappingRules: [],
   });
 
   // Check if credentials are configured
@@ -62,13 +66,23 @@ export const useERPNextImport = () => {
         throw new Error(result.error || 'Failed to fetch items');
       }
       
-      setItems(result.data || []);
-      setSelectedItems(new Set((result.data || []).map(item => item.item_code)));
+      // Convert to ImportPreviewItem format
+      const previewItems: ImportPreviewItem[] = (result.data || []).map(item => ({
+        ...item,
+        proposedCategoryId: undefined,
+        proposedSubcategoryId: undefined,
+        proposedCategoryName: undefined,
+        proposedSubcategoryName: undefined,
+        mappingRule: undefined
+      }));
+      
+      setItems(previewItems);
+      setSelectedItems(new Set(previewItems.map(item => item.item_code)));
       setShowPreview(true);
       
       toast({
         title: "Items loaded",
-        description: `Successfully loaded ${result.data?.length || 0} items from Drops item group.`,
+        description: `Successfully loaded ${previewItems.length} items from Drops item group.`,
       });
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -100,6 +114,28 @@ export const useERPNextImport = () => {
     setSelectedItems(newSelection);
   };
 
+  const handleCategoryAssignmentChange = (itemCode: string, categoryId: string, subcategoryId?: string) => {
+    setItems(prevItems => 
+      prevItems.map(item => 
+        item.item_code === itemCode 
+          ? { 
+              ...item, 
+              proposedCategoryId: categoryId,
+              proposedSubcategoryId: subcategoryId,
+              mappingRule: 'Manual Assignment'
+            }
+          : item
+      )
+    );
+  };
+
+  const handleMappingRulesChange = (rules: CategoryMappingRule[]) => {
+    setConfig(prevConfig => ({
+      ...prevConfig,
+      mappingRules: rules
+    }));
+  };
+
   const handleImport = async () => {
     if (selectedItems.size === 0) {
       toast({
@@ -119,7 +155,7 @@ export const useERPNextImport = () => {
       
       console.log(`Starting import of ${selectedItemsData.length} selected items...`);
       
-      // Simulate progress updates (in a real implementation, you'd get this from the import function)
+      // Simulate progress updates
       const progressInterval = setInterval(() => {
         setImportProgress(prev => Math.min(prev + 10, 90));
       }, 500);
@@ -170,15 +206,19 @@ export const useERPNextImport = () => {
     importProgress,
     importResult,
     showPreview,
+    showCategoryMapping,
     isConnected,
     credentials,
     config,
     setConfig,
     setShowPreview,
+    setShowCategoryMapping,
     handleCredentialsUpdate,
     handleFetchItems,
     handleSelectAll,
     handleSelectItem,
+    handleCategoryAssignmentChange,
+    handleMappingRulesChange,
     handleImport
   };
 };
