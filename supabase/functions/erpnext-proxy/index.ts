@@ -103,7 +103,6 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Regular API calls - include session cookies if available
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
 
@@ -111,10 +110,15 @@ const handler = async (req: Request): Promise<Response> => {
       headers['Cookie'] = sessionCookie;
     }
 
+    // For GET requests, don't set Content-Type
+    if (method !== 'GET' && data) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     const response = await fetch(`${baseUrl}${endpoint}`, {
       method,
       headers,
-      body: data ? JSON.stringify(data) : undefined,
+      body: data && method !== 'GET' ? JSON.stringify(data) : undefined,
     });
 
     console.log(`ERPNext API response status: ${response.status}`);
