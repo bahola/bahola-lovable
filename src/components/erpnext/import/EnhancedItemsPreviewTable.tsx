@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -45,7 +46,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
     try {
       console.log('Fetching categories and subcategories...');
       
-      // Fetch all categories (no type filter since we don't know the exact constraint)
+      // Fetch all categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('product_categories')
         .select('id, name, type');
@@ -106,6 +107,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   }, [items, categories]);
 
   const handleSaveCategoryAssignment = (item: ImportPreviewItem, categoryId: string, subcategoryId?: string) => {
+    console.log(`Saving category assignment for ${item.item_code}: categoryId=${categoryId}, subcategoryId=${subcategoryId}`);
     onCategoryAssignmentChange(item.item_code, categoryId, subcategoryId);
     setEditingItems(prev => {
       const newSet = new Set(prev);
@@ -115,6 +117,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   };
 
   const handleEditItem = (itemCode: string) => {
+    console.log(`Starting edit for item: ${itemCode}`);
     setEditingItems(prev => {
       const newSet = new Set(prev);
       newSet.add(itemCode);
@@ -123,6 +126,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   };
 
   const handleCancelEdit = (itemCode: string) => {
+    console.log(`Canceling edit for item: ${itemCode}`);
     setEditingItems(prev => {
       const newSet = new Set(prev);
       newSet.delete(itemCode);
@@ -346,6 +350,7 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
   const handleSave = () => {
     if (selectedCategoryId && selectedCategoryId !== 'no-category') {
       const subcategoryId = selectedSubcategoryId === 'no-subcategory' ? undefined : selectedSubcategoryId;
+      console.log(`CategoryEditor saving: categoryId=${selectedCategoryId}, subcategoryId=${subcategoryId}`);
       onSave(item, selectedCategoryId, subcategoryId);
     }
   };
@@ -356,13 +361,14 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedCategoryId} onValueChange={(value) => {
+        console.log(`CategoryEditor category changed to: ${value}`);
         setSelectedCategoryId(value);
         setSelectedSubcategoryId('no-subcategory');
       }}>
         <SelectTrigger className="w-36">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-50 bg-white">
           <SelectItem value="no-category">No Category</SelectItem>
           {categories.map((category) => (
             <SelectItem key={category.id} value={category.id}>
@@ -374,13 +380,16 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
 
       <Select 
         value={selectedSubcategoryId} 
-        onValueChange={setSelectedSubcategoryId}
+        onValueChange={(value) => {
+          console.log(`CategoryEditor subcategory changed to: ${value}`);
+          setSelectedSubcategoryId(value);
+        }}
         disabled={!selectedCategoryId || selectedCategoryId === 'no-category'}
       >
         <SelectTrigger className="w-32">
           <SelectValue placeholder="Subcategory" />
         </SelectTrigger>
-        <SelectContent className="max-h-60 overflow-auto">
+        <SelectContent className="max-h-60 overflow-auto z-50 bg-white">
           <SelectItem value="no-subcategory">None</SelectItem>
           {selectedCategory?.subcategories.map((subcategory) => (
             <SelectItem key={subcategory.id} value={subcategory.id}>
