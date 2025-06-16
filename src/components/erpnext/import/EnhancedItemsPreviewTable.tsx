@@ -44,27 +44,46 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   const fetchCategories = async () => {
     setLoadingCategories(true);
     try {
+      console.log('Fetching categories and subcategories...');
+      
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('product_categories')
         .select('id, name')
         .eq('type', 'category');
 
-      if (categoriesError) throw categoriesError;
+      if (categoriesError) {
+        console.error('Error fetching categories:', categoriesError);
+        throw categoriesError;
+      }
+
+      console.log('Categories fetched:', categoriesData);
 
       const { data: subcategoriesData, error: subcategoriesError } = await supabase
         .from('product_subcategories')
         .select('id, name, category_id');
 
-      if (subcategoriesError) throw subcategoriesError;
+      if (subcategoriesError) {
+        console.error('Error fetching subcategories:', subcategoriesError);
+        throw subcategoriesError;
+      }
 
-      const categoryOptions: CategoryOption[] = (categoriesData || []).map(cat => ({
-        id: cat.id,
-        name: cat.name,
-        subcategories: (subcategoriesData || [])
+      console.log('Subcategories fetched:', subcategoriesData);
+
+      const categoryOptions: CategoryOption[] = (categoriesData || []).map(cat => {
+        const categorySubcategories = (subcategoriesData || [])
           .filter(sub => sub.category_id === cat.id)
-          .map(sub => ({ id: sub.id, name: sub.name }))
-      }));
+          .map(sub => ({ id: sub.id, name: sub.name }));
+        
+        console.log(`Category "${cat.name}" has ${categorySubcategories.length} subcategories:`, categorySubcategories);
+        
+        return {
+          id: cat.id,
+          name: cat.name,
+          subcategories: categorySubcategories
+        };
+      });
 
+      console.log('Final category options:', categoryOptions);
       setCategories(categoryOptions);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -98,6 +117,9 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
 
   // Get specialty products subcategories for bulk assignment
   const specialtyCategory = categories.find(c => c.name === 'Specialty Products');
+  
+  console.log('Specialty Products category found:', specialtyCategory);
+  console.log('Available categories:', categories.map(c => c.name));
 
   return (
     <div className="space-y-4">
@@ -131,7 +153,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
         </div>
       </div>
 
-      {specialtyCategory && requiresManualCount > 0 && (
+      {specialtyCategory && specialtyCategory.subcategories.length > 0 && requiresManualCount > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
           <h4 className="text-sm font-medium mb-2">Quick Bulk Assignment</h4>
           <p className="text-xs text-gray-600 mb-2">
@@ -151,6 +173,12 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
                 });
             }}
           />
+        </div>
+      )}
+
+      {loadingCategories && (
+        <div className="text-center py-4 text-gray-500">
+          Loading categories...
         </div>
       )}
 
@@ -252,13 +280,15 @@ const BulkSubcategoryAssigner: React.FC<BulkSubcategoryAssignerProps> = ({
 }) => {
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string>('');
 
+  console.log('BulkSubcategoryAssigner subcategories:', subcategories);
+
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedSubcategoryId} onValueChange={setSelectedSubcategoryId}>
         <SelectTrigger className="w-48">
           <SelectValue placeholder="Select health condition" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-60 overflow-auto">
           {subcategories.map((subcategory) => (
             <SelectItem key={subcategory.id} value={subcategory.id}>
               {subcategory.name}
@@ -297,6 +327,9 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
     }
   };
 
+  console.log('CategoryEditor selectedCategory:', selectedCategory);
+  console.log('CategoryEditor available categories:', categories);
+
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedCategoryId} onValueChange={(value) => {
@@ -324,7 +357,7 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
         <SelectTrigger className="w-32">
           <SelectValue placeholder="Subcategory" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-60 overflow-auto">
           <SelectItem value="no-subcategory">None</SelectItem>
           {selectedCategory?.subcategories.map((subcategory) => (
             <SelectItem key={subcategory.id} value={subcategory.id}>
