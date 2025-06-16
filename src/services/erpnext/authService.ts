@@ -1,5 +1,5 @@
-
-import { getERPNextConfig } from './erpnextService';
+import { getERPNextConfig, loginToERPNext } from './erpnextService';
+import { supabase } from "@/integrations/supabase/client";
 
 export interface ERPNextLoginResponse {
   message: string;
@@ -29,43 +29,12 @@ export interface ERPNextCustomer {
 }
 
 /**
- * Login to ERPNext using email and password
+ * Login to ERPNext using email and password via proxy
  */
-export const loginToERPNext = async (email: string, password: string): Promise<ERPNextLoginResponse> => {
-  const config = getERPNextConfig();
-  if (!config) {
-    throw new Error("ERPNext is not initialized. Please configure ERPNext connection first.");
-  }
-
-  const response = await fetch(`${config.baseUrl}/api/method/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    credentials: 'include', // Important for session cookies
-    body: JSON.stringify({
-      usr: email,
-      pwd: password,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(
-      `ERPNext login failed: ${response.status} ${response.statusText} - ${
-        errorData?.message || 'Invalid credentials'
-      }`
-    );
-  }
-
-  const result = await response.json();
-  console.log('ERPNext login successful:', result);
-  return result;
-};
+export { loginToERPNext };
 
 /**
- * Logout from ERPNext
+ * Logout from ERPNext via proxy
  */
 export const logoutFromERPNext = async (): Promise<void> => {
   const config = getERPNextConfig();
@@ -73,13 +42,25 @@ export const logoutFromERPNext = async (): Promise<void> => {
     throw new Error("ERPNext is not initialized.");
   }
 
-  await fetch(`${config.baseUrl}/api/method/logout`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const { error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: config.baseUrl,
+        endpoint: '/api/method/logout',
+        method: 'POST',
+      },
+    });
+
+    if (error) {
+      console.error('Logout error:', error);
+      throw new Error(`ERPNext logout error: ${error.message}`);
+    }
+
+    console.log('ERPNext logout successful');
+  } catch (error) {
+    console.error("ERPNext logout failed:", error);
+    throw error;
+  }
 };
 
 /**

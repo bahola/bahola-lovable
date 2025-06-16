@@ -8,9 +8,9 @@ import {
   initializeERPNext, 
   getERPNextConfig, 
   clearERPNextConfig,
-  getDocTypes 
+  getDocTypes,
+  loginToERPNext
 } from '@/services/erpnext/erpnextService';
-import { loginToERPNext } from '@/services/erpnext/authService';
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
@@ -63,9 +63,9 @@ const ERPNextConfig: React.FC = () => {
         password
       });
 
-      console.log('Attempting to login to ERPNext...');
+      console.log('Attempting to login to ERPNext via proxy...');
       
-      // Perform actual login to establish session
+      // Perform actual login to establish session through proxy
       await loginToERPNext(username, password);
       
       console.log('Login successful, testing API access...');
@@ -76,7 +76,7 @@ const ERPNextConfig: React.FC = () => {
       setIsConnected(true);
       toast({
         title: "Connection successful",
-        description: "Authenticated and connected to ERPNext instance.",
+        description: "Authenticated and connected to ERPNext instance via proxy.",
       });
     } catch (err) {
       console.error('ERPNext connection failed:', err);
@@ -108,7 +108,7 @@ const ERPNextConfig: React.FC = () => {
       <CardHeader>
         <CardTitle>ERPNext Integration</CardTitle>
         <CardDescription>
-          Connect to your ERPNext instance with username and password authentication
+          Connect to your ERPNext instance with username and password authentication (via secure proxy)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -158,7 +158,7 @@ const ERPNextConfig: React.FC = () => {
           {isConnected && (
             <div className="text-sm text-green-500 flex items-center">
               <CheckCircle className="h-4 w-4 mr-2" />
-              Authenticated and connected to ERPNext
+              Authenticated and connected to ERPNext via secure proxy
             </div>
           )}
         </form>
@@ -173,10 +173,10 @@ const ERPNextConfig: React.FC = () => {
             {isConnecting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Connecting & Authenticating...
+                Connecting via Proxy...
               </>
             ) : (
-              'Connect & Login'
+              'Connect via Proxy'
             )}
           </Button>
         )}

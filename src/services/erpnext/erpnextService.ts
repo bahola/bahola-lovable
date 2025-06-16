@@ -1,8 +1,10 @@
 
 /**
  * ERPNext API Service
- * This service handles communication with the ERPNext instance running on Frappe
+ * This service handles communication with the ERPNext instance through a Supabase Edge Function proxy
  */
+
+import { supabase } from "@/integrations/supabase/client";
 
 // Define base URL type for better type safety
 export interface ERPNextConfig {
@@ -37,7 +39,7 @@ export const clearERPNextConfig = (): void => {
 };
 
 /**
- * Make a request to the ERPNext API using session-based authentication
+ * Make a request to the ERPNext API through the Supabase Edge Function proxy
  */
 export const erpRequest = async <T>(
   endpoint: string, 
@@ -48,43 +50,73 @@ export const erpRequest = async <T>(
     throw new Error("ERPNext is not initialized. Call initializeERPNext first.");
   }
 
-  const url = `${erpConfig.baseUrl}${endpoint}`;
-  
   try {
-    console.log(`Making ERPNext API request: ${method} ${url}`);
+    console.log(`Making ERPNext API request via proxy: ${method} ${endpoint}`);
     
-    const response = await fetch(url, {
-      method,
-      credentials: 'include', // Include session cookies
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+    const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: erpConfig.baseUrl,
+        endpoint,
+        method,
+        data,
       },
-      body: data ? JSON.stringify(data) : undefined,
     });
 
-    console.log(`ERPNext API response status: ${response.status}`);
-
-    if (!response.ok) {
-      // If we get a 403/401, it might mean our session expired
-      if (response.status === 403 || response.status === 401) {
-        console.warn('ERPNext session may have expired, authentication required');
-        throw new Error('Authentication required. Please reconnect to ERPNext.');
-      }
-      
-      const errorData = await response.json().catch(() => null);
-      throw new Error(
-        `ERPNext API error: ${response.status} ${response.statusText} - ${
-          errorData ? JSON.stringify(errorData) : 'No error details'
-        }`
-      );
+    if (error) {
+      console.error('Supabase function error:', error);
+      throw new Error(`ERPNext proxy error: ${error.message}`);
     }
 
-    const result = await response.json();
-    console.log('ERPNext API request successful');
+    if (result?.error) {
+      // Handle ERPNext-specific errors
+      if (result.code === 'SESSION_EXPIRED') {
+        throw new Error('Authentication required. Please reconnect to ERPNext.');
+      }
+      throw new Error(result.error);
+    }
+
+    console.log('ERPNext API request successful via proxy');
     return result;
   } catch (error) {
     console.error("ERPNext API request failed:", error);
+    throw error;
+  }
+};
+
+/**
+ * Make a login request to ERPNext through the proxy
+ */
+export const loginToERPNext = async (username: string, password: string): Promise<any> => {
+  if (!erpConfig) {
+    throw new Error("ERPNext is not initialized. Call initializeERPNext first.");
+  }
+
+  try {
+    console.log('Attempting ERPNext login via proxy...');
+    
+    const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: erpConfig.baseUrl,
+        endpoint: '/api/method/login',
+        method: 'POST',
+        username,
+        password,
+      },
+    });
+
+    if (error) {
+      console.error('Supabase function error during login:', error);
+      throw new Error(`ERPNext login error: ${error.message}`);
+    }
+
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+
+    console.log('ERPNext login successful via proxy');
+    return result;
+  } catch (error) {
+    console.error("ERPNext login failed:", error);
     throw error;
   }
 };
