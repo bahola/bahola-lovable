@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -51,9 +50,11 @@ export const useERPNextImport = () => {
 
     setIsLoading(true);
     try {
-      console.log('Fetching ERPNext items...');
+      console.log('Fetching ERPNext items from Brands and Generics...');
       
-      const filters = config.importDisabled ? undefined : { disabled: 0 };
+      // Build filters - only fetch enabled items unless config says otherwise
+      const filters = config.importDisabled ? {} : { disabled: 0 };
+      
       const result = await erpnextAPI.fetchItems(filters);
       
       if (!result.success) {
@@ -66,7 +67,7 @@ export const useERPNextImport = () => {
       
       toast({
         title: "Items loaded",
-        description: `Successfully loaded ${result.data?.length || 0} items from ERPNext.`,
+        description: `Successfully loaded ${result.data?.length || 0} items from Brands and Generics.`,
       });
     } catch (error) {
       console.error('Error fetching items:', error);

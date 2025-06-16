@@ -89,9 +89,8 @@ export class ERPNextAPI {
     try {
       console.log('Fetching ERPNext items via proxy...');
       
-      // Build the endpoint with query parameters
+      // Build the endpoint with query parameters - remove duplicate doctype
       const params = new URLSearchParams();
-      params.append('doctype', 'Item');
       params.append('fields', JSON.stringify([
         'item_code',
         'item_name', 
@@ -106,10 +105,16 @@ export class ERPNextAPI {
         'modified'
       ]));
 
-      // Add custom filters if provided
-      if (Object.keys(filters).length > 0) {
-        params.append('filters', JSON.stringify(filters));
-      }
+      // Add filter for Brands and Generics item groups, plus any custom filters
+      const itemGroupFilters = {
+        'item_group': ['in', ['Brands', 'Generics']],
+        ...filters
+      };
+      
+      params.append('filters', JSON.stringify(itemGroupFilters));
+      
+      // Limit results for performance
+      params.append('limit_page_length', '1000');
 
       const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
         body: {
