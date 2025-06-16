@@ -30,7 +30,7 @@ export interface ERPNextDocument {
   parenttype?: string;
 }
 
-// Item interface
+// Enhanced Item interface with all necessary fields for product import
 export interface ERPNextItem extends ERPNextDocument {
   item_code: string;
   item_name: string;
@@ -42,6 +42,21 @@ export interface ERPNextItem extends ERPNextDocument {
   image?: string;
   standard_rate?: number;
   valuation_rate?: number;
+  gst_hsn_code?: string;
+  hsn_code?: string;
+  weight_per_unit?: number;
+  brand?: string;
+  opening_stock?: number;
+  shelf_life_in_days?: number;
+  has_variants?: number;
+  variant_of?: string;
+  attributes?: ERPNextItemAttribute[];
+}
+
+// Item Attribute interface for handling variants
+export interface ERPNextItemAttribute {
+  attribute: string;
+  attribute_value: string;
 }
 
 // Customer interface

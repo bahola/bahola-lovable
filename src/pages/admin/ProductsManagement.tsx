@@ -2,11 +2,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import AddProductSheet from '@/components/admin/AddProductSheet';
 import ImportProductDialog from '@/components/admin/ImportProductDialog';
+import ERPNextProductImport from '@/components/erpnext/ERPNextProductImport';
 import SearchAndFilterBar from '@/components/admin/SearchAndFilterBar';
 import ProductList from '@/components/admin/ProductList';
 import { ProductListItem } from '@/data/sampleProducts';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Package, Upload, Database } from 'lucide-react';
 
 const ProductsManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -158,23 +161,50 @@ const ProductsManagement = () => {
             // Refresh product list after adding a product
             fetchProducts();
           }} />
-          <ImportProductDialog />
         </div>
       </div>
       
-      {/* Search and Filter Bar */}
-      <SearchAndFilterBar 
-        searchTerm={searchTerm}
-        onSearchChange={handleSearch}
-        onClearSearch={handleClearSearch}
-      />
-      
-      {/* Products Table */}
-      <ProductList 
-        products={filteredProducts} 
-        isLoading={isLoading} 
-        onDelete={handleDeleteProduct}
-      />
+      {/* Import and Manage Tabs */}
+      <Tabs defaultValue="manage" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="manage" className="flex items-center gap-2">
+            <Package className="h-4 w-4" />
+            Manage Products
+          </TabsTrigger>
+          <TabsTrigger value="excel-import" className="flex items-center gap-2">
+            <Upload className="h-4 w-4" />
+            Excel Import
+          </TabsTrigger>
+          <TabsTrigger value="erpnext-import" className="flex items-center gap-2">
+            <Database className="h-4 w-4" />
+            ERPNext Import
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="manage" className="space-y-4">
+          {/* Search and Filter Bar */}
+          <SearchAndFilterBar 
+            searchTerm={searchTerm}
+            onSearchChange={handleSearch}
+            onClearSearch={handleClearSearch}
+          />
+          
+          {/* Products Table */}
+          <ProductList 
+            products={filteredProducts} 
+            isLoading={isLoading} 
+            onDelete={handleDeleteProduct}
+          />
+        </TabsContent>
+        
+        <TabsContent value="excel-import">
+          <ImportProductDialog />
+        </TabsContent>
+        
+        <TabsContent value="erpnext-import">
+          <ERPNextProductImport />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
