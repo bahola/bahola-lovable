@@ -1,4 +1,3 @@
-
 import { ERPNextItem } from '@/types/erpnext';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -91,6 +90,8 @@ export class ERPNextAPI {
       
       // Use ERPNext's resource API directly with simple query parameters
       const params = new URLSearchParams();
+      
+      // Remove hsn_code from fields as it's not permitted in query
       params.append('fields', JSON.stringify([
         'name',
         'item_code',
@@ -101,21 +102,19 @@ export class ERPNextAPI {
         'stock_uom',
         'disabled',
         'gst_hsn_code',
-        'hsn_code',
         'creation',
         'modified'
       ]));
       
-      // Add item group filter
-      params.append('filters', JSON.stringify([
-        ['item_group', 'in', ['Brands', 'Generics']]
-      ]));
-      
-      // Add disabled filter if not importing disabled items
+      // Add item group filter for Brands and Generics
       if (!filters.disabled) {
         params.append('filters', JSON.stringify([
           ['item_group', 'in', ['Brands', 'Generics']],
           ['disabled', '=', 0]
+        ]));
+      } else {
+        params.append('filters', JSON.stringify([
+          ['item_group', 'in', ['Brands', 'Generics']]
         ]));
       }
       
