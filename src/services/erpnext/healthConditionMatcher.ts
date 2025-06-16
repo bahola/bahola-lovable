@@ -1,4 +1,3 @@
-
 import { HealthConditionPattern } from './types';
 
 // Health condition keyword patterns for automatic subcategory assignment
@@ -66,39 +65,17 @@ export const HEALTH_CONDITION_PATTERNS: HealthConditionPattern[] = [
 ];
 
 /**
- * Analyze product name and description to suggest health condition subcategories
+ * Get all available health condition subcategories for manual selection
  */
-export const analyzeHealthConditions = (itemName: string, description?: string): Array<{id?: string, name: string, confidence: number}> => {
-  const text = `${itemName} ${description || ''}`.toLowerCase();
-  const suggestions: Array<{name: string, confidence: number}> = [];
-
-  for (const pattern of HEALTH_CONDITION_PATTERNS) {
-    let matchCount = 0;
-    let totalKeywords = pattern.keywords.length;
-
-    for (const keyword of pattern.keywords) {
-      if (text.includes(keyword.toLowerCase())) {
-        matchCount++;
-      }
-    }
-
-    if (matchCount > 0) {
-      const confidence = (matchCount / totalKeywords) * pattern.confidence;
-      suggestions.push({
-        name: pattern.subcategoryName,
-        confidence: Math.min(confidence, 1.0)
-      });
-    }
-  }
-
-  // Sort by confidence and return top suggestions
-  return suggestions
-    .sort((a, b) => b.confidence - a.confidence)
-    .slice(0, 3); // Return top 3 suggestions
+export const getHealthConditionSubcategories = (): Array<{name: string, keywords: string[]}> => {
+  return HEALTH_CONDITION_PATTERNS.map(pattern => ({
+    name: pattern.subcategoryName,
+    keywords: pattern.keywords
+  }));
 };
 
 /**
- * Create automatic mapping rules for ERPNext item groups
+ * Create automatic mapping rules for ERPNext item groups to Specialty Products
  */
 export const createERPNextGroupMappingRules = (specialtyProductsCategoryId: string) => {
   return [
@@ -121,4 +98,13 @@ export const createERPNextGroupMappingRules = (specialtyProductsCategoryId: stri
       isActive: true
     }
   ];
+};
+
+/**
+ * Simplified analysis - no longer used for automatic suggestions
+ * @deprecated Use manual selection instead
+ */
+export const analyzeHealthConditions = (itemName: string, description?: string): Array<{id?: string, name: string, confidence: number}> => {
+  // Return empty array - we're moving to manual selection
+  return [];
 };

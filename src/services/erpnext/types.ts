@@ -42,6 +42,7 @@ export interface ImportPreviewItem extends ERPNextItem {
   proposedCategoryName?: string;
   proposedSubcategoryName?: string;
   mappingRule?: string;
+  requiresManualSelection?: boolean;
   suggestedSubcategories?: Array<{id: string, name: string, confidence: number}>;
 }
 

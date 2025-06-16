@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -5,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit3, Save, X } from 'lucide-react';
+import { Edit3, Save, X, AlertTriangle } from 'lucide-react';
 import { ImportPreviewItem, CategoryMappingRule } from '@/services/erpnext/types';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -72,107 +73,31 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
     }
   };
 
-  // Apply mapping rules to determine proposed categories with health condition analysis
+  // Enhanced items with better mapping display
   const itemsWithProposedCategories = useMemo(() => {
     return items.map(item => {
-      // Find the highest priority matching rule
-      const matchingRule = mappingRules
-        .filter(rule => rule.isActive)
-        .sort((a, b) => b.priority - a.priority)
-        .find(rule => {
-          if (rule.type === 'pattern' && rule.pattern) {
-            try {
-              const regex = new RegExp(rule.pattern, 'i');
-              return regex.test(item.item_name) || regex.test(item.item_code);
-            } catch (e) {
-              console.warn('Invalid regex pattern:', rule.pattern);
-              return false;
-            }
-          }
-          
-          if (rule.type === 'erpnext-group' && rule.erpnextItemGroup) {
-            return item.item_group === rule.erpnextItemGroup;
-          }
-          
-          return false;
-        });
-
-      let proposedCategoryId = item.proposedCategoryId;
-      let proposedSubcategoryId = item.proposedSubcategoryId;
-      let mappingRuleName = item.mappingRule;
-      let suggestedSubcategories: Array<{id: string, name: string, confidence: number}> = [];
-
-      if (matchingRule) {
-        proposedCategoryId = matchingRule.targetCategoryId;
-        proposedSubcategoryId = matchingRule.targetSubcategoryId;
-        mappingRuleName = matchingRule.name;
-
-        // For ERPNext groups (Drops/Specialties), provide health condition suggestions
-        if (matchingRule.type === 'erpnext-group' && 
-            (matchingRule.erpnextItemGroup === 'Drops' || matchingRule.erpnextItemGroup === 'Specialties')) {
-          
-          // Import health condition analyzer
-          import('@/services/erpnext/healthConditionMatcher').then(({ analyzeHealthConditions }) => {
-            const healthSuggestions = analyzeHealthConditions(item.item_name, item.description);
-            
-            // Match with actual subcategories
-            const category = categories.find(c => c.id === proposedCategoryId);
-            if (category) {
-              suggestedSubcategories = healthSuggestions
-                .map(suggestion => {
-                  const matchedSubcat = category.subcategories.find(sub => 
-                    sub.name.toLowerCase().includes(suggestion.name.toLowerCase()) ||
-                    suggestion.name.toLowerCase().includes(sub.name.toLowerCase())
-                  );
-                  
-                  return matchedSubcat ? {
-                    id: matchedSubcat.id,
-                    name: matchedSubcat.name,
-                    confidence: suggestion.confidence
-                  } : null;
-                })
-                .filter(Boolean) as Array<{id: string, name: string, confidence: number}>;
-            }
-          });
-        }
-
-        // Auto-assign subcategory based on first letter if not specified and no health suggestions
-        if (!proposedSubcategoryId && proposedCategoryId && suggestedSubcategories.length === 0) {
-          const category = categories.find(c => c.id === proposedCategoryId);
-          if (category) {
-            const firstLetter = item.item_name.charAt(0).toUpperCase();
-            const alphabetSubcat = category.subcategories.find(s => 
-              s.name === firstLetter || s.name.toLowerCase() === firstLetter.toLowerCase()
-            );
-            if (alphabetSubcat) {
-              proposedSubcategoryId = alphabetSubcat.id;
-            }
-          }
-        }
-      }
-
-      const proposedCategory = categories.find(c => c.id === proposedCategoryId);
-      const proposedSubcategory = proposedCategory?.subcategories.find(s => s.id === proposedSubcategoryId);
+      const proposedCategory = categories.find(c => c.id === item.proposedCategoryId);
+      const proposedSubcategory = proposedCategory?.subcategories.find(s => s.id === item.proposedSubcategoryId);
 
       return {
         ...item,
-        proposedCategoryId,
-        proposedSubcategoryId,
         proposedCategoryName: proposedCategory?.name,
         proposedSubcategoryName: proposedSubcategory?.name,
-        mappingRule: mappingRuleName,
-        suggestedSubcategories
       };
     });
-  }, [items, mappingRules, categories]);
+  }, [items, categories]);
 
   const handleSaveCategoryAssignment = (item: ImportPreviewItem, categoryId: string, subcategoryId?: string) => {
     onCategoryAssignmentChange(item.item_code, categoryId, subcategoryId);
     setEditingItem(null);
   };
 
-  const categorizedCount = itemsWithProposedCategories.filter(item => item.proposedCategoryId).length;
+  const categorizedCount = itemsWithProposedCategories.filter(item => item.proposedCategoryId && item.proposedSubcategoryId).length;
+  const requiresManualCount = itemsWithProposedCategories.filter(item => item.requiresManualSelection).length;
   const uncategorizedCount = itemsWithProposedCategories.length - categorizedCount;
+
+  // Get specialty products subcategories for bulk assignment
+  const specialtyCategory = categories.find(c => c.name === 'Specialty Products');
 
   return (
     <div className="space-y-4">
@@ -193,12 +118,41 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
         
         <div className="flex items-center gap-2">
           <Badge variant="default">{selectedItems.size} selected</Badge>
-          <Badge variant="secondary">{categorizedCount} categorized</Badge>
+          <Badge variant="secondary">{categorizedCount} fully mapped</Badge>
+          {requiresManualCount > 0 && (
+            <Badge variant="outline" className="border-orange-300 text-orange-700">
+              <AlertTriangle className="w-3 h-3 mr-1" />
+              {requiresManualCount} need subcategory
+            </Badge>
+          )}
           {uncategorizedCount > 0 && (
-            <Badge variant="destructive">{uncategorizedCount} uncategorized</Badge>
+            <Badge variant="destructive">{uncategorizedCount} unmapped</Badge>
           )}
         </div>
       </div>
+
+      {specialtyCategory && requiresManualCount > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+          <h4 className="text-sm font-medium mb-2">Quick Bulk Assignment</h4>
+          <p className="text-xs text-gray-600 mb-2">
+            Assign all Drops/Specialties products to a health condition subcategory:
+          </p>
+          <BulkSubcategoryAssigner 
+            subcategories={specialtyCategory.subcategories}
+            items={itemsWithProposedCategories.filter(item => 
+              item.requiresManualSelection && 
+              item.proposedCategoryId === specialtyCategory.id
+            )}
+            onBulkAssign={(subcategoryId) => {
+              itemsWithProposedCategories
+                .filter(item => item.requiresManualSelection && item.proposedCategoryId === specialtyCategory.id)
+                .forEach(item => {
+                  onCategoryAssignmentChange(item.item_code, specialtyCategory.id, subcategoryId);
+                });
+            }}
+          />
+        </div>
+      )}
 
       <div className="border rounded-md max-h-96 overflow-auto">
         <Table>
@@ -209,8 +163,7 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
               <TableHead>Item Name</TableHead>
               <TableHead>HSN Code</TableHead>
               <TableHead>Rate</TableHead>
-              <TableHead>Proposed Category</TableHead>
-              <TableHead>Health Suggestions</TableHead>
+              <TableHead>Category Assignment</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -243,6 +196,12 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
                             {item.proposedCategoryName}
                             {item.proposedSubcategoryName && ` → ${item.proposedSubcategoryName}`}
                           </Badge>
+                          {item.requiresManualSelection && !item.proposedSubcategoryName && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <AlertTriangle className="w-3 h-3 text-orange-500" />
+                              <span className="text-xs text-orange-600">Needs subcategory</span>
+                            </div>
+                          )}
                           {item.mappingRule && (
                             <p className="text-xs text-muted-foreground">
                               Rule: {item.mappingRule}
@@ -250,27 +209,9 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
                           )}
                         </div>
                       ) : (
-                        <Badge variant="destructive">Uncategorized</Badge>
+                        <Badge variant="destructive">Unmapped</Badge>
                       )}
                     </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {item.suggestedSubcategories && item.suggestedSubcategories.length > 0 ? (
-                    <div className="space-y-1">
-                      {item.suggestedSubcategories.slice(0, 2).map((suggestion, idx) => (
-                        <Badge 
-                          key={idx} 
-                          variant="secondary" 
-                          className="text-xs"
-                          title={`Confidence: ${Math.round(suggestion.confidence * 100)}%`}
-                        >
-                          {suggestion.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground text-xs">No suggestions</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -298,6 +239,44 @@ const EnhancedItemsPreviewTable: React.FC<EnhancedItemsPreviewTableProps> = ({
   );
 };
 
+interface BulkSubcategoryAssignerProps {
+  subcategories: { id: string; name: string; }[];
+  items: ImportPreviewItem[];
+  onBulkAssign: (subcategoryId: string) => void;
+}
+
+const BulkSubcategoryAssigner: React.FC<BulkSubcategoryAssignerProps> = ({
+  subcategories,
+  items,
+  onBulkAssign
+}) => {
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string>('');
+
+  return (
+    <div className="flex items-center gap-2">
+      <Select value={selectedSubcategoryId} onValueChange={setSelectedSubcategoryId}>
+        <SelectTrigger className="w-48">
+          <SelectValue placeholder="Select health condition" />
+        </SelectTrigger>
+        <SelectContent>
+          {subcategories.map((subcategory) => (
+            <SelectItem key={subcategory.id} value={subcategory.id}>
+              {subcategory.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Button 
+        size="sm" 
+        onClick={() => selectedSubcategoryId && onBulkAssign(selectedSubcategoryId)}
+        disabled={!selectedSubcategoryId}
+      >
+        Assign to {items.length} items
+      </Button>
+    </div>
+  );
+};
+
 interface CategoryEditorProps {
   item: ImportPreviewItem;
   categories: CategoryOption[];
@@ -307,21 +286,24 @@ interface CategoryEditorProps {
 
 const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSave, onCancel }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(item.proposedCategoryId || 'no-category');
-  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(item.proposedSubcategoryId || 'auto-assign');
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(item.proposedSubcategoryId || 'no-subcategory');
 
   const selectedCategory = categories.find(c => c.id === selectedCategoryId);
 
   const handleSave = () => {
     if (selectedCategoryId && selectedCategoryId !== 'no-category') {
-      const subcategoryId = selectedSubcategoryId === 'auto-assign' ? undefined : selectedSubcategoryId;
+      const subcategoryId = selectedSubcategoryId === 'no-subcategory' ? undefined : selectedSubcategoryId;
       onSave(item, selectedCategoryId, subcategoryId);
     }
   };
 
   return (
     <div className="flex items-center gap-2">
-      <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
-        <SelectTrigger className="w-32">
+      <Select value={selectedCategoryId} onValueChange={(value) => {
+        setSelectedCategoryId(value);
+        setSelectedSubcategoryId('no-subcategory');
+      }}>
+        <SelectTrigger className="w-36">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
@@ -339,11 +321,11 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
         onValueChange={setSelectedSubcategoryId}
         disabled={!selectedCategoryId || selectedCategoryId === 'no-category'}
       >
-        <SelectTrigger className="w-24">
-          <SelectValue placeholder="Sub" />
+        <SelectTrigger className="w-32">
+          <SelectValue placeholder="Subcategory" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="auto-assign">Auto</SelectItem>
+          <SelectItem value="no-subcategory">None</SelectItem>
           {selectedCategory?.subcategories.map((subcategory) => (
             <SelectItem key={subcategory.id} value={subcategory.id}>
               {subcategory.name}

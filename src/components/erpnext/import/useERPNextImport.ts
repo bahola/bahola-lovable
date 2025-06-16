@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -10,7 +9,7 @@ import {
 import { importProductsFromERPNext } from '@/services/erpnext/importer';
 import { ERPNextItem } from '@/types/erpnext';
 import { erpnextAPI } from '@/services/erpnext/api';
-import { applyCategoryMappingRules } from '@/services/erpnext/mapping';
+import { applyCategoryMappingRules, saveProductMappingRule } from '@/services/erpnext/mapping';
 
 export const useERPNextImport = () => {
   const { toast } = useToast();
@@ -67,10 +66,10 @@ export const useERPNextImport = () => {
         throw new Error(result.error || 'Failed to fetch items');
       }
       
-      // Convert to ImportPreviewItem format and apply initial mapping
+      // Convert to ImportPreviewItem format with simplified mapping
       const previewItems: ImportPreviewItem[] = await Promise.all(
         (result.data || []).map(async (item) => {
-          // Apply mapping rules including health condition analysis
+          // Apply simplified mapping rules
           const mappingResult = await applyCategoryMappingRules(item, config.mappingRules || [], []);
           
           return {
@@ -80,7 +79,7 @@ export const useERPNextImport = () => {
             proposedCategoryName: undefined,
             proposedSubcategoryName: undefined,
             mappingRule: mappingResult.ruleName,
-            suggestedSubcategories: mappingResult.suggestedSubcategories
+            requiresManualSelection: mappingResult.requiresManualSelection || false
           };
         })
       );
@@ -89,9 +88,11 @@ export const useERPNextImport = () => {
       setSelectedItems(new Set(previewItems.map(item => item.item_code)));
       setShowPreview(true);
       
+      const requiresManualCount = previewItems.filter(item => item.requiresManualSelection).length;
+      
       toast({
         title: "Items loaded",
-        description: `Successfully loaded ${previewItems.length} items with intelligent health condition mapping.`,
+        description: `Successfully loaded ${previewItems.length} items. ${requiresManualCount} items require manual subcategory selection.`,
       });
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -123,7 +124,7 @@ export const useERPNextImport = () => {
     setSelectedItems(newSelection);
   };
 
-  const handleCategoryAssignmentChange = (itemCode: string, categoryId: string, subcategoryId?: string) => {
+  const handleCategoryAssignmentChange = async (itemCode: string, categoryId: string, subcategoryId?: string) => {
     setItems(prevItems => 
       prevItems.map(item => 
         item.item_code === itemCode 
@@ -131,11 +132,30 @@ export const useERPNextImport = () => {
               ...item, 
               proposedCategoryId: categoryId,
               proposedSubcategoryId: subcategoryId,
-              mappingRule: 'Manual Assignment'
+              mappingRule: 'Manual Assignment',
+              requiresManualSelection: false
             }
           : item
       )
     );
+
+    // Save as a persistent mapping rule
+    try {
+      const item = items.find(i => i.item_code === itemCode);
+      if (item && subcategoryId) {
+        const newRule = await saveProductMappingRule(itemCode, item.item_name, categoryId, subcategoryId);
+        
+        // Add to config mapping rules
+        setConfig(prevConfig => ({
+          ...prevConfig,
+          mappingRules: [...(prevConfig.mappingRules || []), newRule]
+        }));
+        
+        console.log(`Saved mapping rule for ${item.item_name}`);
+      }
+    } catch (error) {
+      console.warn('Failed to save mapping rule:', error);
+    }
   };
 
   const handleMappingRulesChange = (rules: CategoryMappingRule[]) => {

@@ -2,10 +2,9 @@ import { ERPNextItem } from '@/types/erpnext';
 import { Product } from '@/types/product';
 import { CategoryMappingRule, ImportPreviewItem } from './types';
 import { supabase } from '@/integrations/supabase/client';
-import { analyzeHealthConditions } from './healthConditionMatcher';
 
 /**
- * Map ERPNext item to local product format with enhanced category mapping
+ * Map ERPNext item to local product format with simple category mapping
  */
 export const mapERPNextToLocal = async (
   erpItem: ImportPreviewItem, 
@@ -144,13 +143,13 @@ export const getAlphabeticalSubcategory = async (categoryId: string, itemName: s
 };
 
 /**
- * Apply category mapping rules to determine category assignment with health condition analysis
+ * Simplified category mapping rules - assign Drops/Specialties to Specialty Products
  */
 export const applyCategoryMappingRules = async (
   item: ERPNextItem, 
   rules: CategoryMappingRule[],
   subcategories: Array<{id: string, name: string, category_id: string}>
-): Promise<{ categoryId?: string; subcategoryId?: string; ruleName?: string; suggestedSubcategories?: Array<{id: string, name: string, confidence: number}> }> => {
+): Promise<{ categoryId?: string; subcategoryId?: string; ruleName?: string; requiresManualSelection?: boolean }> => {
   
   // Find the highest priority matching rule
   const matchingRule = rules
@@ -175,47 +174,41 @@ export const applyCategoryMappingRules = async (
     });
 
   if (matchingRule) {
-    let suggestedSubcategories: Array<{id: string, name: string, confidence: number}> = [];
-    
-    // If this maps to specialty products, analyze for health conditions
-    if (matchingRule.type === 'erpnext-group' && 
-        (matchingRule.erpnextItemGroup === 'Drops' || matchingRule.erpnextItemGroup === 'Specialties')) {
-      
-      const healthSuggestions = analyzeHealthConditions(item.item_name, item.description);
-      
-      // Match health suggestions with actual subcategories
-      suggestedSubcategories = healthSuggestions
-        .map(suggestion => {
-          const matchedSubcat = subcategories.find(sub => 
-            sub.category_id === matchingRule.targetCategoryId && 
-            sub.name.toLowerCase().includes(suggestion.name.toLowerCase())
-          );
-          
-          if (matchedSubcat) {
-            return {
-              id: matchedSubcat.id,
-              name: matchedSubcat.name,
-              confidence: suggestion.confidence
-            };
-          }
-          
-          // If no exact match, return the suggestion without ID for manual selection
-          return {
-            id: '',
-            name: suggestion.name,
-            confidence: suggestion.confidence
-          };
-        })
-        .filter(Boolean);
-    }
+    // For Drops and Specialties, assign to category but require manual subcategory selection
+    const requiresManualSelection = matchingRule.type === 'erpnext-group' && 
+      (matchingRule.erpnextItemGroup === 'Drops' || matchingRule.erpnextItemGroup === 'Specialties');
     
     return {
       categoryId: matchingRule.targetCategoryId,
       subcategoryId: matchingRule.targetSubcategoryId,
       ruleName: matchingRule.name,
-      suggestedSubcategories
+      requiresManualSelection
     };
   }
 
   return {};
+};
+
+/**
+ * Save a product-specific mapping rule
+ */
+export const saveProductMappingRule = async (
+  itemCode: string, 
+  itemName: string, 
+  categoryId: string, 
+  subcategoryId: string
+): Promise<CategoryMappingRule> => {
+  // Create a product-specific mapping rule
+  const rule: CategoryMappingRule = {
+    id: `product-${itemCode}`,
+    name: `Product: ${itemName}`,
+    type: 'pattern',
+    pattern: `^${itemCode.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, // Escape regex special chars
+    targetCategoryId: categoryId,
+    targetSubcategoryId: subcategoryId,
+    priority: 100, // High priority for product-specific rules
+    isActive: true
+  };
+
+  return rule;
 };
