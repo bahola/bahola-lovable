@@ -55,6 +55,9 @@ import {
   AllergiesProductsPage
 } from './LazyImports';
 
+// Import admin components
+import ProductsManagement from '@/pages/admin/ProductsManagement';
+
 // Import route functions
 import { getHealthConcernRoutes } from './HealthConcernRoutes';
 import { getDetailedHealthRoutes } from './DetailedHealthRoutes';
@@ -150,6 +153,7 @@ const AppRoutes = () => {
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>
           <Route index element={<AdminHome />} />
+          <Route path="products" element={<ProductsManagement />} />
           <Route path="pages" element={<PagesManagement />} />
           <Route path="help-center" element={<HelpCenterManagement />} />
         </Route>
