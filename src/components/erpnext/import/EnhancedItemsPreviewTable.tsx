@@ -252,10 +252,17 @@ interface CategoryEditorProps {
 }
 
 const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSave, onCancel }) => {
-  const [selectedCategoryId, setSelectedCategoryId] = useState(item.proposedCategoryId || '');
-  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(item.proposedSubcategoryId || '');
+  const [selectedCategoryId, setSelectedCategoryId] = useState(item.proposedCategoryId || 'no-category');
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState(item.proposedSubcategoryId || 'auto-assign');
 
   const selectedCategory = categories.find(c => c.id === selectedCategoryId);
+
+  const handleSave = () => {
+    if (selectedCategoryId && selectedCategoryId !== 'no-category') {
+      const subcategoryId = selectedSubcategoryId === 'auto-assign' ? undefined : selectedSubcategoryId;
+      onSave(item, selectedCategoryId, subcategoryId);
+    }
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -264,6 +271,7 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value="no-category">No Category</SelectItem>
           {categories.map((category) => (
             <SelectItem key={category.id} value={category.id}>
               {category.name}
@@ -275,13 +283,13 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
       <Select 
         value={selectedSubcategoryId} 
         onValueChange={setSelectedSubcategoryId}
-        disabled={!selectedCategoryId}
+        disabled={!selectedCategoryId || selectedCategoryId === 'no-category'}
       >
         <SelectTrigger className="w-24">
           <SelectValue placeholder="Sub" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Auto</SelectItem>
+          <SelectItem value="auto-assign">Auto</SelectItem>
           {selectedCategory?.subcategories.map((subcategory) => (
             <SelectItem key={subcategory.id} value={subcategory.id}>
               {subcategory.name}
@@ -294,8 +302,8 @@ const CategoryEditor: React.FC<CategoryEditorProps> = ({ item, categories, onSav
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onSave(item, selectedCategoryId, selectedSubcategoryId || undefined)}
-          disabled={!selectedCategoryId}
+          onClick={handleSave}
+          disabled={!selectedCategoryId || selectedCategoryId === 'no-category'}
         >
           <Save className="h-3 w-3" />
         </Button>

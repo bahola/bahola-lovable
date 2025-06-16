@@ -38,7 +38,14 @@ const ImportConfigForm: React.FC<ImportConfigFormProps> = ({ config, onConfigCha
   };
 
   const handleConfigUpdate = (key: keyof ProductImportConfig, value: any) => {
-    onConfigChange({ ...config, [key]: value });
+    // Handle special values for default assignments
+    if (key === 'defaultCategoryId' && value === 'no-default') {
+      onConfigChange({ ...config, [key]: undefined });
+    } else if (key === 'defaultSubcategoryId' && value === 'auto-assign') {
+      onConfigChange({ ...config, [key]: undefined });
+    } else {
+      onConfigChange({ ...config, [key]: value });
+    }
   };
 
   const availableSubcategories = subcategories.filter(sub => 
@@ -88,14 +95,14 @@ const ImportConfigForm: React.FC<ImportConfigFormProps> = ({ config, onConfigCha
           <div className="space-y-2">
             <Label>Default Category</Label>
             <Select
-              value={config.defaultCategoryId || ''}
-              onValueChange={(value) => handleConfigUpdate('defaultCategoryId', value || undefined)}
+              value={config.defaultCategoryId || 'no-default'}
+              onValueChange={(value) => handleConfigUpdate('defaultCategoryId', value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select default category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No default</SelectItem>
+                <SelectItem value="no-default">No default</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name}
@@ -108,15 +115,15 @@ const ImportConfigForm: React.FC<ImportConfigFormProps> = ({ config, onConfigCha
           <div className="space-y-2">
             <Label>Default Subcategory</Label>
             <Select
-              value={config.defaultSubcategoryId || ''}
-              onValueChange={(value) => handleConfigUpdate('defaultSubcategoryId', value || undefined)}
+              value={config.defaultSubcategoryId || 'auto-assign'}
+              onValueChange={(value) => handleConfigUpdate('defaultSubcategoryId', value)}
               disabled={!config.defaultCategoryId}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select default subcategory" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Auto-assign by name</SelectItem>
+                <SelectItem value="auto-assign">Auto-assign by name</SelectItem>
                 {availableSubcategories.map((subcategory) => (
                   <SelectItem key={subcategory.id} value={subcategory.id}>
                     {subcategory.name}
