@@ -86,7 +86,7 @@ export class ERPNextAPI {
     }
 
     try {
-      console.log('Fetching ERPNext items via proxy...');
+      console.log('Fetching ERPNext items from Drops item group...');
       
       // Use ERPNext's resource API directly with simple query parameters
       const params = new URLSearchParams();
@@ -106,15 +106,15 @@ export class ERPNextAPI {
         'modified'
       ]));
       
-      // Add item group filter for Brands and Generics
+      // Add item group filter for Drops
       if (!filters.disabled) {
         params.append('filters', JSON.stringify([
-          ['item_group', 'in', ['Brands', 'Generics']],
+          ['item_group', '=', 'Drops'],
           ['disabled', '=', 0]
         ]));
       } else {
         params.append('filters', JSON.stringify([
-          ['item_group', 'in', ['Brands', 'Generics']]
+          ['item_group', '=', 'Drops']
         ]));
       }
       
