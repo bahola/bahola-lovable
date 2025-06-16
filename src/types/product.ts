@@ -8,7 +8,7 @@ export interface ProductVariation {
 }
 
 export interface Product {
-  id?: string | number; // Updated to accept both string and number types
+  id?: string; // Changed to only accept string type for consistency with Supabase
   name: string;
   type: 'simple' | 'variable';
   description: string;

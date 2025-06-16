@@ -30,14 +30,33 @@ export const importProductsFromERPNext = async (
       }
 
       // Map ERPNext item to local format
-      const localProduct = await mapERPNextToLocal(erpItem, config.categoryMapping);
+      const mappedProduct = await mapERPNextToLocal(erpItem, config.categoryMapping);
+
+      // Ensure required fields are present and properly typed
+      const localProduct = {
+        name: mappedProduct.name || erpItem.item_name,
+        type: mappedProduct.type || 'simple',
+        hsn_code: mappedProduct.hsnCode || erpItem.gst_hsn_code || erpItem.hsn_code || erpItem.item_code,
+        description: mappedProduct.description || '',
+        price: mappedProduct.price || 0,
+        stock: mappedProduct.stock || 0,
+        weight: mappedProduct.weight || 0,
+        dimensions: mappedProduct.dimensions || '',
+        image: mappedProduct.image,
+        category_id: mappedProduct.category ? undefined : null,
+        subcategory_id: mappedProduct.subcategory ? undefined : null,
+        pack_sizes: mappedProduct.packSizes || null,
+        potencies: mappedProduct.potencies || null,
+        tax_status: mappedProduct.tax_status || 'taxable',
+        tax_class: mappedProduct.tax_class || '5'
+      };
 
       // Check if product already exists (by HSN code or name)
       const { data: existingProduct } = await supabase
         .from('products')
         .select('id')
-        .or(`hsn_code.eq.${localProduct.hsnCode},name.eq.${localProduct.name}`)
-        .single();
+        .or(`hsn_code.eq.${localProduct.hsn_code},name.eq.${localProduct.name}`)
+        .maybeSingle();
 
       if (existingProduct && config.updateExisting) {
         // Update existing product

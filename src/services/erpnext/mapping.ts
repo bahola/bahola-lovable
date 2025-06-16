@@ -13,7 +13,11 @@ export const mapERPNextToLocal = async (erpItem: ERPNextItem, categoryMapping?: 
   
   if (erpItem.item_group) {
     const mappedCategory = categoryMapping?.[erpItem.item_group] || erpItem.item_group;
-    categoryId = await getOrCreateCategory(mappedCategory);
+    try {
+      categoryId = await getOrCreateCategory(mappedCategory);
+    } catch (error) {
+      console.warn(`Failed to create category ${mappedCategory}:`, error);
+    }
   }
 
   // Determine HSN code from available fields
@@ -34,8 +38,8 @@ export const mapERPNextToLocal = async (erpItem: ERPNextItem, categoryMapping?: 
     image: erpItem.image || undefined,
     category: categoryId ? undefined : erpItem.item_group, // Use category name if no ID
     subcategory: subcategoryId ? undefined : undefined,
-    // Store ERPNext reference for future sync
-    // Note: This would require adding erpnext_item_code field to products table
+    tax_status: 'taxable' as const,
+    tax_class: '5' as const
   };
 
   return mappedProduct;
@@ -52,7 +56,7 @@ export const getOrCreateCategory = async (categoryName: string): Promise<string>
       .select('id')
       .eq('name', categoryName)
       .eq('type', 'category')
-      .single();
+      .maybeSingle();
 
     if (existingCategory) {
       return existingCategory.id;
