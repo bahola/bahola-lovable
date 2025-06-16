@@ -1,4 +1,5 @@
 
+
 import { erpRequest } from './erpnextService';
 import { ERPNextItem } from '@/types/erpnext';
 import { Product } from '@/types/product';
@@ -253,3 +254,4 @@ export const fetchERPNextItemGroups = async (): Promise<string[]> => {
     throw new Error(`Failed to fetch item groups from ERPNext: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };
+
