@@ -80,9 +80,9 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
-    // For non-login requests, ensure we have a session
-    if (!sessionCookie && username) {
-      console.log('No session found, attempting to login first...');
+    // For operations requiring admin credentials, ensure we have an admin session
+    if (username && password && !sessionCookie) {
+      console.log('No session found, attempting to login with provided credentials...');
       
       // Attempt login first
       const loginResponse = await fetch(`${baseUrl}/api/method/login`, {
@@ -93,7 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
         },
         body: new URLSearchParams({
           usr: username,
-          pwd: password || '',
+          pwd: password,
         }),
       });
 
@@ -102,10 +102,18 @@ const handler = async (req: Request): Promise<Response> => {
         if (setCookieHeaders.length > 0) {
           sessionCookie = setCookieHeaders.join('; ');
           sessionStore.set(sessionKey, sessionCookie);
-          console.log('Auto-login successful, session stored');
+          console.log('Admin login successful, session stored');
         }
       } else {
-        console.error('Auto-login failed:', loginResponse.status);
+        const errorText = await loginResponse.text();
+        console.error('Admin login failed:', loginResponse.status, errorText);
+        return new Response(
+          JSON.stringify({ 
+            error: `Admin authentication failed: ${loginResponse.status}`,
+            details: errorText 
+          }),
+          { status: 401, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+        );
       }
     }
 
@@ -147,6 +155,10 @@ const handler = async (req: Request): Promise<Response> => {
       headers['Content-Type'] = 'application/json';
     }
 
+    console.log(`Making request to: ${baseUrl}${endpoint}`);
+    console.log(`Request method: ${method}`);
+    console.log(`Has session cookie: ${!!sessionCookie}`);
+    
     const response = await fetch(`${baseUrl}${endpoint}`, {
       method,
       headers,
@@ -157,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('ERPNext API error response:', errorText);
+      console.error('ERPNext API error response:', response.status, errorText);
       
       // If we get a 403/401, session might have expired
       if (response.status === 403 || response.status === 401) {
@@ -184,7 +196,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const result = await response.json();
-    console.log('ERPNext API request successful, data length:', result?.data?.length || 'no data array');
+    console.log('ERPNext API request successful');
     
     return new Response(JSON.stringify(result), {
       status: 200,
