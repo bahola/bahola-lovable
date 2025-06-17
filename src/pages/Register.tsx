@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +13,12 @@ const Register = () => {
   const initialUserType = searchParams.get('type') === 'doctor' ? 'doctor' : 'customer';
   const [userType, setUserType] = useState<UserType>(initialUserType);
   const { handleSubmit } = useRegisterSubmit();
+
+  // Debug logging to see what's happening
+  useEffect(() => {
+    console.log('Register page loaded with params:', searchParams.get('type'));
+    console.log('Initial user type set to:', initialUserType);
+  }, [searchParams, initialUserType]);
   
   return (
     <PageLayout title="Create an Account" description="Join Bahola Labs for a better shopping experience">
