@@ -29,6 +29,10 @@ export interface ERPNextCustomer {
   disabled: number;
 }
 
+// Admin credentials for ERPNext operations
+const ADMIN_USERNAME = 'kartik@baholalabs.in';
+const ADMIN_PASSWORD = 'Murugan@1984';
+
 /**
  * Login to ERPNext using email and password via proxy
  */
@@ -119,7 +123,7 @@ export const getCurrentUser = async (): Promise<ERPNextUser> => {
 };
 
 /**
- * Create a new customer in ERPNext via proxy
+ * Create a new customer in ERPNext via proxy using admin credentials
  */
 export const createERPNextCustomer = async (customerData: {
   customer_name: string;
@@ -142,8 +146,30 @@ export const createERPNextCustomer = async (customerData: {
   };
 
   try {
-    const response = await erpRequest<{message: ERPNextCustomer}>('/api/resource/Customer', 'POST', data);
-    return response.message;
+    console.log('Creating ERPNext customer with admin credentials...');
+    
+    const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: 'https://bahola.net',
+        endpoint: '/api/resource/Customer',
+        method: 'POST',
+        data,
+        username: ADMIN_USERNAME,
+        password: ADMIN_PASSWORD,
+      },
+    });
+
+    if (error) {
+      console.error('Supabase function error during customer creation:', error);
+      throw new Error(`ERPNext customer creation error: ${error.message}`);
+    }
+
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+
+    console.log('ERPNext customer created successfully:', result.message);
+    return result.message;
   } catch (error) {
     console.error("Failed to create customer:", error);
     throw error;
@@ -151,15 +177,33 @@ export const createERPNextCustomer = async (customerData: {
 };
 
 /**
- * Get customer by email via proxy
+ * Get customer by email via proxy using admin credentials
  */
 export const getCustomerByEmail = async (email: string): Promise<ERPNextCustomer | null> => {
   try {
-    const params = new URLSearchParams();
-    params.append('filters', JSON.stringify([["email_id","=",email]]));
+    console.log('Fetching customer with admin credentials...');
     
-    const response = await erpRequest<{message: ERPNextCustomer[]}>(`/api/resource/Customer?${params.toString()}`, 'GET');
-    return response.message && response.message.length > 0 ? response.message[0] : null;
+    const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: 'https://bahola.net',
+        endpoint: `/api/resource/Customer?filters=${encodeURIComponent(JSON.stringify([["email_id","=",email]]))}`,
+        method: 'GET',
+        username: ADMIN_USERNAME,
+        password: ADMIN_PASSWORD,
+      },
+    });
+
+    if (error) {
+      console.error('Error fetching customer:', error);
+      return null;
+    }
+
+    if (result?.error) {
+      console.error('ERPNext error fetching customer:', result.error);
+      return null;
+    }
+
+    return result.data && result.data.length > 0 ? result.data[0] : null;
   } catch (error) {
     console.error('Error fetching customer:', error);
     return null;
@@ -167,7 +211,7 @@ export const getCustomerByEmail = async (email: string): Promise<ERPNextCustomer
 };
 
 /**
- * Check if ERPNext user exists
+ * Check if ERPNext user exists using admin credentials
  */
 export const checkERPNextUserExists = async (email: string): Promise<boolean> => {
   try {
@@ -178,8 +222,8 @@ export const checkERPNextUserExists = async (email: string): Promise<boolean> =>
         baseUrl: 'https://bahola.net',
         endpoint: `/api/resource/User/${email}`,
         method: 'GET',
-        username: 'kartik@baholalabs.in',
-        password: 'Murugan@1984',
+        username: ADMIN_USERNAME,
+        password: ADMIN_PASSWORD,
       },
     });
 
@@ -235,7 +279,7 @@ export const createERPNextUser = async (userData: {
       send_welcome_email: 0,
     };
 
-    console.log('Creating new ERPNext user with data:', { ...data, new_password: '[HIDDEN]' });
+    console.log('Creating new ERPNext user with admin credentials:', { ...data, new_password: '[HIDDEN]' });
 
     const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
       body: {
@@ -243,8 +287,8 @@ export const createERPNextUser = async (userData: {
         endpoint: '/api/resource/User',
         method: 'POST',
         data,
-        username: 'kartik@baholalabs.in',
-        password: 'Murugan@1984',
+        username: ADMIN_USERNAME,
+        password: ADMIN_PASSWORD,
       },
     });
 
