@@ -185,8 +185,8 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         try {
           const customerName = `${userData.firstName} ${userData.lastName}`;
           
-          // Set customer group based on user type
-          const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Retail';
+          // Use "All Customer Groups" for all customer types to avoid missing group errors
+          const customerGroup = 'All Customer Groups';
           
           await createERPNextCustomer({
             customer_name: customerName,
