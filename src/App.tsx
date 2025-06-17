@@ -30,6 +30,7 @@ function App() {
                 </main>
                 <Footer />
               </div>
+              <AuthModals />
               <Toaster />
             </BrowserRouter>
           </CartProvider>
