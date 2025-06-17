@@ -10,7 +10,6 @@ import { ERPNextAuthProvider } from './contexts/ERPNextAuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { LazyHeader } from './components/LazyHeader';
 import { Footer } from './components/Footer';
-import { AuthModals } from './components/AuthModals';
 import AppRoutes from './components/routing/AppRoutes';
 
 const queryClient = new QueryClient();
@@ -30,7 +29,6 @@ function App() {
                 </main>
                 <Footer />
               </div>
-              <AuthModals />
               <Toaster />
             </BrowserRouter>
           </CartProvider>
