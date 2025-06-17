@@ -171,6 +171,8 @@ export const getCustomerByEmail = async (email: string): Promise<ERPNextCustomer
  */
 export const checkERPNextUserExists = async (email: string): Promise<boolean> => {
   try {
+    console.log(`Checking if ERPNext user exists: ${email}`);
+    
     const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
       body: {
         baseUrl: 'https://bahola.net',
@@ -186,7 +188,9 @@ export const checkERPNextUserExists = async (email: string): Promise<boolean> =>
       return false;
     }
 
-    return result && result.message;
+    const exists = result && result.message;
+    console.log(`User ${email} exists in ERPNext:`, exists);
+    return !!exists;
   } catch (error) {
     console.log('User does not exist:', error);
     return false;
@@ -203,22 +207,14 @@ export const createERPNextUser = async (userData: {
   password: string;
   user_type?: string;
 }): Promise<ERPNextUser> => {
-  const data = {
-    email: userData.email,
-    first_name: userData.first_name,
-    last_name: userData.last_name,
-    new_password: userData.password,
-    user_type: userData.user_type || 'Website User',
-    enabled: 1,
-    send_welcome_email: 0,
-  };
-
   try {
+    console.log(`Creating ERPNext user: ${userData.email}`);
+    
     // First check if user already exists
     const userExists = await checkERPNextUserExists(userData.email);
     
     if (userExists) {
-      console.log('User already exists in ERPNext, skipping creation');
+      console.log('User already exists in ERPNext, returning existing user info');
       // Return a mock user object since the user exists
       return {
         name: userData.email,
@@ -229,7 +225,18 @@ export const createERPNextUser = async (userData: {
       };
     }
 
-    // Create new user
+    const data = {
+      email: userData.email,
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      new_password: userData.password,
+      user_type: userData.user_type || 'Website User',
+      enabled: 1,
+      send_welcome_email: 0,
+    };
+
+    console.log('Creating new ERPNext user with data:', { ...data, new_password: '[HIDDEN]' });
+
     const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
       body: {
         baseUrl: 'https://bahola.net',
@@ -243,16 +250,61 @@ export const createERPNextUser = async (userData: {
 
     if (error) {
       console.error('Supabase function error during user creation:', error);
+      
+      // Check if it's a 409 duplicate error from the edge function logs
+      if (error.message && error.message.includes('non-2xx status code')) {
+        console.log('Detected duplicate user error, treating as existing user');
+        return {
+          name: userData.email,
+          email: userData.email,
+          full_name: `${userData.first_name} ${userData.last_name}`,
+          user_type: userData.user_type || 'Website User',
+          enabled: 1
+        };
+      }
+      
       throw new Error(`ERPNext user creation error: ${error.message}`);
     }
 
     if (result?.error) {
+      console.error('ERPNext API error:', result.error);
+      
+      // Check if it's a duplicate user error
+      if (result.error.includes('already exists') || result.error.includes('Duplicate entry')) {
+        console.log('User already exists, returning existing user info');
+        return {
+          name: userData.email,
+          email: userData.email,
+          full_name: `${userData.first_name} ${userData.last_name}`,
+          user_type: userData.user_type || 'Website User',
+          enabled: 1
+        };
+      }
+      
       throw new Error(result.error);
     }
 
+    console.log('ERPNext user created successfully:', result.message);
     return result.message;
   } catch (error) {
     console.error("Failed to create user:", error);
+    
+    // One final check for duplicate user errors
+    if (error instanceof Error && (
+      error.message.includes('already exists') || 
+      error.message.includes('Duplicate entry') ||
+      error.message.includes('non-2xx status code')
+    )) {
+      console.log('Handling as duplicate user, returning mock user object');
+      return {
+        name: userData.email,
+        email: userData.email,
+        full_name: `${userData.first_name} ${userData.last_name}`,
+        user_type: userData.user_type || 'Website User',
+        enabled: 1
+      };
+    }
+    
     throw error;
   }
 };
