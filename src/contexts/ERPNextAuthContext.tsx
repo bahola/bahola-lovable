@@ -6,6 +6,7 @@ import {
   getCurrentUser, 
   createERPNextUser,
   createERPNextCustomer,
+  getCustomerByEmail,
   ERPNextUser 
 } from '@/services/erpnext/authService';
 import { initializeERPNext, getERPNextConfig } from '@/services/erpnext/erpnextService';
@@ -151,33 +152,51 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         user_type: 'Website User',
       });
 
-      // Create customer record with correct customer groups
-      const customerName = `${userData.firstName} ${userData.lastName}`;
-      const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
+      // Check if customer already exists
+      const existingCustomer = await getCustomerByEmail(userData.email);
       
-      await createERPNextCustomer({
-        customer_name: customerName,
-        email_id: userData.email,
-        mobile_no: userData.phone,
-        customer_type: 'Individual', // Both customers and doctors are "Individual"
-        customer_group: customerGroup,
-      });
+      if (!existingCustomer) {
+        // Create customer record with correct customer groups
+        const customerName = `${userData.firstName} ${userData.lastName}`;
+        const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
+        
+        await createERPNextCustomer({
+          customer_name: customerName,
+          email_id: userData.email,
+          mobile_no: userData.phone,
+          customer_type: 'Individual', // Both customers and doctors are "Individual"
+          customer_group: customerGroup,
+        });
+      } else {
+        console.log('Customer already exists in ERPNext, skipping creation');
+      }
 
       // Store additional information in Supabase customers table
       const verificationStatus = userData.userType === 'doctor' ? 'pending' : 'approved';
       
-      await supabase.from('customers').insert({
-        customer_id: `${userData.userType === 'doctor' ? 'DOC' : 'CUST'}${Date.now().toString().slice(-3)}`, // Temporary ID, will be replaced by trigger
-        name: customerName,
-        email: userData.email,
-        phone: userData.phone || '',
-        customer_type: userData.userType,
-        verification_status: verificationStatus,
-        medical_license: userData.userType === 'doctor' ? userData.medicalLicense : null,
-        specialization: userData.userType === 'doctor' ? userData.specialization : null,
-        clinic: userData.userType === 'doctor' ? userData.clinic : null,
-        years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
-      });
+      // Check if customer already exists in Supabase
+      const { data: existingSupabaseCustomer } = await supabase
+        .from('customers')
+        .select('id')
+        .eq('email', userData.email)
+        .single();
+
+      if (!existingSupabaseCustomer) {
+        await supabase.from('customers').insert({
+          customer_id: `${userData.userType === 'doctor' ? 'DOC' : 'CUST'}${Date.now().toString().slice(-3)}`, // Temporary ID, will be replaced by trigger
+          name: `${userData.firstName} ${userData.lastName}`,
+          email: userData.email,
+          phone: userData.phone || '',
+          customer_type: userData.userType,
+          verification_status: verificationStatus,
+          medical_license: userData.userType === 'doctor' ? userData.medicalLicense : null,
+          specialization: userData.userType === 'doctor' ? userData.specialization : null,
+          clinic: userData.userType === 'doctor' ? userData.clinic : null,
+          years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
+        });
+      } else {
+        console.log('Customer already exists in Supabase, skipping creation');
+      }
 
       // Automatically log in the user after registration
       await login(userData.email, userData.password);

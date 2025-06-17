@@ -167,6 +167,33 @@ export const getCustomerByEmail = async (email: string): Promise<ERPNextCustomer
 };
 
 /**
+ * Check if ERPNext user exists
+ */
+export const checkERPNextUserExists = async (email: string): Promise<boolean> => {
+  try {
+    const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: 'https://bahola.net',
+        endpoint: `/api/resource/User/${email}`,
+        method: 'GET',
+        username: 'kartik@baholalabs.in',
+        password: 'Murugan@1984',
+      },
+    });
+
+    if (error) {
+      console.log('User does not exist or error checking:', error);
+      return false;
+    }
+
+    return result && result.message;
+  } catch (error) {
+    console.log('User does not exist:', error);
+    return false;
+  }
+};
+
+/**
  * Create ERPNext user account via proxy with admin authentication
  */
 export const createERPNextUser = async (userData: {
@@ -187,15 +214,30 @@ export const createERPNextUser = async (userData: {
   };
 
   try {
-    // Use your actual admin credentials for user creation
+    // First check if user already exists
+    const userExists = await checkERPNextUserExists(userData.email);
+    
+    if (userExists) {
+      console.log('User already exists in ERPNext, skipping creation');
+      // Return a mock user object since the user exists
+      return {
+        name: userData.email,
+        email: userData.email,
+        full_name: `${userData.first_name} ${userData.last_name}`,
+        user_type: userData.user_type || 'Website User',
+        enabled: 1
+      };
+    }
+
+    // Create new user
     const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
       body: {
         baseUrl: 'https://bahola.net',
         endpoint: '/api/resource/User',
         method: 'POST',
         data,
-        username: 'kartik@baholalabs.in', // Your actual admin username
-        password: 'Murugan@1984', // Your actual admin password
+        username: 'kartik@baholalabs.in',
+        password: 'Murugan@1984',
       },
     });
 
