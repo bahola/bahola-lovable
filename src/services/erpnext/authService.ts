@@ -187,15 +187,15 @@ export const createERPNextUser = async (userData: {
   };
 
   try {
-    // Use admin credentials for user creation
+    // Use your actual admin credentials for user creation
     const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
       body: {
         baseUrl: 'https://bahola.net',
         endpoint: '/api/resource/User',
         method: 'POST',
         data,
-        username: 'administrator', // Use admin account for user creation
-        password: 'admin123', // This should be moved to environment variables
+        username: 'kartik@baholalabs.in', // Your actual admin username
+        password: 'Murugan@1984', // Your actual admin password
       },
     });
 
