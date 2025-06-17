@@ -16,6 +16,7 @@ import { AccountSidebar } from '@/components/account/AccountSidebar';
 import { ProfileTab } from '@/components/account/ProfileTab';
 import { SecurityTab } from '@/components/account/SecurityTab';
 import { RecentActivityCard } from '@/components/account/RecentActivityCard';
+import { VerificationStatusCard } from '@/components/account/VerificationStatusCard';
 
 const UserAccount = () => {
   const { user, isLoading: authLoading, isAuthenticated, logout } = useERPNextAuth();
@@ -138,6 +139,9 @@ const UserAccount = () => {
         
         {/* Main content area */}
         <div className="lg:col-span-3">
+          {/* Verification Status Card for Doctors */}
+          <VerificationStatusCard />
+          
           <Tabs defaultValue="profile" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="profile">Profile Information</TabsTrigger>

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { 
   loginToERPNext, 
@@ -8,6 +9,7 @@ import {
   ERPNextUser 
 } from '@/services/erpnext/authService';
 import { initializeERPNext, getERPNextConfig } from '@/services/erpnext/erpnextService';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ERPNextAuthContextType {
   user: ERPNextUser | null;
@@ -24,6 +26,8 @@ interface ERPNextAuthContextType {
     userType: 'customer' | 'doctor';
     medicalLicense?: string;
     specialization?: string;
+    clinic?: string;
+    yearsOfPractice?: string;
   }) => Promise<void>;
 }
 
@@ -132,27 +136,47 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
     userType: 'customer' | 'doctor';
     medicalLicense?: string;
     specialization?: string;
+    clinic?: string;
+    yearsOfPractice?: string;
   }) => {
     try {
       setIsLoading(true);
       
-      // Create ERPNext user account
+      // Create ERPNext user account - both customers and doctors use "Website User"
       const newUser = await createERPNextUser({
         email: userData.email,
         first_name: userData.firstName,
         last_name: userData.lastName,
         password: userData.password,
-        user_type: userData.userType === 'doctor' ? 'System User' : 'Website User',
+        user_type: 'Website User',
       });
 
-      // Create customer record
+      // Create customer record with correct customer groups
       const customerName = `${userData.firstName} ${userData.lastName}`;
+      const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
+      
       await createERPNextCustomer({
         customer_name: customerName,
         email_id: userData.email,
         mobile_no: userData.phone,
-        customer_type: userData.userType === 'doctor' ? 'Company' : 'Individual',
-        customer_group: userData.userType === 'doctor' ? 'Healthcare Professional' : 'All Customer Groups',
+        customer_type: 'Individual', // Both customers and doctors are "Individual"
+        customer_group: customerGroup,
+      });
+
+      // Store additional information in Supabase customers table
+      const verificationStatus = userData.userType === 'doctor' ? 'pending' : 'approved';
+      
+      await supabase.from('customers').insert({
+        customer_id: `${userData.userType === 'doctor' ? 'DOC' : 'CUST'}${Date.now().toString().slice(-3)}`, // Temporary ID, will be replaced by trigger
+        name: customerName,
+        email: userData.email,
+        phone: userData.phone || '',
+        customer_type: userData.userType,
+        verification_status: verificationStatus,
+        medical_license: userData.userType === 'doctor' ? userData.medicalLicense : null,
+        specialization: userData.userType === 'doctor' ? userData.specialization : null,
+        clinic: userData.userType === 'doctor' ? userData.clinic : null,
+        years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
       });
 
       // Automatically log in the user after registration

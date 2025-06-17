@@ -23,16 +23,26 @@ export const useRegisterSubmit = () => {
         ...(userType === 'doctor' ? {
           medicalLicense: (values as DoctorFormData).medicalLicense,
           specialization: (values as DoctorFormData).specialization,
+          clinic: (values as DoctorFormData).clinic,
+          yearsOfPractice: (values as DoctorFormData).yearsOfPractice,
         } : {})
       };
 
       await register(registrationData);
 
-      toast({
-        title: "Registration Successful",
-        description: `Welcome! You have been registered as a ${userType === 'doctor' ? 'healthcare professional' : 'customer'} and are now logged in.`,
-        duration: 5000,
-      });
+      if (userType === 'doctor') {
+        toast({
+          title: "Registration Successful",
+          description: "Welcome! Your healthcare professional account has been created and is pending verification. You'll receive an email notification once your account is approved (typically 1-2 business days).",
+          duration: 7000,
+        });
+      } else {
+        toast({
+          title: "Registration Successful",
+          description: "Welcome! You have been registered as a customer and are now logged in.",
+          duration: 5000,
+        });
+      }
       
       // Redirect to the return URL if available, otherwise to home page
       navigate(returnUrl || '/');
