@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Card, 
@@ -58,8 +57,8 @@ export const DoctorApprovalCard: React.FC = () => {
           name: doc.name,
           email: doc.email,
           phone: doc.phone,
-          medical_license: doc.medical_license,
-          specialization: doc.specialization,
+          medical_license: doc.medical_license!,
+          specialization: doc.specialization!,
           clinic: doc.clinic,
           years_of_practice: doc.years_of_practice,
           created_at: doc.created_at,

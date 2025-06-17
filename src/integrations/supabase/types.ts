@@ -65,6 +65,7 @@ export type Database = {
           address: string | null
           average_order_value: number | null
           city: string | null
+          clinic: string | null
           created_at: string
           customer_id: string
           customer_lifetime_value: number | null
@@ -76,6 +77,7 @@ export type Database = {
           last_order_date: string | null
           ltv_segment: string | null
           marketing_priority: number | null
+          medical_license: string | null
           name: string
           notes: string | null
           phone: string
@@ -83,16 +85,20 @@ export type Database = {
           predicted_next_purchase_date: string | null
           purchase_frequency: number | null
           source: string | null
+          specialization: string | null
           state: string | null
           status: string | null
           total_orders: number | null
           total_spent: number | null
           updated_at: string
+          verification_status: string | null
+          years_of_practice: number | null
         }
         Insert: {
           address?: string | null
           average_order_value?: number | null
           city?: string | null
+          clinic?: string | null
           created_at?: string
           customer_id: string
           customer_lifetime_value?: number | null
@@ -104,6 +110,7 @@ export type Database = {
           last_order_date?: string | null
           ltv_segment?: string | null
           marketing_priority?: number | null
+          medical_license?: string | null
           name: string
           notes?: string | null
           phone: string
@@ -111,16 +118,20 @@ export type Database = {
           predicted_next_purchase_date?: string | null
           purchase_frequency?: number | null
           source?: string | null
+          specialization?: string | null
           state?: string | null
           status?: string | null
           total_orders?: number | null
           total_spent?: number | null
           updated_at?: string
+          verification_status?: string | null
+          years_of_practice?: number | null
         }
         Update: {
           address?: string | null
           average_order_value?: number | null
           city?: string | null
+          clinic?: string | null
           created_at?: string
           customer_id?: string
           customer_lifetime_value?: number | null
@@ -132,6 +143,7 @@ export type Database = {
           last_order_date?: string | null
           ltv_segment?: string | null
           marketing_priority?: number | null
+          medical_license?: string | null
           name?: string
           notes?: string | null
           phone?: string
@@ -139,11 +151,14 @@ export type Database = {
           predicted_next_purchase_date?: string | null
           purchase_frequency?: number | null
           source?: string | null
+          specialization?: string | null
           state?: string | null
           status?: string | null
           total_orders?: number | null
           total_spent?: number | null
           updated_at?: string
+          verification_status?: string | null
+          years_of_practice?: number | null
         }
         Relationships: []
       }

@@ -37,7 +37,7 @@ export const useUserVerification = (): UserVerificationData => {
           .from('customers')
           .select('verification_status, customer_type, medical_license, specialization, clinic, years_of_practice')
           .eq('email', user.email)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('Error fetching verification status:', error);
