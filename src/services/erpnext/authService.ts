@@ -1,4 +1,3 @@
-
 import { getERPNextConfig, erpRequest } from './erpnextService';
 import { supabase } from "@/integrations/supabase/client";
 
@@ -328,8 +327,21 @@ export const createERPNextUser = async (userData: {
       throw new Error(result.error);
     }
 
-    console.log('ERPNext user created successfully:', result.message);
-    return result.message;
+    // Handle successful creation - construct user object from known data
+    // Even if result.message is undefined, we know the creation was successful
+    const createdUser: ERPNextUser = {
+      name: userData.email,
+      email: userData.email,
+      full_name: `${userData.first_name} ${userData.last_name}`,
+      user_type: userData.user_type || 'Website User',
+      enabled: 1
+    };
+
+    // If result.message exists, use it; otherwise use our constructed object
+    const finalUser = result?.message || createdUser;
+    
+    console.log('ERPNext user created successfully:', finalUser);
+    return finalUser;
   } catch (error) {
     console.error("Failed to create user:", error);
     
