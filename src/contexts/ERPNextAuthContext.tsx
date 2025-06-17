@@ -152,6 +152,60 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         lastName: userData.lastName 
       });
       
+      // For doctors, skip ERPNext creation and only create Supabase record
+      if (userData.userType === 'doctor') {
+        console.log('Doctor registration - skipping ERPNext creation until approval');
+        
+        const verificationStatus = 'pending';
+        
+        try {
+          // Check if customer already exists in Supabase
+          const { data: existingSupabaseCustomer, error: checkError } = await supabase
+            .from('customers')
+            .select('id')
+            .eq('email', userData.email)
+            .maybeSingle();
+
+          if (checkError) {
+            console.error('Error checking Supabase customer:', checkError);
+          }
+
+          if (!existingSupabaseCustomer) {
+            const { data: insertData, error: insertError } = await supabase.from('customers').insert({
+              customer_id: `DOC${Date.now().toString().slice(-6)}`,
+              name: `${userData.firstName} ${userData.lastName}`,
+              email: userData.email,
+              phone: userData.phone || '',
+              customer_type: userData.userType,
+              verification_status: verificationStatus,
+              medical_license: userData.medicalLicense,
+              specialization: userData.specialization,
+              clinic: userData.clinic,
+              years_of_practice: userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
+            }).select();
+
+            if (insertError) {
+              console.error('❌ Supabase customer creation failed:', insertError);
+              throw new Error(`Failed to store customer information: ${insertError.message}`);
+            }
+            
+            console.log('✅ Doctor record created in Supabase - awaiting admin approval');
+          } else {
+            console.log('✅ Customer already exists in Supabase');
+          }
+          
+          console.log('=== DOCTOR REGISTRATION COMPLETED - PENDING APPROVAL ===');
+          return; // Exit early for doctors - no ERPNext creation or auto-login
+          
+        } catch (error) {
+          console.error('❌ Doctor registration failed:', error);
+          throw error;
+        }
+      }
+
+      // For regular customers, proceed with full ERPNext creation
+      console.log('Customer registration - proceeding with ERPNext creation');
+      
       // Step 1: Create ERPNext user account
       console.log('Step 1: Creating ERPNext user...');
       let newUser;
@@ -184,9 +238,7 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         console.log('Step 3: Creating ERPNext customer...');
         try {
           const customerName = `${userData.firstName} ${userData.lastName}`;
-          
-          // Set customer group based on user type
-          const customerGroup = userData.userType === 'doctor' ? 'Online Doctor' : 'All Customer Groups';
+          const customerGroup = 'All Customer Groups';
           
           await createERPNextCustomer({
             customer_name: customerName,
@@ -199,7 +251,6 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
           console.log(`✅ ERPNext customer created successfully with group: ${customerGroup}`);
         } catch (error) {
           console.error('❌ ERPNext customer creation failed:', error);
-          // Don't fail registration if customer creation fails - proceed anyway
           console.log('⚠️ Proceeding with registration despite customer creation failure');
         }
       } else {
@@ -208,7 +259,7 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
 
       // Step 4: Store additional information in Supabase
       console.log('Step 4: Creating Supabase customer record...');
-      const verificationStatus = userData.userType === 'doctor' ? 'pending' : 'approved';
+      const verificationStatus = 'approved'; // Regular customers are auto-approved
       
       try {
         // Check if customer already exists in Supabase
@@ -224,16 +275,12 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
 
         if (!existingSupabaseCustomer) {
           const { data: insertData, error: insertError } = await supabase.from('customers').insert({
-            customer_id: `${userData.userType === 'doctor' ? 'DOC' : 'CUST'}${Date.now().toString().slice(-6)}`,
+            customer_id: `CUST${Date.now().toString().slice(-6)}`,
             name: `${userData.firstName} ${userData.lastName}`,
             email: userData.email,
             phone: userData.phone || '',
             customer_type: userData.userType,
             verification_status: verificationStatus,
-            medical_license: userData.userType === 'doctor' ? userData.medicalLicense : null,
-            specialization: userData.userType === 'doctor' ? userData.specialization : null,
-            clinic: userData.userType === 'doctor' ? userData.clinic : null,
-            years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
           }).select();
 
           if (insertError) {
@@ -250,7 +297,7 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         throw new Error(`Failed to store customer information: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
-      // Step 5: Automatically log in the user after registration
+      // Step 5: Automatically log in the user after registration (only for regular customers)
       console.log('Step 5: Logging in user after registration...');
       try {
         await login(userData.email, userData.password);
