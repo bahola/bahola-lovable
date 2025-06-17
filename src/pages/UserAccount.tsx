@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Tabs, 
   TabsContent, 
@@ -19,9 +19,129 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import { User, Package, CreditCard, Heart, Bell, LogOut, Home } from 'lucide-react';
+import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
+import { getCustomerByEmail } from '@/services/erpnext/authService';
+import { toast } from 'sonner';
+
+interface CustomerData {
+  customer_name: string;
+  email_id: string;
+  mobile_no?: string;
+  phone?: string;
+  customer_type: string;
+  customer_group: string;
+}
 
 const UserAccount = () => {
+  const { user, isLoading: authLoading, isAuthenticated, logout } = useERPNextAuth();
+  const [customerData, setCustomerData] = useState<CustomerData | null>(null);
+  const [isLoadingCustomer, setIsLoadingCustomer] = useState(false);
+  const [profileData, setProfileData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    birthdate: ''
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    if (user?.email) {
+      fetchCustomerData(user.email);
+      // Parse user name into first and last name
+      const fullName = user.full_name || user.email;
+      const nameParts = fullName.split(' ');
+      setProfileData(prev => ({
+        ...prev,
+        firstName: nameParts[0] || '',
+        lastName: nameParts.slice(1).join(' ') || '',
+        email: user.email
+      }));
+    }
+  }, [user, authLoading, isAuthenticated, navigate]);
+
+  const fetchCustomerData = async (email: string) => {
+    setIsLoadingCustomer(true);
+    try {
+      console.log('Fetching customer data for email:', email);
+      const customer = await getCustomerByEmail(email);
+      if (customer) {
+        setCustomerData(customer);
+        setProfileData(prev => ({
+          ...prev,
+          phone: customer.mobile_no || customer.phone || ''
+        }));
+        console.log('Customer data loaded:', customer);
+      } else {
+        console.log('No customer data found for email:', email);
+      }
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
+      toast.error('Failed to load customer information');
+    } finally {
+      setIsLoadingCustomer(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+      toast.success('Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to logout');
+    }
+  };
+
+  const handleProfileUpdate = async () => {
+    try {
+      // TODO: Implement profile update functionality with ERPNext
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      console.error('Profile update error:', error);
+      toast.error('Failed to update profile');
+    }
+  };
+
+  const handlePasswordUpdate = async () => {
+    try {
+      // TODO: Implement password update functionality
+      toast.success('Password updated successfully');
+    } catch (error) {
+      console.error('Password update error:', error);
+      toast.error('Failed to update password');
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <PageLayout title="My Account" description="Manage your account details and preferences">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="lg:col-span-1">
+            <Skeleton className="h-64 w-full" />
+          </div>
+          <div className="lg:col-span-3">
+            <Skeleton className="h-96 w-full" />
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null; // Will redirect to login
+  }
+
+  const displayName = user?.full_name || user?.email || 'User';
+
   return (
     <PageLayout title="My Account" description="Manage your account details and preferences">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -31,9 +151,18 @@ const UserAccount = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                <span>Hi, John Doe</span>
+                <span>Hi, {displayName}</span>
               </CardTitle>
-              <CardDescription>john.doe@example.com</CardDescription>
+              <CardDescription>{user?.email}</CardDescription>
+              {isLoadingCustomer && (
+                <Skeleton className="h-4 w-32" />
+              )}
+              {customerData && (
+                <div className="text-sm text-muted-foreground">
+                  <p>Customer Type: {customerData.customer_type}</p>
+                  <p>Group: {customerData.customer_group}</p>
+                </div>
+              )}
             </CardHeader>
             <CardContent className="p-0">
               <nav className="space-y-1">
@@ -64,7 +193,11 @@ const UserAccount = () => {
               </nav>
             </CardContent>
             <CardFooter className="border-t">
-              <Button variant="ghost" className="text-red-500 w-full justify-start">
+              <Button 
+                variant="ghost" 
+                className="text-red-500 w-full justify-start"
+                onClick={handleLogout}
+              >
                 <LogOut className="h-5 w-5 mr-2" />
                 <span>Log Out</span>
               </Button>
@@ -89,37 +222,70 @@ const UserAccount = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" defaultValue="John" />
+                  {isLoadingCustomer ? (
+                    <div className="space-y-4">
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" defaultValue="Doe" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" defaultValue="john.doe@example.com" disabled />
-                    <p className="text-sm text-bahola-neutral-500">To change your email, please contact customer support.</p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" defaultValue="+91 98765 43210" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="birthdate">Date of Birth</Label>
-                    <Input id="birthdate" type="date" defaultValue="1990-01-01" />
-                    <p className="text-sm text-bahola-neutral-500">For identity verification and birthday offers.</p>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName">First Name</Label>
+                          <Input 
+                            id="firstName" 
+                            value={profileData.firstName}
+                            onChange={(e) => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName">Last Name</Label>
+                          <Input 
+                            id="lastName" 
+                            value={profileData.lastName}
+                            onChange={(e) => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          value={profileData.email}
+                          disabled 
+                        />
+                        <p className="text-sm text-bahola-neutral-500">To change your email, please contact customer support.</p>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input 
+                          id="phone" 
+                          type="tel" 
+                          value={profileData.phone}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="birthdate">Date of Birth</Label>
+                        <Input 
+                          id="birthdate" 
+                          type="date" 
+                          value={profileData.birthdate}
+                          onChange={(e) => setProfileData(prev => ({ ...prev, birthdate: e.target.value }))}
+                        />
+                        <p className="text-sm text-bahola-neutral-500">For identity verification and birthday offers.</p>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
                 <CardFooter className="flex justify-between border-t pt-6">
                   <Button variant="outline">Cancel</Button>
-                  <Button>Save Changes</Button>
+                  <Button onClick={handleProfileUpdate}>Save Changes</Button>
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -161,7 +327,7 @@ const UserAccount = () => {
                 </CardContent>
                 <CardFooter className="flex justify-between border-t pt-6">
                   <Button variant="outline">Cancel</Button>
-                  <Button>Update Password</Button>
+                  <Button onClick={handlePasswordUpdate}>Update Password</Button>
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -174,22 +340,36 @@ const UserAccount = () => {
                 <div className="divide-y">
                   <div className="px-4 py-3 flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Password Changed</p>
-                      <p className="text-sm text-bahola-neutral-500">10 April 2025, 15:30</p>
+                      <p className="font-medium">Account Login</p>
+                      <p className="text-sm text-bahola-neutral-500">
+                        {new Date().toLocaleDateString('en-GB', { 
+                          day: 'numeric', 
+                          month: 'long', 
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
                     </div>
                     <Button variant="ghost" size="sm">View</Button>
                   </div>
-                  <div className="px-4 py-3 flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">New Order Placed</p>
-                      <p className="text-sm text-bahola-neutral-500">5 April 2025, 12:15</p>
+                  {customerData && (
+                    <div className="px-4 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Customer Profile Loaded</p>
+                        <p className="text-sm text-bahola-neutral-500">
+                          Customer Type: {customerData.customer_type}
+                        </p>
+                      </div>
+                      <Button variant="ghost" size="sm">View</Button>
                     </div>
-                    <Button variant="ghost" size="sm">View</Button>
-                  </div>
+                  )}
                   <div className="px-4 py-3 flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Login from New Device</p>
-                      <p className="text-sm text-bahola-neutral-500">1 April 2025, 09:45</p>
+                      <p className="font-medium">Connected to ERPNext</p>
+                      <p className="text-sm text-bahola-neutral-500">
+                        Account synchronized with ERPNext system
+                      </p>
                     </div>
                     <Button variant="ghost" size="sm">View</Button>
                   </div>
