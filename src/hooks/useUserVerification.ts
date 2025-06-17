@@ -49,15 +49,23 @@ export const useUserVerification = (): UserVerificationData => {
           return;
         }
 
-        setVerificationData({
-          verificationStatus: data.verification_status,
-          customerType: data.customer_type,
-          medicalLicense: data.medical_license,
-          specialization: data.specialization,
-          clinic: data.clinic,
-          yearsOfPractice: data.years_of_practice,
-          isLoading: false,
-        });
+        if (data) {
+          setVerificationData({
+            verificationStatus: data.verification_status,
+            customerType: data.customer_type,
+            medicalLicense: data.medical_license,
+            specialization: data.specialization,
+            clinic: data.clinic,
+            yearsOfPractice: data.years_of_practice,
+            isLoading: false,
+          });
+        } else {
+          setVerificationData({
+            verificationStatus: null,
+            customerType: null,
+            isLoading: false,
+          });
+        }
       } catch (error) {
         console.error('Error fetching verification status:', error);
         setVerificationData({

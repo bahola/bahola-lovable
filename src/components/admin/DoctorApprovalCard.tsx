@@ -39,7 +39,7 @@ export const DoctorApprovalCard: React.FC = () => {
     try {
       const { data, error } = await supabase
         .from('customers')
-        .select('*')
+        .select('id, name, email, phone, medical_license, specialization, clinic, years_of_practice, created_at')
         .eq('customer_type', 'doctor')
         .eq('verification_status', 'pending')
         .order('created_at', { ascending: true });
@@ -50,7 +50,22 @@ export const DoctorApprovalCard: React.FC = () => {
         return;
       }
 
-      setPendingDoctors(data || []);
+      // Filter and map data to ensure required fields exist
+      const validDoctors = (data || [])
+        .filter(doc => doc.medical_license && doc.specialization)
+        .map(doc => ({
+          id: doc.id,
+          name: doc.name,
+          email: doc.email,
+          phone: doc.phone,
+          medical_license: doc.medical_license,
+          specialization: doc.specialization,
+          clinic: doc.clinic,
+          years_of_practice: doc.years_of_practice,
+          created_at: doc.created_at,
+        }));
+
+      setPendingDoctors(validDoctors);
     } catch (error) {
       console.error('Error fetching pending doctors:', error);
       toast.error('Failed to load pending doctor applications');
