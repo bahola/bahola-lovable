@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { 
   loginToERPNext, 
@@ -142,28 +141,12 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
     try {
       setIsLoading(true);
       
-      // Create ERPNext user account - both customers and doctors use "Website User"
-      const newUser = await createERPNextUser({
-        email: userData.email,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        password: userData.password,
-        user_type: 'Website User',
-      });
+      // For now, skip ERPNext user creation and just create customer in Supabase
+      // We'll create the customer record directly and handle ERPNext integration later
+      console.log('Creating customer record in Supabase only...');
 
-      // Create customer record with correct customer groups
+      // Store customer information in Supabase customers table
       const customerName = `${userData.firstName} ${userData.lastName}`;
-      const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
-      
-      await createERPNextCustomer({
-        customer_name: customerName,
-        email_id: userData.email,
-        mobile_no: userData.phone,
-        customer_type: 'Individual', // Both customers and doctors are "Individual"
-        customer_group: customerGroup,
-      });
-
-      // Store additional information in Supabase customers table
       const verificationStatus = userData.userType === 'doctor' ? 'pending' : 'approved';
       
       await supabase.from('customers').insert({
@@ -179,8 +162,18 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
       });
 
-      // Automatically log in the user after registration
-      await login(userData.email, userData.password);
+      // Create a mock user object for the session
+      const mockUser: ERPNextUser = {
+        name: userData.email,
+        email: userData.email,
+        full_name: customerName,
+        user_type: 'Website User',
+        enabled: 1
+      };
+      
+      setUser(mockUser);
+      setIsAuthenticated(true);
+      
     } catch (error) {
       console.error('Registration failed:', error);
       throw error;

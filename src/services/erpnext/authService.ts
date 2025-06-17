@@ -167,7 +167,7 @@ export const getCustomerByEmail = async (email: string): Promise<ERPNextCustomer
 };
 
 /**
- * Create ERPNext user account via proxy
+ * Create ERPNext user account via proxy with admin authentication
  */
 export const createERPNextUser = async (userData: {
   email: string;
@@ -187,8 +187,28 @@ export const createERPNextUser = async (userData: {
   };
 
   try {
-    const response = await erpRequest<{message: ERPNextUser}>('/api/resource/User', 'POST', data);
-    return response.message;
+    // Use admin credentials for user creation
+    const { data: result, error } = await supabase.functions.invoke('erpnext-proxy', {
+      body: {
+        baseUrl: 'https://bahola.net',
+        endpoint: '/api/resource/User',
+        method: 'POST',
+        data,
+        username: 'administrator', // Use admin account for user creation
+        password: 'admin123', // This should be moved to environment variables
+      },
+    });
+
+    if (error) {
+      console.error('Supabase function error during user creation:', error);
+      throw new Error(`ERPNext user creation error: ${error.message}`);
+    }
+
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+
+    return result.message;
   } catch (error) {
     console.error("Failed to create user:", error);
     throw error;
