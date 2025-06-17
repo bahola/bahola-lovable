@@ -185,16 +185,18 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         try {
           const customerName = `${userData.firstName} ${userData.lastName}`;
           
-          // Use default customer groups that should exist in ERPNext
+          // Set customer group based on user type
+          const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Retail';
+          
           await createERPNextCustomer({
             customer_name: customerName,
             email_id: userData.email,
             mobile_no: userData.phone,
             customer_type: 'Individual',
-            customer_group: 'All Customer Groups', // Use default group
-            territory: 'All Territories', // Use default territory
+            customer_group: customerGroup,
+            territory: 'All Territories',
           });
-          console.log('✅ ERPNext customer created successfully');
+          console.log(`✅ ERPNext customer created successfully with group: ${customerGroup}`);
         } catch (error) {
           console.error('❌ ERPNext customer creation failed:', error);
           // Don't fail registration if customer creation fails - proceed anyway
