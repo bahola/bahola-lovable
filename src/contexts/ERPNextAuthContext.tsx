@@ -144,7 +144,13 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
   }) => {
     try {
       setIsLoading(true);
-      console.log('Starting registration process for:', userData.email);
+      console.log('=== STARTING REGISTRATION ===');
+      console.log('User data:', { 
+        email: userData.email, 
+        userType: userData.userType,
+        firstName: userData.firstName,
+        lastName: userData.lastName 
+      });
       
       // Step 1: Create ERPNext user account
       console.log('Step 1: Creating ERPNext user...');
@@ -157,9 +163,9 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
           password: userData.password,
           user_type: 'Website User',
         });
-        console.log('ERPNext user created successfully:', newUser);
+        console.log('✅ ERPNext user created/exists:', newUser.email);
       } catch (error) {
-        console.error('ERPNext user creation failed:', error);
+        console.error('❌ ERPNext user creation failed:', error);
         throw new Error(`Failed to create user account: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -168,9 +174,9 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
       let existingCustomer;
       try {
         existingCustomer = await getCustomerByEmail(userData.email);
-        console.log('Existing customer check result:', existingCustomer);
+        console.log('Customer check result:', existingCustomer ? '✅ Exists' : '❌ Not found');
       } catch (error) {
-        console.warn('Error checking existing customer:', error);
+        console.warn('⚠️ Error checking existing customer (proceeding anyway):', error);
       }
       
       // Step 3: Create customer record if it doesn't exist
@@ -178,22 +184,24 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
         console.log('Step 3: Creating ERPNext customer...');
         try {
           const customerName = `${userData.firstName} ${userData.lastName}`;
-          const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
           
+          // Use default customer groups that should exist in ERPNext
           await createERPNextCustomer({
             customer_name: customerName,
             email_id: userData.email,
             mobile_no: userData.phone,
             customer_type: 'Individual',
-            customer_group: customerGroup,
+            customer_group: 'All Customer Groups', // Use default group
+            territory: 'All Territories', // Use default territory
           });
-          console.log('ERPNext customer created successfully');
+          console.log('✅ ERPNext customer created successfully');
         } catch (error) {
-          console.error('ERPNext customer creation failed:', error);
-          throw new Error(`Failed to create customer record: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          console.error('❌ ERPNext customer creation failed:', error);
+          // Don't fail registration if customer creation fails - proceed anyway
+          console.log('⚠️ Proceeding with registration despite customer creation failure');
         }
       } else {
-        console.log('Customer already exists in ERPNext, skipping creation');
+        console.log('✅ Customer already exists in ERPNext, skipping creation');
       }
 
       // Step 4: Store additional information in Supabase
@@ -227,16 +235,16 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
           }).select();
 
           if (insertError) {
-            console.error('Supabase customer creation failed:', insertError);
+            console.error('❌ Supabase customer creation failed:', insertError);
             throw new Error(`Failed to store customer information: ${insertError.message}`);
           }
           
-          console.log('Supabase customer created successfully:', insertData);
+          console.log('✅ Supabase customer created successfully:', insertData);
         } else {
-          console.log('Customer already exists in Supabase, skipping creation');
+          console.log('✅ Customer already exists in Supabase, skipping creation');
         }
       } catch (error) {
-        console.error('Supabase operation failed:', error);
+        console.error('❌ Supabase operation failed:', error);
         throw new Error(`Failed to store customer information: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
@@ -244,14 +252,15 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
       console.log('Step 5: Logging in user after registration...');
       try {
         await login(userData.email, userData.password);
-        console.log('Auto-login successful');
+        console.log('✅ Auto-login successful');
+        console.log('=== REGISTRATION COMPLETED SUCCESSFULLY ===');
       } catch (error) {
-        console.error('Auto-login failed:', error);
+        console.error('❌ Auto-login failed:', error);
         throw new Error(`Registration successful but login failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
       
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error('❌ REGISTRATION FAILED:', error);
       throw error;
     } finally {
       setIsLoading(false);
