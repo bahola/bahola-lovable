@@ -22,21 +22,12 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { User, Package, CreditCard, Heart, Bell, LogOut, Home } from 'lucide-react';
 import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
-import { getCustomerByEmail } from '@/services/erpnext/authService';
+import { getCustomerByEmail, ERPNextCustomer } from '@/services/erpnext/authService';
 import { toast } from 'sonner';
-
-interface CustomerData {
-  customer_name: string;
-  email_id: string;
-  mobile_no?: string;
-  phone?: string;
-  customer_type: string;
-  customer_group: string;
-}
 
 const UserAccount = () => {
   const { user, isLoading: authLoading, isAuthenticated, logout } = useERPNextAuth();
-  const [customerData, setCustomerData] = useState<CustomerData | null>(null);
+  const [customerData, setCustomerData] = useState<ERPNextCustomer | null>(null);
   const [isLoadingCustomer, setIsLoadingCustomer] = useState(false);
   const [profileData, setProfileData] = useState({
     firstName: '',
