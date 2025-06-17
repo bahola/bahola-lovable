@@ -13,6 +13,8 @@ export const useRegisterSubmit = () => {
   
   const handleSubmit = async (values: CustomerFormData | DoctorFormData, userType: UserType) => {
     try {
+      console.log('Registration form submitted:', { userType, email: values.email });
+      
       const registrationData = {
         email: values.email,
         password: values.password,
@@ -28,6 +30,7 @@ export const useRegisterSubmit = () => {
         } : {})
       };
 
+      console.log('Calling register function with data:', registrationData);
       await register(registrationData);
 
       if (userType === 'doctor') {
@@ -45,14 +48,33 @@ export const useRegisterSubmit = () => {
       }
       
       // Redirect to the return URL if available, otherwise to home page
+      console.log('Registration successful, redirecting to:', returnUrl || '/');
       navigate(returnUrl || '/');
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error in handleSubmit:', error);
+      
+      let errorMessage = "There was a problem with your registration. Please try again.";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        
+        // Handle specific error cases
+        if (error.message.includes('already exists') || error.message.includes('409')) {
+          errorMessage = "An account with this email already exists. Please try logging in instead.";
+        } else if (error.message.includes('Failed to create user account')) {
+          errorMessage = "Failed to create your account. Please check your details and try again.";
+        } else if (error.message.includes('Failed to create customer record')) {
+          errorMessage = "Account created but failed to complete customer setup. Please contact support.";
+        } else if (error.message.includes('Failed to store customer information')) {
+          errorMessage = "Account created but failed to store additional information. Please contact support.";
+        }
+      }
+      
       toast({
         title: "Registration Failed",
-        description: error instanceof Error ? error.message : "There was a problem with your registration. Please try again.",
+        description: errorMessage,
         variant: "destructive",
-        duration: 5000,
+        duration: 7000,
       });
     }
   };

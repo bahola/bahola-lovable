@@ -67,7 +67,6 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
           return;
         }
 
-        // Don't try to get current user on initial load as we might not be logged in
         console.log('ERPNext config initialized, ready for login');
       } catch (error) {
         console.log('ERPNext not configured or user not authenticated');
@@ -84,7 +83,10 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
+      console.log('Starting login process for:', email);
+      
       const loginResult = await loginToERPNext(email, password);
+      console.log('ERPNext login result:', loginResult);
       
       // Create a user object from login result since getCurrentUser might not work
       const userFromLogin: ERPNextUser = {
@@ -142,64 +144,111 @@ export const ERPNextAuthProvider: React.FC<ERPNextAuthProviderProps> = ({ childr
   }) => {
     try {
       setIsLoading(true);
+      console.log('Starting registration process for:', userData.email);
       
-      // Create ERPNext user account - both customers and doctors use "Website User"
-      const newUser = await createERPNextUser({
-        email: userData.email,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        password: userData.password,
-        user_type: 'Website User',
-      });
-
-      // Check if customer already exists
-      const existingCustomer = await getCustomerByEmail(userData.email);
-      
-      if (!existingCustomer) {
-        // Create customer record with correct customer groups
-        const customerName = `${userData.firstName} ${userData.lastName}`;
-        const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
-        
-        await createERPNextCustomer({
-          customer_name: customerName,
-          email_id: userData.email,
-          mobile_no: userData.phone,
-          customer_type: 'Individual', // Both customers and doctors are "Individual"
-          customer_group: customerGroup,
+      // Step 1: Create ERPNext user account
+      console.log('Step 1: Creating ERPNext user...');
+      let newUser;
+      try {
+        newUser = await createERPNextUser({
+          email: userData.email,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          password: userData.password,
+          user_type: 'Website User',
         });
+        console.log('ERPNext user created successfully:', newUser);
+      } catch (error) {
+        console.error('ERPNext user creation failed:', error);
+        throw new Error(`Failed to create user account: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+
+      // Step 2: Check if customer already exists in ERPNext
+      console.log('Step 2: Checking if customer exists in ERPNext...');
+      let existingCustomer;
+      try {
+        existingCustomer = await getCustomerByEmail(userData.email);
+        console.log('Existing customer check result:', existingCustomer);
+      } catch (error) {
+        console.warn('Error checking existing customer:', error);
+      }
+      
+      // Step 3: Create customer record if it doesn't exist
+      if (!existingCustomer) {
+        console.log('Step 3: Creating ERPNext customer...');
+        try {
+          const customerName = `${userData.firstName} ${userData.lastName}`;
+          const customerGroup = userData.userType === 'doctor' ? 'Online Doctors' : 'Online';
+          
+          await createERPNextCustomer({
+            customer_name: customerName,
+            email_id: userData.email,
+            mobile_no: userData.phone,
+            customer_type: 'Individual',
+            customer_group: customerGroup,
+          });
+          console.log('ERPNext customer created successfully');
+        } catch (error) {
+          console.error('ERPNext customer creation failed:', error);
+          throw new Error(`Failed to create customer record: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
       } else {
         console.log('Customer already exists in ERPNext, skipping creation');
       }
 
-      // Store additional information in Supabase customers table
+      // Step 4: Store additional information in Supabase
+      console.log('Step 4: Creating Supabase customer record...');
       const verificationStatus = userData.userType === 'doctor' ? 'pending' : 'approved';
       
-      // Check if customer already exists in Supabase
-      const { data: existingSupabaseCustomer } = await supabase
-        .from('customers')
-        .select('id')
-        .eq('email', userData.email)
-        .single();
+      try {
+        // Check if customer already exists in Supabase
+        const { data: existingSupabaseCustomer, error: checkError } = await supabase
+          .from('customers')
+          .select('id')
+          .eq('email', userData.email)
+          .maybeSingle();
 
-      if (!existingSupabaseCustomer) {
-        await supabase.from('customers').insert({
-          customer_id: `${userData.userType === 'doctor' ? 'DOC' : 'CUST'}${Date.now().toString().slice(-3)}`, // Temporary ID, will be replaced by trigger
-          name: `${userData.firstName} ${userData.lastName}`,
-          email: userData.email,
-          phone: userData.phone || '',
-          customer_type: userData.userType,
-          verification_status: verificationStatus,
-          medical_license: userData.userType === 'doctor' ? userData.medicalLicense : null,
-          specialization: userData.userType === 'doctor' ? userData.specialization : null,
-          clinic: userData.userType === 'doctor' ? userData.clinic : null,
-          years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
-        });
-      } else {
-        console.log('Customer already exists in Supabase, skipping creation');
+        if (checkError) {
+          console.error('Error checking Supabase customer:', checkError);
+        }
+
+        if (!existingSupabaseCustomer) {
+          const { data: insertData, error: insertError } = await supabase.from('customers').insert({
+            customer_id: `${userData.userType === 'doctor' ? 'DOC' : 'CUST'}${Date.now().toString().slice(-6)}`,
+            name: `${userData.firstName} ${userData.lastName}`,
+            email: userData.email,
+            phone: userData.phone || '',
+            customer_type: userData.userType,
+            verification_status: verificationStatus,
+            medical_license: userData.userType === 'doctor' ? userData.medicalLicense : null,
+            specialization: userData.userType === 'doctor' ? userData.specialization : null,
+            clinic: userData.userType === 'doctor' ? userData.clinic : null,
+            years_of_practice: userData.userType === 'doctor' && userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null,
+          }).select();
+
+          if (insertError) {
+            console.error('Supabase customer creation failed:', insertError);
+            throw new Error(`Failed to store customer information: ${insertError.message}`);
+          }
+          
+          console.log('Supabase customer created successfully:', insertData);
+        } else {
+          console.log('Customer already exists in Supabase, skipping creation');
+        }
+      } catch (error) {
+        console.error('Supabase operation failed:', error);
+        throw new Error(`Failed to store customer information: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
-      // Automatically log in the user after registration
-      await login(userData.email, userData.password);
+      // Step 5: Automatically log in the user after registration
+      console.log('Step 5: Logging in user after registration...');
+      try {
+        await login(userData.email, userData.password);
+        console.log('Auto-login successful');
+      } catch (error) {
+        console.error('Auto-login failed:', error);
+        throw new Error(`Registration successful but login failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
       
     } catch (error) {
       console.error('Registration failed:', error);
