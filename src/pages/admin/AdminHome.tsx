@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { RevenueChart } from '@/components/admin/RevenueChart';
-import { SummaryCard } from '@/components/admin/SummaryCard';
-import { StatsCard } from '@/components/admin/StatsCard';
-import { TopSellingProductsTable } from '@/components/admin/TopSellingProductsTable';
-import { RecentOrdersTable } from '@/components/admin/RecentOrdersTable';
+import RevenueChart from '@/components/admin/RevenueChart';
+import SummaryCard from '@/components/admin/SummaryCard';
+import StatsCard from '@/components/admin/StatsCard';
+import TopSellingProductsTable from '@/components/admin/TopSellingProductsTable';
+import RecentOrdersTable from '@/components/admin/RecentOrdersTable';
 import { DoctorApprovalCard } from '@/components/admin/DoctorApprovalCard';
 import { 
   Users, 
@@ -14,6 +14,32 @@ import {
   TrendingUp,
   AlertCircle 
 } from 'lucide-react';
+
+// Sample data for the components
+const sampleRevenueData = [
+  { name: 'Jan', total: 12000 },
+  { name: 'Feb', total: 15000 },
+  { name: 'Mar', total: 18000 },
+  { name: 'Apr', total: 22000 },
+  { name: 'May', total: 25000 },
+  { name: 'Jun', total: 28000 },
+];
+
+const sampleTopProducts = [
+  { id: 1, name: 'Arnica Montana', category: 'Pain Relief', sales: 15000, growth: 12.5 },
+  { id: 2, name: 'Belladonna', category: 'Fever', sales: 12000, growth: 8.3 },
+  { id: 3, name: 'Nux Vomica', category: 'Digestive', sales: 10000, growth: -2.1 },
+  { id: 4, name: 'Pulsatilla', category: 'Women\'s Health', sales: 9500, growth: 15.7 },
+  { id: 5, name: 'Rhus Tox', category: 'Joint Pain', sales: 8800, growth: 6.9 },
+];
+
+const sampleRecentOrders = [
+  { id: 'ORD-001', customer: 'Dr. Sarah Wilson', total: '₹2,340', status: 'Completed' },
+  { id: 'ORD-002', customer: 'Dr. Raj Kumar', total: '₹1,890', status: 'Processing' },
+  { id: 'ORD-003', customer: 'Dr. Emily Chen', total: '₹3,200', status: 'Pending' },
+  { id: 'ORD-004', customer: 'Dr. Michael Brown', total: '₹1,560', status: 'Completed' },
+  { id: 'ORD-005', customer: 'Dr. Priya Sharma', total: '₹2,780', status: 'Processing' },
+];
 
 const AdminHome = () => {
   return (
@@ -30,30 +56,26 @@ const AdminHome = () => {
         <StatsCard
           title="Total Revenue"
           value="₹45,231"
-          change="+20.1%"
+          changePercentage={20.1}
           icon={DollarSign}
-          trend="up"
         />
         <StatsCard
           title="Orders"
           value="1,234"
-          change="+15.2%"
+          changePercentage={15.2}
           icon={ShoppingCart}
-          trend="up"
         />
         <StatsCard
           title="Customers"
           value="456"
-          change="+8.5%"
+          changePercentage={8.5}
           icon={Users}
-          trend="up"
         />
         <StatsCard
           title="Products"
           value="89"
-          change="+2.1%"
+          changePercentage={2.1}
           icon={Package}
-          trend="up"
         />
       </div>
 
@@ -62,36 +84,33 @@ const AdminHome = () => {
         <SummaryCard
           title="Monthly Growth"
           value="12.5%"
-          description="Compared to last month"
+          growth={12.5}
           icon={TrendingUp}
-          color="green"
         />
         <SummaryCard
           title="Pending Orders"
           value="23"
-          description="Require attention"
+          growth={-5.2}
           icon={AlertCircle}
-          color="orange"
         />
         <SummaryCard
           title="Active Products"
           value="67"
-          description="Currently in stock"
+          growth={8.1}
           icon={Package}
-          color="blue"
         />
       </div>
 
       {/* Charts */}
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-        <RevenueChart />
+        <RevenueChart data={sampleRevenueData} />
         <div className="space-y-4">
-          <TopSellingProductsTable />
+          <TopSellingProductsTable products={sampleTopProducts} />
         </div>
       </div>
 
       {/* Recent Orders */}
-      <RecentOrdersTable />
+      <RecentOrdersTable orders={sampleRecentOrders} />
     </div>
   );
 };
