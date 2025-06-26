@@ -87,8 +87,7 @@ const ProductPageOptimized: React.FC<ProductPageOptimizedProps> = ({
             </div>
             
             <ProductPrice 
-              price={product.price} 
-              inStock={product.inStock}
+              price={product.price}
             />
             
             <div>
