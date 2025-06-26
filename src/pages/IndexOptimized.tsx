@@ -99,7 +99,7 @@ const IndexOptimized: React.FC<IndexOptimizedProps> = ({
       <ShopHeroCarousel />
       <SearchActionBar />
       <ConsultSection />
-      <DiscoverSection healthConcerns={healthConcerns} />
+      <DiscoverSection />
       
       {/* Below-the-fold content - can be lazy loaded or server rendered */}
       <FeaturedProductsSection products={featuredProducts} />

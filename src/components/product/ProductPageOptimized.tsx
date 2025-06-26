@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { SEO } from '@/components/SEO';
-import { ProductImages } from '@/components/product/ProductImages';
-import { ProductPrice } from '@/components/product/ProductPrice';
-import { ProductActions } from '@/components/product/ProductActions';
-import { ProductTabs } from '@/components/product/ProductTabs';
-import { RelatedProducts } from '@/components/product/RelatedProducts';
+import ProductImages from '@/components/product/ProductImages';
+import ProductPrice from '@/components/product/ProductPrice';
+import ProductActions from '@/components/product/ProductActions';
+import ProductTabs from '@/components/product/ProductTabs';
+import RelatedProducts from '@/components/product/RelatedProducts';
 
 interface ProductPageOptimizedProps {
   product: {
@@ -14,10 +14,14 @@ interface ProductPageOptimizedProps {
     price: number;
     description: string;
     images: string[];
+    image: string;
     category: string;
     inStock: boolean;
-    specifications: Record<string, string>;
+    benefits: string[];
+    usage: string;
+    ingredients: string;
     reviews: any[];
+    stock?: number;
   };
   relatedProducts: any[];
 }
@@ -64,7 +68,11 @@ const ProductPageOptimized: React.FC<ProductPageOptimizedProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Product Images */}
           <div>
-            <ProductImages images={product.images} productName={product.name} />
+            <ProductImages 
+              image={product.image} 
+              images={product.images} 
+              productName={product.name} 
+            />
           </div>
           
           {/* Product Info */}
@@ -91,16 +99,27 @@ const ProductPageOptimized: React.FC<ProductPageOptimizedProps> = ({
             </div>
             
             <ProductActions 
-              productId={product.id}
-              inStock={product.inStock}
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                stock: product.stock
+              }}
+              quantity={1}
+              setQuantity={() => {}}
+              isOutOfStock={!product.inStock}
             />
           </div>
         </div>
         
         {/* Product Details Tabs */}
         <ProductTabs 
-          specifications={product.specifications}
-          reviews={product.reviews}
+          benefits={product.benefits || []}
+          usage={product.usage || ''}
+          ingredients={product.ingredients || ''}
+          reviewCount={product.reviews.length}
+          productId={product.id}
         />
         
         {/* Related Products */}
