@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
@@ -9,8 +8,9 @@ interface SEOProps {
   image?: string;
   url?: string;
   type?: 'website' | 'article' | 'product';
-  structuredData?: object;
+  structuredData?: object | object[];
   noIndex?: boolean;
+  breadcrumbs?: Array<{ name: string; url: string }>;
 }
 
 export const SEO: React.FC<SEOProps> = ({
@@ -21,7 +21,8 @@ export const SEO: React.FC<SEOProps> = ({
   url = 'https://bahola-labs.lovable.app',
   type = 'website',
   structuredData,
-  noIndex = false
+  noIndex = false,
+  breadcrumbs
 }) => {
   const fullTitle = title.includes('Bahola Labs') ? title : `${title} | Bahola Labs`;
   const fullUrl = url.startsWith('http') ? url : `https://bahola-labs.lovable.app${url}`;
@@ -37,7 +38,9 @@ export const SEO: React.FC<SEOProps> = ({
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+91-XXXXXXXXXX",
-      "contactType": "Customer Service"
+      "contactType": "Customer Service",
+      "areaServed": "IN",
+      "availableLanguage": ["en", "hi"]
     },
     "sameAs": [
       "https://www.facebook.com/bahola-labs",
@@ -45,6 +48,24 @@ export const SEO: React.FC<SEOProps> = ({
       "https://www.twitter.com/bahola-labs"
     ]
   };
+
+  // Generate breadcrumb structured data if breadcrumbs provided
+  const breadcrumbSchema = breadcrumbs ? {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbs.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": item.url.startsWith('http') ? item.url : `https://bahola-labs.lovable.app${item.url}`
+    }))
+  } : null;
+
+  // Combine all structured data
+  const allStructuredData = [
+    structuredData || defaultStructuredData,
+    breadcrumbSchema
+  ].filter(Boolean);
 
   return (
     <Helmet>
@@ -81,9 +102,11 @@ export const SEO: React.FC<SEOProps> = ({
       <meta httpEquiv="Content-Language" content="en" />
       
       {/* Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify(structuredData || defaultStructuredData)}
-      </script>
+      {allStructuredData.map((data, index) => (
+        <script key={index} type="application/ld+json">
+          {JSON.stringify(data)}
+        </script>
+      ))}
     </Helmet>
   );
 };

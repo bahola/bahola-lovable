@@ -1,31 +1,19 @@
+# Bahola Labs - Robots.txt
 
 User-agent: *
 Allow: /
 
-# Important pages
-Allow: /
-Allow: /about
-Allow: /products
-Allow: /diseases-conditions
-Allow: /consultation
-Allow: /homeopathy
-Allow: /help-center
-Allow: /contact
-
-# Health concern pages
-Allow: /concern/
-
-# Help center pages
-Allow: /help/
-
-# Disallow admin and private pages
-Disallow: /admin
-Disallow: /account
+# Disallow admin and account pages
+Disallow: /admin/
+Disallow: /account/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order-confirmation
 Disallow: /video-room/
 Disallow: /join-consultation/
 
-# Crawl delay
-Crawl-delay: 1
-
-# Sitemap
+# Sitemap location
 Sitemap: https://bahola-labs.lovable.app/sitemap.xml
+
+# Crawl-delay for better server performance
+Crawl-delay: 1
