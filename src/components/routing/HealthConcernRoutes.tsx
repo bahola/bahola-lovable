@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
+import DigestiveIssuesDetailed from '../../pages/health-concerns/gut-health/DigestiveIssuesDetailed';
+
 import {
   AnxietyStress,
   InsomniaPage,
@@ -90,6 +92,9 @@ export const getHealthConcernRoutes = () => [
   // Main Category Routes with new hero section structure
   <Route key="allergies-main" path="/diseases-conditions/allergies" element={<AllergiesCategoryPage />} />,
   <Route key="gut-health-main" path="/diseases-conditions/gut-health" element={<GutHealthCategoryPage />} />,
+  
+  // Gut Health - Detailed condition pages
+  <Route key="digestive-issues-detailed" path="/diseases-conditions/gut-health/digestive-issues" element={<DigestiveIssuesDetailed />} />,
   <Route key="heart-health-main" path="/diseases-conditions/heart-health" element={<HeartHealthCategoryPage />} />,
   <Route key="eye-care-main" path="/diseases-conditions/eye-care" element={<EyeCareCategoryPage />} />,
   <Route key="ent-care-main" path="/diseases-conditions/ent-care" element={<ENTCareCategoryPage />} />,
