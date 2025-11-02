@@ -6,7 +6,8 @@ import {
   MegaMenuConcern, 
   MegaMenuCategory, 
   MegaMenuDoctor, 
-  MegaMenuBachFlower 
+  MegaMenuBachFlower,
+  MegaMenuDiseasesConditions
 } from '@/components/mega-menus';
 
 interface MainMenuProps {
@@ -46,9 +47,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         <ChevronDown size={16} className="ml-1 text-gray-600" />
       </div>
 
-      <Link to="/diseases-conditions" className="main-menu-item">
+      <div
+        className="main-menu-item flex items-center relative cursor-pointer"
+        onClick={() => handleMenuClick('diseases')}
+      >
         <span className="text-gray-800 font-medium">Diseases & Conditions</span>
-      </Link>
+        <ChevronDown size={16} className="ml-1 text-gray-600" />
+      </div>
 
       <div
         className="main-menu-item flex items-center relative cursor-pointer"
@@ -84,6 +89,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
       {/* Mega menus positioned at the end of the nav */}
       <MegaMenuConcern isOpen={activeMenu === 'concern'} />
       <MegaMenuCategory isOpen={activeMenu === 'category'} />
+      <MegaMenuDiseasesConditions isOpen={activeMenu === 'diseases'} />
       <MegaMenuDoctor isOpen={activeMenu === 'doctors'} />
       <MegaMenuBachFlower isOpen={activeMenu === 'bachflower'} />
     </nav>
