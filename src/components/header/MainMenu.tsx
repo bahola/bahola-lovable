@@ -21,51 +21,43 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   onMenuHover, 
   onMenuLeave 
 }) => {
-  const handleMenuClick = (menuName: string) => {
-    if (activeMenu === menuName) {
-      onMenuLeave();
-    } else {
-      onMenuHover(menuName);
-    }
-  };
-
   return (
-    <nav className="hidden lg:flex items-center space-x-2 relative">
+    <nav className="hidden lg:flex items-center space-x-2 relative" onMouseLeave={onMenuLeave}>
       <div
-        className="main-menu-item flex items-center relative cursor-pointer"
-        onClick={() => handleMenuClick('concern')}
+        className="main-menu-item flex items-center relative cursor-pointer py-4"
+        onMouseEnter={() => onMenuHover('concern')}
       >
         <span className="text-gray-800 font-medium">Shop by Problem</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
       </div>
 
       <div
-        className="main-menu-item flex items-center relative cursor-pointer"
-        onClick={() => handleMenuClick('category')}
+        className="main-menu-item flex items-center relative cursor-pointer py-4"
+        onMouseEnter={() => onMenuHover('category')}
       >
         <span className="text-gray-800 font-medium">Shop by Category</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
       </div>
 
       <div
-        className="main-menu-item flex items-center relative cursor-pointer"
-        onClick={() => handleMenuClick('diseases')}
+        className="main-menu-item flex items-center relative cursor-pointer py-4"
+        onMouseEnter={() => onMenuHover('diseases')}
       >
         <span className="text-gray-800 font-medium">Diseases & Conditions</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
       </div>
 
       <div
-        className="main-menu-item flex items-center relative cursor-pointer"
-        onClick={() => handleMenuClick('doctors')}
+        className="main-menu-item flex items-center relative cursor-pointer py-4"
+        onMouseEnter={() => onMenuHover('doctors')}
       >
         <span className="text-gray-800 font-medium">For Doctors</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
       </div>
 
       <div 
-        className="main-menu-item flex items-center relative cursor-pointer"
-        onClick={() => handleMenuClick('bachflower')}
+        className="main-menu-item flex items-center relative cursor-pointer py-4"
+        onMouseEnter={() => onMenuHover('bachflower')}
       >
         <span className="text-gray-800 font-medium">Bach Flower</span>
         <ChevronDown size={16} className="ml-1 text-gray-600" />
