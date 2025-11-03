@@ -4,7 +4,6 @@ import { Route } from 'react-router-dom';
 
 import {
   ChildCare,
-  ENTCare,
   EyeCare,
   GutHealth,
   WomensHealth,
@@ -31,6 +30,12 @@ import {
   FeverWithChills,
   Teething,
   ChronicRhinitis,
+  Tonsillitis,
+  SoreThroat,
+  NasalPolyps,
+  NoseBleedsEpistaxis,
+  Tinnitus,
+  LossOfVoiceLaryngitis,
   Diarrhoea,
   Gastritis,
   BreastTenderness,
@@ -69,15 +74,15 @@ export const getDetailedHealthRoutes = () => [
   <Route key="temper-tantrums" path="/diseases-conditions/child-care/temper-tantrums-hyperactivity" element={<ChildCare />} />,
 
   // Ear, Nose, Throat Routes
-  <Route key="earache-otitis" path="/diseases-conditions/ear,-nose,-throat/earache-otitis-media" element={<ENTCare />} />,
-  <Route key="sinusitis" path="/diseases-conditions/ear,-nose,-throat/sinusitis" element={<ENTCare />} />,
-  <Route key="tonsillitis" path="/diseases-conditions/ear,-nose,-throat/tonsillitis" element={<ENTCare />} />,
-  <Route key="sore-throat" path="/diseases-conditions/ear,-nose,-throat/sore-throat" element={<ENTCare />} />,
-  <Route key="nasal-polyps" path="/diseases-conditions/ear,-nose,-throat/nasal-polyps" element={<ENTCare />} />,
+  <Route key="earache-otitis" path="/diseases-conditions/ear,-nose,-throat/earache-otitis-media" element={<EarSinusInfections />} />,
+  <Route key="sinusitis" path="/diseases-conditions/ear,-nose,-throat/sinusitis" element={<EarSinusInfections />} />,
+  <Route key="tonsillitis" path="/diseases-conditions/ear,-nose,-throat/tonsillitis" element={<Tonsillitis />} />,
+  <Route key="sore-throat" path="/diseases-conditions/ear,-nose,-throat/sore-throat" element={<SoreThroat />} />,
+  <Route key="nasal-polyps" path="/diseases-conditions/ear,-nose,-throat/nasal-polyps" element={<NasalPolyps />} />,
   <Route key="chronic-rhinitis" path="/diseases-conditions/ear,-nose,-throat/chronic-rhinitis" element={<ChronicRhinitis />} />,
-  <Route key="nose-bleeds" path="/diseases-conditions/ear,-nose,-throat/nose-bleeds-epistaxis" element={<ENTCare />} />,
-  <Route key="tinnitus" path="/diseases-conditions/ear,-nose,-throat/tinnitus" element={<ENTCare />} />,
-  <Route key="loss-of-voice" path="/diseases-conditions/ear,-nose,-throat/loss-of-voice-laryngitis" element={<ENTCare />} />,
+  <Route key="nose-bleeds" path="/diseases-conditions/ear,-nose,-throat/nose-bleeds-epistaxis" element={<NoseBleedsEpistaxis />} />,
+  <Route key="tinnitus" path="/diseases-conditions/ear,-nose,-throat/tinnitus" element={<Tinnitus />} />,
+  <Route key="loss-of-voice" path="/diseases-conditions/ear,-nose,-throat/loss-of-voice-laryngitis" element={<LossOfVoiceLaryngitis />} />,
 
   // Eye Care Routes
   <Route key="eye-strain" path="/diseases-conditions/eye-care/eye-strain-digital-eye-fatigue" element={<EyeProblems />} />,

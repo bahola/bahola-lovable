@@ -54,7 +54,6 @@ export const HeartHealth = React.lazy(() => import('@/pages/health-concerns/Hear
 export const ChildCare = React.lazy(() => import('@/pages/health-concerns/ChildCare'));
 export const CancerSupport = React.lazy(() => import('@/pages/health-concerns/CancerSupport'));
 export const AnxietyMentalHealth = React.lazy(() => import('@/pages/health-concerns/AnxietyMentalHealth'));
-export const ENTCare = React.lazy(() => import('@/pages/health-concerns/ENTCare'));
 export const EyeCare = React.lazy(() => import('@/pages/health-concerns/EyeCare'));
 export const HairCare = React.lazy(() => import('@/pages/health-concerns/HairCare'));
 export const ImmuneBoosters = React.lazy(() => import('@/pages/health-concerns/ImmuneBoosters'));

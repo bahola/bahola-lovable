@@ -49,7 +49,6 @@ import {
   ChildCare,
   CancerSupport,
   AnxietyMentalHealth,
-  ENTCare,
   EyeCare,
   HairCare,
   ImmuneBoosters,
