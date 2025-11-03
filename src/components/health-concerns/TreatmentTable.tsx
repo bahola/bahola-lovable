@@ -6,7 +6,7 @@ interface TreatmentTableProps {
 }
 
 export const TreatmentTable: React.FC<TreatmentTableProps> = ({ treatment }) => {
-  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
+  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-').replace(/\(/g, '').replace(/\)/g, '');
   
   return (
     <div id={sectionId} className="bg-card rounded-lg shadow-sm border border-border overflow-hidden mb-8 scroll-mt-24">

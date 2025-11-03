@@ -51,7 +51,7 @@ const CancerSupport = () => {
               <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Quick Navigation</h2>
               <div className="flex flex-wrap gap-2">
                 {cancerTreatments.map((treatment, idx) => {
-                  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
+                  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-').replace(/\(/g, '').replace(/\)/g, '');
                   return (
                     <a
                       key={idx}
