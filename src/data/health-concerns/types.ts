@@ -1,4 +1,24 @@
 
+export interface RemedyDetail {
+  name: string;
+  potency: string;
+  specificIndication: string;
+  expectedResult: string;
+}
+
+export interface BiochemicDetail {
+  name: string;
+  potency: string;
+}
+
+export interface SubConditionTreatment {
+  subConditionName: string;
+  remedies: RemedyDetail[];
+  biochemicRemedies: BiochemicDetail[];
+  bioCombination: string;
+  baholaSpecialty: string;
+}
+
 export interface HealthConcern {
   id: string;
   name: string;
@@ -11,6 +31,7 @@ export interface HealthConcern {
   keywords: string[];
   lastUpdated: string;
   trending?: boolean;
+  detailedTreatments?: SubConditionTreatment[];
 }
 
 export type HealthConcernCategory = 
