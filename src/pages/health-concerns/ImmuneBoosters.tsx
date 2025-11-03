@@ -1,90 +1,104 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthConcernsBreadcrumb';
-import { HealthConcernsToolbar } from '@/components/health-concerns/HealthConcernsToolbar';
-import { HealthConcernsGrid } from '@/components/health-concerns/HealthConcernsGrid';
-import { NoResultsMessage } from '@/components/health-concerns/NoResultsMessage';
-import { healthConcernsData } from '@/data/healthConcernsData';
+import { immuneBoostersTreatments } from '@/data/health-concerns/immuneBoostersTreatments';
+import { TreatmentTable } from '@/components/health-concerns/TreatmentTable';
+import { SEO } from '@/components/SEO';
 
 const ImmuneBoosters = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('popular');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-
-  const categoryName = 'Immune Boosters';
-  const filteredConcerns = healthConcernsData.filter(concern => {
-    const matchesCategory = concern.category === categoryName;
-    const matchesSearch = concern.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         concern.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         concern.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    return matchesCategory && matchesSearch;
-  });
-
-  const sortedConcerns = [...filteredConcerns].sort((a, b) => {
-    switch (sortBy) {
-      case 'alphabetical':
-        return a.name.localeCompare(b.name);
-      case 'popular':
-        return b.searchVolume - a.searchVolume;
-      case 'newest':
-        return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
-      default:
-        return 0;
-    }
-  });
-
-  const handleClearFilters = () => {
-    setSearchQuery('');
-  };
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">
-        <div className="bg-bahola-blue-50 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-bahola-navy-950 mb-4">
-              {categoryName}
-            </h1>
-            <p className="text-xl text-bahola-neutral-600 max-w-3xl mx-auto">
-              Natural homeopathic remedies to strengthen immunity and boost vitality
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-gray-50 px-4 py-8">
-          <div className="container mx-auto">
+    <>
+      <SEO
+        title="Immune Boosters Treatment Guide - Natural Immunity Solutions"
+        description="Comprehensive homeopathic treatment guide for immune health including low immunity, recurrent infections, post-illness recovery, and detox support with detailed remedies and potencies."
+        keywords={[
+          'immune boosters homeopathy',
+          'immunity treatment',
+          'recurrent cold remedies',
+          'post illness recovery',
+          'vaccine detox',
+          'frequent infections treatment',
+          'immunity support',
+          'biochemic remedies immunity',
+          'natural immune health'
+        ]}
+      />
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
+          <div className="container mx-auto px-4 py-6">
             <HealthConcernsBreadcrumb 
-              categoryName={categoryName}
-              categoryPath="/health-concerns/immune-boosters"
+              categoryName="Immune Boosters"
+              categoryPath="/diseases-conditions/immune-boosters"
             />
+          </div>
 
-            <div className="flex-1">
-              <HealthConcernsToolbar
-                showFilters={false}
-                onToggleFilters={() => {}}
-                concernsCount={sortedConcerns.length}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-                sortBy={sortBy}
-                onSortChange={setSortBy}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-              />
-
-              <HealthConcernsGrid
-                concerns={sortedConcerns}
-                viewMode={viewMode}
-              />
-
-              {sortedConcerns.length === 0 && (
-                <NoResultsMessage onClearFilters={handleClearFilters} />
-              )}
+          {/* Hero Section */}
+          <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-background py-12 md:py-16">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                Complete Immune Boosters Treatment Guide
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-3xl">
+                Natural homeopathic treatment protocols for strengthening immunity and preventing infections. 
+                Each section includes specific remedies with potencies, detailed indications, and expected outcomes.
+              </p>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+
+          {/* Quick Navigation */}
+          <div className="bg-card border-y border-border sticky top-0 z-10 shadow-sm">
+            <div className="container mx-auto px-4 py-4 max-w-6xl">
+              <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Quick Navigation</h2>
+              <div className="flex flex-wrap gap-2">
+                {immuneBoostersTreatments.map((treatment, idx) => {
+                  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-').replace(/\(/g, '').replace(/\)/g, '');
+                  return (
+                    <a
+                      key={idx}
+                      href={`#${sectionId}`}
+                      className="px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md text-sm font-medium transition-colors"
+                    >
+                      {treatment.subConditionName}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Introduction Section */}
+          <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="bg-card rounded-lg shadow-sm border border-border p-6 mb-8">
+              <h2 className="text-2xl font-bold mb-4 text-foreground">Understanding Homeopathic Immune Support</h2>
+              <div className="prose prose-sm max-w-none text-muted-foreground">
+                <p className="mb-3">
+                  This comprehensive guide provides detailed homeopathic treatment protocols for immune system support. 
+                  Each treatment protocol includes:
+                </p>
+                <ul className="list-disc list-inside space-y-2 mb-4">
+                  <li><strong className="text-foreground">Homeopathic Remedies:</strong> Specific medicines with potencies (Q, 6CH, 12CH, 6X, etc.)</li>
+                  <li><strong className="text-foreground">Specific Indications:</strong> Exact symptoms and conditions each remedy addresses</li>
+                  <li><strong className="text-foreground">Expected Results:</strong> What improvement to expect from each remedy</li>
+                  <li><strong className="text-foreground">Biochemic Remedies:</strong> Tissue salts that support immune health</li>
+                  <li><strong className="text-foreground">Bio-Combinations:</strong> Pre-formulated combinations for convenience</li>
+                  <li><strong className="text-foreground">Bahola Specialty Products:</strong> Ready-to-use immune support formulations</li>
+                </ul>
+                <p className="text-sm italic border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded">
+                  <strong>Important:</strong> Always consult with qualified healthcare practitioners before starting any treatment protocol. 
+                  This guide is for informational purposes only.
+                </p>
+              </div>
+            </div>
+
+            {/* Treatment Tables for All Sub-Conditions */}
+            <div className="space-y-6">
+              {immuneBoostersTreatments.map((treatment, idx) => (
+                <TreatmentTable key={idx} treatment={treatment} />
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 };
 
