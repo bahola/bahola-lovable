@@ -90,6 +90,9 @@ import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategory
 import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
 import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
 import ENTCareCategoryPage from '../../pages/health-concerns/ENTCareCategoryPage';
+import WomensHealthCategoryPage from '../../pages/health-concerns/WomensHealthCategoryPage';
+
+export { AllergiesCategoryPage, GutHealthCategoryPage, HeartHealthCategoryPage, EyeCareCategoryPage, ENTCareCategoryPage, WomensHealthCategoryPage };
 
 // Add ENT pages - corrected paths to point to the root health-concerns directory
 export const Tonsillitis = React.lazy(() => import('@/pages/health-concerns/Tonsillitis'));

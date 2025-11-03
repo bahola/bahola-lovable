@@ -86,6 +86,7 @@ import GutHealthCategoryPage from '../../pages/health-concerns/GutHealthCategory
 import HeartHealthCategoryPage from '../../pages/health-concerns/HeartHealthCategoryPage';
 import EyeCareCategoryPage from '../../pages/health-concerns/EyeCareCategoryPage';
 import ENTCareCategoryPage from '../../pages/health-concerns/ENTCareCategoryPage';
+import WomensHealthCategoryPage from '../../pages/health-concerns/WomensHealthCategoryPage';
 
 export const getHealthConcernRoutes = () => [
   // Main Category Routes with new hero section structure
@@ -97,6 +98,7 @@ export const getHealthConcernRoutes = () => [
   <Route key="heart-health-main" path="/diseases-conditions/heart-health" element={<HeartHealthCategoryPage />} />,
   <Route key="eye-care-main" path="/diseases-conditions/eye-care" element={<EyeCareCategoryPage />} />,
   <Route key="ent-care-main" path="/diseases-conditions/ent-care" element={<ENTCareCategoryPage />} />,
+  <Route key="womens-health-main" path="/diseases-conditions/womens-health" element={<WomensHealthCategoryPage />} />,
   
   // Other category routes (will be updated to new structure later)
   <Route key="child-care" path="/diseases-conditions/child-care" element={<ChildCare />} />,
@@ -120,7 +122,6 @@ export const getHealthConcernRoutes = () => [
   <Route key="tooth-care" path="/diseases-conditions/tooth-care" element={<ToothCare />} />,
   <Route key="urology-care-1" path="/diseases-conditions/urology-care" element={<UrologyCare />} />,
   <Route key="urology-care-2" path="/diseases-conditions/urinary-care" element={<UrologyCare />} />,
-  <Route key="womens-health-1" path="/diseases-conditions/womens-health" element={<WomensHealth />} />,
   <Route key="womens-health-2" path="/diseases-conditions/womens-care" element={<WomensHealth />} />,
 
   // HIERARCHICAL ROUTES - Allergies
