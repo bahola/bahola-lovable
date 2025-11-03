@@ -1,36 +1,34 @@
 import React from 'react';
 import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthConcernsBreadcrumb';
-import { heartHealthTreatments } from '@/data/health-concerns/heartHealthTreatments';
+import { cancerTreatments } from '@/data/health-concerns/cancerTreatments';
 import { TreatmentTable } from '@/components/health-concerns/TreatmentTable';
 import { SEO } from '@/components/SEO';
 
-const HeartHealthCategoryPage = () => {
+const CancerCareCategoryPage = () => {
   return (
     <>
       <SEO
-        title="Heart Health & Cardiovascular Treatment Guide - Homeopathic Solutions"
-        description="Comprehensive homeopathic treatment guide for heart health and cardiovascular conditions including high blood pressure, high cholesterol, heart palpitations, poor circulation, and cardiac weakness with detailed remedies, potencies, and expected results."
+        title="Cancer Care Treatment Guide - Homeopathic Support Solutions"
+        description="Comprehensive homeopathic treatment guide for cancer care including post-radiation recovery, chemotherapy support, immune system strengthening, and digestive support with detailed remedies, potencies, and expected results."
         keywords={[
-          'heart health homeopathy',
-          'high blood pressure treatment',
-          'high cholesterol remedies',
-          'heart palpitations treatment',
-          'angina homeopathy',
-          'poor circulation remedies',
-          'DVT care',
-          'high triglycerides treatment',
-          'cardiac weakness remedies',
-          'cardiovascular health',
-          'biochemic remedies heart',
-          'natural heart care'
+          'cancer care homeopathy',
+          'post radiation recovery',
+          'chemotherapy support',
+          'cancer treatment side effects',
+          'homeopathic immune support',
+          'breast cancer recovery',
+          'liver support post therapy',
+          'biochemic remedies cancer',
+          'natural cancer care',
+          'complementary cancer treatment'
         ]}
       />
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow">
           <div className="container mx-auto px-4 py-6">
             <HealthConcernsBreadcrumb 
-              categoryName="Heart Health"
-              categoryPath="/diseases-conditions/heart-health"
+              categoryName="Cancer Care"
+              categoryPath="/diseases-conditions/cancer-care"
             />
           </div>
 
@@ -38,10 +36,10 @@ const HeartHealthCategoryPage = () => {
           <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-background py-12 md:py-16">
             <div className="container mx-auto px-4 max-w-6xl">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                Complete Heart Health & Cardiovascular Guide
+                Complete Cancer Care Support Guide
               </h1>
               <p className="text-lg text-muted-foreground max-w-3xl">
-                Comprehensive homeopathic treatment protocols for cardiovascular conditions and heart health support. 
+                Comprehensive homeopathic treatment protocols to support recovery during and after cancer therapy. 
                 Each section includes specific remedies with potencies, detailed indications, and expected outcomes.
               </p>
             </div>
@@ -52,7 +50,7 @@ const HeartHealthCategoryPage = () => {
             <div className="container mx-auto px-4 py-4 max-w-6xl">
               <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Quick Navigation</h2>
               <div className="flex flex-wrap gap-2">
-                {heartHealthTreatments.map((treatment, idx) => {
+                {cancerTreatments.map((treatment, idx) => {
                   const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
                   return (
                     <a
@@ -71,22 +69,22 @@ const HeartHealthCategoryPage = () => {
           {/* Introduction Section */}
           <div className="container mx-auto px-4 py-8 max-w-6xl">
             <div className="bg-card rounded-lg shadow-sm border border-border p-6 mb-8">
-              <h2 className="text-2xl font-bold mb-4 text-foreground">Understanding Homeopathic Heart Health Treatment</h2>
+              <h2 className="text-2xl font-bold mb-4 text-foreground">Understanding Homeopathic Cancer Care Support</h2>
               <div className="prose prose-sm max-w-none text-muted-foreground">
                 <p className="mb-3">
-                  This comprehensive guide provides detailed homeopathic treatment protocols for cardiovascular health and heart-related conditions. 
+                  This comprehensive guide provides detailed homeopathic treatment protocols to support patients during and after cancer therapy. 
                   Each treatment protocol includes:
                 </p>
                 <ul className="list-disc list-inside space-y-2 mb-4">
                   <li><strong className="text-foreground">Homeopathic Remedies:</strong> Specific medicines with potencies (Q, 6CH, 12CH, 6X, etc.)</li>
                   <li><strong className="text-foreground">Specific Indications:</strong> Exact symptoms and conditions each remedy addresses</li>
                   <li><strong className="text-foreground">Expected Results:</strong> What improvement to expect from each remedy</li>
-                  <li><strong className="text-foreground">Biochemic Remedies:</strong> Tissue salts that support cardiovascular health</li>
+                  <li><strong className="text-foreground">Biochemic Remedies:</strong> Tissue salts that support healing and recovery</li>
                   <li><strong className="text-foreground">Bio-Combinations:</strong> Pre-formulated combinations for convenience</li>
-                  <li><strong className="text-foreground">Bahola Specialty Products:</strong> Ready-to-use cardiac care formulations</li>
+                  <li><strong className="text-foreground">Bahola Specialty Products:</strong> Ready-to-use therapeutic formulations</li>
                 </ul>
                 <p className="text-sm italic border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded">
-                  <strong>Important:</strong> Heart conditions require professional medical supervision. These homeopathic remedies are complementary support therapies and should be used alongside conventional cardiac care. 
+                  <strong>Important:</strong> These remedies are complementary support therapies and should be used alongside conventional cancer treatment under proper medical supervision. 
                   Always consult with qualified healthcare practitioners before starting any treatment protocol.
                 </p>
               </div>
@@ -94,7 +92,7 @@ const HeartHealthCategoryPage = () => {
 
             {/* Treatment Tables for All Sub-Conditions */}
             <div className="space-y-6">
-              {heartHealthTreatments.map((treatment, idx) => (
+              {cancerTreatments.map((treatment, idx) => (
                 <TreatmentTable key={idx} treatment={treatment} />
               ))}
             </div>
@@ -105,4 +103,4 @@ const HeartHealthCategoryPage = () => {
   );
 };
 
-export default HeartHealthCategoryPage;
+export default CancerCareCategoryPage;
