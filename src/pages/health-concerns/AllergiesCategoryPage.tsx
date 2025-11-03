@@ -45,6 +45,27 @@ const AllergiesCategoryPage = () => {
             </div>
           </div>
 
+          {/* Quick Navigation */}
+          <div className="bg-card border-y border-border sticky top-0 z-10 shadow-sm">
+            <div className="container mx-auto px-4 py-4 max-w-6xl">
+              <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Quick Navigation</h2>
+              <div className="flex flex-wrap gap-2">
+                {allergyTreatments.map((treatment, idx) => {
+                  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
+                  return (
+                    <a
+                      key={idx}
+                      href={`#${sectionId}`}
+                      className="px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md text-sm font-medium transition-colors"
+                    >
+                      {treatment.subConditionName}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
           {/* Introduction Section */}
           <div className="container mx-auto px-4 py-8 max-w-6xl">
             <div className="bg-card rounded-lg shadow-sm border border-border p-6 mb-8">
