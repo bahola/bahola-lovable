@@ -56,6 +56,7 @@ import {
   MateriaMedica,
   RemedyDeepDive,
   Sulphur,
+  NuxVomica,
   BryoniaRhus,
   PulsatillaSepia,
   LachesisPulsatilla,
@@ -166,6 +167,7 @@ const AppRoutes = () => {
         {/* Professional Routes */}
         <Route path="/professional/remedy-deep-dive" element={<RemedyDeepDive />} />
         <Route path="/professional/remedy-deep-dive/sulphur" element={<Sulphur />} />
+        <Route path="/professional/remedy-deep-dive/nux-vomica" element={<NuxVomica />} />
         <Route path="/professional/materia-medica" element={<MateriaMedica />} />
         <Route path="/professional/materia-medica/bryonia-rhus" element={<BryoniaRhus />} />
         <Route path="/professional/materia-medica/pulsatilla-sepia" element={<PulsatillaSepia />} />

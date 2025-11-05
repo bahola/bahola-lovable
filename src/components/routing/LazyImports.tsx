@@ -96,6 +96,7 @@ export const UrinaryCareCategoryPage = React.lazy(() => import('@/pages/health-c
 export const MateriaMedica = React.lazy(() => import('@/pages/professional/MateriaMedica'));
 export const RemedyDeepDive = React.lazy(() => import('@/pages/professional/RemedyDeepDive'));
 export const Sulphur = React.lazy(() => import('@/pages/professional/Sulphur'));
+export const NuxVomica = React.lazy(() => import('@/pages/professional/NuxVomica'));
 export const BryoniaRhus = React.lazy(() => import('@/pages/professional/BryoniaRhus'));
 export const PulsatillaSepia = React.lazy(() => import('@/pages/professional/PulsatillaSepia'));
 export const LachesisPulsatilla = React.lazy(() => import('@/pages/professional/LachesisPulsatilla'));
