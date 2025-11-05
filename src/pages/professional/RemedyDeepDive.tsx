@@ -1,7 +1,6 @@
 import { PageLayout } from '@/components/PageLayout';
-import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Target, Lightbulb, Clock } from 'lucide-react';
+import { BookOpen, Target, Clock } from 'lucide-react';
 
 const featuredRemedies = [
   { no: 1, remedy: "Sulphur", icon: "🔥", theme: "The King of Antipsorics", highlights: "Chronic psora, venous stasis, philosophical mind, neglect of appearance" },
@@ -39,13 +38,11 @@ const comingSoon = [
 ];
 
 const RemedyDeepDive = () => {
-
   return (
-    <ProtectedDoctorRoute>
-      <PageLayout 
-        title="🧠 Deep Dive Materia Medica" 
-        description="Explore the inner world of our greatest remedies — one at a time."
-      >
+    <PageLayout 
+      title="🧠 Deep Dive Materia Medica" 
+      description="Explore the inner world of our greatest remedies — one at a time."
+    >
         <div className="max-w-7xl mx-auto space-y-8">
           
           {/* Introduction */}
@@ -160,7 +157,6 @@ const RemedyDeepDive = () => {
 
         </div>
       </PageLayout>
-    </ProtectedDoctorRoute>
   );
 };
 
