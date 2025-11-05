@@ -313,7 +313,7 @@ const BachFlowerConcerns = () => {
 
   return (
     <PageLayout title="Shop by Concern – Bach Flower Remedies" description="Find the perfect remedy for your emotional balance">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <div className="inline-flex items-center">
             <Flower className="h-8 w-8 text-bahola-blue-500 mr-2" />
@@ -325,9 +325,36 @@ const BachFlowerConcerns = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {concerns.map((concern) => (
-            <Card key={concern.id} className="border-2 hover:border-bahola-blue-400 transition-colors overflow-hidden">
+        <div className="flex gap-8 relative">
+          {/* Quick Navigation Menu */}
+          <aside className="hidden lg:block w-64 shrink-0">
+            <div className="sticky top-24 bg-background border border-border rounded-lg p-4 max-h-[calc(100vh-7rem)] overflow-y-auto">
+              <h2 className="font-semibold text-sm text-muted-foreground mb-3 uppercase tracking-wide">Quick Navigation</h2>
+              <nav className="space-y-1">
+                {concerns.map((concern) => (
+                  <a
+                    key={concern.id}
+                    href={`#${concern.id}`}
+                    className="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent hover:text-accent-foreground transition-colors group"
+                  >
+                    <span className="text-base group-hover:scale-110 transition-transform">{concern.emoji}</span>
+                    <span className="line-clamp-1">{concern.title}</span>
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {concerns.map((concern) => (
+                <Card 
+                  key={concern.id} 
+                  id={concern.id}
+                  className="border-2 hover:border-bahola-blue-400 transition-colors overflow-hidden scroll-mt-24"
+                >
               <CardHeader className="bg-gradient-to-r from-bahola-blue-50 to-white pb-2">
                 <div className="flex items-center mb-2">
                   <span className="text-2xl mr-2">{concern.emoji}</span>
@@ -358,11 +385,11 @@ const BachFlowerConcerns = () => {
                   </Link>
                 </div>
               </CardContent>
-            </Card>
-          ))}
-        </div>
+                </Card>
+              ))}
+            </div>
 
-        <div className="bg-bahola-blue-50 p-6 rounded-lg text-center mb-12">
+            <div className="bg-bahola-blue-50 p-6 rounded-lg text-center mb-12">
           <h2 className="text-2xl font-bold text-bahola-neutral-800 mb-4">
             ✨ Embrace gentle healing
           </h2>
@@ -370,9 +397,11 @@ const BachFlowerConcerns = () => {
             Each remedy is hand-picked to match a specific emotional need.
             Start your journey toward emotional harmony today.
           </p>
-          <Button className="bg-bahola-blue-500 hover:bg-bahola-blue-600">
-            Explore All Bach Flower Remedies
-          </Button>
+              <Button className="bg-bahola-blue-500 hover:bg-bahola-blue-600">
+                Explore All Bach Flower Remedies
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </PageLayout>
