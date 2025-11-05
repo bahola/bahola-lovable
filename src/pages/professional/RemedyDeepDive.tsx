@@ -1,6 +1,7 @@
 import { PageLayout } from '@/components/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Target, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const featuredRemedies = [
   { no: 1, remedy: "Sulphur", icon: "🔥", theme: "The King of Antipsorics", highlights: "Chronic psora, venous stasis, philosophical mind, neglect of appearance" },
@@ -78,10 +79,17 @@ const RemedyDeepDive = () => {
                       <tr key={item.no} className="border-b border-border hover:bg-muted/50 transition-colors">
                         <td className="py-3 px-4">{item.no}</td>
                         <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">{item.icon}</span>
-                            <span className="font-medium">{item.remedy}</span>
-                          </div>
+                          {item.no === 1 ? (
+                            <Link to="/professional/remedy-deep-dive/sulphur" className="flex items-center gap-2 hover:text-primary">
+                              <span className="text-xl">{item.icon}</span>
+                              <span className="font-medium">{item.remedy}</span>
+                            </Link>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl">{item.icon}</span>
+                              <span className="font-medium">{item.remedy}</span>
+                            </div>
+                          )}
                         </td>
                         <td className="py-3 px-4 font-medium text-primary">{item.theme}</td>
                         <td className="py-3 px-4 text-sm text-muted-foreground">{item.highlights}</td>
