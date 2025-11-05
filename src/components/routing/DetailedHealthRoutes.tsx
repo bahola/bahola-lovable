@@ -60,6 +60,8 @@ import {
   EyeProblems
 } from './HealthConcernImports';
 
+import { InfectiousDiseasesPage } from './LazyImports';
+
 export const getDetailedHealthRoutes = () => [
   // Child Care Routes
   <Route key="teething-troubles" path="/diseases-conditions/child-care/teething-troubles" element={<Teething />} />,
@@ -145,5 +147,6 @@ export const getDetailedHealthRoutes = () => [
   <Route key="skin-infections" path="/diseases-conditions/infection/skin-infections" element={<SkinInfections />} />,
   <Route key="ear-sinus-infections" path="/diseases-conditions/infection/ear-sinus-infections" element={<EarSinusInfections />} />,
   <Route key="recurrent-fevers" path="/diseases-conditions/infection/recurrent-fevers" element={<RecurrentFevers />} />,
-  <Route key="fever-with-chills" path="/diseases-conditions/infection/fever-with-chills-intermittent-fever" element={<FeverWithChills />} />
+  <Route key="fever-with-chills" path="/diseases-conditions/infection/fever-with-chills-intermittent-fever" element={<FeverWithChills />} />,
+  <Route key="infectious-diseases-fever" path="/diseases-conditions/infection/infectious-diseases-fever" element={<InfectiousDiseasesPage />} />
 ];
