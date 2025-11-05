@@ -96,6 +96,7 @@ export const UrinaryCareCategoryPage = React.lazy(() => import('@/pages/health-c
 export const MateriaMedica = React.lazy(() => import('@/pages/professional/MateriaMedica'));
 export const BryoniaRhus = React.lazy(() => import('@/pages/professional/BryoniaRhus'));
 export const PulsatillaSepia = React.lazy(() => import('@/pages/professional/PulsatillaSepia'));
+export const LachesisPulsatilla = React.lazy(() => import('@/pages/professional/LachesisPulsatilla'));
 
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };

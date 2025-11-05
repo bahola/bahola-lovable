@@ -55,7 +55,8 @@ import {
   AllergiesProductsPage,
   MateriaMedica,
   BryoniaRhus,
-  PulsatillaSepia
+  PulsatillaSepia,
+  LachesisPulsatilla
 } from './LazyImports';
 
 // Import admin components
@@ -157,6 +158,7 @@ const AppRoutes = () => {
         <Route path="/professional/materia-medica" element={<MateriaMedica />} />
         <Route path="/professional/materia-medica/bryonia-rhus" element={<BryoniaRhus />} />
         <Route path="/professional/materia-medica/pulsatilla-sepia" element={<PulsatillaSepia />} />
+        <Route path="/professional/materia-medica/lachesis-pulsatilla" element={<LachesisPulsatilla />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>
