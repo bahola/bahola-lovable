@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import DigestiveIssuesDetailed from '../../pages/health-concerns/gut-health/DigestiveIssuesDetailed';
-import { InfectiousDiseasesPage, LifestyleCategoryPage, MuscleJointCategoryPage } from './LazyImports';
+import { InfectiousDiseasesPage, LifestyleCategoryPage, MuscleJointCategoryPage, MentalHealthCategoryPage } from './LazyImports';
 
 import {
   AnxietyStress,
@@ -110,7 +110,7 @@ export const getHealthConcernRoutes = () => [
   <Route key="infection-care-2" path="/diseases-conditions/infection" element={<InfectiousDiseasesPage />} />,
   <Route key="lifestyle-care-1" path="/diseases-conditions/lifestyle-care" element={<LifestyleCategoryPage />} />,
   <Route key="lifestyle-care-2" path="/diseases-conditions/lifestyle" element={<LifestyleCategoryPage />} />,
-  <Route key="mental-health" path="/diseases-conditions/mental-health" element={<MentalHealth />} />,
+  <Route key="mental-health" path="/diseases-conditions/mental-health" element={<MentalHealthCategoryPage />} />,
   <Route key="muscle-care-1" path="/diseases-conditions/muscle-care" element={<MuscleJointCategoryPage />} />,
   <Route key="muscle-care-2" path="/diseases-conditions/muscle-joint-care" element={<MuscleJointCategoryPage />} />,
   <Route key="nutritive-care-1" path="/diseases-conditions/nutritive-care" element={<NutritiveCare />} />,

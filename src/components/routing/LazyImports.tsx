@@ -68,5 +68,8 @@ export const LifestyleCategoryPage = React.lazy(() => import('@/pages/health-con
 // Add the new lazy import for MuscleJointCategoryPage
 export const MuscleJointCategoryPage = React.lazy(() => import('@/pages/health-concerns/MuscleJointCategoryPage'));
 
+// Add the new lazy import for MentalHealthCategoryPage
+export const MentalHealthCategoryPage = React.lazy(() => import('@/pages/health-concerns/MentalHealthCategoryPage'));
+
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };
