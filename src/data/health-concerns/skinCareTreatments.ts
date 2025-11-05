@@ -2,22 +2,22 @@ import { SubConditionTreatment } from './types';
 
 export const skinCareTreatments: SubConditionTreatment[] = [
   {
-    subConditionName: 'Blood Purifier / Acne Support',
+    subConditionName: 'Blood Purifier / Detox for Healthy Skin',
     remedies: [
       {
         name: 'Sulphur',
         potency: '6CH',
-        specificIndication: 'Chronic skin eruptions, itching',
-        expectedResult: 'Clear, glowing skin'
+        specificIndication: 'Chronic eruptions, boils, itching',
+        expectedResult: 'Clear, fresh skin'
       },
       {
         name: 'Berberis aquifolium',
         potency: 'Q',
-        specificIndication: 'Pimples, dark spots',
+        specificIndication: 'Acne, dark spots, blotches',
         expectedResult: 'Clearer complexion'
       },
       {
-        name: 'Echinacea angustifolia',
+        name: 'Echinacea',
         potency: 'Q',
         specificIndication: 'Recurrent boils, low immunity',
         expectedResult: 'Reduced breakouts'
@@ -25,27 +25,104 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       {
         name: 'Hepar sulphur',
         potency: '6CH',
-        specificIndication: 'Suppurating acne',
-        expectedResult: 'Faster healing'
+        specificIndication: 'Suppurating pimples',
+        expectedResult: 'Quicker healing'
       },
       {
         name: 'Graphites',
         potency: '6CH',
-        specificIndication: 'Oozing eruptions',
-        expectedResult: 'Smooth skin'
+        specificIndication: 'Sticky eruptions',
+        expectedResult: 'Smooth complexion'
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Kali sulphuricum',
-        potency: '6X'
-      }
+      { name: 'Kali sulphuricum', potency: '6X' }
     ],
     bioCombination: 'BC 20 – Skin Diseases',
     baholaSpecialty: 'Haematone'
   },
   {
-    subConditionName: 'Acne / Blemishes',
+    subConditionName: 'Acne / Pimples (Internal Purifier)',
+    remedies: [
+      {
+        name: 'Sulphur',
+        potency: '6CH',
+        specificIndication: 'Red, inflamed acne with itching',
+        expectedResult: 'Clearer skin'
+      },
+      {
+        name: 'Hepar sulphur',
+        potency: '6CH',
+        specificIndication: 'Painful, sensitive pimples',
+        expectedResult: 'Rapid healing'
+      },
+      {
+        name: 'Calcarea sulphurica',
+        potency: '6CH',
+        specificIndication: 'Pus-filled pimples',
+        expectedResult: 'Drains quickly, less scarring'
+      },
+      {
+        name: 'Natrum muriaticum',
+        potency: '6X',
+        specificIndication: 'Acne from stress, salt craving',
+        expectedResult: 'Reduced oiliness'
+      },
+      {
+        name: 'Graphites',
+        potency: '6CH',
+        specificIndication: 'Oozing eruptions',
+        expectedResult: 'Smooth recovery'
+      }
+    ],
+    biochemicRemedies: [
+      { name: 'Kali sulphuricum', potency: '6X' }
+    ],
+    bioCombination: 'BC 20 – Skin Diseases',
+    baholaSpecialty: 'Acnil'
+  },
+  {
+    subConditionName: 'Skin Brightening / Uneven Tone',
+    remedies: [
+      {
+        name: 'Berberis aquifolium',
+        potency: 'Q',
+        specificIndication: 'Dull complexion, acne marks',
+        expectedResult: 'Brighter, clearer skin'
+      },
+      {
+        name: 'Sulphur',
+        potency: '6CH',
+        specificIndication: 'Pigmentation & oily T-zone',
+        expectedResult: 'Balanced tone'
+      },
+      {
+        name: 'Natrum muriaticum',
+        potency: '6X',
+        specificIndication: 'Dark circles, patchy skin',
+        expectedResult: 'Hydrated glow'
+      },
+      {
+        name: 'Calcarea fluorica',
+        potency: '6X',
+        specificIndication: 'Rough, uneven surface',
+        expectedResult: 'Smooth texture'
+      },
+      {
+        name: 'Arsenicum album',
+        potency: '6CH',
+        specificIndication: 'Sallow dull skin',
+        expectedResult: 'Fresh radiant tone'
+      }
+    ],
+    biochemicRemedies: [
+      { name: 'Kali sulphuricum', potency: '6X' }
+    ],
+    bioCombination: 'BC 20',
+    baholaSpecialty: 'SkinTone'
+  },
+  {
+    subConditionName: 'Acne / Blemishes (Topical Repair)',
     remedies: [
       {
         name: 'Sulphur',
@@ -56,13 +133,13 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       {
         name: 'Calcarea sulphurica',
         potency: '6CH',
-        specificIndication: 'Pustular eruption',
-        expectedResult: 'Healing without marks'
+        specificIndication: 'Pustular acne',
+        expectedResult: 'Heals without marks'
       },
       {
         name: 'Hepar sulphur',
         potency: '6CH',
-        specificIndication: 'Painful acne',
+        specificIndication: 'Painful inflamed acne',
         expectedResult: 'Quick resolution'
       },
       {
@@ -74,18 +151,15 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       {
         name: 'Graphites',
         potency: '6CH',
-        specificIndication: 'Sticky oozing eruption',
-        expectedResult: 'Smooth skin'
+        specificIndication: 'Oozing eruptions',
+        expectedResult: 'Smooth surface'
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Kali sulphuricum',
-        potency: '6X'
-      }
+      { name: 'Kali sulphuricum', potency: '6X' }
     ],
     bioCombination: 'BC 20',
-    baholaSpecialty: 'SkinTone / Skin Salve'
+    baholaSpecialty: 'Skin Salve'
   },
   {
     subConditionName: 'Eczema / Itchy Skin',
@@ -100,7 +174,7 @@ export const skinCareTreatments: SubConditionTreatment[] = [
         name: 'Sulphur',
         potency: '12CH',
         specificIndication: 'Burning itch at night',
-        expectedResult: 'Clear skin'
+        expectedResult: 'Calm skin'
       },
       {
         name: 'Mezereum',
@@ -109,7 +183,7 @@ export const skinCareTreatments: SubConditionTreatment[] = [
         expectedResult: 'Stops ooze'
       },
       {
-        name: 'Rhus toxicodendron',
+        name: 'Rhus tox',
         potency: '6CH',
         specificIndication: 'Itch after wet weather',
         expectedResult: 'Fewer flare-ups'
@@ -122,13 +196,50 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Calcarea sulphurica',
-        potency: '6X'
-      }
+      { name: 'Calcarea sulphurica', potency: '6X' }
     ],
     bioCombination: 'BC 20',
     baholaSpecialty: 'Eczemanil'
+  },
+  {
+    subConditionName: 'Chronic Eczema / Lichenified Patches',
+    remedies: [
+      {
+        name: 'Graphites',
+        potency: '6CH',
+        specificIndication: 'Thick, cracked, oozing skin',
+        expectedResult: 'Softer, healed surface'
+      },
+      {
+        name: 'Sulphur',
+        potency: '12CH',
+        specificIndication: 'Night itching, dry burning skin',
+        expectedResult: 'Calmer itch, clearer skin'
+      },
+      {
+        name: 'Mezereum',
+        potency: '6CH',
+        specificIndication: 'Thick crusts on scalp/face',
+        expectedResult: 'Ooze and crusts reduce'
+      },
+      {
+        name: 'Petroleum',
+        potency: '6CH',
+        specificIndication: 'Winter cracks, very dry eczema',
+        expectedResult: 'Restored moisture barrier'
+      },
+      {
+        name: 'Hepar sulphur',
+        potency: '6CH',
+        specificIndication: 'Secondary infection tendency',
+        expectedResult: 'Faster, cleaner healing'
+      }
+    ],
+    biochemicRemedies: [
+      { name: 'Calcarea sulphurica', potency: '6X' }
+    ],
+    bioCombination: 'BC 20 – Skin Diseases',
+    baholaSpecialty: 'Eczemace'
   },
   {
     subConditionName: 'Psoriasis / Dry Scaly Patches',
@@ -137,13 +248,13 @@ export const skinCareTreatments: SubConditionTreatment[] = [
         name: 'Arsenicum album',
         potency: '6CH',
         specificIndication: 'Dry burning scales',
-        expectedResult: 'Smooth texture'
+        expectedResult: 'Softer skin'
       },
       {
         name: 'Sulphur',
         potency: '12CH',
         specificIndication: 'Itchy dry eruption',
-        expectedResult: 'Softer skin'
+        expectedResult: 'Smooth texture'
       },
       {
         name: 'Graphites',
@@ -160,15 +271,12 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       {
         name: 'Rhus tox',
         potency: '6CH',
-        specificIndication: 'Weather flare psoriasis',
+        specificIndication: 'Weather-flare psoriasis',
         expectedResult: 'Fewer episodes'
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Natrum sulphuricum',
-        potency: '6X'
-      }
+      { name: 'Natrum sulphuricum', potency: '6X' }
     ],
     bioCombination: 'BC 20',
     baholaSpecialty: 'Psoriasis Drops'
@@ -186,7 +294,7 @@ export const skinCareTreatments: SubConditionTreatment[] = [
         name: 'Belladonna',
         potency: '6CH',
         specificIndication: 'Burning heat rash',
-        expectedResult: 'Temperature normalizes'
+        expectedResult: 'Temperature normalises'
       },
       {
         name: 'Sulphur',
@@ -208,10 +316,7 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Kali muriaticum',
-        potency: '6X'
-      }
+      { name: 'Kali muriaticum', potency: '6X' }
     ],
     bioCombination: 'BC 20',
     baholaSpecialty: 'Photosensnil'
@@ -222,7 +327,7 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       {
         name: 'Arsenicum sulphuratum flavum',
         potency: '6CH',
-        specificIndication: 'White spots on skin',
+        specificIndication: 'White patches, loss of pigment',
         expectedResult: 'Pigment revival'
       },
       {
@@ -251,16 +356,13 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Calcarea fluorica',
-        potency: '6X'
-      }
+      { name: 'Calcarea fluorica', potency: '6X' }
     ],
     bioCombination: 'BC 20',
     baholaSpecialty: 'Vitinil'
   },
   {
-    subConditionName: 'Corn / Warts',
+    subConditionName: 'Warts',
     remedies: [
       {
         name: 'Thuja occidentalis',
@@ -271,19 +373,19 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       {
         name: 'Antimonium crudum',
         potency: '6CH',
-        specificIndication: 'Thick hard corns',
-        expectedResult: 'Softened skin'
+        specificIndication: 'Horny warts on hands/feet',
+        expectedResult: 'Softens skin'
       },
       {
         name: 'Nitric acid',
         potency: '6CH',
-        specificIndication: 'Painful corn edges',
-        expectedResult: 'Relief on pressure'
+        specificIndication: 'Painful corn-like warts',
+        expectedResult: 'Pressure comfort'
       },
       {
         name: 'Causticum',
         potency: '6CH',
-        specificIndication: 'Soft flat warts',
+        specificIndication: 'Flat soft warts',
         expectedResult: 'Clear surface'
       },
       {
@@ -294,55 +396,129 @@ export const skinCareTreatments: SubConditionTreatment[] = [
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Calcarea fluorica',
-        potency: '6X'
-      }
+      { name: 'Calcarea fluorica', potency: '6X' }
     ],
     bioCombination: 'BC 20',
-    baholaSpecialty: 'Wartnil / Corn Paint'
+    baholaSpecialty: 'Wartnil'
   },
   {
-    subConditionName: 'Antiseptic / Wound Care',
+    subConditionName: 'Corn / Callus',
     remedies: [
       {
-        name: 'Calendula',
+        name: 'Antimonium crudum',
         potency: '6CH',
-        specificIndication: 'Cuts & rashes',
-        expectedResult: 'Gentle healing'
+        specificIndication: 'Thick horny corn on soles',
+        expectedResult: 'Softened corn tissue'
       },
       {
-        name: 'Hypericum',
+        name: 'Nitric acid',
         potency: '6CH',
-        specificIndication: 'Nerve pain in wounds',
-        expectedResult: 'Calm sensation'
+        specificIndication: 'Painful corns on toes',
+        expectedResult: 'Easier walking'
       },
       {
-        name: 'Arnica montana',
+        name: 'Graphites',
         potency: '6CH',
-        specificIndication: 'Bruised tissue',
-        expectedResult: 'Soreness subsides'
+        specificIndication: 'Deep cracks with callus',
+        expectedResult: 'Smooth surface'
       },
       {
         name: 'Silicea',
         potency: '6X',
-        specificIndication: 'Slow healing ulcers',
+        specificIndication: 'Chronic corns, hardened tissue',
+        expectedResult: 'Clear, healthy skin'
+      },
+      {
+        name: 'Sulphur',
+        potency: '6CH',
+        specificIndication: 'Recurring thickened skin',
+        expectedResult: 'Reduced recurrence'
+      }
+    ],
+    biochemicRemedies: [
+      { name: 'Calcarea fluorica', potency: '6X' }
+    ],
+    bioCombination: 'BC 20 – Corns',
+    baholaSpecialty: 'Corn Paint'
+  },
+  {
+    subConditionName: 'Antiseptic Dusting Powder (Bedsores / Burns)',
+    remedies: [
+      {
+        name: 'Calendula',
+        potency: '6CH',
+        specificIndication: 'Ulcers, sores, burns',
+        expectedResult: 'Gentle antisepsis'
+      },
+      {
+        name: 'Arnica montana',
+        potency: '6CH',
+        specificIndication: 'Bruised or reddened area',
+        expectedResult: 'Reduces soreness'
+      },
+      {
+        name: 'Hypericum',
+        potency: '6CH',
+        specificIndication: 'Nerve-end pain in ulcers',
+        expectedResult: 'Comfort restored'
+      },
+      {
+        name: 'Silicea',
+        potency: '6X',
+        specificIndication: 'Slow-healing wounds',
         expectedResult: 'Healthy closure'
       },
       {
         name: 'Belladonna',
         potency: '6CH',
-        specificIndication: 'Inflammation with redness',
-        expectedResult: 'Cooling comfort'
+        specificIndication: 'Red inflamed surface',
+        expectedResult: 'Cooling relief'
       }
     ],
     biochemicRemedies: [
-      {
-        name: 'Calcarea sulphurica',
-        potency: '6X'
-      }
+      { name: 'Calcarea sulphurica', potency: '6X' }
     ],
     bioCombination: 'BC 17 – Inflammation',
-    baholaSpecialty: 'Dermin / Calendula Cream'
+    baholaSpecialty: 'Dermin'
+  },
+  {
+    subConditionName: 'Antiseptic Cream / Minor Wounds',
+    remedies: [
+      {
+        name: 'Calendula',
+        potency: 'Q',
+        specificIndication: 'Cuts, abrasions, rashes',
+        expectedResult: 'Rapid healing'
+      },
+      {
+        name: 'Hypericum',
+        potency: '6CH',
+        specificIndication: 'Nerve pain after minor injury',
+        expectedResult: 'Soothed tissue'
+      },
+      {
+        name: 'Arnica',
+        potency: '6CH',
+        specificIndication: 'Bruising & soreness',
+        expectedResult: 'Comfort & recovery'
+      },
+      {
+        name: 'Silicea',
+        potency: '6X',
+        specificIndication: 'Chronic wound tendency',
+        expectedResult: 'Skin renewal'
+      },
+      {
+        name: 'Bellis perennis',
+        potency: '6CH',
+        specificIndication: 'Deep muscle tenderness',
+        expectedResult: 'Relief & softness'
+      }
+    ],
+    biochemicRemedies: [
+      { name: 'Calcarea sulphurica', potency: '6X' }
+    ],
+    bioCombination: 'BC 17',
+    baholaSpecialty: 'Calendula Cream'
   }
 ];
