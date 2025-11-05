@@ -62,7 +62,8 @@ import {
   PhosphorusArsenicum,
   HeparMercurius,
   BelladonnaGlonoinum,
-  CalcareaNatrum
+  CalcareaNatrum,
+  GelsemiumBaptisia
 } from './LazyImports';
 
 // Import admin components
@@ -171,6 +172,7 @@ const AppRoutes = () => {
         <Route path="/professional/materia-medica/hepar-mercurius" element={<HeparMercurius />} />
         <Route path="/professional/materia-medica/belladonna-glonoinum" element={<BelladonnaGlonoinum />} />
         <Route path="/professional/materia-medica/calcarea-natrum" element={<CalcareaNatrum />} />
+        <Route path="/professional/materia-medica/gelsemium-baptisia" element={<GelsemiumBaptisia />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>
