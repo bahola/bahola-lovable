@@ -1,13 +1,11 @@
 
 import { PageLayout } from '@/components/PageLayout';
-import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const MateriaMedica = () => {
   return (
-    <ProtectedDoctorRoute>
-      <PageLayout 
+    <PageLayout
         title="Comparative Materia Medica" 
         description="Access detailed comparative studies of homeopathic remedies"
       >
@@ -97,7 +95,6 @@ const MateriaMedica = () => {
           </div>
         </div>
       </PageLayout>
-    </ProtectedDoctorRoute>
   );
 };
 

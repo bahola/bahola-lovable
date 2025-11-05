@@ -1,13 +1,11 @@
 import { PageLayout } from '@/components/PageLayout';
-import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const BryoniaRhus = () => {
   return (
-    <ProtectedDoctorRoute>
-      <PageLayout 
+    <PageLayout
         title="Bryonia alba vs Rhus toxicodendron" 
         description="Comprehensive comparative materia medica analysis"
       >
@@ -229,7 +227,6 @@ const BryoniaRhus = () => {
           </Card>
         </div>
       </PageLayout>
-    </ProtectedDoctorRoute>
   );
 };
 
