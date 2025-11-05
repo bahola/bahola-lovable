@@ -2,6 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import DigestiveIssuesDetailed from '../../pages/health-concerns/gut-health/DigestiveIssuesDetailed';
+import { InfectiousDiseasesPage } from './LazyImports';
 
 import {
   AnxietyStress,
@@ -105,8 +106,8 @@ export const getHealthConcernRoutes = () => [
   <Route key="cancer-support" path="/diseases-conditions/cancer-support" element={<CancerSupport />} />,
   <Route key="hair-care" path="/diseases-conditions/hair-care" element={<HairCare />} />,
   <Route key="immune-boosters" path="/diseases-conditions/immune-boosters" element={<ImmuneBoosters />} />,
-  <Route key="infection-care-1" path="/diseases-conditions/infection-care" element={<InfectionCare />} />,
-  <Route key="infection-care-2" path="/diseases-conditions/infection" element={<InfectionCare />} />,
+  <Route key="infection-care-1" path="/diseases-conditions/infection-care" element={<InfectiousDiseasesPage />} />,
+  <Route key="infection-care-2" path="/diseases-conditions/infection" element={<InfectiousDiseasesPage />} />,
   <Route key="lifestyle-care-1" path="/diseases-conditions/lifestyle-care" element={<LifestyleCare />} />,
   <Route key="lifestyle-care-2" path="/diseases-conditions/lifestyle" element={<LifestyleCare />} />,
   <Route key="mental-health" path="/diseases-conditions/mental-health" element={<MentalHealth />} />,
