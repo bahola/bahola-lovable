@@ -54,7 +54,8 @@ import {
   BachFlowerConcerns,
   AllergiesProductsPage,
   MateriaMedica,
-  BryoniaRhus
+  BryoniaRhus,
+  PulsatillaSepia
 } from './LazyImports';
 
 // Import admin components
@@ -155,6 +156,7 @@ const AppRoutes = () => {
         {/* Professional Routes */}
         <Route path="/professional/materia-medica" element={<MateriaMedica />} />
         <Route path="/professional/materia-medica/bryonia-rhus" element={<BryoniaRhus />} />
+        <Route path="/professional/materia-medica/pulsatilla-sepia" element={<PulsatillaSepia />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>
