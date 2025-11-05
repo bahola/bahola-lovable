@@ -59,5 +59,8 @@ export const BachFlowerConcerns = React.lazy(() => import('@/pages/BachFlowerCon
 // Add the new lazy import for AllergiesProductsPage
 export const AllergiesProductsPage = React.lazy(() => import('@/pages/AllergiesProductsPage'));
 
+// Add the new lazy import for InfectiousDiseasesPage
+export const InfectiousDiseasesPage = React.lazy(() => import('@/pages/health-concerns/InfectiousDiseasesPage'));
+
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };

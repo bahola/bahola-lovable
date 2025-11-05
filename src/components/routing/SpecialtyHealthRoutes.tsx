@@ -30,6 +30,8 @@ import {
   UrinaryTractInfections
 } from './HealthConcernImports';
 
+import { InfectiousDiseasesPage } from './LazyImports';
+
 export const getSpecialtyHealthRoutes = () => [
   // Lifestyle Routes
   <Route key="obesity-weight-gain" path="/diseases-conditions/lifestyle/obesity-weight-gain" element={<WeightManagement />} />,
@@ -144,5 +146,8 @@ export const getSpecialtyHealthRoutes = () => [
   <Route key="incontinence" path="/diseases-conditions/urinary-care/incontinence" element={<UrologyCare />} />,
   <Route key="prostate-enlargement" path="/diseases-conditions/urinary-care/prostate-enlargement-bph" element={<UrologyCare />} />,
   <Route key="cystitis" path="/diseases-conditions/urinary-care/cystitis" element={<UrologyCare />} />,
-  <Route key="nephrotic-syndrome" path="/diseases-conditions/urinary-care/nephrotic-syndrome-supportive" element={<UrologyCare />} />
+  <Route key="nephrotic-syndrome" path="/diseases-conditions/urinary-care/nephrotic-syndrome-supportive" element={<UrologyCare />} />,
+
+  // Infectious Diseases & Fever Route
+  <Route key="infectious-diseases" path="/diseases-conditions/infectious-diseases-fever" element={<InfectiousDiseasesPage />} />
 ];
