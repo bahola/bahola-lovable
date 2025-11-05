@@ -57,7 +57,8 @@ import {
   BryoniaRhus,
   PulsatillaSepia,
   LachesisPulsatilla,
-  NuxVomicaSulphur
+  NuxVomicaSulphur,
+  ApisCantharis
 } from './LazyImports';
 
 // Import admin components
@@ -161,6 +162,7 @@ const AppRoutes = () => {
         <Route path="/professional/materia-medica/pulsatilla-sepia" element={<PulsatillaSepia />} />
         <Route path="/professional/materia-medica/lachesis-pulsatilla" element={<LachesisPulsatilla />} />
         <Route path="/professional/materia-medica/nux-vomica-sulphur" element={<NuxVomicaSulphur />} />
+        <Route path="/professional/materia-medica/apis-cantharis" element={<ApisCantharis />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>

@@ -98,6 +98,7 @@ export const BryoniaRhus = React.lazy(() => import('@/pages/professional/Bryonia
 export const PulsatillaSepia = React.lazy(() => import('@/pages/professional/PulsatillaSepia'));
 export const LachesisPulsatilla = React.lazy(() => import('@/pages/professional/LachesisPulsatilla'));
 export const NuxVomicaSulphur = React.lazy(() => import('@/pages/professional/NuxVomicaSulphur'));
+export const ApisCantharis = React.lazy(() => import('@/pages/professional/ApisCantharis'));
 
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };
