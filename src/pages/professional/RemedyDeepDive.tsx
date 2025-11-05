@@ -84,6 +84,16 @@ const RemedyDeepDive = () => {
                               <span className="text-xl">{item.icon}</span>
                               <span className="font-medium">{item.remedy}</span>
                             </Link>
+                          ) : item.no === 2 ? (
+                            <Link to="/professional/remedy-deep-dive/nux-vomica" className="flex items-center gap-2 hover:text-primary">
+                              <span className="text-xl">{item.icon}</span>
+                              <span className="font-medium">{item.remedy}</span>
+                            </Link>
+                          ) : item.no === 3 ? (
+                            <Link to="/professional/remedy-deep-dive/pulsatilla" className="flex items-center gap-2 hover:text-primary">
+                              <span className="text-xl">{item.icon}</span>
+                              <span className="font-medium">{item.remedy}</span>
+                            </Link>
                           ) : (
                             <div className="flex items-center gap-2">
                               <span className="text-xl">{item.icon}</span>
