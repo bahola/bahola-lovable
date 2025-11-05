@@ -1,100 +1,119 @@
 
 import { PageLayout } from '@/components/PageLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Link } from 'react-router-dom';
 
 const MateriaMedica = () => {
+  const remedies = [
+    { name: "Bryonia alba", comparisons: "Rhus tox, Arnica, Belladonna", keynote: "Dryness, stitching pains, worse motion" },
+    { name: "Rhus toxicodendron", comparisons: "Bryonia, Arnica, Calcarea", keynote: "Restlessness, stiffness, better motion" },
+    { name: "Arnica montana", comparisons: "Rhus tox, Bellis perennis", keynote: "Sore, bruised, \"as if beaten\"" },
+    { name: "Pulsatilla nigricans", comparisons: "Sepia, Lachesis, Natrum mur", keynote: "Mild, yielding, weepy, thirstless" },
+    { name: "Sepia officinalis", comparisons: "Pulsatilla, Natrum mur, Lachesis", keynote: "Indifferent, irritable, bearing-down" },
+    { name: "Natrum muriaticum", comparisons: "Pulsatilla, Sepia, Ignatia", keynote: "Reserved, grief, aversion to consolation" },
+    { name: "Lachesis mutus", comparisons: "Pulsatilla, Lycopodium, Sepia", keynote: "Loquacious, left-sided, worse after sleep" },
+    { name: "Lycopodium clavatum", comparisons: "Lachesis, Sulphur, Nux vomica", keynote: "Flatulence, anticipation, lack of confidence" },
+    { name: "Sulphur", comparisons: "Nux vomica, Lycopodium, Calcarea", keynote: "Philosophic, burning sensations, offensive discharges" },
+    { name: "Nux vomica", comparisons: "Sulphur, Ignatia, Coffea", keynote: "Irritable, oversensitive, sedentary" },
+    { name: "Ignatia amara", comparisons: "Natrum mur, Nux vomica", keynote: "Contradictory, spasmodic grief, sighing" },
+    { name: "Calcarea carbonica", comparisons: "Natrum mur, Lycopodium, Sulphur", keynote: "Slow, flabby, chilly, sweats on head" },
+    { name: "Phosphorus", comparisons: "Arsenicum, Sulphur, Bryonia", keynote: "Open, sympathetic, thirst for cold water" },
+    { name: "Arsenicum album", comparisons: "Phosphorus, Nux vomica", keynote: "Anxious, restless, fastidious, burning pains" },
+    { name: "Belladonna", comparisons: "Glonoinum, Bryonia", keynote: "Sudden, violent, congestive, red face" },
+    { name: "Gelsemium sempervirens", comparisons: "Baptisia, Nux vomica", keynote: "Dull, drowsy, dizzy, trembling" },
+    { name: "Baptisia tinctoria", comparisons: "Gelsemium, Arnica", keynote: "Stupor, besotted look, prostration" },
+    { name: "Hepar sulphuris", comparisons: "Mercurius, Silicea", keynote: "Sensitive to cold, suppuration tendency" },
+    { name: "Mercurius solubilis", comparisons: "Hepar sulph, Kali bich", keynote: "Offensive discharges, salivation, bone pains" },
+    { name: "Apis mellifica", comparisons: "Cantharis, Rhus tox", keynote: "Burning, stinging, oedema, thirstless" },
+    { name: "Cantharis vesicatoria", comparisons: "Apis, Merc cor", keynote: "Burning with cutting pains, urinary tenesmus" },
+    { name: "Causticum", comparisons: "Rhus tox, Phosphorus", keynote: "Paralytic weakness, burning, worse dry cold wind" },
+    { name: "Silicea terra", comparisons: "Hepar sulph, Calcarea", keynote: "Lack of grit, suppurative tendencies, chilliness" },
+    { name: "Kali carbonicum", comparisons: "Bryonia, Nux vomica", keynote: "Stitching pains, weakness, early waking" },
+  ];
+
+  const popularComparisons = [
+    { name: "Bryonia vs Rhus tox", link: "/professional/materia-medica/bryonia-rhus" },
+    { name: "Pulsatilla vs Sepia", link: "#" },
+    { name: "Lachesis vs Pulsatilla", link: "#" },
+    { name: "Nux vomica vs Sulphur", link: "#" },
+    { name: "Apis vs Cantharis", link: "#" },
+    { name: "Phosphorus vs Arsenicum", link: "#" },
+    { name: "Belladonna vs Glonoinum", link: "#" },
+    { name: "Gelsemium vs Baptisia", link: "#" },
+    { name: "Hepar sulph vs Mercurius", link: "#" },
+    { name: "Calcarea vs Natrum mur", link: "#" },
+  ];
+
   return (
     <PageLayout
-        title="Comparative Materia Medica" 
-        description="Access detailed comparative studies of homeopathic remedies"
-      >
-        <div className="max-w-6xl mx-auto mb-10">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-6 text-bahola-blue-800">Materia Medica Resources</h2>
-            
-            <Tabs defaultValue="comparative">
-              <TabsList className="mb-6">
-                <TabsTrigger value="comparative">Comparative Studies</TabsTrigger>
-                <TabsTrigger value="remedies">Remedy Database</TabsTrigger>
-                <TabsTrigger value="research">Research Papers</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="comparative">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Bryonia alba vs Rhus toxicodendron</CardTitle>
-                      <CardDescription>Comprehensive comparison of two major rheumatic remedies</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p>Detailed comparative analysis including family traits, modalities, clinical applications, and trio comparison with Arnica montana.</p>
-                      <a href="/professional/materia-medica/bryonia-rhus" className="text-bahola-blue-500 font-medium mt-4 inline-block">Access Resource →</a>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Mental Symptoms Comparison</CardTitle>
-                      <CardDescription>Detailed analysis of mental symptoms across similar remedies</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p>Access our comprehensive guide comparing mental symptoms across major remedies including Natrum Muriaticum, Pulsatilla, and Phosphorus.</p>
-                      <a href="#" className="text-bahola-blue-500 font-medium mt-4 inline-block">Access Resource →</a>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Polycrest Remedies</CardTitle>
-                      <CardDescription>Comparative study of the most commonly used remedies</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p>Explore similarities and differences between major polycrest remedies and their clinical applications across various pathologies.</p>
-                      <a href="#" className="text-bahola-blue-500 font-medium mt-4 inline-block">Access Resource →</a>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Respiratory Affections</CardTitle>
-                      <CardDescription>Comparing remedies for respiratory conditions</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p>In-depth analysis of remedies indicated for respiratory conditions, with comparative symptomatology and clinical indications.</p>
-                      <a href="#" className="text-bahola-blue-500 font-medium mt-4 inline-block">Access Resource →</a>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Constitutional Types</CardTitle>
-                      <CardDescription>Comparative study of constitutional remedies</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p>Detailed comparison of the major constitutional types in homeopathy and their characteristic presentations and tendencies.</p>
-                      <a href="#" className="text-bahola-blue-500 font-medium mt-4 inline-block">Access Resource →</a>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="remedies">
-                <p className="text-lg mb-6">Our comprehensive remedy database is currently being updated with the latest research. Please check back soon.</p>
-              </TabsContent>
-              
-              <TabsContent value="research">
-                <p className="text-lg mb-6">Recent research papers and publications related to Materia Medica will be available here soon.</p>
-              </TabsContent>
-            </Tabs>
-            
-            <div className="mt-10 p-4 bg-bahola-blue-50 rounded-lg">
-              <h3 className="font-medium mb-2">Professional Note</h3>
-              <p>These resources are exclusively available to registered healthcare professionals. For access to additional clinical resources, please contact our professional services team.</p>
-            </div>
+      title="🩺 Comparative Materia Medica" 
+      description="Refine your clinical differentiation."
+    >
+      <div className="max-w-7xl mx-auto mb-10">
+        {/* Intro Section */}
+        <div className="mb-12">
+          <p className="text-lg text-muted-foreground mb-4">
+            Explore side-by-side comparisons of similar remedies — concise, clinically relevant, and doctor-ready.
+          </p>
+          <p className="text-lg text-muted-foreground mb-4">
+            Perfect for practice, teaching, and case correlation.
+          </p>
+          <p className="text-lg font-medium">
+            🧩 See at a glance how similar remedies diverge in essence, modalities, and constitution.
+          </p>
+        </div>
+
+        {/* Browse by Remedy Table */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6">🔍 Browse by Remedy</h2>
+          <p className="text-muted-foreground mb-4">(Click any remedy to open comparisons where it appears.)</p>
+          
+          <div className="rounded-lg border bg-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-semibold">Remedy</TableHead>
+                  <TableHead className="font-semibold">Common Comparisons</TableHead>
+                  <TableHead className="font-semibold">Keynote</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {remedies.map((remedy, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{remedy.name}</TableCell>
+                    <TableCell>{remedy.comparisons}</TableCell>
+                    <TableCell className="text-muted-foreground">{remedy.keynote}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
-      </PageLayout>
+
+        {/* Popular Comparisons */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6">🧠 Popular Comparisons</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {popularComparisons.map((comparison, index) => (
+              <Link
+                key={index}
+                to={comparison.link}
+                className="p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
+              >
+                <span className="font-medium">{comparison.name}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Subscribe Note */}
+        <div className="p-6 rounded-lg bg-muted">
+          <p className="text-center text-muted-foreground">
+            📚 More pairs and trios are added weekly. Subscribe to updates.
+          </p>
+        </div>
+      </div>
+    </PageLayout>
   );
 };
 
