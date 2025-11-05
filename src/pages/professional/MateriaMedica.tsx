@@ -98,7 +98,7 @@ const MateriaMedica = () => {
               <Link
                 key={index}
                 to={comparison.link}
-                className="p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
+                className="p-4 rounded-lg border bg-card hover:border-primary hover:shadow-md transition-all"
               >
                 <span className="font-medium">{comparison.name}</span>
               </Link>
