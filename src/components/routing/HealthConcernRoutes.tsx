@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import DigestiveIssuesDetailed from '../../pages/health-concerns/gut-health/DigestiveIssuesDetailed';
-import { InfectiousDiseasesPage, LifestyleCategoryPage, MuscleJointCategoryPage, MentalHealthCategoryPage, NutritiveCategoryPage, PainCareCategoryPage, ReproductiveCareCategoryPage, RespiratoryCareCategoryPage } from './LazyImports';
+import { InfectiousDiseasesPage, LifestyleCategoryPage, MuscleJointCategoryPage, MentalHealthCategoryPage, NutritiveCategoryPage, PainCareCategoryPage, ReproductiveCareCategoryPage, RespiratoryCareCategoryPage, SkinCareCategoryPage } from './LazyImports';
 
 import {
   AnxietyStress,
@@ -118,7 +118,7 @@ export const getHealthConcernRoutes = () => [
   <Route key="pain-care" path="/diseases-conditions/pain-care" element={<PainCareCategoryPage />} />,
   <Route key="reproductive-care" path="/diseases-conditions/reproductive-care" element={<ReproductiveCareCategoryPage />} />,
   <Route key="respiratory-care" path="/diseases-conditions/respiratory-care" element={<RespiratoryCareCategoryPage />} />,
-  <Route key="skin-care" path="/diseases-conditions/skin-care" element={<SkinCare />} />,
+  <Route key="skin-care" path="/diseases-conditions/skin-care" element={<SkinCareCategoryPage />} />,
   <Route key="specialty-care" path="/diseases-conditions/specialty-care" element={<SpecialtyCare />} />,
   <Route key="tooth-care" path="/diseases-conditions/tooth-care" element={<ToothCare />} />,
   <Route key="urology-care-1" path="/diseases-conditions/urology-care" element={<UrologyCare />} />,
