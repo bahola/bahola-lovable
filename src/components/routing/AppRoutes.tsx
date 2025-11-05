@@ -54,6 +54,7 @@ import {
   BachFlowerConcerns,
   AllergiesProductsPage,
   MateriaMedica,
+  RemedyDeepDive,
   BryoniaRhus,
   PulsatillaSepia,
   LachesisPulsatilla,
@@ -162,6 +163,7 @@ const AppRoutes = () => {
         } />
         
         {/* Professional Routes */}
+        <Route path="/professional/remedy-deep-dive" element={<RemedyDeepDive />} />
         <Route path="/professional/materia-medica" element={<MateriaMedica />} />
         <Route path="/professional/materia-medica/bryonia-rhus" element={<BryoniaRhus />} />
         <Route path="/professional/materia-medica/pulsatilla-sepia" element={<PulsatillaSepia />} />
