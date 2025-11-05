@@ -74,5 +74,8 @@ export const MentalHealthCategoryPage = React.lazy(() => import('@/pages/health-
 // Add the new lazy import for NutritiveCategoryPage
 export const NutritiveCategoryPage = React.lazy(() => import('@/pages/health-concerns/NutritiveCategoryPage'));
 
+// Add the new lazy import for PainCareCategoryPage
+export const PainCareCategoryPage = React.lazy(() => import('@/pages/health-concerns/PainCareCategoryPage'));
+
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };
