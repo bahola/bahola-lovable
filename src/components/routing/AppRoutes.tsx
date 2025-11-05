@@ -52,7 +52,9 @@ import {
   ShippingIssues,
   Certifications,
   BachFlowerConcerns,
-  AllergiesProductsPage
+  AllergiesProductsPage,
+  MateriaMedica,
+  BryoniaRhus
 } from './LazyImports';
 
 // Import admin components
@@ -149,6 +151,10 @@ const AppRoutes = () => {
             <DoctorSchedule />
           </ProtectedDoctorRoute>
         } />
+        
+        {/* Professional Routes */}
+        <Route path="/professional/materia-medica" element={<MateriaMedica />} />
+        <Route path="/professional/materia-medica/bryonia-rhus" element={<BryoniaRhus />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>

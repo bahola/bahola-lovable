@@ -92,5 +92,9 @@ export const ToothCareCategoryPage = React.lazy(() => import('@/pages/health-con
 // Add the new lazy import for UrinaryCareCategoryPage
 export const UrinaryCareCategoryPage = React.lazy(() => import('@/pages/health-concerns/UrinaryCareCategoryPage'));
 
+// Professional routes
+export const MateriaMedica = React.lazy(() => import('@/pages/professional/MateriaMedica'));
+export const BryoniaRhus = React.lazy(() => import('@/pages/professional/BryoniaRhus'));
+
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };

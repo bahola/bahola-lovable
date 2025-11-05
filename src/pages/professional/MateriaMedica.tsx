@@ -26,6 +26,17 @@ const MateriaMedica = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card>
                     <CardHeader>
+                      <CardTitle>Bryonia alba vs Rhus toxicodendron</CardTitle>
+                      <CardDescription>Comprehensive comparison of two major rheumatic remedies</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p>Detailed comparative analysis including family traits, modalities, clinical applications, and trio comparison with Arnica montana.</p>
+                      <a href="/professional/materia-medica/bryonia-rhus" className="text-bahola-blue-500 font-medium mt-4 inline-block">Access Resource →</a>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
                       <CardTitle>Mental Symptoms Comparison</CardTitle>
                       <CardDescription>Detailed analysis of mental symptoms across similar remedies</CardDescription>
                     </CardHeader>
