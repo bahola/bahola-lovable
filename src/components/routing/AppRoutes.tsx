@@ -61,7 +61,8 @@ import {
   ApisCantharis,
   PhosphorusArsenicum,
   HeparMercurius,
-  BelladonnaGlonoinum
+  BelladonnaGlonoinum,
+  CalcareaNatrum
 } from './LazyImports';
 
 // Import admin components
@@ -169,6 +170,7 @@ const AppRoutes = () => {
         <Route path="/professional/materia-medica/phosphorus-arsenicum" element={<PhosphorusArsenicum />} />
         <Route path="/professional/materia-medica/hepar-mercurius" element={<HeparMercurius />} />
         <Route path="/professional/materia-medica/belladonna-glonoinum" element={<BelladonnaGlonoinum />} />
+        <Route path="/professional/materia-medica/calcarea-natrum" element={<CalcareaNatrum />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>

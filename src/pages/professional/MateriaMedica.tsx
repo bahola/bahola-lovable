@@ -41,7 +41,7 @@ const MateriaMedica = () => {
     { name: "Belladonna vs Glonoinum", link: "/professional/materia-medica/belladonna-glonoinum" },
     { name: "Gelsemium vs Baptisia", link: "#" },
     { name: "Hepar sulph vs Mercurius", link: "/professional/materia-medica/hepar-mercurius" },
-    { name: "Calcarea vs Natrum mur", link: "#" },
+    { name: "Calcarea vs Natrum mur", link: "/professional/materia-medica/calcarea-natrum" },
   ];
 
   return (

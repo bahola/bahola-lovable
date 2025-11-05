@@ -102,6 +102,7 @@ export const ApisCantharis = React.lazy(() => import('@/pages/professional/ApisC
 export const PhosphorusArsenicum = React.lazy(() => import('@/pages/professional/PhosphorusArsenicum'));
 export const HeparMercurius = React.lazy(() => import('@/pages/professional/HeparMercurius'));
 export const BelladonnaGlonoinum = React.lazy(() => import('@/pages/professional/BelladonnaGlonoinum'));
+export const CalcareaNatrum = React.lazy(() => import('@/pages/professional/CalcareaNatrum'));
 
 // Export critical pages that are not lazy-loaded
 export { Index, NotFound };
