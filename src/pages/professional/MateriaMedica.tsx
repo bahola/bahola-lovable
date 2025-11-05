@@ -37,7 +37,7 @@ const MateriaMedica = () => {
     { name: "Lachesis vs Pulsatilla", link: "/professional/materia-medica/lachesis-pulsatilla" },
     { name: "Nux vomica vs Sulphur", link: "/professional/materia-medica/nux-vomica-sulphur" },
     { name: "Apis vs Cantharis", link: "/professional/materia-medica/apis-cantharis" },
-    { name: "Phosphorus vs Arsenicum", link: "#" },
+    { name: "Phosphorus vs Arsenicum", link: "/professional/materia-medica/phosphorus-arsenicum" },
     { name: "Belladonna vs Glonoinum", link: "#" },
     { name: "Gelsemium vs Baptisia", link: "#" },
     { name: "Hepar sulph vs Mercurius", link: "#" },
