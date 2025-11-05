@@ -97,6 +97,7 @@ export const MateriaMedica = React.lazy(() => import('@/pages/professional/Mater
 export const RemedyDeepDive = React.lazy(() => import('@/pages/professional/RemedyDeepDive'));
 export const Sulphur = React.lazy(() => import('@/pages/professional/Sulphur'));
 export const NuxVomica = React.lazy(() => import('@/pages/professional/NuxVomica'));
+export const Pulsatilla = React.lazy(() => import('@/pages/professional/Pulsatilla'));
 export const BryoniaRhus = React.lazy(() => import('@/pages/professional/BryoniaRhus'));
 export const PulsatillaSepia = React.lazy(() => import('@/pages/professional/PulsatillaSepia'));
 export const LachesisPulsatilla = React.lazy(() => import('@/pages/professional/LachesisPulsatilla'));
