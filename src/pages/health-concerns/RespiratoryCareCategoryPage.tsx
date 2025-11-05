@@ -1,142 +1,106 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { TreatmentTable } from '@/components/health-concerns/TreatmentTable';
+import React from 'react';
+import { HealthConcernsBreadcrumb } from '@/components/health-concerns/HealthConcernsBreadcrumb';
 import { respiratoryTreatments } from '@/data/health-concerns/respiratoryTreatments';
+import { TreatmentTable } from '@/components/health-concerns/TreatmentTable';
+import { SEO } from '@/components/SEO';
 
 const RespiratoryCareCategoryPage = () => {
-  const [activeSection, setActiveSection] = useState<string>('');
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: '-20% 0px -35% 0px' }
-    );
-
-    const sections = document.querySelectorAll('section[id]');
-    sections.forEach((section) => observerRef.current?.observe(section));
-
-    return () => observerRef.current?.disconnect();
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-    }
-  };
-
   return (
     <>
-      <Helmet>
-        <title>Respiratory Care - Homeopathic Treatment for Asthma, Cough & Breathing | Bahola</title>
-        <meta
-          name="description"
-          content="Natural homeopathic remedies for respiratory conditions including asthma, chronic cough, bronchitis, and chest congestion. Comprehensive treatment protocols with biochemic support."
-        />
-        <meta
-          name="keywords"
-          content="respiratory care, asthma treatment, chronic cough, bronchitis, homeopathy for breathing, chest congestion, wheezing relief"
-        />
-        <link rel="canonical" href="https://bahola.com/diseases-conditions/respiratory-care" />
-      </Helmet>
+      <SEO
+        title="Respiratory Care Treatment Guide - Natural Asthma & Cough Relief Solutions"
+        description="Comprehensive homeopathic treatment guide for asthma, chronic cough, bronchitis, throat irritation, and chest congestion with detailed remedies and potencies."
+        keywords={[
+          'respiratory care homeopathy',
+          'asthma treatment',
+          'chronic cough remedies',
+          'bronchitis treatment',
+          'throat irritation relief',
+          'chest congestion',
+          'wheezing relief',
+          'dry cough treatment',
+          'biochemic remedies respiratory health',
+          'natural breathing support'
+        ]}
+      />
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-grow">
+          <div className="container mx-auto px-4 py-6">
+            <HealthConcernsBreadcrumb 
+              categoryName="Respiratory Care"
+              categoryPath="/diseases-conditions/respiratory-care"
+            />
+          </div>
 
-      <main>
-        <section className="bg-gradient-to-br from-primary/5 via-background to-primary/10 py-16 md:py-24">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                Respiratory Care
+          {/* Hero Section */}
+          <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-background py-12 md:py-16">
+            <div className="container mx-auto px-4 max-w-6xl">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+                Complete Respiratory Care Treatment Guide
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Comprehensive homeopathic support for asthma, cough, bronchitis, and respiratory wellness
+              <p className="text-lg text-muted-foreground max-w-3xl">
+                Natural homeopathic treatment protocols for asthma, cough, bronchitis, and respiratory wellness. 
+                Each section includes specific remedies with potencies, detailed indications, and expected outcomes.
               </p>
             </div>
           </div>
-        </section>
 
-        <div className="sticky top-16 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
-          <div className="container mx-auto px-4">
-            <nav className="flex gap-2 overflow-x-auto py-3 scrollbar-hide">
-              {respiratoryTreatments.map((treatment) => {
-                const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
-                return (
-                  <button
-                    key={sectionId}
-                    onClick={() => scrollToSection(sectionId)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                      activeSection === sectionId
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                    }`}
-                  >
-                    {treatment.subConditionName}
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-        </div>
-
-        <section className="py-12 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto prose prose-lg">
-              <h2 className="text-3xl font-bold text-foreground mb-6">
-                Natural Solutions for Respiratory Health
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Respiratory conditions like asthma, chronic cough, and bronchitis can significantly impact quality of life.
-                Homeopathy offers gentle, effective support that addresses both acute symptoms and underlying causes,
-                helping restore healthy breathing and lung function.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Our comprehensive treatment protocols combine classical homeopathic remedies with biochemic tissue salts
-                and specialized Bahola formulations to provide multi-level support for various respiratory conditions,
-                from allergic asthma to productive cough and chest congestion.
-              </p>
+          {/* Quick Navigation */}
+          <div className="bg-card border-y border-border sticky top-0 z-10 shadow-sm">
+            <div className="container mx-auto px-4 py-4 max-w-6xl">
+              <h2 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Quick Navigation</h2>
+              <div className="flex flex-wrap gap-2">
+                {respiratoryTreatments.map((treatment, idx) => {
+                  const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-').replace(/\(/g, '').replace(/\)/g, '');
+                  return (
+                    <a
+                      key={idx}
+                      href={`#${sectionId}`}
+                      className="px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md text-sm font-medium transition-colors"
+                    >
+                      {treatment.subConditionName}
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </section>
 
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto space-y-12">
-              {respiratoryTreatments.map((treatment) => {
-                const sectionId = treatment.subConditionName.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
-                return (
-                  <section key={sectionId} id={sectionId} className="scroll-mt-32">
-                    <TreatmentTable treatment={treatment} />
-                  </section>
-                );
-              })}
+          {/* Introduction Section */}
+          <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="bg-card rounded-lg shadow-sm border border-border p-6 mb-8">
+              <h2 className="text-2xl font-bold mb-4 text-foreground">Understanding Homeopathic Respiratory Care</h2>
+              <div className="prose prose-sm max-w-none text-muted-foreground">
+                <p className="mb-3">
+                  This comprehensive guide provides detailed homeopathic treatment protocols for respiratory health and breathing wellness. 
+                  Each treatment protocol includes:
+                </p>
+                <ul className="list-disc list-inside space-y-2 mb-4">
+                  <li><strong className="text-foreground">Homeopathic Remedies:</strong> Specific medicines with potencies (6CH, 6X, etc.)</li>
+                  <li><strong className="text-foreground">Specific Indications:</strong> Exact symptoms and conditions each remedy addresses</li>
+                  <li><strong className="text-foreground">Expected Results:</strong> What improvement to expect from each remedy</li>
+                  <li><strong className="text-foreground">Biochemic Remedies:</strong> Tissue salts that support respiratory health</li>
+                  <li><strong className="text-foreground">Bio-Combinations:</strong> Pre-formulated combinations for convenience</li>
+                  <li><strong className="text-foreground">Bahola Specialty Products:</strong> Ready-to-use respiratory care formulations</li>
+                </ul>
+                <p className="text-sm italic border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded">
+                  <strong>Important:</strong> Respiratory conditions require proper medical evaluation and diagnosis. 
+                  These remedies are supportive and work best alongside appropriate medical care, breathing exercises, and healthy lifestyle. 
+                  For severe asthma, persistent cough, or breathing difficulties, consult with qualified healthcare providers. 
+                  This guide is for informational purposes only.
+                </p>
+              </div>
+            </div>
+
+            {/* Treatment Tables for All Sub-Conditions */}
+            <div className="space-y-6">
+              {respiratoryTreatments.map((treatment, idx) => (
+                <TreatmentTable key={idx} treatment={treatment} />
+              ))}
             </div>
           </div>
-        </section>
-
-        <section className="py-12 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-foreground mb-4">
-                Important Notice
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                These treatment protocols are provided for informational purposes. Always consult with a qualified
-                healthcare practitioner before starting any new treatment, especially for chronic or severe
-                respiratory conditions. Individual results may vary.
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
+        </main>
+      </div>
     </>
   );
 };
