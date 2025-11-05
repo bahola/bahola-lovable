@@ -34,9 +34,11 @@ const BachFlowerConcerns = () => {
       title: 'Anxiety & Worry',
       description: 'Find calm in chaos and restore a sense of security.',
       remedies: [
-        { name: 'Mimulus', description: 'For known fears' },
-        { name: 'Aspen', description: 'For unknown fears' },
-        { name: 'Red Chestnut', description: 'For worry about others' }
+        { name: 'Mimulus', description: 'For known fears like illness or public speaking' },
+        { name: 'Aspen', description: 'For vague, unknown fears or dread' },
+        { name: 'Red Chestnut', description: 'For excessive worry about loved ones' },
+        { name: 'Cherry Plum', description: 'For fear of losing control' },
+        { name: 'Rock Rose', description: 'For panic or terror' }
       ]
     },
     {
@@ -46,21 +48,24 @@ const BachFlowerConcerns = () => {
       title: 'Irritability & Anger',
       description: 'Soothe frustration and balance inner tension.',
       remedies: [
-        { name: 'Impatiens', description: 'For impatience' },
-        { name: 'Holly', description: 'For jealousy, hatred, anger' },
-        { name: 'Beech', description: 'For intolerance and criticism' }
+        { name: 'Impatiens', description: 'For irritability and quick temper' },
+        { name: 'Holly', description: 'For jealousy, hatred, or anger' },
+        { name: 'Beech', description: 'For criticism and intolerance' },
+        { name: 'Vine', description: 'For domineering attitudes and need for control' }
       ]
     },
     {
       id: 'grief-sadness',
-      icon: <Frown className="h-8 w-8 text-blue-500" />, // Changed from Grief to Frown
+      icon: <Frown className="h-8 w-8 text-blue-500" />,
       emoji: '😢',
       title: 'Grief & Sadness',
       description: 'Gently ease sorrow and heal emotional wounds.',
       remedies: [
-        { name: 'Star of Bethlehem', description: 'For shock and trauma' },
-        { name: 'Sweet Chestnut', description: 'For deep anguish' },
-        { name: 'Mustard', description: 'For sudden gloom without cause' }
+        { name: 'Star of Bethlehem', description: 'For shock or trauma' },
+        { name: 'Sweet Chestnut', description: 'For anguish and despair' },
+        { name: 'Mustard', description: 'For gloom without reason' },
+        { name: 'Gentian', description: 'For discouragement after setbacks' },
+        { name: 'Gorse', description: 'For hopelessness and resignation' }
       ]
     },
     {
@@ -70,9 +75,10 @@ const BachFlowerConcerns = () => {
       title: 'Low Confidence & Self-Doubt',
       description: 'Strengthen self-trust and inner belief.',
       remedies: [
-        { name: 'Larch', description: 'For lack of confidence' },
+        { name: 'Larch', description: 'For lack of confidence or fear of failure' },
         { name: 'Cerato', description: 'For self-doubt and seeking validation' },
-        { name: 'Gentian', description: 'For discouragement from setbacks' }
+        { name: 'Gentian', description: 'For loss of faith after setbacks' },
+        { name: 'Elm', description: 'For temporary overwhelm from responsibility' }
       ]
     },
     {
@@ -82,9 +88,10 @@ const BachFlowerConcerns = () => {
       title: 'Overthinking & Mental Overload',
       description: 'Free your mind and restore clarity.',
       remedies: [
-        { name: 'White Chestnut', description: 'For unwanted thoughts' },
+        { name: 'White Chestnut', description: 'For repetitive thoughts' },
         { name: 'Elm', description: 'For feeling overwhelmed' },
-        { name: 'Chestnut Bud', description: 'For repeating mistakes' }
+        { name: 'Chestnut Bud', description: 'For repeating mistakes' },
+        { name: 'Hornbeam', description: 'For mental fatigue or procrastination' }
       ]
     },
     {
@@ -95,7 +102,8 @@ const BachFlowerConcerns = () => {
       description: 'Gain clarity and make confident choices.',
       remedies: [
         { name: 'Scleranthus', description: 'For indecision between two choices' },
-        { name: 'Wild Oat', description: 'For uncertainty about life direction' }
+        { name: 'Wild Oat', description: 'For uncertainty about direction in life' },
+        { name: 'Cerato', description: 'For lack of trust in one\'s own judgment' }
       ]
     },
     {
@@ -106,8 +114,9 @@ const BachFlowerConcerns = () => {
       description: 'Restore energy and emotional resilience.',
       remedies: [
         { name: 'Olive', description: 'For physical exhaustion' },
-        { name: 'Hornbeam', description: 'For mental fatigue' },
-        { name: 'Oak', description: 'For pushing beyond limits' }
+        { name: 'Hornbeam', description: 'For mental tiredness' },
+        { name: 'Oak', description: 'For those who push themselves too hard' },
+        { name: 'Vervain', description: 'For overzealous, tense achievers' }
       ]
     },
     {
@@ -128,9 +137,9 @@ const BachFlowerConcerns = () => {
       title: 'Restlessness & Inattention',
       description: 'Promote focus and emotional calm.',
       remedies: [
-        { name: 'Vervain', description: 'For hyper-enthusiasm' },
-        { name: 'Clematis', description: 'For daydreaming and lack of focus' },
-        { name: 'Chicory', description: 'For clinginess or over-possessiveness' }
+        { name: 'Vervain', description: 'For overenthusiasm and tension' },
+        { name: 'Clematis', description: 'For daydreaming or distraction' },
+        { name: 'Chicory', description: 'For over-possessiveness or clinginess' }
       ]
     },
     {
@@ -140,7 +149,164 @@ const BachFlowerConcerns = () => {
       title: 'Crisis & Emotional Shock',
       description: 'Emergency support when emotions spiral.',
       remedies: [
-        { name: 'Rescue Remedy', description: 'A blend of 5 Bach flowers for immediate balance in crisis situations' }
+        { name: 'Rescue Remedy', description: 'A blend of Rock Rose, Impatiens, Clematis, Star of Bethlehem, and Cherry Plum for rapid balance' }
+      ]
+    },
+    {
+      id: 'disengagement',
+      icon: <Cloud className="h-8 w-8 text-slate-500" />,
+      emoji: '🫥',
+      title: 'Disengagement & Apathy',
+      description: 'Reignite presence and zest for life.',
+      remedies: [
+        { name: 'Wild Rose', description: 'For resignation and apathy' },
+        { name: 'Honeysuckle', description: 'For living in the past' },
+        { name: 'Olive', description: 'For energy drained by illness or effort' },
+        { name: 'Mustard', description: 'For gloom without cause' },
+        { name: 'Clematis', description: 'For disconnection from the present moment' }
+      ]
+    },
+    {
+      id: 'loneliness',
+      icon: <Heart className="h-8 w-8 text-pink-500" />,
+      emoji: '🧍',
+      title: 'Loneliness & Isolation',
+      description: 'Open gentle pathways to connection.',
+      remedies: [
+        { name: 'Water Violet', description: 'For aloofness or reserve' },
+        { name: 'Heather', description: 'For self-preoccupation and loneliness' },
+        { name: 'Impatiens', description: 'For irritability that pushes others away' }
+      ]
+    },
+    {
+      id: 'oversensitivity',
+      icon: <Leaf className="h-8 w-8 text-teal-500" />,
+      emoji: '🛡️',
+      title: 'Oversensitivity & Boundaries',
+      description: 'Stay centered amid outside pressures.',
+      remedies: [
+        { name: 'Walnut', description: 'For change and external influence' },
+        { name: 'Centaury', description: 'For difficulty asserting oneself' },
+        { name: 'Agrimony', description: 'For hiding pain behind cheerfulness' },
+        { name: 'Holly', description: 'For jealousy, anger, and emotional defensiveness' }
+      ]
+    },
+    {
+      id: 'despair',
+      icon: <Frown className="h-8 w-8 text-gray-600" />,
+      emoji: '🌫️',
+      title: 'Despair & Hopelessness',
+      description: 'Recover courage, dignity, and hope.',
+      remedies: [
+        { name: 'Gorse', description: 'For hopelessness and giving up' },
+        { name: 'Sweet Chestnut', description: 'For deep despair and anguish' },
+        { name: 'Oak', description: 'For those who persist beyond endurance' },
+        { name: 'Pine', description: 'For guilt and self-blame' },
+        { name: 'Crab Apple', description: 'For shame or self-disgust' }
+      ]
+    },
+    {
+      id: 'over-care',
+      icon: <Heart className="h-8 w-8 text-rose-500" />,
+      emoji: '🤲',
+      title: 'Over-Care & Control',
+      description: 'Serve with love, not pressure.',
+      remedies: [
+        { name: 'Chicory', description: 'For possessive or controlling love' },
+        { name: 'Vervain', description: 'For overzealous reformers' },
+        { name: 'Vine', description: 'For dominating personalities' },
+        { name: 'Beech', description: 'For critical or rigid attitudes' },
+        { name: 'Rock Water', description: 'For strict self-denial or inflexibility' }
+      ]
+    },
+    {
+      id: 'change-transition',
+      icon: <CircleArrowRight className="h-8 w-8 text-violet-500" />,
+      emoji: '🔄',
+      title: 'Change & Transition',
+      description: 'Adapt smoothly through life\'s turning points.',
+      remedies: [
+        { name: 'Walnut', description: 'For emotional protection during change' },
+        { name: 'Star of Bethlehem', description: 'For healing shock or upheaval' },
+        { name: 'Honeysuckle', description: 'For letting go of the past' }
+      ]
+    },
+    {
+      id: 'creativity-focus',
+      icon: <Brain className="h-8 w-8 text-amber-500" />,
+      emoji: '💡',
+      title: 'Creativity & Focus',
+      description: 'Align clarity, drive, and follow-through.',
+      remedies: [
+        { name: 'Clematis', description: 'For lack of focus or dreamy detachment' },
+        { name: 'Vervain', description: 'For overstrain and mental excitement' },
+        { name: 'Chestnut Bud', description: 'For learning from experience' },
+        { name: 'Hornbeam', description: 'For mental fatigue' }
+      ]
+    },
+    {
+      id: 'sleep-rest',
+      icon: <Moon className="h-8 w-8 text-indigo-600" />,
+      emoji: '🌙',
+      title: 'Sleep & Rest',
+      description: 'Find peace and rest through emotional calm.',
+      remedies: [
+        { name: 'White Chestnut', description: 'For racing thoughts at night' },
+        { name: 'Aspen', description: 'For fear of the unknown' },
+        { name: 'Mimulus', description: 'For identifiable fears' },
+        { name: 'Olive', description: 'For physical exhaustion' },
+        { name: 'Star of Bethlehem', description: 'For soothing emotional wounds' }
+      ]
+    },
+    {
+      id: 'post-illness',
+      icon: <Sun className="h-8 w-8 text-orange-400" />,
+      emoji: '🌤️',
+      title: 'Post-Illness Recovery',
+      description: 'Rebuild emotional and physical strength.',
+      remedies: [
+        { name: 'Olive', description: 'For fatigue after illness' },
+        { name: 'Hornbeam', description: 'For mental weariness' },
+        { name: 'Star of Bethlehem', description: 'For trauma or shock from illness' },
+        { name: 'Impatiens', description: 'For frustration with slow healing' }
+      ]
+    },
+    {
+      id: 'spiritual-growth',
+      icon: <Star className="h-8 w-8 text-purple-600" />,
+      emoji: '🔮',
+      title: 'Spiritual Growth & Inner Peace',
+      description: 'Rebalance your inner world and align with purpose.',
+      remedies: [
+        { name: 'Wild Oat', description: 'For uncertainty about life direction' },
+        { name: 'Walnut', description: 'For transformation and letting go' },
+        { name: 'Chestnut Bud', description: 'For breaking old patterns' },
+        { name: 'Water Violet', description: 'For inner stillness and wisdom' }
+      ]
+    },
+    {
+      id: 'emotional-suppression',
+      icon: <Heart className="h-8 w-8 text-blue-400" />,
+      emoji: '🕊️',
+      title: 'Emotional Suppression & Expression',
+      description: 'Find safety in feeling.',
+      remedies: [
+        { name: 'Agrimony', description: 'For masking pain behind a smile' },
+        { name: 'Water Violet', description: 'For emotional reserve' },
+        { name: 'Star of Bethlehem', description: 'For frozen grief or trauma' }
+      ]
+    },
+    {
+      id: 'overall-balance',
+      icon: <Flower className="h-8 w-8 text-emerald-500" />,
+      emoji: '✨',
+      title: 'Overall Balance',
+      description: 'Harmonize emotions and rediscover equilibrium.',
+      remedies: [
+        { name: 'Rescue Remedy', description: 'Emergency blend for daily stress' },
+        { name: 'Walnut', description: 'For life transitions' },
+        { name: 'Olive', description: 'For renewal' },
+        { name: 'Gentian', description: 'For optimism' }
       ]
     }
   ];
