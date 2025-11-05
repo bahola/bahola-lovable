@@ -1,171 +1,163 @@
 import { PageLayout } from '@/components/PageLayout';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Search, X } from 'lucide-react';
-import { useState } from 'react';
+import { BookOpen, Target, Lightbulb, Clock } from 'lucide-react';
 
-const remedies = [
-  {
-    name: "Arnica Montana",
-    source: "Plant - Leopard's Bane",
-    category: "Trauma remedy",
-    potencies: "3X to 1M",
-    indications: "Trauma, bruising, soreness, post-surgical recovery",
-    keyCharacteristics: "\"Feels well\" even when injured; fear of being touched; bruised, sore feeling"
-  },
-  {
-    name: "Belladonna",
-    source: "Plant - Deadly Nightshade",
-    category: "Acute inflammatory conditions",
-    potencies: "6C to 200C",
-    indications: "Sudden high fever, throbbing headaches, redness and heat",
-    keyCharacteristics: "Sudden onset; intense symptoms; redness, heat, burning; dilated pupils"
-  },
-  {
-    name: "Nux Vomica",
-    source: "Plant - Poison Nut",
-    category: "Digestive and nervous system remedy",
-    potencies: "6C to 30C",
-    indications: "Digestive upsets, hangover, irritability, hypersensitivity",
-    keyCharacteristics: "Irritable, impatient; chilly; oversensitive; digestive disturbances; type A personality"
-  }
+const featuredRemedies = [
+  { no: 1, remedy: "Sulphur", icon: "🔥", theme: "The King of Antipsorics", highlights: "Chronic psora, venous stasis, philosophical mind, neglect of appearance" },
+  { no: 2, remedy: "Nux vomica", icon: "⚡", theme: "The Driven Modern Temperament", highlights: "Business strain, stimulants, irritability, dyspepsia, overwork" },
+  { no: 3, remedy: "Pulsatilla nigricans", icon: "💧", theme: "The Gentle Adaptor", highlights: "Mucous catarrhs, hormonal change, yielding nature, thirstlessness" },
+  { no: 4, remedy: "Lycopodium clavatum", icon: "🌿", theme: "The Anticipatory Intellectual", highlights: "Right-sided complaints, low confidence, gas, hepatic and urinary tension" },
+  { no: 5, remedy: "Arsenicum album", icon: "❄️", theme: "The Restless Perfectionist", highlights: "Anxiety, chilliness, burning pains, meticulousness" },
+  { no: 6, remedy: "Calcarea carbonica", icon: "🪶", theme: "The Solid Builder", highlights: "Slow development, fatigue, glandular swellings, bone health" },
+  { no: 7, remedy: "Phosphorus", icon: "✨", theme: "The Radiant Sensitivity", highlights: "Nervous exhaustion, bleeding tendency, desire for company" },
+  { no: 8, remedy: "Natrum muriaticum", icon: "💎", theme: "The Silent Griever", highlights: "Reserved emotions, headaches, chronic malaria, emaciation" },
+  { no: 9, remedy: "Belladonna", icon: "🌡️", theme: "The Fiery Acute", highlights: "Sudden onset, congestion, violence, delirium, fever" },
+  { no: 10, remedy: "Rhus toxicodendron", icon: "🌧️", theme: "The Mover in Motion", highlights: "Rheumatism, sprains, eruptions, better from motion" }
+];
+
+const seriesFeatures = [
+  "Family & Sphere of Action (botanical/mineral signature)",
+  "Constitution & Temperament",
+  "Modalities & Causations",
+  "Farrington's Comparative Hints",
+  "Boger's Keynotes & Synoptic Essence",
+  "Boericke's Clinical Pearls",
+  "Doctor's Commentary & Case References",
+  "Relationships and Complementaries"
+];
+
+const usagePoints = [
+  "Use for case differentiation and remedy essence recall",
+  "Ideal for seminars, repertory integration, and advanced materia medica discussions",
+  "Each page cross-links to Comparative Materia Medica and Family Overview"
+];
+
+const comingSoon = [
+  "Deep Dives into Ignatia, Sepia, Bryonia, Hepar sulphuris, and Aurum metallicum",
+  "Integrated audio lectures and PDF downloads for each remedy"
 ];
 
 const RemedyDeepDive = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRemedy, setSelectedRemedy] = useState<typeof remedies[0] | null>(null);
-
-  const filteredRemedies = remedies.filter(remedy => 
-    remedy.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const clearSearch = () => {
-    setSearchTerm("");
-  };
 
   return (
     <ProtectedDoctorRoute>
       <PageLayout 
-        title="Deep Dive into Remedies" 
-        description="Explore in-depth analysis of specific homeopathic remedies"
+        title="🧠 Deep Dive Materia Medica" 
+        description="Explore the inner world of our greatest remedies — one at a time."
       >
-        <div className="max-w-6xl mx-auto mb-10">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-6 text-bahola-blue-800">Remedy Research Tool</h2>
-            
-            <div className="mb-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-bahola-neutral-400" />
-                <Input 
-                  type="text"
-                  placeholder="Search remedies by name..."
-                  className="pl-10 pr-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <Button 
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 p-0"
-                    onClick={clearSearch}
-                  >
-                    <X size={16} />
-                  </Button>
-                )}
+        <div className="max-w-7xl mx-auto space-y-8">
+          
+          {/* Introduction */}
+          <Card>
+            <CardHeader>
+              <CardDescription className="text-base leading-relaxed">
+                Go beyond keynotes and symptoms. The Deep Dive Series is designed for the professional homeopath who wishes to study the constitutional depth, pathophysiological affinities, and remedy essence that define classical materia medica.
+              </CardDescription>
+              <CardDescription className="text-base leading-relaxed mt-4">
+                Each article synthesizes insights from <span className="font-semibold">Farrington's Lectures</span>, <span className="font-semibold">Boger's Synoptic Key</span>, and <span className="font-semibold">Boericke's Clinical Materia Medica</span>, with modern clinical perspectives and remedy relationships.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          {/* Featured Remedies */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">🔍 Featured Remedies</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-border">
+                      <th className="text-left py-3 px-4 font-semibold">No.</th>
+                      <th className="text-left py-3 px-4 font-semibold">Remedy</th>
+                      <th className="text-left py-3 px-4 font-semibold">Theme</th>
+                      <th className="text-left py-3 px-4 font-semibold">Highlights</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {featuredRemedies.map((item) => (
+                      <tr key={item.no} className="border-b border-border hover:bg-muted/50 transition-colors">
+                        <td className="py-3 px-4">{item.no}</td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">{item.icon}</span>
+                            <span className="font-medium">{item.remedy}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 font-medium text-primary">{item.theme}</td>
+                        <td className="py-3 px-4 text-sm text-muted-foreground">{item.highlights}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="md:col-span-1">
-                <h3 className="font-semibold mb-4 text-lg">Remedy List</h3>
-                <div className="space-y-2">
-                  {filteredRemedies.length > 0 ? (
-                    filteredRemedies.map((remedy) => (
-                      <Button 
-                        key={remedy.name}
-                        variant={selectedRemedy?.name === remedy.name ? "default" : "outline"} 
-                        className="w-full justify-start"
-                        onClick={() => setSelectedRemedy(remedy)}
-                      >
-                        {remedy.name}
-                      </Button>
-                    ))
-                  ) : (
-                    <p className="text-bahola-neutral-500 italic">No remedies found matching "{searchTerm}"</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="md:col-span-2">
-                {selectedRemedy ? (
-                  <div className="border rounded-lg p-6">
-                    <h2 className="text-2xl font-bold mb-2 text-bahola-blue-700">{selectedRemedy.name}</h2>
-                    <p className="text-bahola-neutral-600 mb-6">Source: {selectedRemedy.source}</p>
-                    
-                    <Tabs defaultValue="overview">
-                      <TabsList className="mb-4">
-                        <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="indications">Clinical Indications</TabsTrigger>
-                        <TabsTrigger value="materia">Materia Medica</TabsTrigger>
-                      </TabsList>
-                      
-                      <TabsContent value="overview" className="space-y-4">
-                        <div>
-                          <h3 className="font-semibold">Category</h3>
-                          <p>{selectedRemedy.category}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Common Potencies</h3>
-                          <p>{selectedRemedy.potencies}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Key Indications</h3>
-                          <p>{selectedRemedy.indications}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Key Characteristics</h3>
-                          <p>{selectedRemedy.keyCharacteristics}</p>
-                        </div>
-                      </TabsContent>
-                      
-                      <TabsContent value="indications">
-                        <p className="italic text-bahola-neutral-500">
-                          Detailed clinical indications for {selectedRemedy.name} are available in the 
-                          professional version of this database. Please contact our professional 
-                          services team for access.
-                        </p>
-                      </TabsContent>
-                      
-                      <TabsContent value="materia">
-                        <p className="italic text-bahola-neutral-500">
-                          Complete Materia Medica for {selectedRemedy.name} is available in the 
-                          professional version of this database. Please contact our professional 
-                          services team for access.
-                        </p>
-                      </TabsContent>
-                    </Tabs>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center h-full border rounded-lg p-10">
-                    <div className="text-center text-bahola-neutral-500">
-                      <p className="mb-2">Select a remedy from the list to view details</p>
-                      <p className="text-sm">or search for a specific remedy</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            <div className="mt-10 p-4 bg-bahola-blue-50 rounded-lg">
-              <h3 className="font-medium mb-2">Professional Note</h3>
-              <p>This is a limited preview of our remedy database. Healthcare professionals have access to our complete database with detailed remedy relationships, cases, and research.</p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+
+          {/* About the Series */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                🩺 About the Series
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-muted-foreground">Each remedy page includes:</p>
+              <ul className="space-y-2">
+                {seriesFeatures.map((feature, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* How to Use */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                💡 How to Use
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 font-medium">Designed for clinicians and postgraduate students:</p>
+              <ul className="space-y-2">
+                {usagePoints.map((point, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Coming Soon */}
+          <Card className="border-2 border-primary/20 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                📚 Coming Soon
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {comingSoon.map((item, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
         </div>
       </PageLayout>
     </ProtectedDoctorRoute>
