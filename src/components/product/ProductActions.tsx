@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/contexts/CartAdapter';
 
 interface ProductActionsProps {
   product: {

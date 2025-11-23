@@ -2,7 +2,7 @@
 import React from 'react';
 import { ShoppingCart, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/contexts/CartAdapter';
 
 export const CartButton: React.FC = () => {
   const { itemCount, totalAmount } = useCart();

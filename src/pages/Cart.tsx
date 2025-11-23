@@ -4,7 +4,7 @@ import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/contexts/CartAdapter';
 import ShippingCalculator from '@/components/shipping/ShippingCalculator';
 
 const Cart = () => {

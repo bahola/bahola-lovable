@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CreditCard, Building, Home, Shield, ShoppingBag } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/contexts/CartAdapter';
 import ShippingCalculator from '@/components/shipping/ShippingCalculator';
 
 const Checkout = () => {

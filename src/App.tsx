@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
 
 import { SwellCartProvider } from './contexts/SwellCartContext';
+import { CartAdapterProvider } from './contexts/CartAdapter';
 import { ERPNextAuthProvider } from './contexts/ERPNextAuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { LazyHeader } from './components/LazyHeader';
@@ -20,7 +21,8 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ERPNextAuthProvider>
           <SwellCartProvider>
-            <BrowserRouter>
+            <CartAdapterProvider>
+              <BrowserRouter>
               <ScrollToTop />
               <div className="min-h-screen flex flex-col">
                 <LazyHeader />
@@ -30,7 +32,8 @@ function App() {
                 <Footer />
               </div>
               <Toaster />
-            </BrowserRouter>
+              </BrowserRouter>
+            </CartAdapterProvider>
           </SwellCartProvider>
         </ERPNextAuthProvider>
       </QueryClientProvider>
