@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
 
-import { CartProvider } from './contexts/CartContext';
+import { SwellCartProvider } from './contexts/SwellCartContext';
 import { ERPNextAuthProvider } from './contexts/ERPNextAuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { LazyHeader } from './components/LazyHeader';
@@ -19,7 +19,7 @@ function App() {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <ERPNextAuthProvider>
-          <CartProvider>
+          <SwellCartProvider>
             <BrowserRouter>
               <ScrollToTop />
               <div className="min-h-screen flex flex-col">
@@ -31,7 +31,7 @@ function App() {
               </div>
               <Toaster />
             </BrowserRouter>
-          </CartProvider>
+          </SwellCartProvider>
         </ERPNextAuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
