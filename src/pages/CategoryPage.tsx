@@ -1,12 +1,11 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams, useLocation } from 'react-router-dom';
 import { CategoryPageHeader } from '@/components/category/CategoryPageHeader';
 import { CategoryFilters } from '@/components/category/CategoryFilters';
 import { ProductGrid } from '@/components/category/ProductGrid';
 import { formatName, getPageInfo } from '@/utils/productUtils';
-import { supabase } from '@/integrations/supabase/client';
+import { useSwellProducts, getSwellProductImage, getSwellDiscountPercentage } from '@/hooks/useSwellProducts';
 
 interface Product {
   id: string;
@@ -34,8 +33,6 @@ const CategoryPage = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   
   // Debounce search input
   useEffect(() => {
@@ -49,127 +46,42 @@ const CategoryPage = () => {
   // Determine if we're viewing a category or concern page
   const isConcernPage = location.pathname.includes('/concern/');
   const id = isConcernPage ? concernId : categoryId;
-  
-  // Fetch products from database
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        console.log('Fetching products for category/subcategory/concern:', { 
-          categoryId, 
-          subcategoryId, 
-          concernId, 
-          isConcernPage 
-        });
-        
-        let query = supabase
-          .from('products')
-          .select(`
-            id,
-            name,
-            description,
-            short_description,
-            price,
-            image,
-            category:category_id(id, name, slug),
-            subcategory:subcategory_id(id, name)
-          `);
 
-        // If we're on a concern page, we should filter by the concern (which is the subcategory)
-        if (isConcernPage && concernId) {
-          // First, get the "Specialty Products" category ID
-          const { data: categoryData } = await supabase
-            .from('product_categories')
-            .select('id')
-            .ilike('name', '%specialty%')
-            .single();
-          
-          if (categoryData) {
-            // Then find subcategory matching the concern name/slug
-            const { data: subcategoryData } = await supabase
-              .from('product_subcategories')
-              .select('id')
-              .or(`name.ilike.%${concernId}%, slug.ilike.%${concernId}%`)
-              .eq('category_id', categoryData.id)
-              .single();
-            
-            if (subcategoryData) {
-              console.log('Found matching subcategory for concern:', subcategoryData);
-              query = query
-                .eq('category_id', categoryData.id)
-                .eq('subcategory_id', subcategoryData.id);
-            } else {
-              console.log('No matching subcategory found for concern:', concernId);
-            }
-          }
-        }
-        // If we have a specific category, filter by it
-        else if (categoryId) {
-          // First, get the category UUID by slug
-          const { data: categoryData } = await supabase
-            .from('product_categories')
-            .select('id, slug')
-            .eq('slug', categoryId)
-            .single();
-          
-          if (categoryData) {
-            query = query.eq('category_id', categoryData.id);
-            
-            // If we also have a subcategory, filter by it
-            if (subcategoryId) {
-              // For alphabetical subcategories (like 'a', 'b', etc), filter by first letter of product name
-              if (subcategoryId.length === 1 && /[a-z]/.test(subcategoryId)) {
-                query = query.ilike('name', `${subcategoryId.toUpperCase()}%`);
-              } else {
-                // For other subcategories, try to match by subcategory name or slug
-                const { data: subcategoryData } = await supabase
-                  .from('product_subcategories')
-                  .select('id, name')
-                  .or(`name.ilike.%${subcategoryId}%,slug.ilike.%${subcategoryId}%`)
-                  .eq('category_id', categoryData.id)
-                  .single();
-                
-                if (subcategoryData) {
-                  query = query.eq('subcategory_id', subcategoryData.id);
-                }
-              }
-            }
-          }
-        }
-
-        const { data, error } = await query;
-        
-        if (error) {
-          console.error('Error fetching products:', error);
-          setProducts([]);
-        } else {
-          console.log('Fetched products:', data);
-          
-          // Transform products to match the expected interface
-          const transformedProducts: Product[] = data.map(product => ({
-            id: product.id,
-            title: product.name,
-            description: product.short_description || product.description || 'No description available',
-            price: product.price,
-            imageSrc: product.image || '/placeholder.svg',
-            discountPercentage: 0,
-            rating: 4.5,
-            reviewCount: 10,
-            url: `/product/${product.id}`
-          }));
-          
-          setProducts(transformedProducts);
-        }
-      } catch (error) {
-        console.error('Error in fetchProducts:', error);
-        setProducts([]);
-      } finally {
-        setIsLoading(false);
-      }
+  // Build Swell query options
+  const swellOptions = useMemo(() => {
+    const options: { category?: string; search?: string; limit?: number } = {
+      limit: 50
     };
+    
+    // Map category/concern to Swell category if needed
+    if (categoryId && categoryId !== 'all-products') {
+      options.category = categoryId;
+    }
+    
+    if (debouncedSearchQuery) {
+      options.search = debouncedSearchQuery;
+    }
+    
+    return options;
+  }, [categoryId, debouncedSearchQuery]);
 
-    fetchProducts();
-  }, [categoryId, subcategoryId, concernId, isConcernPage]);
+  // Fetch products from Swell
+  const { products: swellProducts, loading: isLoading, error } = useSwellProducts(swellOptions);
+
+  // Transform Swell products to our Product interface
+  const products: Product[] = useMemo(() => {
+    return swellProducts.map(product => ({
+      id: product.id,
+      title: product.name,
+      description: product.description || 'No description available',
+      price: product.sale_price || product.price,
+      imageSrc: getSwellProductImage(product),
+      discountPercentage: getSwellDiscountPercentage(product),
+      rating: 4.5, // Default rating - Swell doesn't have ratings by default
+      reviewCount: 10, // Default review count
+      url: `/product/${product.slug || product.id}`
+    }));
+  }, [swellProducts]);
   
   // Get page info based on if we're viewing a category, subcategory, or concern
   const pageInfo = getPageInfo(id, isConcernPage, subcategoryId);
@@ -190,12 +102,14 @@ const CategoryPage = () => {
     setSearchQuery('');
   };
   
-  // Apply search filter
-  const filteredProducts = products.filter(product => 
-    !debouncedSearchQuery || 
-    product.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-  );
+  // Apply local search filter (for additional client-side filtering)
+  const filteredProducts = products.filter(product => {
+    // Price range filter
+    if (product.price < priceRange[0] || product.price > priceRange[1]) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <PageLayout 
@@ -228,6 +142,8 @@ const CategoryPage = () => {
           
           {isLoading ? (
             <div className="text-center p-8">Loading products...</div>
+          ) : error ? (
+            <div className="text-center p-8 text-red-500">{error}</div>
           ) : (
             <ProductGrid 
               products={filteredProducts}
