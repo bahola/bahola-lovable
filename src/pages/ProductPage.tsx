@@ -149,6 +149,13 @@ const ProductPage = () => {
     return product?.stock || 0;
   };
 
+  // Memoize the sanitized description - MUST be before any early returns
+  const safeDescriptionHtml = useMemo(() => {
+    if (!product?.description) return '';
+    const decoded = decodeHtmlEntities(product.description);
+    return DOMPurify.sanitize(decoded);
+  }, [product?.description]);
+
   // Loading state
   if (loading) {
     return (
@@ -178,11 +185,6 @@ const ProductPage = () => {
   }
 
   const currentStock = getCurrentStock();
-
-  const safeDescriptionHtml = useMemo(() => {
-    const decoded = decodeHtmlEntities(product.description || '');
-    return DOMPurify.sanitize(decoded);
-  }, [product.description]);
   
   return (
     <PageLayout title={product.name} description={product.description}>
