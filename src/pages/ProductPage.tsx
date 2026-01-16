@@ -204,13 +204,6 @@ const ProductPage = () => {
                   originalPrice={product.originalPrice}
                   discountPercentage={product.discountPercentage}
                 />
-                
-                <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-bahola-blue-500">
-                  <div 
-                    className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.shortDescription || '') }}
-                  />
-                </div>
               </div>
 
               {/* Product Options Card */}
