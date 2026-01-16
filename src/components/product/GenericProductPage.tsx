@@ -151,12 +151,11 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
   }, [product]);
 
   // Extract unique potencies and pack sizes
-  const { potencies, packSizes, packSizeWithPrice } = useMemo(() => {
-    if (!product?.variations) return { potencies: [], packSizes: [], packSizeWithPrice: new Map() };
+  const { potencies, packSizes } = useMemo(() => {
+    if (!product?.variations) return { potencies: [], packSizes: [] };
     
     const potencySet = new Set<string>();
     const packSizeSet = new Set<string>();
-    const priceMap = new Map<string, number>();
     
     product.variations.forEach((v: Variation) => {
       if (v.potency && v.potency.trim() !== '' && v.potency !== 'undefined') {
@@ -164,17 +163,12 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
       }
       if (v.pack_size && v.pack_size.trim() !== '' && v.pack_size !== 'undefined') {
         packSizeSet.add(v.pack_size);
-        // Store the price for each pack size
-        if (!priceMap.has(v.pack_size)) {
-          priceMap.set(v.pack_size, v.price);
-        }
       }
     });
     
     return {
       potencies: Array.from(potencySet),
-      packSizes: Array.from(packSizeSet),
-      packSizeWithPrice: priceMap
+      packSizes: Array.from(packSizeSet)
     };
   }, [product?.variations]);
 
@@ -356,27 +350,19 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                     Select Pack Size
                   </label>
                   <div className="flex flex-wrap gap-3">
-                    {packSizes.map((packSize) => {
-                      const price = packSizeWithPrice.get(packSize);
-                      return (
-                        <button
-                          key={packSize}
-                          onClick={() => setSelectedPackSize(packSize)}
-                          className={`px-5 py-3 rounded-lg border-2 text-center transition-all duration-200 min-w-[100px] ${
-                            selectedPackSize === packSize
-                              ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
-                              : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
-                          }`}
-                        >
-                          <div className="font-semibold text-sm">{packSize}</div>
-                          {price && (
-                            <div className={`text-xs mt-1 ${selectedPackSize === packSize ? 'opacity-90' : ''}`}>
-                              ₹{price}
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
+                    {packSizes.map((packSize) => (
+                      <button
+                        key={packSize}
+                        onClick={() => setSelectedPackSize(packSize)}
+                        className={`px-5 py-3 rounded-lg border-2 font-semibold text-sm transition-all duration-200 min-w-[80px] ${
+                          selectedPackSize === packSize
+                            ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
+                            : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
+                        }`}
+                      >
+                        {packSize}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
