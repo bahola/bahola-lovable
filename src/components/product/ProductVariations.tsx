@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 interface Variation {
   id: string;
@@ -14,86 +14,114 @@ interface ProductVariationsProps {
 }
 
 const ProductVariations: React.FC<ProductVariationsProps> = ({ variations, onVariationSelect }) => {
-  const [selectedVariation, setSelectedVariation] = useState<string | null>(null);
+  const [selectedPotency, setSelectedPotency] = useState<string | null>(null);
+  const [selectedPackSize, setSelectedPackSize] = useState<string | null>(null);
   
-  useEffect(() => {
-    // Set first variation as default when component mounts
-    if (variations && variations.length > 0 && !selectedVariation) {
-      setSelectedVariation(variations[0].id);
-      if (onVariationSelect) {
-        onVariationSelect(variations[0]);
+  // Extract unique potencies and pack sizes
+  const { potencies, packSizes } = useMemo(() => {
+    const potencySet = new Set<string>();
+    const packSizeSet = new Set<string>();
+    
+    variations.forEach(v => {
+      if (v.potency && v.potency.trim() !== '' && v.potency !== 'undefined') {
+        potencySet.add(v.potency);
       }
+      if (v.pack_size && v.pack_size.trim() !== '' && v.pack_size !== 'undefined') {
+        packSizeSet.add(v.pack_size);
+      }
+    });
+    
+    return {
+      potencies: Array.from(potencySet),
+      packSizes: Array.from(packSizeSet)
+    };
+  }, [variations]);
+
+  // Find matching variation when both are selected
+  const selectedVariation = useMemo(() => {
+    if (!selectedPotency || !selectedPackSize) return null;
+    return variations.find(v => v.potency === selectedPotency && v.pack_size === selectedPackSize) || null;
+  }, [variations, selectedPotency, selectedPackSize]);
+
+  // Set defaults on mount
+  useEffect(() => {
+    if (potencies.length > 0 && !selectedPotency) {
+      setSelectedPotency(potencies[0]);
     }
-  }, [variations, selectedVariation, onVariationSelect]);
-  
+    if (packSizes.length > 0 && !selectedPackSize) {
+      setSelectedPackSize(packSizes[0]);
+    }
+  }, [potencies, packSizes, selectedPotency, selectedPackSize]);
+
+  // Notify parent when variation changes
+  useEffect(() => {
+    if (selectedVariation && onVariationSelect) {
+      onVariationSelect(selectedVariation);
+    }
+  }, [selectedVariation, onVariationSelect]);
+
   // If no variations, don't render anything
   if (!variations || variations.length === 0) {
     return null;
   }
 
-  // Check if there are actual variations with meaningful differences
-  const hasPotencyVariations = variations.some(v => v.potency && v.potency.trim() !== '' && v.potency !== 'undefined');
-  const hasPackSizeVariations = variations.some(v => v.pack_size && v.pack_size.trim() !== '' && v.pack_size !== 'undefined');
-
-  // If there are no meaningful attribute variations, don't show the section
-  if (!hasPotencyVariations && !hasPackSizeVariations) {
+  // If there are no meaningful variations, don't show the section
+  if (potencies.length === 0 && packSizes.length === 0) {
     return null;
   }
 
-  const handleVariationClick = (variation: Variation) => {
-    setSelectedVariation(variation.id);
-    if (onVariationSelect) {
-      onVariationSelect(variation);
-    }
-  };
-
-  // Helper function to check if a variation has a valid potency
-  const hasValidPotency = (variation: Variation) => {
-    return variation.potency && 
-           typeof variation.potency === 'string' && 
-           variation.potency.trim() !== '' && 
-           variation.potency !== 'undefined' && 
-           variation.potency !== 'null';
-  };
-
-  // Helper function to check if a variation has a valid pack size
-  const hasValidPackSize = (variation: Variation) => {
-    return variation.pack_size && 
-           typeof variation.pack_size === 'string' && 
-           variation.pack_size.trim() !== '' && 
-           variation.pack_size !== 'undefined' && 
-           variation.pack_size !== 'null';
-  };
-
   return (
-    <div className="mb-6">
-      <h2 className="font-semibold mb-2">Available Variations</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {variations.map((variation) => {
-          console.log('Variation potency:', `"${variation.potency}"`, 'hasValidPotency:', hasValidPotency(variation));
-          console.log('Variation pack_size:', `"${variation.pack_size}"`, 'hasValidPackSize:', hasValidPackSize(variation));
-          
-          return (
-            <div 
-              key={variation.id}
-              className={`border rounded p-2 text-center cursor-pointer transition-colors ${
-                selectedVariation === variation.id 
-                  ? 'border-bahola-blue-500 bg-bahola-blue-50' 
-                  : 'border-bahola-neutral-200 hover:bg-bahola-blue-50'
-              }`}
-              onClick={() => handleVariationClick(variation)}
-            >
-              {hasValidPotency(variation) && (
-                <div className="font-medium">{variation.potency}</div>
-              )}
-              {hasValidPackSize(variation) && (
-                <div className="text-sm">{variation.pack_size}</div>
-              )}
-              <div className="text-bahola-blue-600">₹{variation.price}</div>
-            </div>
-          );
-        })}
-      </div>
+    <div className="mb-6 space-y-4">
+      {/* Potency Selector */}
+      {potencies.length > 0 && (
+        <div>
+          <h3 className="font-semibold mb-2 text-sm text-muted-foreground">Potency</h3>
+          <div className="flex flex-wrap gap-2">
+            {potencies.map((potency) => (
+              <button
+                key={potency}
+                onClick={() => setSelectedPotency(potency)}
+                className={`px-4 py-2 rounded-md border text-sm font-medium transition-colors ${
+                  selectedPotency === potency
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border bg-background hover:bg-accent hover:text-accent-foreground'
+                }`}
+              >
+                {potency}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Pack Size Selector */}
+      {packSizes.length > 0 && (
+        <div>
+          <h3 className="font-semibold mb-2 text-sm text-muted-foreground">Pack Size</h3>
+          <div className="flex flex-wrap gap-2">
+            {packSizes.map((packSize) => (
+              <button
+                key={packSize}
+                onClick={() => setSelectedPackSize(packSize)}
+                className={`px-4 py-2 rounded-md border text-sm font-medium transition-colors ${
+                  selectedPackSize === packSize
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border bg-background hover:bg-accent hover:text-accent-foreground'
+                }`}
+              >
+                {packSize}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Show selected price */}
+      {selectedVariation && (
+        <div className="pt-2">
+          <span className="text-2xl font-bold text-primary">₹{selectedVariation.price}</span>
+        </div>
+      )}
     </div>
   );
 };
