@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -12,11 +11,25 @@ import {
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { User, Package, CreditCard, Heart, Bell, LogOut, Home } from 'lucide-react';
-import { ERPNextUser, ERPNextCustomer } from '@/services/erpnext/authService';
+
+// Flexible user type that works with both ERPNext and Swell
+interface AccountUser {
+  full_name?: string;
+  email?: string;
+  name?: string;
+}
+
+// Flexible customer type that works with both ERPNext and Swell
+interface AccountCustomer {
+  customer_name?: string;
+  customer_type?: string;
+  customer_group?: string;
+  name?: string;
+}
 
 interface AccountSidebarProps {
-  user: ERPNextUser | null;
-  customerData: ERPNextCustomer | null;
+  user: AccountUser | null;
+  customerData: AccountCustomer | null;
   isLoadingCustomer: boolean;
   onLogout: () => void;
 }
@@ -27,7 +40,7 @@ export const AccountSidebar: React.FC<AccountSidebarProps> = ({
   isLoadingCustomer,
   onLogout
 }) => {
-  const displayName = user?.full_name || user?.email || 'User';
+  const displayName = user?.full_name || user?.name || user?.email || 'User';
 
   return (
     <Card>
@@ -42,8 +55,12 @@ export const AccountSidebar: React.FC<AccountSidebarProps> = ({
         )}
         {customerData && (
           <div className="text-sm text-muted-foreground">
-            <p>Customer Type: {customerData.customer_type}</p>
-            <p>Group: {customerData.customer_group}</p>
+            {customerData.customer_type && (
+              <p>Account Type: <span className="capitalize">{customerData.customer_type}</span></p>
+            )}
+            {customerData.customer_group && (
+              <p>Group: <span className="capitalize">{customerData.customer_group}</span></p>
+            )}
           </div>
         )}
       </CardHeader>
