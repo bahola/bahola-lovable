@@ -161,6 +161,15 @@ export default {
 						800: '#3c4043',
 						900: '#202124',
 					}
+				},
+				// Generic Product Page Theme (Forest Green)
+				generic: {
+					forest: 'hsl(var(--generic-forest))',
+					sage: 'hsl(var(--generic-sage))',
+					cream: 'hsl(var(--generic-cream))',
+					sand: 'hsl(var(--generic-sand))',
+					gold: 'hsl(var(--generic-gold))',
+					charcoal: 'hsl(var(--generic-charcoal))',
 				}
 			},
 			fontFamily: {

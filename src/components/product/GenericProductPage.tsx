@@ -1,0 +1,438 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
+import { PageLayout } from '@/components/PageLayout';
+import { useToast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/CartAdapter';
+import { useSwellProduct, getSwellProductImage, getSwellProductImages, getSwellEffectivePrice } from '@/hooks/useSwellProducts';
+import ProductImages, { ProductImagesLoading } from '@/components/product/ProductImages';
+import ProductNotFound from '@/components/product/ProductNotFound';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Check, Award, Package } from 'lucide-react';
+
+// Categories that should NOT show potency selection (only pack sizes)
+const POTENCY_EXCLUDED_CATEGORIES = [
+  'mother tinctures',
+  'mother-tinctures',
+];
+
+interface Variation {
+  id: string;
+  potency: string;
+  pack_size: string;
+  price: number;
+  stock: number;
+}
+
+const GenericProductPage = () => {
+  const { productSlug } = useParams<{ productSlug: string }>();
+  const [quantity, setQuantity] = useState(1);
+  const [selectedPotency, setSelectedPotency] = useState<string | null>(null);
+  const [selectedPackSize, setSelectedPackSize] = useState<string | null>(null);
+  const { toast } = useToast();
+  const { addToCart } = useCart();
+  
+  const { product: swellProduct, loading, error } = useSwellProduct(productSlug);
+
+  // Helper to safely get variants array
+  const getVariantsArray = (variants: any): any[] => {
+    if (!variants) return [];
+    if (Array.isArray(variants)) return variants;
+    if (variants.results && Array.isArray(variants.results)) return variants.results;
+    return [];
+  };
+
+  // Transform Swell product
+  const product = useMemo(() => {
+    if (!swellProduct) return null;
+
+    const categoryName = Array.isArray(swellProduct.categories) 
+      ? swellProduct.categories[0]?.name 
+      : (swellProduct.categories as any)?.results?.[0]?.name || 'Homeopathic Medicine';
+
+    const content = swellProduct.content as Record<string, any> | undefined;
+
+    return {
+      id: swellProduct.id,
+      name: swellProduct.name,
+      latinName: content?.latin_name || '',
+      description: swellProduct.description || '',
+      price: getSwellEffectivePrice(swellProduct),
+      image: getSwellProductImage(swellProduct),
+      images: getSwellProductImages(swellProduct),
+      stock: swellProduct.stock_level ?? 100,
+      category: categoryName,
+      categorySlug: Array.isArray(swellProduct.categories)
+        ? swellProduct.categories[0]?.slug
+        : (swellProduct.categories as any)?.results?.[0]?.slug || '',
+      variations: getVariantsArray(swellProduct.variants).map((v: any) => {
+        const parts = v.name?.split(',').map((s: string) => s.trim()) || [];
+        return {
+          id: v.id,
+          potency: parts[0] || v.name,
+          pack_size: parts[1] || '',
+          price: v.price || swellProduct.price,
+          stock: v.stock_level ?? 100
+        };
+      }),
+      benefits: content?.benefits || [
+        'Effective relief from bruises, sprains, and muscle soreness',
+        'Reduces swelling and inflammation naturally',
+        'Accelerates healing of injuries and trauma',
+        'Relieves shock and trauma following accidents',
+        'Helps with post-surgical recovery',
+        'Safe for all age groups when used as directed'
+      ],
+      dosage: content?.dosage || `Adults: 10-15 drops in water, 3 times daily or as directed by physician.\n\nChildren: 5-10 drops in water, 3 times daily or as directed by physician.\n\nTake 30 minutes before or after meals. For acute conditions, may be taken every 2-3 hours.`,
+      safetyInfo: content?.safety_info || [
+        'Read the label carefully before use',
+        'Keep out of reach of children',
+        'Store in a cool, dry place away from direct sunlight',
+        'Do not exceed recommended dosage',
+        'Pregnant or nursing mothers should consult physician',
+        'Avoid strong flavors 30 minutes before/after taking medicine'
+      ],
+      disclaimer: content?.disclaimer || 'The information provided is for educational purposes only and should not be used as a substitute for professional medical advice. Always consult a registered medical practitioner for diagnosis and treatment. Results may vary from person to person.',
+      slug: swellProduct.slug
+    };
+  }, [swellProduct]);
+
+  // Check if this category should hide potency
+  const shouldHidePotency = useMemo(() => {
+    if (!product) return false;
+    const cat = product.category.toLowerCase();
+    const slug = product.categorySlug?.toLowerCase() || '';
+    return POTENCY_EXCLUDED_CATEGORIES.some(c => cat.includes(c) || slug.includes(c));
+  }, [product]);
+
+  // Extract unique potencies and pack sizes
+  const { potencies, packSizes, packSizeWithPrice } = useMemo(() => {
+    if (!product?.variations) return { potencies: [], packSizes: [], packSizeWithPrice: new Map() };
+    
+    const potencySet = new Set<string>();
+    const packSizeSet = new Set<string>();
+    const priceMap = new Map<string, number>();
+    
+    product.variations.forEach((v: Variation) => {
+      if (v.potency && v.potency.trim() !== '' && v.potency !== 'undefined') {
+        potencySet.add(v.potency);
+      }
+      if (v.pack_size && v.pack_size.trim() !== '' && v.pack_size !== 'undefined') {
+        packSizeSet.add(v.pack_size);
+        // Store the price for each pack size
+        if (!priceMap.has(v.pack_size)) {
+          priceMap.set(v.pack_size, v.price);
+        }
+      }
+    });
+    
+    return {
+      potencies: Array.from(potencySet),
+      packSizes: Array.from(packSizeSet),
+      packSizeWithPrice: priceMap
+    };
+  }, [product?.variations]);
+
+  // Set defaults on mount
+  useEffect(() => {
+    if (potencies.length > 0 && !selectedPotency && !shouldHidePotency) {
+      setSelectedPotency(potencies[0]);
+    }
+    if (packSizes.length > 0 && !selectedPackSize) {
+      setSelectedPackSize(packSizes[0]);
+    }
+  }, [potencies, packSizes, selectedPotency, selectedPackSize, shouldHidePotency]);
+
+  // Find matching variation
+  const selectedVariation = useMemo(() => {
+    if (!product?.variations) return null;
+    
+    if (shouldHidePotency) {
+      // For Mother Tinctures, match only by pack size
+      return product.variations.find((v: Variation) => v.pack_size === selectedPackSize) || null;
+    }
+    
+    if (!selectedPotency || !selectedPackSize) return null;
+    return product.variations.find((v: Variation) => 
+      v.potency === selectedPotency && v.pack_size === selectedPackSize
+    ) || null;
+  }, [product?.variations, selectedPotency, selectedPackSize, shouldHidePotency]);
+
+  // Dynamic product name based on potency
+  const displayProductName = useMemo(() => {
+    if (!product) return '';
+    if (shouldHidePotency || !selectedPotency) return product.name;
+    // Append potency to product name
+    const baseName = product.name.replace(/\s+\d+[CMK]?\d*$/i, ''); // Remove existing potency suffix
+    return `${baseName} ${selectedPotency}`;
+  }, [product, selectedPotency, shouldHidePotency]);
+
+  // Current price
+  const currentPrice = selectedVariation?.price || product?.price || 0;
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    
+    try {
+      addToCart({
+        id: String(product.id),
+        name: displayProductName,
+        price: currentPrice,
+        image: product.image || '/placeholder.svg',
+        taxStatus: 'taxable',
+        taxClass: '5'
+      }, quantity);
+      
+      toast({
+        title: "Added to cart",
+        description: `${quantity} x ${displayProductName} added to your cart`,
+      });
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Sanitize description
+  const safeDescription = useMemo(() => {
+    if (!product?.description) return '';
+    return DOMPurify.sanitize(product.description);
+  }, [product?.description]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <PageLayout title="Loading..." description="">
+        <div className="bg-[hsl(var(--generic-cream))] min-h-screen">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <ProductImagesLoading />
+              <div className="space-y-6">
+                <Skeleton className="h-12 w-3/4" />
+                <Skeleton className="h-6 w-1/2" />
+                <Skeleton className="h-8 w-1/4" />
+                <Skeleton className="h-32 w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error || !product) {
+    return <ProductNotFound />;
+  }
+
+  return (
+    <PageLayout title={displayProductName} description={product.description?.substring(0, 157)} heroDescription={null}>
+      <div className="bg-[hsl(var(--generic-cream))] min-h-screen">
+        {/* Main Product Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+            
+            {/* Product Image Section */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-br from-white to-[hsl(var(--generic-sand))] rounded-xl p-6 lg:p-8 shadow-lg relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,hsl(var(--generic-gold)/0.1),transparent_70%)]" />
+                <div className="relative z-10">
+                  <ProductImages 
+                    image={product.image} 
+                    images={product.images} 
+                    productName={product.name}
+                  />
+                </div>
+              </div>
+              
+              {/* Trust Badges */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-white p-4 rounded-lg border border-[hsl(var(--generic-sand))] text-center">
+                  <Check className="w-6 h-6 text-[hsl(var(--generic-gold))] mx-auto mb-2" />
+                  <span className="text-xs font-semibold text-[hsl(var(--generic-sage))] uppercase tracking-wide">GMP Certified</span>
+                </div>
+                <div className="bg-white p-4 rounded-lg border border-[hsl(var(--generic-sand))] text-center">
+                  <Package className="w-6 h-6 text-[hsl(var(--generic-gold))] mx-auto mb-2" />
+                  <span className="text-xs font-semibold text-[hsl(var(--generic-sage))] uppercase tracking-wide">Made in India</span>
+                </div>
+                <div className="bg-white p-4 rounded-lg border border-[hsl(var(--generic-sand))] text-center">
+                  <Award className="w-6 h-6 text-[hsl(var(--generic-gold))] mx-auto mb-2" />
+                  <span className="text-xs font-semibold text-[hsl(var(--generic-sage))] uppercase tracking-wide">Fast Acting</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Details Section */}
+            <div className="space-y-6">
+              {/* Category & Name */}
+              <div>
+                <p className="text-sm font-semibold tracking-widest uppercase text-[hsl(var(--generic-sage))] mb-2">
+                  {product.category}
+                </p>
+                <h1 className="text-4xl lg:text-5xl font-bold text-[hsl(var(--generic-forest))] leading-tight font-serif">
+                  {displayProductName}
+                </h1>
+                {product.latinName && (
+                  <p className="text-lg italic text-[hsl(var(--generic-sage))] mt-2">{product.latinName}</p>
+                )}
+              </div>
+
+              {/* Potency Selection - Hidden for Mother Tinctures */}
+              {!shouldHidePotency && potencies.length > 0 && (
+                <div>
+                  <label className="block font-semibold text-sm text-[hsl(var(--generic-charcoal))] uppercase tracking-wide mb-3">
+                    Select Potency
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {potencies.map((potency) => (
+                      <button
+                        key={potency}
+                        onClick={() => setSelectedPotency(potency)}
+                        className={`px-5 py-3 rounded-lg border-2 font-semibold text-sm transition-all duration-200 min-w-[70px] ${
+                          selectedPotency === potency
+                            ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
+                            : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
+                        }`}
+                      >
+                        {potency}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Pack Size Selection */}
+              {packSizes.length > 0 && (
+                <div>
+                  <label className="block font-semibold text-sm text-[hsl(var(--generic-charcoal))] uppercase tracking-wide mb-3">
+                    Select Pack Size
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {packSizes.map((packSize) => {
+                      const price = packSizeWithPrice.get(packSize);
+                      return (
+                        <button
+                          key={packSize}
+                          onClick={() => setSelectedPackSize(packSize)}
+                          className={`px-5 py-3 rounded-lg border-2 text-center transition-all duration-200 min-w-[100px] ${
+                            selectedPackSize === packSize
+                              ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
+                              : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
+                          }`}
+                        >
+                          <div className="font-semibold text-sm">{packSize}</div>
+                          {price && (
+                            <div className={`text-xs mt-1 ${selectedPackSize === packSize ? 'opacity-90' : ''}`}>
+                              ₹{price}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Price Section */}
+              <div className="bg-white p-6 rounded-xl border-2 border-[hsl(var(--generic-sand))]">
+                <div className="text-4xl font-bold text-[hsl(var(--generic-forest))] font-serif">
+                  ₹{currentPrice.toFixed(2)}
+                </div>
+                <p className="text-sm text-[hsl(var(--generic-sage))] mt-1">MRP inclusive of all taxes</p>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex gap-4">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-[hsl(var(--generic-forest))] text-white py-4 px-6 rounded-lg font-semibold uppercase tracking-wide text-sm transition-all duration-300 hover:bg-[hsl(var(--generic-charcoal))] hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  onClick={() => {
+                    handleAddToCart();
+                    // Navigate to cart
+                  }}
+                  className="flex-1 bg-white text-[hsl(var(--generic-forest))] py-4 px-6 rounded-lg font-semibold uppercase tracking-wide text-sm border-2 border-[hsl(var(--generic-forest))] transition-all duration-200 hover:bg-[hsl(var(--generic-cream))]"
+                >
+                  Buy Now
+                </button>
+              </div>
+
+              {/* Product Information Sections */}
+              <div className="space-y-6 pt-6 border-t border-[hsl(var(--generic-sand))]">
+                
+                {/* Product Description */}
+                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
+                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
+                    Product Description
+                  </h2>
+                  {safeDescription ? (
+                    <div 
+                      className="text-[hsl(var(--generic-charcoal))] leading-relaxed prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: safeDescription }}
+                    />
+                  ) : (
+                    <p className="text-[hsl(var(--generic-charcoal))] leading-relaxed">
+                      {product.name} is a premier homeopathic remedy trusted by families for generations. Bahola's formulation delivers consistent results in managing various health conditions naturally.
+                    </p>
+                  )}
+                </section>
+
+                {/* Key Benefits */}
+                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
+                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
+                    Key Benefits
+                  </h2>
+                  <ul className="space-y-3">
+                    {product.benefits.map((benefit: string, index: number) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <Check className="w-5 h-5 text-[hsl(var(--generic-gold))] flex-shrink-0 mt-0.5" />
+                        <span className="text-[hsl(var(--generic-charcoal))]">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                {/* Dosage & Directions */}
+                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
+                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
+                    Dosage & Directions
+                  </h2>
+                  <div className="text-[hsl(var(--generic-charcoal))] leading-relaxed whitespace-pre-line">
+                    {product.dosage}
+                  </div>
+                </section>
+
+                {/* Safety Information */}
+                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
+                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
+                    Safety Information
+                  </h2>
+                  <ul className="space-y-2 text-[hsl(var(--generic-charcoal))]">
+                    {product.safetyInfo.map((info: string, index: number) => (
+                      <li key={index}>• {info}</li>
+                    ))}
+                  </ul>
+                </section>
+
+                {/* Disclaimer */}
+                <section className="bg-[hsl(var(--generic-sand))] p-5 rounded-lg">
+                  <p className="text-sm text-[hsl(var(--generic-charcoal))] leading-relaxed">
+                    <strong>Disclaimer:</strong> {product.disclaimer}
+                  </p>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  );
+};
+
+export default GenericProductPage;
