@@ -30,6 +30,14 @@ const ProductPage = () => {
   // Fetch product from Swell
   const { product: swellProduct, loading, error } = useSwellProduct(productSlug);
 
+  // Helper to safely get variants array from Swell response
+  const getVariantsArray = (variants: any): any[] => {
+    if (!variants) return [];
+    if (Array.isArray(variants)) return variants;
+    if (variants.results && Array.isArray(variants.results)) return variants.results;
+    return [];
+  };
+
   // Transform Swell product to our format
   const product = swellProduct ? {
     id: swellProduct.id,
@@ -56,14 +64,16 @@ const ProductPage = () => {
     ingredients: swellProduct.content?.ingredients || `${swellProduct.name}, Sucrose (inactive)`,
     precautions: 'Consult a qualified homeopathic practitioner before use. Not a replacement for emergency medical care for serious injuries.',
     shipping: 'Usually ships within 24 hours. Free shipping on orders above ₹500.',
-    category: swellProduct.categories?.[0]?.name || 'Uncategorized',
-    variations: swellProduct.variants?.map(v => ({
+    category: Array.isArray(swellProduct.categories) 
+      ? swellProduct.categories[0]?.name 
+      : (swellProduct.categories as any)?.results?.[0]?.name || 'Uncategorized',
+    variations: getVariantsArray(swellProduct.variants).map((v: any) => ({
       id: v.id,
       potency: v.name,
       pack_size: v.name,
       price: v.price,
       stock: v.stock_level ?? 100
-    })) || [],
+    })),
     tax_status: 'taxable' as const,
     tax_class: '5' as const,
     slug: swellProduct.slug
