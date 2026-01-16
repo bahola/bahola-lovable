@@ -67,13 +67,17 @@ const ProductPage = () => {
     category: Array.isArray(swellProduct.categories) 
       ? swellProduct.categories[0]?.name 
       : (swellProduct.categories as any)?.results?.[0]?.name || 'Uncategorized',
-    variations: getVariantsArray(swellProduct.variants).map((v: any) => ({
-      id: v.id,
-      potency: v.name,
-      pack_size: v.name,
-      price: v.price,
-      stock: v.stock_level ?? 100
-    })),
+    variations: getVariantsArray(swellProduct.variants).map((v: any) => {
+      // Parse variant name like "CM, 30ml" into potency and pack_size
+      const parts = v.name?.split(',').map((s: string) => s.trim()) || [];
+      return {
+        id: v.id,
+        potency: parts[0] || v.name,
+        pack_size: parts[1] || '',
+        price: v.price,
+        stock: v.stock_level ?? 100
+      };
+    }),
     tax_status: 'taxable' as const,
     tax_class: '5' as const,
     slug: swellProduct.slug
