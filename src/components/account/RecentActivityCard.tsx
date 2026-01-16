@@ -1,14 +1,20 @@
-
 import React from 'react';
 import { 
   Card, 
   CardContent
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ERPNextCustomer } from '@/services/erpnext/authService';
+
+// Flexible customer type that works with both ERPNext and Swell
+interface AccountCustomer {
+  customer_name?: string;
+  customer_type?: string;
+  customer_group?: string;
+  name?: string;
+}
 
 interface RecentActivityCardProps {
-  customerData: ERPNextCustomer | null;
+  customerData: AccountCustomer | null;
 }
 
 export const RecentActivityCard: React.FC<RecentActivityCardProps> = ({ customerData }) => {
@@ -37,8 +43,8 @@ export const RecentActivityCard: React.FC<RecentActivityCardProps> = ({ customer
               <div className="px-4 py-3 flex items-center justify-between">
                 <div>
                   <p className="font-medium">Customer Profile Loaded</p>
-                  <p className="text-sm text-bahola-neutral-500">
-                    Customer Type: {customerData.customer_type}
+                  <p className="text-sm text-bahola-neutral-500 capitalize">
+                    Account Type: {customerData.customer_type || customerData.customer_group || 'Customer'}
                   </p>
                 </div>
                 <Button variant="ghost" size="sm">View</Button>
@@ -46,9 +52,9 @@ export const RecentActivityCard: React.FC<RecentActivityCardProps> = ({ customer
             )}
             <div className="px-4 py-3 flex items-center justify-between">
               <div>
-                <p className="font-medium">Connected to ERPNext</p>
+                <p className="font-medium">Connected to Swell</p>
                 <p className="text-sm text-bahola-neutral-500">
-                  Account synchronized with ERPNext system
+                  Account synchronized with Swell e-commerce
                 </p>
               </div>
               <Button variant="ghost" size="sm">View</Button>
