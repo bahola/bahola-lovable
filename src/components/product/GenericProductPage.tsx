@@ -8,6 +8,7 @@ import { useSwellProduct, getSwellProductImage, getSwellProductImages, getSwellE
 import ProductImages, { ProductImagesLoading } from '@/components/product/ProductImages';
 import ProductNotFound from '@/components/product/ProductNotFound';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Check, Award, Package, Star } from 'lucide-react';
 
 // Categories that should NOT show potency selection (only pack sizes)
@@ -421,42 +422,51 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                   )}
                 </section>
 
-                {/* Key Benefits */}
-                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
-                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
-                    Key Benefits
-                  </h2>
-                  <ul className="space-y-3">
-                    {product.benefits.map((benefit: string, index: number) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-[hsl(var(--generic-gold))] flex-shrink-0 mt-0.5" />
-                        <span className="text-[hsl(var(--generic-charcoal))]">{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                {/* Accordion Sections */}
+                <Accordion type="multiple" defaultValue={["benefits"]} className="w-full">
+                  {/* Key Benefits */}
+                  <AccordionItem value="benefits" className="border-[hsl(var(--generic-sand))]">
+                    <AccordionTrigger className="text-xl font-bold text-[hsl(var(--generic-forest))] font-serif hover:no-underline">
+                      Key Benefits
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="space-y-3 pt-2">
+                        {product.benefits.map((benefit: string, index: number) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-[hsl(var(--generic-gold))] flex-shrink-0 mt-0.5" />
+                            <span className="text-[hsl(var(--generic-charcoal))]">{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                {/* Dosage & Directions */}
-                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
-                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
-                    Dosage & Directions
-                  </h2>
-                  <div className="text-[hsl(var(--generic-charcoal))] leading-relaxed whitespace-pre-line">
-                    {product.dosage}
-                  </div>
-                </section>
+                  {/* Dosage & Directions */}
+                  <AccordionItem value="dosage" className="border-[hsl(var(--generic-sand))]">
+                    <AccordionTrigger className="text-xl font-bold text-[hsl(var(--generic-forest))] font-serif hover:no-underline">
+                      Dosage & Directions
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="text-[hsl(var(--generic-charcoal))] leading-relaxed whitespace-pre-line pt-2">
+                        {product.dosage}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                {/* Safety Information */}
-                <section className="pb-6 border-b border-[hsl(var(--generic-sand))]">
-                  <h2 className="text-2xl font-bold text-[hsl(var(--generic-forest))] mb-4 font-serif">
-                    Safety Information
-                  </h2>
-                  <ul className="space-y-2 text-[hsl(var(--generic-charcoal))]">
-                    {product.safetyInfo.map((info: string, index: number) => (
-                      <li key={index}>• {info}</li>
-                    ))}
-                  </ul>
-                </section>
+                  {/* Safety Information */}
+                  <AccordionItem value="safety" className="border-[hsl(var(--generic-sand))]">
+                    <AccordionTrigger className="text-xl font-bold text-[hsl(var(--generic-forest))] font-serif hover:no-underline">
+                      Safety Information
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="space-y-2 text-[hsl(var(--generic-charcoal))] pt-2">
+                        {product.safetyInfo.map((info: string, index: number) => (
+                          <li key={index}>• {info}</li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
                 {/* Disclaimer */}
                 <section className="bg-[hsl(var(--generic-sand))] p-5 rounded-lg">
