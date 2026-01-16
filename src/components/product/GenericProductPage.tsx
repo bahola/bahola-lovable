@@ -14,7 +14,33 @@ import { Check, Award, Package } from 'lucide-react';
 const POTENCY_EXCLUDED_CATEGORIES = [
   'mother tinctures',
   'mother-tinctures',
+  'homeopathic mother tinctures',
 ];
+
+// Map Swell category names to display names
+const CATEGORY_DISPLAY_MAP: Record<string, string> = {
+  'homeopathic dilutions': 'Dilutions',
+  'homeopathic mother tinctures': 'Mother Tinctures',
+  'mother tinctures': 'Mother Tinctures',
+  'lm potencies': 'LM Potencies',
+  'bio chemics': 'Bio Chemics',
+  'bio combinations': 'Bio Combinations',
+  'triturations': 'Triturations',
+  'single remedies': 'Single Remedies',
+};
+
+// Map subcategory slugs to display names (e.g., "Dil-A" → "Dil A")
+const formatSubcategory = (name: string): string => {
+  if (!name) return '';
+  // Replace hyphens with spaces and clean up
+  return name.replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+};
+
+// Get display category name
+const getDisplayCategory = (categoryName: string): string => {
+  const normalized = categoryName.toLowerCase().trim();
+  return CATEGORY_DISPLAY_MAP[normalized] || categoryName;
+};
 
 interface Variation {
   id: string;
@@ -24,7 +50,11 @@ interface Variation {
   stock: number;
 }
 
-const GenericProductPage = () => {
+interface GenericProductPageProps {
+  swellProduct?: any;
+}
+
+const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: passedProduct }) => {
   const { productSlug } = useParams<{ productSlug: string }>();
   const [quantity, setQuantity] = useState(1);
   const [selectedPotency, setSelectedPotency] = useState<string | null>(null);
@@ -32,7 +62,12 @@ const GenericProductPage = () => {
   const { toast } = useToast();
   const { addToCart } = useCart();
   
-  const { product: swellProduct, loading, error } = useSwellProduct(productSlug);
+  // Only fetch if no product was passed
+  const { product: fetchedProduct, loading, error } = useSwellProduct(passedProduct ? undefined : productSlug);
+  
+  // Use passed product or fetched product
+  const swellProduct = passedProduct || fetchedProduct;
+  const isLoading = passedProduct ? false : loading;
 
   // Helper to safely get variants array
   const getVariantsArray = (variants: any): any[] => {
@@ -46,9 +81,14 @@ const GenericProductPage = () => {
   const product = useMemo(() => {
     if (!swellProduct) return null;
 
-    const categoryName = Array.isArray(swellProduct.categories) 
+    const rawCategoryName = Array.isArray(swellProduct.categories) 
       ? swellProduct.categories[0]?.name 
       : (swellProduct.categories as any)?.results?.[0]?.name || 'Homeopathic Medicine';
+    
+    // Get subcategory (second category or parent_id reference)
+    const rawSubcategory = Array.isArray(swellProduct.categories) && swellProduct.categories.length > 1
+      ? swellProduct.categories[1]?.name
+      : (swellProduct.categories as any)?.results?.[1]?.name || '';
 
     const content = swellProduct.content as Record<string, any> | undefined;
 
@@ -61,7 +101,9 @@ const GenericProductPage = () => {
       image: getSwellProductImage(swellProduct),
       images: getSwellProductImages(swellProduct),
       stock: swellProduct.stock_level ?? 100,
-      category: categoryName,
+      category: getDisplayCategory(rawCategoryName),
+      subcategory: formatSubcategory(rawSubcategory),
+      rawCategory: rawCategoryName,
       categorySlug: Array.isArray(swellProduct.categories)
         ? swellProduct.categories[0]?.slug
         : (swellProduct.categories as any)?.results?.[0]?.slug || '',
@@ -100,9 +142,12 @@ const GenericProductPage = () => {
   // Check if this category should hide potency
   const shouldHidePotency = useMemo(() => {
     if (!product) return false;
-    const cat = product.category.toLowerCase();
+    const rawCat = product.rawCategory?.toLowerCase() || '';
+    const displayCat = product.category.toLowerCase();
     const slug = product.categorySlug?.toLowerCase() || '';
-    return POTENCY_EXCLUDED_CATEGORIES.some(c => cat.includes(c) || slug.includes(c));
+    return POTENCY_EXCLUDED_CATEGORIES.some(c => 
+      rawCat.includes(c) || displayCat.includes(c) || slug.includes(c)
+    );
   }, [product]);
 
   // Extract unique potencies and pack sizes
@@ -204,7 +249,7 @@ const GenericProductPage = () => {
   }, [product?.description]);
 
   // Loading state
-  if (loading) {
+  if (isLoading) {
     return (
       <PageLayout title="Loading..." description="">
         <div className="bg-[hsl(var(--generic-cream))] min-h-screen">
@@ -224,7 +269,7 @@ const GenericProductPage = () => {
     );
   }
 
-  if (error || !product) {
+  if ((error && !passedProduct) || !product) {
     return <ProductNotFound />;
   }
 
