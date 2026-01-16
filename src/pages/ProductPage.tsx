@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -205,7 +206,10 @@ const ProductPage = () => {
                 />
                 
                 <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-bahola-blue-500">
-                  <p className="text-gray-700 leading-relaxed">{product.shortDescription}</p>
+                  <div 
+                    className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.shortDescription || '') }}
+                  />
                 </div>
               </div>
 
@@ -213,7 +217,10 @@ const ProductPage = () => {
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all duration-300">
                 <div className="mb-6">
                   <h2 className="font-semibold mb-4 text-lg text-gray-900">Product Details</h2>
-                  <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                  <div 
+                    className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description || '') }}
+                  />
                 </div>
                 
                 {product.variations && product.variations.length > 0 && (
