@@ -223,9 +223,6 @@ const ProductPage = () => {
                   />
                 </div>
                 
-                {product.variations && product.variations.length > 0 && (
-                  <ProductSpecs potency={product.potency} brand={product.brand} />
-                )}
                 
                 <ProductVariations 
                   variations={product.variations} 
