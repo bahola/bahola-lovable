@@ -18,8 +18,22 @@ import ProductShipping from '@/components/product/ProductShipping';
 import ProductTabs from '@/components/product/ProductTabs';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import ProductNotFound from '@/components/product/ProductNotFound';
+import GenericProductPage from '@/components/product/GenericProductPage';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Shield, Truck, RotateCcw, Award } from 'lucide-react';
+
+// Categories that should use the Generic Product Page layout
+const GENERIC_CATEGORIES = [
+  'homeopathic dilutions',
+  'dilutions',
+  'mother tinctures',
+  'homeopathic mother tinctures',
+  'lm potencies',
+  'bio chemics',
+  'bio combinations',
+  'triturations',
+  'single remedies',
+];
 
 const decodeHtmlEntities = (value: string) => {
   // Swell sometimes stores rich text as HTML-encoded (e.g. "&lt;p&gt;...").
@@ -64,6 +78,18 @@ const ProductPage = () => {
   
   // Fetch product from Swell
   const { product: swellProduct, loading, error } = useSwellProduct(productSlug);
+
+  // Check if this product belongs to a generic category
+  const isGenericCategory = useMemo(() => {
+    if (!swellProduct) return false;
+    
+    const categoryName = Array.isArray(swellProduct.categories) 
+      ? swellProduct.categories[0]?.name 
+      : (swellProduct.categories as any)?.results?.[0]?.name || '';
+    
+    const normalized = categoryName.toLowerCase().trim();
+    return GENERIC_CATEGORIES.some(cat => normalized.includes(cat) || cat.includes(normalized));
+  }, [swellProduct]);
 
   // Helper to safely get variants array from Swell response
   const getVariantsArray = (variants: any): any[] => {
@@ -207,6 +233,11 @@ const ProductPage = () => {
   // Error or not found
   if (error || !product) {
     return <ProductNotFound />;
+  }
+
+  // If this is a generic category product, render GenericProductPage instead
+  if (isGenericCategory) {
+    return <GenericProductPage swellProduct={swellProduct} />;
   }
 
   const currentStock = getCurrentStock();
