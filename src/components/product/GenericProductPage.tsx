@@ -197,14 +197,8 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
     ) || null;
   }, [product?.variations, selectedPotency, selectedPackSize, shouldHidePotency]);
 
-  // Dynamic product name based on potency
-  const displayProductName = useMemo(() => {
-    if (!product) return '';
-    if (shouldHidePotency || !selectedPotency) return product.name;
-    // Append potency to product name
-    const baseName = product.name.replace(/\s+\d+[CMK]?\d*$/i, ''); // Remove existing potency suffix
-    return `${baseName} ${selectedPotency}`;
-  }, [product, selectedPotency, shouldHidePotency]);
+  // Product name - keep original from Swell
+  const displayProductName = product?.name || '';
 
   // Current price
   const currentPrice = selectedVariation?.price || product?.price || 0;
