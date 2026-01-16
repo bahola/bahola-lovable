@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
+import { ChevronRight } from 'lucide-react';
 import { PageLayout } from '@/components/PageLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/contexts/CartAdapter';
@@ -265,6 +266,42 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
   return (
     <PageLayout title={displayProductName} description={product.description?.substring(0, 157)} heroDescription={null}>
       <div className="bg-[hsl(var(--generic-cream))] min-h-screen">
+        {/* Breadcrumb Navigation */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6">
+          <nav className="text-sm text-[hsl(var(--generic-sage))]" aria-label="Breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1.5">
+              <li className="inline-flex items-center">
+                <Link to="/" className="hover:text-[hsl(var(--generic-forest))] transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <ChevronRight className="w-4 h-4" />
+                <Link to="/shop" className="hover:text-[hsl(var(--generic-forest))] transition-colors">
+                  Shop
+                </Link>
+              </li>
+              {product.categorySlug && (
+                <li className="inline-flex items-center gap-1.5">
+                  <ChevronRight className="w-4 h-4" />
+                  <Link 
+                    to={`/shop?category=${product.categorySlug}`} 
+                    className="hover:text-[hsl(var(--generic-forest))] transition-colors"
+                  >
+                    {product.category}
+                  </Link>
+                </li>
+              )}
+              <li className="inline-flex items-center gap-1.5">
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-[hsl(var(--generic-charcoal))] font-medium" aria-current="page">
+                  {displayProductName}
+                </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
         {/* Main Product Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 lg:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
