@@ -3,100 +3,106 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Google Fonts - Inter and Merriweather */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
 @layer base {
   :root {
-    /* Bahola Labs Brand Color System */
+    /* Bahola Labs Brand Color System - Finalized */
     
-    /* Primary: Heritage Cream background */
-    --background: 45 33% 96%;
-    --foreground: 193 9% 19%;
+    /* Background: Soft White #F8F9FA */
+    --background: 210 17% 98%;
+    --foreground: 210 29% 24%;
 
-    /* Card: Pharmaceutical White */
+    /* Card: Pure White */
     --card: 0 0% 100%;
-    --card-foreground: 193 9% 19%;
+    --card-foreground: 210 29% 24%;
 
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 193 9% 19%;
+    --popover-foreground: 210 29% 24%;
 
-    /* Primary: Bahola Deep Green #1B4332 */
-    --primary: 152 43% 18%;
+    /* Primary: Bahola Navy Blue #003366 */
+    --primary: 210 100% 20%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Heritage Cream */
-    --secondary: 45 33% 96%;
-    --secondary-foreground: 193 9% 19%;
+    /* Secondary: Steel Blue #4A90A4 */
+    --secondary: 193 38% 47%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Muted: Warm Grey */
-    --muted: 26 4% 92%;
-    --muted-foreground: 26 4% 57%;
+    /* Muted: Light Grey #E9ECEF */
+    --muted: 210 14% 93%;
+    --muted-foreground: 210 10% 40%;
 
-    /* Accent: Trust Blue #2C5F7C */
-    --accent: 202 48% 33%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Warm Gold #D4A574 */
+    --accent: 32 51% 64%;
+    --accent-foreground: 210 29% 24%;
 
-    /* Destructive: Error Red #A63D40 */
-    --destructive: 358 46% 45%;
+    /* Destructive: Error Red #DC3545 */
+    --destructive: 354 70% 54%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Border: Warm Grey */
-    --border: 26 4% 85%;
-    --input: 26 4% 85%;
-    --ring: 152 43% 18%;
+    /* Border: Light Grey */
+    --border: 210 14% 89%;
+    --input: 210 14% 89%;
+    --ring: 210 100% 20%;
 
     --radius: 0.5rem;
 
     /* Sidebar */
-    --sidebar-background: 45 33% 96%;
-    --sidebar-foreground: 193 9% 19%;
-    --sidebar-primary: 152 43% 18%;
+    --sidebar-background: 210 17% 98%;
+    --sidebar-foreground: 210 29% 24%;
+    --sidebar-primary: 210 100% 20%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 202 48% 33%;
+    --sidebar-accent: 193 38% 47%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 26 4% 85%;
-    --sidebar-ring: 152 43% 18%;
+    --sidebar-border: 210 14% 89%;
+    --sidebar-ring: 210 100% 20%;
 
-    /* Brand Colors */
-    --bahola-deep-green: 152 43% 18%;
-    --heritage-cream: 45 33% 96%;
-    --pharmaceutical-white: 0 0% 100%;
-    --charcoal-grey: 193 9% 19%;
-    --warm-grey: 26 4% 57%;
-    --trust-blue: 202 48% 33%;
-    --success-green: 165 19% 40%;
-    --alert-amber: 32 51% 64%;
-    --error-red: 358 46% 45%;
+    /* Brand Colors - HSL Values */
+    --bahola-navy: 210 100% 20%;
+    --bahola-steel: 193 38% 47%;
+    --bahola-gold: 32 51% 64%;
+    --bahola-sage: 101 31% 55%;
+    --bahola-charcoal: 210 29% 24%;
+    --bahola-white: 210 17% 98%;
+    --bahola-grey: 210 14% 93%;
+
+    /* Utility Colors */
+    --success: 134 61% 41%;
+    --warning: 45 100% 51%;
+    --error: 354 70% 54%;
 
     /* Generic Product Page Theme */
-    --generic-forest: 152 43% 18%;
-    --generic-sage: 165 19% 40%;
-    --generic-cream: 45 33% 96%;
-    --generic-sand: 26 4% 85%;
+    --generic-forest: 210 100% 20%;
+    --generic-sage: 101 31% 55%;
+    --generic-cream: 210 17% 98%;
+    --generic-sand: 210 14% 89%;
     --generic-gold: 32 51% 64%;
-    --generic-charcoal: 193 9% 19%;
+    --generic-charcoal: 210 29% 24%;
   }
 
   .dark {
-    /* Dark mode uses Deep Green as background */
-    --background: 152 43% 18%;
-    --foreground: 45 33% 96%;
-    --card: 152 43% 15%;
-    --card-foreground: 45 33% 96%;
-    --popover: 152 43% 15%;
-    --popover-foreground: 45 33% 96%;
-    --primary: 45 33% 96%;
-    --primary-foreground: 152 43% 18%;
-    --secondary: 152 43% 22%;
-    --secondary-foreground: 45 33% 96%;
-    --muted: 152 43% 22%;
-    --muted-foreground: 26 4% 70%;
-    --accent: 202 48% 40%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 358 46% 50%;
+    /* Dark mode uses Navy Blue as background */
+    --background: 210 100% 20%;
+    --foreground: 210 17% 98%;
+    --card: 210 100% 15%;
+    --card-foreground: 210 17% 98%;
+    --popover: 210 100% 15%;
+    --popover-foreground: 210 17% 98%;
+    --primary: 210 17% 98%;
+    --primary-foreground: 210 100% 20%;
+    --secondary: 193 38% 47%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 100% 25%;
+    --muted-foreground: 210 14% 70%;
+    --accent: 32 51% 64%;
+    --accent-foreground: 210 29% 24%;
+    --destructive: 354 70% 54%;
     --destructive-foreground: 0 0% 100%;
-    --border: 152 43% 25%;
-    --input: 152 43% 25%;
-    --ring: 45 33% 96%;
+    --border: 210 100% 25%;
+    --input: 210 100% 25%;
+    --ring: 210 17% 98%;
   }
 }
 
@@ -107,66 +113,121 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
-    font-display: swap; /* Improve font loading */
-  }
-
-  /* Brand Book Typography Implementation with font-display: swap */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #2C3E50;
     font-display: swap;
   }
 
-  /* H1 - Large Headlines & Elegant Emphasis (Helvetica Neue Light 300) */
+  /* Bahola Brand Typography - Optima Bold for H1-H3 */
+  h1, h2, h3 {
+    font-family: 'Optima', 'Candara', 'Noto Sans', 'source-sans-pro', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: #003366;
+    font-display: swap;
+  }
+
+  /* H1 - 48-56px, Navy Blue */
   h1 {
-    @apply font-light text-bahola-green-600;
-    font-size: 2.5rem;
+    font-size: 3.5rem;
   }
 
-  /* H2 - Standard Headlines & Navigation (Helvetica Neue Regular 400) */
+  /* H2 - 36px, Navy Blue or Steel Blue */
   h2 {
-    @apply font-normal text-bahola-green-600;
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
-  /* H3 - Subheadings & Callouts (Helvetica Neue Medium 500) */
+  /* H3 - 28px, Navy Blue */
   h3 {
-    @apply font-medium text-bahola-charcoal-800;
+    font-size: 1.75rem;
+  }
+
+  /* H4-H6 use Inter Bold */
+  h4, h5, h6 {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #2C3E50;
+    font-display: swap;
+  }
+
+  h4 {
     font-size: 1.5rem;
   }
 
-  /* H4+ - Strong Emphasis & Product Names (Helvetica Neue Bold 700) */
-  h4, h5, h6 {
-    @apply font-bold text-bahola-charcoal-800;
+  h5 {
     font-size: 1.25rem;
   }
 
-  /* Body text follows Proxima Nova guidelines with specific line heights and sizes */
+  h6 {
+    font-size: 1.125rem;
+  }
+
+  /* Body text - Inter Regular, 18px */
   p, li, span {
-    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.5; /* Within 1.4-1.6 range for optimal readability */
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.7;
+    color: #2C3E50;
   }
   
-  /* Standard body text - Updated to 16pt */
-  .text-body {
-    font-size: 1rem; /* 16px = 16pt */
+  /* Lead paragraphs - Inter Medium, 20-22px */
+  .text-lead {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  
+  /* Captions - Inter Regular, 14-16px */
+  .text-caption {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.875rem;
     line-height: 1.5;
+    color: #6c757d;
+  }
+
+  /* Standard body text */
+  .text-body {
+    font-size: 1.125rem;
+    line-height: 1.7;
   }
   
-  /* Fine print - 12-14pt (equivalent to 0.75rem-0.875rem) */
-  .text-fine {
-    font-size: 0.875rem; /* 14px = ~10.5pt */
-    line-height: 1.4;
+  /* Smaller body text for mobile */
+  .text-body-sm {
+    font-size: 1rem;
+    line-height: 1.7;
   }
 }
 
 @layer components {
+  /* Merriweather for special cases */
+  .font-quote {
+    font-family: 'Merriweather', Georgia, serif;
+    font-style: italic;
+    font-size: 1.375rem;
+    line-height: 1.6;
+  }
+
+  .font-remedy {
+    font-family: 'Merriweather', Georgia, serif;
+    font-style: italic;
+    font-size: 1.125rem;
+  }
+
+  /* Heritage "Since 1939" styling */
+  .text-heritage {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    font-style: italic;
+    color: #D4A574;
+    font-size: 1.375rem;
+  }
+
   .mega-menu {
-    @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-bahola-green-600 transition-all duration-200 z-50;
+    @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-bahola-navy transition-all duration-200 z-50;
     position: absolute;
     width: 100vw;
     left: 50%;
@@ -183,72 +244,100 @@
     @apply bg-white bg-cloud-pattern bg-repeat;
   }
 
+  /* Primary CTA Button - Navy Blue background */
   .btn-bahola {
-    @apply px-6 py-2 bg-bahola-green-600 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:bg-bahola-green-700;
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply px-6 py-2 bg-bahola-navy text-white font-semibold rounded-full transition-all duration-300 hover:shadow-lg;
+    font-family: 'Inter', system-ui, sans-serif;
+    text-transform: uppercase;
+    font-size: 1rem;
   }
 
-  /* Brand Book Typography Classes with font-display: swap */
+  .btn-bahola:hover {
+    background-color: #002952;
+  }
+
+  /* Secondary Button - White with Navy text */
+  .btn-bahola-secondary {
+    @apply px-6 py-2 bg-white text-bahola-navy font-semibold rounded-full transition-all duration-300 hover:shadow-lg border-2 border-bahola-navy;
+    font-family: 'Inter', system-ui, sans-serif;
+    text-transform: uppercase;
+    font-size: 1rem;
+  }
+
+  /* Brand Typography Classes */
   .brand-headline {
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 300;
+    font-family: 'Optima', 'Candara', 'Noto Sans', 'source-sans-pro', sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    color: #003366;
     font-display: swap;
   }
 
   .brand-title {
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 400;
+    font-family: 'Optima', 'Candara', 'Noto Sans', 'source-sans-pro', sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
-    line-height: 1.2;
+    line-height: 1.3;
+    color: #003366;
     font-display: swap;
   }
 
   .brand-subtitle {
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    font-display: swap;
-  }
-
-  .brand-emphasis {
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Optima', 'Candara', 'Noto Sans', 'source-sans-pro', sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
-    line-height: 1.2;
+    line-height: 1.4;
+    color: #003366;
     font-display: swap;
   }
 
-  /* Proxima Nova body text with font-display: swap */
+  /* Inter body text classes */
   .brand-body {
-    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #2C3E50;
     font-display: swap;
   }
   
   .brand-body-fine {
-    font-family: 'Proxima Nova', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.875rem;
-    line-height: 1.4;
+    line-height: 1.5;
+    color: #6c757d;
     font-display: swap;
   }
 
   .section-title {
-    @apply text-3xl font-light text-bahola-green-600 mb-6 text-center tracking-brand-tight;
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Optima', 'Candara', 'Noto Sans', 'source-sans-pro', sans-serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    color: #003366;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    letter-spacing: -0.02em;
   }
 
+  /* Navigation styles */
   .top-menu-item {
-    @apply text-sm text-bahola-charcoal-800 hover:text-bahola-green-600 transition-colors duration-200 font-medium;
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply text-sm font-medium transition-colors duration-200;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #2C3E50;
+  }
+
+  .top-menu-item:hover {
+    color: #4A90A4;
   }
 
   .main-menu-item {
-    @apply text-base font-medium text-bahola-charcoal-800 hover:text-bahola-green-600 transition-colors duration-200 relative py-5 px-4 cursor-pointer;
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply text-base font-medium transition-colors duration-200 relative py-5 px-4 cursor-pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #2C3E50;
+  }
+
+  .main-menu-item:hover {
+    color: #003366;
   }
 
   .sticky-header {
@@ -278,15 +367,49 @@
   }
 
   .mobile-menu-item {
-    @apply py-4 px-6 border-b border-bahola-grey-light text-bahola-charcoal-800 font-medium flex items-center justify-between hover:bg-bahola-cream-100 transition-colors duration-200;
-    font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply py-4 px-6 border-b font-medium flex items-center justify-between transition-colors duration-200;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #2C3E50;
+    border-color: #E9ECEF;
+  }
+
+  .mobile-menu-item:hover {
+    background-color: #F8F9FA;
   }
 
   .mobile-submenu {
-    @apply h-0 overflow-hidden transition-all duration-300 bg-bahola-cream-100;
+    @apply h-0 overflow-hidden transition-all duration-300;
+    background-color: #F8F9FA;
   }
 
   .mobile-submenu-open {
     @apply h-auto;
+  }
+
+  /* Steel Blue accent for interactive elements */
+  .text-steel {
+    color: #4A90A4;
+  }
+
+  .bg-steel {
+    background-color: #4A90A4;
+  }
+
+  /* Warm Gold for heritage elements */
+  .text-gold {
+    color: #D4A574;
+  }
+
+  .bg-gold {
+    background-color: #D4A574;
+  }
+
+  /* Sage Green for wellness content */
+  .text-sage {
+    color: #7FB069;
+  }
+
+  .bg-sage {
+    background-color: #7FB069;
   }
 }
