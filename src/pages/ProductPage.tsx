@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { PageLayout } from '@/components/PageLayout';
 import { useParams } from 'react-router-dom';
@@ -20,6 +20,24 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import ProductNotFound from '@/components/product/ProductNotFound';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Shield, Truck, RotateCcw, Award } from 'lucide-react';
+
+const decodeHtmlEntities = (value: string) => {
+  // Swell sometimes stores rich text as HTML-encoded (e.g. "&lt;p&gt;...").
+  // If the string is already real HTML ("<p>...") we must NOT decode it,
+  // otherwise we'd strip tags and lose formatting.
+  if (!value) return '';
+
+  const looksHtmlEncoded = /&lt;|&#60;|&gt;|&#62;/.test(value);
+  if (!looksHtmlEncoded) return value;
+
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = value;
+    return textarea.value;
+  } catch {
+    return value;
+  }
+};
 
 const ProductPage = () => {
   const { productSlug } = useParams<{ productSlug: string }>();
@@ -160,6 +178,11 @@ const ProductPage = () => {
   }
 
   const currentStock = getCurrentStock();
+
+  const safeDescriptionHtml = useMemo(() => {
+    const decoded = decodeHtmlEntities(product.description || '');
+    return DOMPurify.sanitize(decoded);
+  }, [product.description]);
   
   return (
     <PageLayout title={product.name} description={product.description}>
@@ -212,7 +235,7 @@ const ProductPage = () => {
                   <h2 className="font-semibold mb-4 text-lg text-gray-900">Product Details</h2>
                   <div 
                     className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description || '') }}
+                    dangerouslySetInnerHTML={{ __html: safeDescriptionHtml }}
                   />
                 </div>
                 
@@ -246,7 +269,8 @@ const ProductPage = () => {
               </div>
 
               {/* Shipping Info Card */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-6">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-6"
+              >
                 <ProductShipping shippingInfo={product.shipping} />
                 
                 <div className="grid grid-cols-2 gap-4 mt-6">
