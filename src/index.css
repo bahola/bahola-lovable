@@ -5,74 +5,98 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 11% 15%;
+    /* Bahola Labs Brand Color System */
+    
+    /* Primary: Heritage Cream background */
+    --background: 45 33% 96%;
+    --foreground: 193 9% 19%;
 
+    /* Card: Pharmaceutical White */
     --card: 0 0% 100%;
-    --card-foreground: 210 11% 15%;
+    --card-foreground: 193 9% 19%;
 
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
+    --popover-foreground: 193 9% 19%;
 
-    --primary: 210 100% 20%;
+    /* Primary: Bahola Deep Green #1B4332 */
+    --primary: 152 43% 18%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 210 11% 15%;
+    /* Secondary: Heritage Cream */
+    --secondary: 45 33% 96%;
+    --secondary-foreground: 193 9% 19%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted: Warm Grey */
+    --muted: 26 4% 92%;
+    --muted-foreground: 26 4% 57%;
 
-    --accent: 214 100% 40%;
+    /* Accent: Trust Blue #2C5F7C */
+    --accent: 202 48% 33%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive: Error Red #A63D40 */
+    --destructive: 358 46% 45%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 214 100% 40%;
+    /* Border: Warm Grey */
+    --border: 26 4% 85%;
+    --input: 26 4% 85%;
+    --ring: 152 43% 18%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar-background: 45 33% 96%;
+    --sidebar-foreground: 193 9% 19%;
+    --sidebar-primary: 152 43% 18%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 202 48% 33%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 26 4% 85%;
+    --sidebar-ring: 152 43% 18%;
 
-    /* Generic Product Page - Forest Green Theme */
-    --generic-forest: 147 48% 21%;
-    --generic-sage: 138 16% 35%;
-    --generic-cream: 43 47% 96%;
-    --generic-sand: 38 35% 85%;
-    --generic-gold: 42 47% 59%;
-    --generic-charcoal: 0 0% 18%;
+    /* Brand Colors */
+    --bahola-deep-green: 152 43% 18%;
+    --heritage-cream: 45 33% 96%;
+    --pharmaceutical-white: 0 0% 100%;
+    --charcoal-grey: 193 9% 19%;
+    --warm-grey: 26 4% 57%;
+    --trust-blue: 202 48% 33%;
+    --success-green: 165 19% 40%;
+    --alert-amber: 32 51% 64%;
+    --error-red: 358 46% 45%;
+
+    /* Generic Product Page Theme */
+    --generic-forest: 152 43% 18%;
+    --generic-sage: 165 19% 40%;
+    --generic-cream: 45 33% 96%;
+    --generic-sand: 26 4% 85%;
+    --generic-gold: 32 51% 64%;
+    --generic-charcoal: 193 9% 19%;
   }
 
   .dark {
-    --background: 210 100% 20%;
-    --foreground: 0 0% 100%;
-    --card: 210 100% 20%;
-    --card-foreground: 0 0% 100%;
-    --popover: 210 100% 20%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 210 100% 20%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* Dark mode uses Deep Green as background */
+    --background: 152 43% 18%;
+    --foreground: 45 33% 96%;
+    --card: 152 43% 15%;
+    --card-foreground: 45 33% 96%;
+    --popover: 152 43% 15%;
+    --popover-foreground: 45 33% 96%;
+    --primary: 45 33% 96%;
+    --primary-foreground: 152 43% 18%;
+    --secondary: 152 43% 22%;
+    --secondary-foreground: 45 33% 96%;
+    --muted: 152 43% 22%;
+    --muted-foreground: 26 4% 70%;
+    --accent: 202 48% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 358 46% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 152 43% 25%;
+    --input: 152 43% 25%;
+    --ring: 45 33% 96%;
   }
 }
 
@@ -99,25 +123,25 @@
 
   /* H1 - Large Headlines & Elegant Emphasis (Helvetica Neue Light 300) */
   h1 {
-    @apply font-light text-bahola-navy-950;
+    @apply font-light text-bahola-green-600;
     font-size: 2.5rem;
   }
 
   /* H2 - Standard Headlines & Navigation (Helvetica Neue Regular 400) */
   h2 {
-    @apply font-normal text-bahola-blue-500;
+    @apply font-normal text-bahola-green-600;
     font-size: 2rem;
   }
 
   /* H3 - Subheadings & Callouts (Helvetica Neue Medium 500) */
   h3 {
-    @apply font-medium text-bahola-navy-950;
+    @apply font-medium text-bahola-charcoal-800;
     font-size: 1.5rem;
   }
 
   /* H4+ - Strong Emphasis & Product Names (Helvetica Neue Bold 700) */
   h4, h5, h6 {
-    @apply font-bold text-bahola-navy-950;
+    @apply font-bold text-bahola-charcoal-800;
     font-size: 1.25rem;
   }
 
@@ -142,7 +166,7 @@
 
 @layer components {
   .mega-menu {
-    @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-blue-500 transition-all duration-200 z-50;
+    @apply invisible absolute opacity-0 bg-white shadow-lg border-t-4 border-bahola-green-600 transition-all duration-200 z-50;
     position: absolute;
     width: 100vw;
     left: 50%;
@@ -160,7 +184,7 @@
   }
 
   .btn-bahola {
-    @apply px-6 py-2 bg-gradient-to-r from-bahola-blue-500 to-bahola-navy-950 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:from-bahola-blue-600 hover:to-bahola-navy-900;
+    @apply px-6 py-2 bg-bahola-green-600 text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:bg-bahola-green-700;
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
@@ -213,17 +237,17 @@
   }
 
   .section-title {
-    @apply text-3xl font-light text-bahola-navy-950 mb-6 text-center tracking-brand-tight;
+    @apply text-3xl font-light text-bahola-green-600 mb-6 text-center tracking-brand-tight;
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .top-menu-item {
-    @apply text-sm text-gray-600 hover:text-bahola-blue-500 transition-colors duration-200 font-medium;
+    @apply text-sm text-bahola-charcoal-800 hover:text-bahola-green-600 transition-colors duration-200 font-medium;
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .main-menu-item {
-    @apply text-base font-medium text-bahola-navy-900 hover:text-bahola-blue-500 transition-colors duration-200 relative py-5 px-4 cursor-pointer;
+    @apply text-base font-medium text-bahola-charcoal-800 hover:text-bahola-green-600 transition-colors duration-200 relative py-5 px-4 cursor-pointer;
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
@@ -254,12 +278,12 @@
   }
 
   .mobile-menu-item {
-    @apply py-4 px-6 border-b border-gray-100 text-bahola-navy-900 font-medium flex items-center justify-between hover:bg-gray-50 transition-colors duration-200;
+    @apply py-4 px-6 border-b border-bahola-grey-light text-bahola-charcoal-800 font-medium flex items-center justify-between hover:bg-bahola-cream-100 transition-colors duration-200;
     font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .mobile-submenu {
-    @apply h-0 overflow-hidden transition-all duration-300 bg-blue-50/50;
+    @apply h-0 overflow-hidden transition-all duration-300 bg-bahola-cream-100;
   }
 
   .mobile-submenu-open {
