@@ -15,6 +15,7 @@ interface ProductProps {
     image: string;
     originalPrice?: number;
     discountPercentage?: number;
+    slug?: string; // Support Swell slug for product URLs
   }
 }
 
@@ -118,10 +119,11 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
     const discountPrice = product.originalPrice && product.discountPercentage 
       ? product.originalPrice * (1 - product.discountPercentage / 100)
       : product.price;
+    const productUrl = `/product/${product.slug || product.id}`;
     
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden border border-bahola-neutral-200 transition-all duration-300 hover:shadow-lg">
-        <Link to={`/product/${product.id}`} className="block">
+        <Link to={productUrl} className="block">
           <div className="relative">
             <img 
               src={imageUrl} 
@@ -155,7 +157,7 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
             </div>
           </div>
           
-          <Link to={`/product/${product.id}`} className="block">
+          <Link to={productUrl} className="block">
             <h3 className="font-medium text-lg mb-2 text-bahola-neutral-800 hover:text-bahola-blue-600">{product.name}</h3>
           </Link>
           
