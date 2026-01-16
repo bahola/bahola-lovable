@@ -12,6 +12,7 @@ import {
   CategoryPage,
   CategoryOverview,
   ProductPage,
+  GenericProductPage,
   Contact,
   Register,
   Login,
@@ -97,6 +98,16 @@ const AppRoutes = () => {
         <Route path="/categories" element={<CategoryOverview />} />
         <Route path="/category/:categorySlug" element={<CategoryPage />} />
         <Route path="/product/:productSlug" element={<ProductPage />} />
+        
+        {/* Generic Product Pages for specific categories */}
+        <Route path="/generic/:productSlug" element={<GenericProductPage />} />
+        <Route path="/mother-tinctures/:productSlug" element={<GenericProductPage />} />
+        <Route path="/dilutions/:productSlug" element={<GenericProductPage />} />
+        <Route path="/lm-potencies/:productSlug" element={<GenericProductPage />} />
+        <Route path="/bio-chemics/:productSlug" element={<GenericProductPage />} />
+        <Route path="/bio-combinations/:productSlug" element={<GenericProductPage />} />
+        <Route path="/triturations/:productSlug" element={<GenericProductPage />} />
+        <Route path="/single-remedies/:productSlug" element={<GenericProductPage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/consultation" element={<Consultation />} />
         <Route path="/appointment-booking" element={<AppointmentBooking />} />

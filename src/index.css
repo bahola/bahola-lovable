@@ -43,6 +43,14 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Generic Product Page - Forest Green Theme */
+    --generic-forest: 147 48% 21%;
+    --generic-sage: 138 16% 35%;
+    --generic-cream: 43 47% 96%;
+    --generic-sand: 38 35% 85%;
+    --generic-gold: 42 47% 59%;
+    --generic-charcoal: 0 0% 18%;
   }
 
   .dark {
