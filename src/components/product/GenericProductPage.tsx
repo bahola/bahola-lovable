@@ -8,7 +8,7 @@ import { useSwellProduct, getSwellProductImage, getSwellProductImages, getSwellE
 import ProductImages, { ProductImagesLoading } from '@/components/product/ProductImages';
 import ProductNotFound from '@/components/product/ProductNotFound';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Check, Award, Package } from 'lucide-react';
+import { Check, Award, Package, Star } from 'lucide-react';
 
 // Categories that should NOT show potency selection (only pack sizes)
 const POTENCY_EXCLUDED_CATEGORIES = [
@@ -311,6 +311,19 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                 {product.latinName && (
                   <p className="text-lg italic text-[hsl(var(--generic-sage))] mt-2">{product.latinName}</p>
                 )}
+                
+                {/* Rating */}
+                <div className="flex items-center gap-3 mt-3">
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className="w-5 h-5 text-[hsl(var(--generic-gold))] fill-[hsl(var(--generic-gold))]"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-[hsl(var(--generic-sage))]">4.8 (2,847 reviews)</span>
+                </div>
               </div>
 
               {/* Potency Selection - Hidden for Mother Tinctures */}
