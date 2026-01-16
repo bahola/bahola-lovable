@@ -1,7 +1,6 @@
 // Swell API client wrapper
-// TODO: Replace with your actual Swell store ID and public key
-const SWELL_STORE_ID = 'your-store-id';
-const SWELL_PUBLIC_KEY = 'your-public-key';
+const SWELL_STORE_ID = 'baholalabs';
+const SWELL_PUBLIC_KEY = 'pk_7r06gV1fCa7kPbg1mSFTtetIZTI6qaC7';
 const SWELL_API_URL = `https://${SWELL_STORE_ID}.swell.store/api`;
 
 class SwellClient {
