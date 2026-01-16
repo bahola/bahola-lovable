@@ -1,55 +1,83 @@
-
 import { useToast } from '@/components/ui/use-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CustomerFormData, DoctorFormData, UserType } from '@/schemas/registerSchema';
-import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
+import { 
+  CustomerFormData, 
+  DoctorFormData, 
+  PharmacyFormData, 
+  StudentFormData, 
+  UserType 
+} from '@/schemas/registerSchema';
+import { useSwellAuth, RegisterUserData } from '@/contexts/SwellAuthContext';
+
+export type RegisterFormData = CustomerFormData | DoctorFormData | PharmacyFormData | StudentFormData;
 
 export const useRegisterSubmit = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get('returnUrl');
-  const { register } = useERPNextAuth();
+  const { register } = useSwellAuth();
   
-  const handleSubmit = async (values: CustomerFormData | DoctorFormData, userType: UserType) => {
+  const handleSubmit = async (values: RegisterFormData, userType: UserType) => {
     try {
       console.log('Registration form submitted:', { userType, email: values.email });
       
-      const registrationData = {
+      const registrationData: RegisterUserData = {
         email: values.email,
         password: values.password,
         firstName: values.firstName,
         lastName: values.lastName,
         phone: values.phone || '',
         userType,
-        ...(userType === 'doctor' ? {
-          medicalLicense: (values as DoctorFormData).medicalLicense,
-          specialization: (values as DoctorFormData).specialization,
-          clinic: (values as DoctorFormData).clinic,
-          yearsOfPractice: (values as DoctorFormData).yearsOfPractice,
-        } : {})
       };
+
+      // Add type-specific fields
+      if (userType === 'doctor') {
+        const doctorValues = values as DoctorFormData;
+        registrationData.medicalLicense = doctorValues.medicalLicense;
+        registrationData.specialization = doctorValues.specialization;
+        registrationData.clinic = doctorValues.clinic;
+        registrationData.yearsOfPractice = doctorValues.yearsOfPractice;
+      } else if (userType === 'pharmacy') {
+        const pharmacyValues = values as PharmacyFormData;
+        registrationData.pharmacyLicense = pharmacyValues.pharmacyLicense;
+        registrationData.pharmacyName = pharmacyValues.pharmacyName;
+        registrationData.gstNumber = pharmacyValues.gstNumber;
+        registrationData.address = pharmacyValues.address;
+      } else if (userType === 'student') {
+        const studentValues = values as StudentFormData;
+        registrationData.studentId = studentValues.studentId;
+        registrationData.institutionName = studentValues.institutionName;
+        registrationData.course = studentValues.course;
+        registrationData.expectedGraduation = studentValues.expectedGraduation;
+      }
 
       console.log('Calling register function with data:', registrationData);
       await register(registrationData);
 
-      if (userType === 'doctor') {
+      // Show appropriate message based on user type
+      const requiresVerification = ['doctor', 'pharmacy', 'student'].includes(userType);
+      
+      if (requiresVerification) {
+        const typeLabels: Record<string, string> = {
+          doctor: 'Healthcare Professional',
+          pharmacy: 'Pharmacy',
+          student: 'Student',
+        };
         toast({
           title: "Registration Successful",
-          description: "Welcome! Your healthcare professional account has been created and is pending verification. You'll receive an email notification once your account is approved (typically 1-2 business days).",
+          description: `Your ${typeLabels[userType]} account has been created and is pending verification. You'll receive an email notification once your account is approved (typically 1-2 business days).`,
           duration: 7000,
         });
+        navigate('/login');
       } else {
         toast({
           title: "Registration Successful",
-          description: "Welcome! You have been registered as a customer and are now logged in.",
+          description: "Welcome! You have been registered and are now logged in.",
           duration: 5000,
         });
+        navigate(returnUrl || '/');
       }
-      
-      // Redirect to the return URL if available, otherwise to home page
-      console.log('Registration successful, redirecting to:', returnUrl || '/');
-      navigate(returnUrl || '/');
     } catch (error) {
       console.error('Registration error in handleSubmit:', error);
       
@@ -61,12 +89,8 @@ export const useRegisterSubmit = () => {
         // Handle specific error cases
         if (error.message.includes('already exists') || error.message.includes('409')) {
           errorMessage = "An account with this email already exists. Please try logging in instead.";
-        } else if (error.message.includes('Failed to create user account')) {
+        } else if (error.message.includes('Failed to create')) {
           errorMessage = "Failed to create your account. Please check your details and try again.";
-        } else if (error.message.includes('Failed to create customer record')) {
-          errorMessage = "Account created but failed to complete customer setup. Please contact support.";
-        } else if (error.message.includes('Failed to store customer information')) {
-          errorMessage = "Account created but failed to store additional information. Please contact support.";
         }
       }
       

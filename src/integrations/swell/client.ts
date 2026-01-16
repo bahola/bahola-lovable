@@ -3,6 +3,42 @@ const SWELL_STORE_ID = 'baholalabs';
 const SWELL_PUBLIC_KEY = 'pk_7r06gV1fCa7kPbg1mSFTtetIZTI6qaC7';
 const SWELL_API_URL = `https://${SWELL_STORE_ID}.swell.store/api`;
 
+// Customer types available in Swell
+export type SwellCustomerType = 'customer' | 'doctor' | 'pharmacy' | 'student';
+
+// Customer group mapping in Swell
+export const CUSTOMER_GROUPS: Record<SwellCustomerType, string> = {
+  customer: 'customer',
+  doctor: 'doctor',
+  pharmacy: 'pharmacy',
+  student: 'student',
+};
+
+// Types requiring verification before activation
+export const REQUIRES_VERIFICATION: SwellCustomerType[] = ['doctor', 'pharmacy', 'student'];
+
+export interface SwellAccount {
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  name?: string;
+  phone?: string;
+  group?: string;
+  type?: string;
+  metadata?: Record<string, any>;
+  date_created?: string;
+}
+
+export interface SwellLoginResult {
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  name?: string;
+  group?: string;
+}
+
 class SwellClient {
   private storeId: string;
   private publicKey: string;
@@ -23,14 +59,84 @@ class SwellClient {
     const response = await fetch(url, {
       ...options,
       headers,
+      credentials: 'include', // Important for session cookies
     });
 
     if (!response.ok) {
-      throw new Error(`Swell API error: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Swell API error: ${response.statusText}`);
     }
 
     return response.json();
   }
+
+  // Account/Authentication methods
+  account = {
+    // Create a new customer account
+    create: async (data: {
+      email: string;
+      password: string;
+      first_name: string;
+      last_name: string;
+      phone?: string;
+      group?: string;
+      type?: string;
+      metadata?: Record<string, any>;
+    }): Promise<SwellAccount> => {
+      return this.request('/account', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    // Login to existing account
+    login: async (email: string, password: string): Promise<SwellLoginResult> => {
+      return this.request('/account/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+    },
+
+    // Logout current session
+    logout: async (): Promise<void> => {
+      return this.request('/account/logout', {
+        method: 'POST',
+      });
+    },
+
+    // Get current logged-in account
+    get: async (): Promise<SwellAccount | null> => {
+      try {
+        return await this.request('/account');
+      } catch {
+        return null;
+      }
+    },
+
+    // Update account details
+    update: async (data: Partial<SwellAccount>): Promise<SwellAccount> => {
+      return this.request('/account', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+
+    // Recover password
+    recover: async (email: string): Promise<{ success: boolean }> => {
+      return this.request('/account/recover', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      });
+    },
+
+    // Reset password with token
+    resetPassword: async (token: string, password: string): Promise<{ success: boolean }> => {
+      return this.request('/account/recover', {
+        method: 'PUT',
+        body: JSON.stringify({ reset_key: token, password }),
+      });
+    },
+  };
 
   products = {
     list: async (params?: any) => {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,7 +6,7 @@ import { Toaster } from 'sonner';
 
 import { SwellCartProvider } from './contexts/SwellCartContext';
 import { CartAdapterProvider } from './contexts/CartAdapter';
-import { ERPNextAuthProvider } from './contexts/ERPNextAuthContext';
+import { SwellAuthProvider } from './contexts/SwellAuthContext';
 import ScrollToTop from './components/ScrollToTop';
 import { LazyHeader } from './components/LazyHeader';
 import { Footer } from './components/Footer';
@@ -19,7 +18,7 @@ function App() {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <ERPNextAuthProvider>
+        <SwellAuthProvider>
           <SwellCartProvider>
             <CartAdapterProvider>
               <BrowserRouter>
@@ -35,7 +34,7 @@ function App() {
               </BrowserRouter>
             </CartAdapterProvider>
           </SwellCartProvider>
-        </ERPNextAuthProvider>
+        </SwellAuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );

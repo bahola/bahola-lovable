@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
+import { useSwellAuth } from '@/contexts/SwellAuthContext';
 
 interface UserVerificationData {
   verificationStatus: string | null;
@@ -14,7 +13,7 @@ interface UserVerificationData {
 }
 
 export const useUserVerification = (): UserVerificationData => {
-  const { user } = useERPNextAuth();
+  const { user, customerType: swellCustomerType, verificationStatus: swellVerificationStatus } = useSwellAuth();
   const [verificationData, setVerificationData] = useState<UserVerificationData>({
     verificationStatus: null,
     customerType: null,
@@ -25,8 +24,8 @@ export const useUserVerification = (): UserVerificationData => {
     const fetchVerificationStatus = async () => {
       if (!user?.email) {
         setVerificationData({
-          verificationStatus: null,
-          customerType: null,
+          verificationStatus: swellVerificationStatus,
+          customerType: swellCustomerType,
           isLoading: false,
         });
         return;
@@ -42,8 +41,8 @@ export const useUserVerification = (): UserVerificationData => {
         if (error) {
           console.error('Error fetching verification status:', error);
           setVerificationData({
-            verificationStatus: null,
-            customerType: null,
+            verificationStatus: swellVerificationStatus,
+            customerType: swellCustomerType,
             isLoading: false,
           });
           return;
@@ -61,23 +60,23 @@ export const useUserVerification = (): UserVerificationData => {
           });
         } else {
           setVerificationData({
-            verificationStatus: null,
-            customerType: null,
+            verificationStatus: swellVerificationStatus,
+            customerType: swellCustomerType,
             isLoading: false,
           });
         }
       } catch (error) {
         console.error('Error fetching verification status:', error);
         setVerificationData({
-          verificationStatus: null,
-          customerType: null,
+          verificationStatus: swellVerificationStatus,
+          customerType: swellCustomerType,
           isLoading: false,
         });
       }
     };
 
     fetchVerificationStatus();
-  }, [user?.email]);
+  }, [user?.email, swellCustomerType, swellVerificationStatus]);
 
   return verificationData;
 };
