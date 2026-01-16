@@ -1,20 +1,24 @@
-
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CustomerRegistrationForm } from '@/components/register/CustomerRegistrationForm';
 import { DoctorRegistrationForm } from '@/components/register/DoctorRegistrationForm';
+import { PharmacyRegistrationForm } from '@/components/register/PharmacyRegistrationForm';
+import { StudentRegistrationForm } from '@/components/register/StudentRegistrationForm';
 import { useRegisterSubmit } from '@/utils/registerUtils';
 import { UserType } from '@/schemas/registerSchema';
 
 const Register = () => {
   const [searchParams] = useSearchParams();
-  const initialUserType = searchParams.get('type') === 'doctor' ? 'doctor' : 'customer';
+  const typeParam = searchParams.get('type');
+  const validTypes: UserType[] = ['customer', 'doctor', 'pharmacy', 'student'];
+  const initialUserType: UserType = validTypes.includes(typeParam as UserType) 
+    ? (typeParam as UserType) 
+    : 'customer';
   const [userType, setUserType] = useState<UserType>(initialUserType);
   const { handleSubmit } = useRegisterSubmit();
 
-  // Debug logging to see what's happening
   useEffect(() => {
     console.log('Register page loaded with params:', searchParams.get('type'));
     console.log('Initial user type set to:', initialUserType);
@@ -29,9 +33,11 @@ const Register = () => {
           onValueChange={(value) => setUserType(value as UserType)}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="customer">Customer Account</TabsTrigger>
-            <TabsTrigger value="doctor">Healthcare Professional</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="customer">Customer</TabsTrigger>
+            <TabsTrigger value="doctor">Doctor</TabsTrigger>
+            <TabsTrigger value="pharmacy">Pharmacy</TabsTrigger>
+            <TabsTrigger value="student">Student</TabsTrigger>
           </TabsList>
           
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -45,6 +51,18 @@ const Register = () => {
               <TabsContent value="doctor">
                 <DoctorRegistrationForm 
                   onSubmit={(values) => handleSubmit(values, 'doctor')} 
+                />
+              </TabsContent>
+
+              <TabsContent value="pharmacy">
+                <PharmacyRegistrationForm 
+                  onSubmit={(values) => handleSubmit(values, 'pharmacy')} 
+                />
+              </TabsContent>
+
+              <TabsContent value="student">
+                <StudentRegistrationForm 
+                  onSubmit={(values) => handleSubmit(values, 'student')} 
                 />
               </TabsContent>
               

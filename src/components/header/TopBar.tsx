@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Phone, Truck, Heart, Gift, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
+import { useSwellAuth } from '@/contexts/SwellAuthContext';
 
 export const TopBar: React.FC = () => {
-  const { isAuthenticated, user, logout } = useERPNextAuth();
+  const { isAuthenticated, user, logout } = useSwellAuth();
 
   const handleLogout = async () => {
     try {
@@ -14,6 +13,8 @@ export const TopBar: React.FC = () => {
       console.error('Logout error:', error);
     }
   };
+
+  const displayName = user?.first_name || user?.name || 'User';
 
   return (
     <div className="bg-bahola-blue-50 py-2">
@@ -47,7 +48,7 @@ export const TopBar: React.FC = () => {
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
               <Link to="/account" className="top-menu-item">
-                Welcome, {user?.full_name || 'User'}
+                Welcome, {displayName}
               </Link>
               <button 
                 className="top-menu-item"

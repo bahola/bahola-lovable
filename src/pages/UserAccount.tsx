@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +8,7 @@ import {
   TabsTrigger 
 } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
-import { getCustomerByEmail, ERPNextCustomer } from '@/services/erpnext/authService';
+import { useSwellAuth } from '@/contexts/SwellAuthContext';
 import { toast } from 'sonner';
 import { AccountSidebar } from '@/components/account/AccountSidebar';
 import { ProfileTab } from '@/components/account/ProfileTab';
@@ -19,9 +17,7 @@ import { RecentActivityCard } from '@/components/account/RecentActivityCard';
 import { VerificationStatusCard } from '@/components/account/VerificationStatusCard';
 
 const UserAccount = () => {
-  const { user, isLoading: authLoading, isAuthenticated, logout } = useERPNextAuth();
-  const [customerData, setCustomerData] = useState<ERPNextCustomer | null>(null);
-  const [isLoadingCustomer, setIsLoadingCustomer] = useState(false);
+  const { user, isLoading: authLoading, isAuthenticated, logout, customerType } = useSwellAuth();
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -37,42 +33,16 @@ const UserAccount = () => {
       return;
     }
 
-    if (user?.email) {
-      fetchCustomerData(user.email);
-      // Parse user name into first and last name
-      const fullName = user.full_name || user.email;
-      const nameParts = fullName.split(' ');
+    if (user) {
       setProfileData(prev => ({
         ...prev,
-        firstName: nameParts[0] || '',
-        lastName: nameParts.slice(1).join(' ') || '',
-        email: user.email
+        firstName: user.first_name || '',
+        lastName: user.last_name || '',
+        email: user.email || '',
+        phone: user.phone || ''
       }));
     }
   }, [user, authLoading, isAuthenticated, navigate]);
-
-  const fetchCustomerData = async (email: string) => {
-    setIsLoadingCustomer(true);
-    try {
-      console.log('Fetching customer data for email:', email);
-      const customer = await getCustomerByEmail(email);
-      if (customer) {
-        setCustomerData(customer);
-        setProfileData(prev => ({
-          ...prev,
-          phone: customer.mobile_no || customer.phone || ''
-        }));
-        console.log('Customer data loaded:', customer);
-      } else {
-        console.log('No customer data found for email:', email);
-      }
-    } catch (error) {
-      console.error('Error fetching customer data:', error);
-      toast.error('Failed to load customer information');
-    } finally {
-      setIsLoadingCustomer(false);
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -87,7 +57,7 @@ const UserAccount = () => {
 
   const handleProfileUpdate = async () => {
     try {
-      // TODO: Implement profile update functionality with ERPNext
+      // TODO: Implement profile update functionality with Swell
       toast.success('Profile updated successfully');
     } catch (error) {
       console.error('Profile update error:', error);
@@ -124,22 +94,34 @@ const UserAccount = () => {
     return null; // Will redirect to login
   }
 
+  // Create a compatible user object for AccountSidebar
+  const sidebarUser = user ? {
+    full_name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
+    email: user.email || ''
+  } : null;
+
+  // Create a compatible customer data object for AccountSidebar
+  const customerData = {
+    customer_group: customerType || 'customer',
+    customer_name: `${user?.first_name || ''} ${user?.last_name || ''}`.trim()
+  };
+
   return (
     <PageLayout title="My Account" description="Manage your account details and preferences">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar - account navigation */}
         <div className="lg:col-span-1">
           <AccountSidebar 
-            user={user}
+            user={sidebarUser}
             customerData={customerData}
-            isLoadingCustomer={isLoadingCustomer}
+            isLoadingCustomer={false}
             onLogout={handleLogout}
           />
         </div>
         
         {/* Main content area */}
         <div className="lg:col-span-3">
-          {/* Verification Status Card for Doctors */}
+          {/* Verification Status Card for Professional accounts */}
           <VerificationStatusCard />
           
           <Tabs defaultValue="profile" className="w-full">
@@ -152,7 +134,7 @@ const UserAccount = () => {
               <ProfileTab 
                 profileData={profileData}
                 setProfileData={setProfileData}
-                isLoadingCustomer={isLoadingCustomer}
+                isLoadingCustomer={false}
                 onProfileUpdate={handleProfileUpdate}
               />
             </TabsContent>

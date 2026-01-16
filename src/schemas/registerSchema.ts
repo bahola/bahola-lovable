@@ -1,5 +1,7 @@
-
 import { z } from 'zod';
+
+// User type enum - 4 customer types in Swell
+export type UserType = 'customer' | 'doctor' | 'pharmacy' | 'student';
 
 // Define the base schema for registration without refine
 export const baseFieldSchema = z.object({
@@ -47,10 +49,35 @@ export const doctorFormSchema = doctorFieldSchema.refine((data) => data.password
   path: ["confirmPassword"],
 });
 
-// User type enum
-export type UserType = 'customer' | 'doctor';
+// Additional fields for pharmacy
+export const pharmacyFieldSchema = baseFieldSchema.extend({
+  pharmacyLicense: z.string().min(5, { message: 'Pharmacy license number is required.' }),
+  pharmacyName: z.string().min(2, { message: 'Pharmacy name is required.' }),
+  gstNumber: z.string().optional(),
+  address: z.string().min(10, { message: 'Address is required.' }),
+});
+
+export const pharmacyFormSchema = pharmacyFieldSchema.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+// Additional fields for students
+export const studentFieldSchema = baseFieldSchema.extend({
+  studentId: z.string().min(3, { message: 'Student ID is required.' }),
+  institutionName: z.string().min(3, { message: 'Institution name is required.' }),
+  course: z.string().min(2, { message: 'Course name is required.' }),
+  expectedGraduation: z.string().optional(),
+});
+
+export const studentFormSchema = studentFieldSchema.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 // Type for the form data
 export type CustomerFormData = z.infer<typeof baseFormSchema>;
 export type DoctorFormData = z.infer<typeof doctorFormSchema>;
-export type RegisterFormData = CustomerFormData | DoctorFormData;
+export type PharmacyFormData = z.infer<typeof pharmacyFormSchema>;
+export type StudentFormData = z.infer<typeof studentFormSchema>;
+export type RegisterFormData = CustomerFormData | DoctorFormData | PharmacyFormData | StudentFormData;

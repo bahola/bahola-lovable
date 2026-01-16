@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -11,7 +10,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
-import { useERPNextAuth } from '@/contexts/ERPNextAuthContext';
+import { useSwellAuth } from '@/contexts/SwellAuthContext';
+import { UserType } from '@/schemas/registerSchema';
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -19,15 +19,13 @@ const loginFormSchema = z.object({
   remember: z.boolean().optional(),
 });
 
-type UserType = 'customer' | 'doctor';
-
 const Login = () => {
   const [userType, setUserType] = useState<UserType>('customer');
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get('returnUrl');
-  const { login, isLoading } = useERPNextAuth();
+  const { login, isLoading, verificationStatus } = useSwellAuth();
   
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -44,7 +42,7 @@ const Login = () => {
       
       toast({
         title: "Login Successful",
-        description: `Welcome back! You're logged in as a ${userType === 'doctor' ? 'healthcare professional' : 'customer'}.`,
+        description: `Welcome back!`,
         duration: 3000,
       });
       
@@ -69,9 +67,11 @@ const Login = () => {
           onValueChange={(value) => setUserType(value as UserType)}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="customer">Customer</TabsTrigger>
-            <TabsTrigger value="doctor">Healthcare Professional</TabsTrigger>
+            <TabsTrigger value="doctor">Doctor</TabsTrigger>
+            <TabsTrigger value="pharmacy">Pharmacy</TabsTrigger>
+            <TabsTrigger value="student">Student</TabsTrigger>
           </TabsList>
           
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -140,7 +140,7 @@ const Login = () => {
               <div className="mt-6 text-center">
                 <p className="text-bahola-neutral-600">
                   Don't have an account?{' '}
-                  <Link to="/register" className="text-bahola-blue-500 font-medium hover:underline">
+                  <Link to={`/register?type=${userType}`} className="text-bahola-blue-500 font-medium hover:underline">
                     Create One
                   </Link>
                 </p>
