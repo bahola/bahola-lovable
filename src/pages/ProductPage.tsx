@@ -39,6 +39,22 @@ const decodeHtmlEntities = (value: string) => {
   }
 };
 
+const htmlToPlainText = (value: string) => {
+  if (!value) return '';
+
+  try {
+    const doc = new DOMParser().parseFromString(value, 'text/html');
+    return (doc.body.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  } catch {
+    return value
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+};
+
 const ProductPage = () => {
   const { productSlug } = useParams<{ productSlug: string }>();
   const [quantity, setQuantity] = useState(1);
@@ -156,6 +172,15 @@ const ProductPage = () => {
     return DOMPurify.sanitize(decoded);
   }, [product?.description]);
 
+  // Plain-text description for SEO (avoid showing raw HTML in the header band)
+  const seoDescription = useMemo(() => {
+    if (!product?.description) return undefined;
+    const decoded = decodeHtmlEntities(product.description);
+    const text = htmlToPlainText(decoded);
+    if (!text) return undefined;
+    return text.length > 157 ? `${text.slice(0, 157)}…` : text;
+  }, [product?.description]);
+
   // Loading state
   if (loading) {
     return (
@@ -187,7 +212,7 @@ const ProductPage = () => {
   const currentStock = getCurrentStock();
   
   return (
-    <PageLayout title={product.name} description={product.description}>
+    <PageLayout title={product.name} description={seoDescription} heroDescription={null}>
       <div className="bg-gradient-to-br from-gray-50 via-blue-50/30 to-white min-h-screen">
         <div className="container mx-auto px-4 py-8">
           
