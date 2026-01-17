@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { X, Search, ChevronRight, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import baholaLogo from '@/assets/bahola-logo.png';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     >
       <div className="p-4 border-b border-bahola-neutral-100 flex items-center justify-between">
         <img 
-          src="/lovable-uploads/e10be5fd-868f-4ce3-8e97-f9c2aac6e207.png" 
+          src={baholaLogo} 
           alt="Bahola Labs" 
           className="h-8" 
         />

@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Menu } from 'lucide-react';
 import { SearchBar } from '@/components/header/SearchBar';
 import { CartButton } from '@/components/header/CartButton';
 import { Link } from 'react-router-dom';
+import baholaLogo from '@/assets/bahola-logo.png';
 
 interface MainHeaderProps {
   isScrolled: boolean;
@@ -39,18 +39,10 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lovable-uploads/ee08c806-593a-4759-b27e-d41be5af04a8.png" 
+              src={baholaLogo} 
               alt="Bahola" 
               className="h-10 w-auto"
-              onError={(e) => {
-                // Fallback to text logo if image fails to load
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-              }}
             />
-            <span className="hidden text-2xl font-bold text-bahola-navy-950 font-helvetica">
-              Bahola
-            </span>
           </Link>
 
           {/* Search Bar - Hidden on mobile */}
