@@ -16,6 +16,7 @@ import {
   Contact,
   Register,
   Login,
+  ForgotPassword,
   FAQ,
   UserAccount,
   VideoConsultation,
@@ -120,6 +121,7 @@ const AppRoutes = () => {
         <Route path="/stores" element={<StoreLocator />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/account" element={<UserAccount />} />
         <Route path="/video-consultation" element={<VideoConsultation />} />

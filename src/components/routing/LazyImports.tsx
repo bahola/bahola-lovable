@@ -15,6 +15,7 @@ export const GenericProductPage = React.lazy(() => import('@/components/product/
 export const Contact = React.lazy(() => import('@/pages/Contact'));
 export const Register = React.lazy(() => import('@/pages/Register'));
 export const Login = React.lazy(() => import('@/pages/Login'));
+export const ForgotPassword = React.lazy(() => import('@/pages/ForgotPassword'));
 export const FAQ = React.lazy(() => import('@/pages/FAQ'));
 export const UserAccount = React.lazy(() => import('@/pages/UserAccount'));
 export const VideoConsultation = React.lazy(() => import('@/pages/VideoConsultation'));
