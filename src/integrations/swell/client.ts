@@ -1,4 +1,4 @@
-// Swell API client wrapper
+// Swell API client wrapper with enhanced error handling
 const SWELL_STORE_ID = 'baholalabs';
 const SWELL_PUBLIC_KEY = 'pk_7r06gV1fCa7kPbg1mSFTtetIZTI6qaC7';
 const SWELL_API_URL = `https://${SWELL_STORE_ID}.swell.store/api`;
@@ -56,18 +56,42 @@ class SwellClient {
       ...options.headers,
     };
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-      credentials: 'include', // Important for session cookies
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Swell API error: ${response.statusText}`);
+    console.log(`[Swell API] ${options.method || 'GET'} ${url}`);
+    if (options.body) {
+      console.log('[Swell API] Request body:', options.body);
     }
 
-    return response.json();
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+        credentials: 'include',
+      });
+
+      const responseText = await response.text();
+      console.log(`[Swell API] Response status: ${response.status}`);
+      console.log('[Swell API] Response body:', responseText);
+
+      if (!response.ok) {
+        let errorMessage = `Swell API error: ${response.statusText}`;
+        try {
+          const errorData = JSON.parse(responseText);
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch {
+          // Use status text if response isn't JSON
+        }
+        throw new Error(errorMessage);
+      }
+
+      // Parse JSON if there's content
+      if (responseText) {
+        return JSON.parse(responseText);
+      }
+      return {};
+    } catch (error) {
+      console.error('[Swell API] Request failed:', error);
+      throw error;
+    }
   }
 
   // Account/Authentication methods
