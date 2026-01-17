@@ -174,11 +174,12 @@ export default {
 			},
 			fontFamily: {
 				// Bahola Brand Typography System
-				'optima': ['Optima', 'Candara', 'Noto Sans', 'source-sans-pro', 'sans-serif'],
+				// Optima with proper fallback chain for cross-platform support
+				'optima': ['Optima', 'Optima Nova', 'Segoe UI', 'Candara', 'Noto Sans', 'sans-serif'],
 				'inter': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 				'merriweather': ['Merriweather', 'Georgia', 'serif'],
 				// Semantic font aliases
-				'headline': ['Optima', 'Candara', 'Noto Sans', 'source-sans-pro', 'sans-serif'],
+				'headline': ['Optima', 'Optima Nova', 'Segoe UI', 'Candara', 'Noto Sans', 'sans-serif'],
 				'body': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 				'serif': ['Merriweather', 'Georgia', 'serif'],
 				'sans': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
