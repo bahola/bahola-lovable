@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
 
 // TypeScript types for customer data
-type CustomerType = 'customer' | 'doctor';
+type CustomerType = 'customer' | 'doctor' | 'pharmacy' | 'student';
 
 interface Customer {
   id: string;
@@ -43,11 +43,28 @@ interface Customer {
   marketing_priority?: number;
   created_at: string;
   updated_at: string;
+  // Doctor-specific fields
+  medical_license?: string;
+  specialization?: string;
+  clinic?: string;
+  years_of_practice?: number;
+  // Pharmacy-specific fields
+  pharmacy_license?: string;
+  pharmacy_name?: string;
+  gst_number?: string;
+  // Student-specific fields
+  student_id?: string;
+  institution_name?: string;
+  course?: string;
+  expected_graduation?: string;
+  verification_status?: string;
 }
 
-const categoryColors = {
+const categoryColors: Record<CustomerType, string> = {
   'customer': 'bg-blue-100 text-blue-800',
-  'doctor': 'bg-green-100 text-green-800'
+  'doctor': 'bg-green-100 text-green-800',
+  'pharmacy': 'bg-purple-100 text-purple-800',
+  'student': 'bg-orange-100 text-orange-800'
 };
 
 const CustomersManagement = () => {
@@ -323,6 +340,8 @@ const CustomersManagement = () => {
                     <SelectContent>
                       <SelectItem value="customer">Customer</SelectItem>
                       <SelectItem value="doctor">Doctor</SelectItem>
+                      <SelectItem value="pharmacy">Pharmacy</SelectItem>
+                      <SelectItem value="student">Student</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -462,7 +481,9 @@ const CustomersManagement = () => {
                     <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
                       categoryColors[customer.customer_type] || 'bg-gray-100 text-gray-800'
                     }`}>
-                      {customer.customer_type === 'doctor' ? 'Doctor' : 'Customer'}
+                      {customer.customer_type === 'doctor' ? 'Doctor' : 
+                       customer.customer_type === 'pharmacy' ? 'Pharmacy' : 
+                       customer.customer_type === 'student' ? 'Student' : 'Customer'}
                     </span>
                   </TableCell>
                   <TableCell>

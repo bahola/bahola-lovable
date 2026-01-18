@@ -71,20 +71,26 @@ export type Database = {
           average_order_value: number | null
           city: string | null
           clinic: string | null
+          course: string | null
           created_at: string
           customer_id: string
           customer_lifetime_value: number | null
           customer_type: Database["public"]["Enums"]["customer_type"]
           days_between_orders: number | null
           email: string
+          expected_graduation: string | null
           first_order_date: string | null
+          gst_number: string | null
           id: string
+          institution_name: string | null
           last_order_date: string | null
           ltv_segment: string | null
           marketing_priority: number | null
           medical_license: string | null
           name: string
           notes: string | null
+          pharmacy_license: string | null
+          pharmacy_name: string | null
           phone: string
           pincode: string | null
           predicted_next_purchase_date: string | null
@@ -93,6 +99,7 @@ export type Database = {
           specialization: string | null
           state: string | null
           status: string | null
+          student_id: string | null
           total_orders: number | null
           total_spent: number | null
           updated_at: string
@@ -104,20 +111,26 @@ export type Database = {
           average_order_value?: number | null
           city?: string | null
           clinic?: string | null
+          course?: string | null
           created_at?: string
           customer_id: string
           customer_lifetime_value?: number | null
           customer_type?: Database["public"]["Enums"]["customer_type"]
           days_between_orders?: number | null
           email: string
+          expected_graduation?: string | null
           first_order_date?: string | null
+          gst_number?: string | null
           id?: string
+          institution_name?: string | null
           last_order_date?: string | null
           ltv_segment?: string | null
           marketing_priority?: number | null
           medical_license?: string | null
           name: string
           notes?: string | null
+          pharmacy_license?: string | null
+          pharmacy_name?: string | null
           phone: string
           pincode?: string | null
           predicted_next_purchase_date?: string | null
@@ -126,6 +139,7 @@ export type Database = {
           specialization?: string | null
           state?: string | null
           status?: string | null
+          student_id?: string | null
           total_orders?: number | null
           total_spent?: number | null
           updated_at?: string
@@ -137,20 +151,26 @@ export type Database = {
           average_order_value?: number | null
           city?: string | null
           clinic?: string | null
+          course?: string | null
           created_at?: string
           customer_id?: string
           customer_lifetime_value?: number | null
           customer_type?: Database["public"]["Enums"]["customer_type"]
           days_between_orders?: number | null
           email?: string
+          expected_graduation?: string | null
           first_order_date?: string | null
+          gst_number?: string | null
           id?: string
+          institution_name?: string | null
           last_order_date?: string | null
           ltv_segment?: string | null
           marketing_priority?: number | null
           medical_license?: string | null
           name?: string
           notes?: string | null
+          pharmacy_license?: string | null
+          pharmacy_name?: string | null
           phone?: string
           pincode?: string | null
           predicted_next_purchase_date?: string | null
@@ -159,6 +179,7 @@ export type Database = {
           specialization?: string | null
           state?: string | null
           status?: string | null
+          student_id?: string | null
           total_orders?: number | null
           total_spent?: number | null
           updated_at?: string
@@ -776,7 +797,7 @@ export type Database = {
       }
     }
     Enums: {
-      customer_type: "customer" | "doctor"
+      customer_type: "customer" | "doctor" | "pharmacy" | "student"
       help_page_type:
         | "getting_started"
         | "potency_guide"
@@ -917,7 +938,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      customer_type: ["customer", "doctor"],
+      customer_type: ["customer", "doctor", "pharmacy", "student"],
       help_page_type: [
         "getting_started",
         "potency_guide",
