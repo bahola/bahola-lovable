@@ -252,15 +252,13 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
       let swellAccountCreated = false;
       try {
         console.log('Step 1: Attempting to create Swell account...');
+        // Swell Frontend API only accepts: email, password, first_name, last_name, email_optin
         const swellAccount = await swell.account.create({
           email: userData.email,
           password: userData.password,
           first_name: userData.firstName,
           last_name: userData.lastName,
-          phone: userData.phone,
-          group: CUSTOMER_GROUPS[userData.userType],
-          type: userData.userType,
-          metadata,
+          email_optin: true,
         });
         console.log('✅ Swell account created:', swellAccount.id);
         swellAccountCreated = true;
