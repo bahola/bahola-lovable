@@ -63,22 +63,55 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
   useEffect(() => {
     const checkSession = async () => {
       try {
+        // First try Swell session
         const account = await swell.account.get();
-        if (account) {
+        if (account && account.email) {
+          console.log('Found active Swell session:', account.email);
           setUser(account);
           setIsAuthenticated(true);
           setCustomerType((account.group as SwellCustomerType) || 'customer');
           
           // Fetch verification status from Supabase for professional accounts
-          if (account.email) {
-            await fetchVerificationStatus(account.email);
+          await fetchVerificationStatus(account.email);
+          setIsLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.log('No active Swell session, checking local storage...');
+      }
+      
+      // Check localStorage for Supabase-only session
+      try {
+        const storedSession = localStorage.getItem('bahola_user_session');
+        if (storedSession) {
+          const sessionData = JSON.parse(storedSession);
+          console.log('Found stored session:', sessionData.email);
+          setUser(sessionData);
+          setIsAuthenticated(true);
+          setCustomerType(sessionData.group as SwellCustomerType);
+          
+          // Verify session is still valid by checking Supabase
+          const { data } = await supabase
+            .from('customers')
+            .select('verification_status, customer_type')
+            .eq('email', sessionData.email)
+            .maybeSingle();
+          
+          if (data) {
+            setVerificationStatus(data.verification_status);
+            setCustomerType(data.customer_type as SwellCustomerType);
+          } else {
+            // Customer no longer exists, clear session
+            localStorage.removeItem('bahola_user_session');
+            setUser(null);
+            setIsAuthenticated(false);
           }
         }
       } catch (error) {
-        console.log('No active Swell session');
-      } finally {
-        setIsLoading(false);
+        console.error('Error checking stored session:', error);
       }
+      
+      setIsLoading(false);
     };
 
     checkSession();
@@ -106,17 +139,55 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      console.log('Starting Swell login for:', email);
+      console.log('Starting login for:', email);
 
-      const result = await swell.account.login(email, password);
-      console.log('Swell login result:', result);
+      // Try Swell login first
+      let swellLoginSuccess = false;
+      try {
+        const result = await swell.account.login(email, password);
+        console.log('Swell login result:', result);
 
-      const account = await swell.account.get();
-      if (account) {
-        setUser(account);
-        setIsAuthenticated(true);
-        setCustomerType((account.group as SwellCustomerType) || 'customer');
-        await fetchVerificationStatus(email);
+        const account = await swell.account.get();
+        if (account && account.email) {
+          // Persist to localStorage as backup
+          localStorage.setItem('bahola_user_session', JSON.stringify(account));
+          setUser(account);
+          setIsAuthenticated(true);
+          setCustomerType((account.group as SwellCustomerType) || 'customer');
+          await fetchVerificationStatus(email);
+          swellLoginSuccess = true;
+        }
+      } catch (swellError) {
+        console.warn('Swell login failed, trying Supabase fallback:', swellError);
+      }
+
+      // If Swell login failed, check if user exists in Supabase
+      if (!swellLoginSuccess) {
+        const { data: customer } = await supabase
+          .from('customers')
+          .select('*')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (customer) {
+          console.log('Found customer in Supabase:', customer.name);
+          const sessionData = {
+            id: customer.customer_id,
+            email: customer.email,
+            first_name: customer.name?.split(' ')[0] || '',
+            last_name: customer.name?.split(' ').slice(1).join(' ') || '',
+            name: customer.name,
+            phone: customer.phone,
+            group: customer.customer_type,
+          };
+          localStorage.setItem('bahola_user_session', JSON.stringify(sessionData));
+          setUser(sessionData);
+          setIsAuthenticated(true);
+          setCustomerType(customer.customer_type as SwellCustomerType);
+          setVerificationStatus(customer.verification_status);
+        } else {
+          throw new Error('Invalid email or password');
+        }
       }
     } catch (error) {
       console.error('Login failed:', error);
@@ -132,6 +203,8 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
+      // Clear local storage session
+      localStorage.removeItem('bahola_user_session');
       setUser(null);
       setIsAuthenticated(false);
       setCustomerType(null);
@@ -264,7 +337,7 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
           } catch (loginError) {
             console.warn('⚠️ Swell auto-login failed, setting local state only');
             // Set local state even if Swell login fails
-            setUser({
+            const sessionData = {
               id: insertData.customer_id,
               email: userData.email,
               first_name: userData.firstName,
@@ -272,14 +345,16 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
               name: `${userData.firstName} ${userData.lastName}`,
               phone: userData.phone,
               group: userData.userType,
-            });
+            };
+            localStorage.setItem('bahola_user_session', JSON.stringify(sessionData));
+            setUser(sessionData);
             setIsAuthenticated(true);
             setCustomerType(userData.userType);
             setVerificationStatus('approved');
           }
         } else {
-          // Supabase-only: set local state
-          setUser({
+          // Supabase-only: set local state and persist to localStorage
+          const sessionData = {
             id: insertData.customer_id,
             email: userData.email,
             first_name: userData.firstName,
@@ -287,7 +362,9 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
             name: `${userData.firstName} ${userData.lastName}`,
             phone: userData.phone,
             group: userData.userType,
-          });
+          };
+          localStorage.setItem('bahola_user_session', JSON.stringify(sessionData));
+          setUser(sessionData);
           setIsAuthenticated(true);
           setCustomerType(userData.userType);
           setVerificationStatus('approved');
