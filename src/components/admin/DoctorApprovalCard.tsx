@@ -93,6 +93,28 @@ export const DoctorApprovalCard: React.FC = () => {
     return data;
   };
 
+  const sendNotificationEmail = async (doctorEmail: string, doctorName: string, status: 'approved' | 'rejected') => {
+    console.log(`Sending ${status} notification email to ${doctorEmail}`);
+    
+    const { data, error } = await supabase.functions.invoke('send-doctor-notification', {
+      body: {
+        doctorEmail,
+        doctorName,
+        status,
+        adminEmail: 'admin@baholalabs.in' // Admin notification recipient
+      }
+    });
+
+    if (error) {
+      console.error('Email notification error:', error);
+      // Don't throw - email failure shouldn't block the approval flow
+      return null;
+    }
+
+    console.log('Email notification response:', data);
+    return data;
+  };
+
   const handleApproval = async (doctorId: string, status: 'approved' | 'rejected') => {
     setProcessingId(doctorId);
     
@@ -136,7 +158,14 @@ export const DoctorApprovalCard: React.FC = () => {
         return;
       }
 
-      toast.success(`Doctor ${status === 'approved' ? 'approved successfully' : 'rejected'}`);
+      // Send notification email
+      try {
+        await sendNotificationEmail(doctor.email, doctor.name, status);
+        toast.success(`Doctor ${status === 'approved' ? 'approved' : 'rejected'} and notification email sent`);
+      } catch (emailError) {
+        console.warn('Email notification failed:', emailError);
+        toast.success(`Doctor ${status === 'approved' ? 'approved' : 'rejected'} (email notification failed)`);
+      }
       
       // Remove the doctor from the pending list
       setPendingDoctors(prev => prev.filter(doc => doc.id !== doctorId));
