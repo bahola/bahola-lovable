@@ -1,4 +1,4 @@
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   CustomerFormData, 
@@ -12,7 +12,6 @@ import { useSwellAuth, RegisterUserData } from '@/contexts/SwellAuthContext';
 export type RegisterFormData = CustomerFormData | DoctorFormData | PharmacyFormData | StudentFormData;
 
 export const useRegisterSubmit = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get('returnUrl');
@@ -64,40 +63,39 @@ export const useRegisterSubmit = () => {
           pharmacy: 'Pharmacy',
           student: 'Student',
         };
-        toast({
-          title: "Registration Successful",
+
+        toast.success('Registration Successful', {
           description: `Your ${typeLabels[userType]} account has been created and is pending verification. You'll receive an email notification once your account is approved (typically 1-2 business days).`,
           duration: 7000,
         });
+
         navigate('/login');
       } else {
-        toast({
-          title: "Registration Successful",
-          description: "Welcome! You have been registered and are now logged in.",
+        toast.success('Registration Successful', {
+          description: 'Welcome! You have been registered and are now logged in.',
           duration: 5000,
         });
+
         navigate(returnUrl || '/');
       }
     } catch (error) {
       console.error('Registration error in handleSubmit:', error);
       
-      let errorMessage = "There was a problem with your registration. Please try again.";
+      let errorMessage = 'There was a problem with your registration. Please try again.';
       
       if (error instanceof Error) {
         errorMessage = error.message;
         
         // Handle specific error cases
         if (error.message.includes('already exists') || error.message.includes('409')) {
-          errorMessage = "An account with this email already exists. Please try logging in instead.";
+          errorMessage = 'An account with this email already exists. Please try logging in instead.';
         } else if (error.message.includes('Failed to create')) {
-          errorMessage = "Failed to create your account. Please check your details and try again.";
+          errorMessage = 'Failed to create your account. Please check your details and try again.';
         }
       }
       
-      toast({
-        title: "Registration Failed",
+      toast.error('Registration Failed', {
         description: errorMessage,
-        variant: "destructive",
         duration: 7000,
       });
     }
