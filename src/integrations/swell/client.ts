@@ -107,10 +107,26 @@ class SwellClient {
       type?: string;
       metadata?: Record<string, any>;
     }): Promise<SwellAccount> => {
-      return this.request('/account', {
+      console.log('[Swell API] Creating account with data:', {
+        email: data.email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        group: data.group,
+        type: data.type,
+      });
+      
+      const result = await this.request('/account', {
         method: 'POST',
         body: JSON.stringify(data),
       });
+      
+      console.log('[Swell API] Account creation result:', result);
+      
+      if (!result || !result.id) {
+        throw new Error('Failed to create account - no account ID returned from Swell');
+      }
+      
+      return result;
     },
 
     // Login to existing account
