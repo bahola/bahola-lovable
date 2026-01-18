@@ -208,7 +208,7 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
           name: `${userData.firstName} ${userData.lastName}`,
           email: userData.email,
           phone: userData.phone || '',
-          customer_type: userData.userType as 'customer' | 'doctor',
+          customer_type: userData.userType as 'customer' | 'doctor' | 'pharmacy' | 'student',
           verification_status: verificationStatusValue,
         };
 
@@ -218,6 +218,22 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
           insertData.specialization = userData.specialization;
           insertData.clinic = userData.clinic;
           insertData.years_of_practice = userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null;
+        }
+
+        // Add type-specific fields for pharmacies
+        if (userData.userType === 'pharmacy') {
+          insertData.pharmacy_license = userData.pharmacyLicense;
+          insertData.pharmacy_name = userData.pharmacyName;
+          insertData.gst_number = userData.gstNumber;
+          insertData.address = userData.address;
+        }
+
+        // Add type-specific fields for students
+        if (userData.userType === 'student') {
+          insertData.student_id = userData.studentId;
+          insertData.institution_name = userData.institutionName;
+          insertData.course = userData.course;
+          insertData.expected_graduation = userData.expectedGraduation;
         }
 
         const { error: insertError } = await supabase.from('customers').insert(insertData);
