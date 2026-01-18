@@ -105,6 +105,8 @@ class SwellClient {
   // Account/Authentication methods
   account = {
     // Create a new customer account
+    // Note: Swell Frontend API doesn't allow setting 'group' or 'type' directly
+    // These fields require backend/admin API access. Store customer type in metadata instead.
     create: async (data: {
       email: string;
       password: string;
@@ -115,17 +117,24 @@ class SwellClient {
       type?: string;
       metadata?: Record<string, any>;
     }): Promise<SwellAccount> => {
+      // Remove protected fields that can't be set via Frontend API
+      const { group, type, ...allowedData } = data;
+      
+      // Store customer type in metadata if not already there
+      if ((group || type) && allowedData.metadata) {
+        allowedData.metadata.customer_type = type || group;
+      }
+      
       console.log('[Swell API] Creating account with data:', {
-        email: data.email,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        group: data.group,
-        type: data.type,
+        email: allowedData.email,
+        first_name: allowedData.first_name,
+        last_name: allowedData.last_name,
+        metadata: allowedData.metadata,
       });
       
       const result = await this.request('/account', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(allowedData),
       });
       
       console.log('[Swell API] Account creation result:', result);
