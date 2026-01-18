@@ -142,7 +142,7 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
   const register = async (userData: RegisterUserData) => {
     try {
       setIsLoading(true);
-      console.log('=== STARTING SWELL REGISTRATION ===');
+      console.log('=== STARTING REGISTRATION ===');
       console.log('User data:', {
         email: userData.email,
         userType: userData.userType,
@@ -153,106 +153,84 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
       const requiresVerification = REQUIRES_VERIFICATION.includes(userData.userType);
       const verificationStatusValue = requiresVerification ? 'pending' : 'approved';
 
-      // Build metadata based on user type
-      const metadata: Record<string, any> = {
-        userType: userData.userType,
-      };
-
-      if (userData.userType === 'doctor') {
-        metadata.medicalLicense = userData.medicalLicense;
-        metadata.specialization = userData.specialization;
-        metadata.clinic = userData.clinic;
-        metadata.yearsOfPractice = userData.yearsOfPractice;
-      } else if (userData.userType === 'pharmacy') {
-        metadata.pharmacyLicense = userData.pharmacyLicense;
-        metadata.pharmacyName = userData.pharmacyName;
-        metadata.gstNumber = userData.gstNumber;
-        metadata.address = userData.address;
-      } else if (userData.userType === 'student') {
-        metadata.studentId = userData.studentId;
-        metadata.institutionName = userData.institutionName;
-        metadata.course = userData.course;
-        metadata.expectedGraduation = userData.expectedGraduation;
-      }
-
-      // Step 1: Create Swell account
-      console.log('Step 1: Creating Swell account...');
-      const swellAccount = await swell.account.create({
-        email: userData.email,
-        password: userData.password,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        phone: userData.phone,
-        group: CUSTOMER_GROUPS[userData.userType],
-        type: userData.userType,
-        metadata,
-      });
-      console.log('✅ Swell account created:', swellAccount.id);
-
-      // Step 2: Store verification info in Supabase
-      console.log('Step 2: Creating Supabase customer record...');
+      // Generate customer ID prefix
       const customerIdPrefix = userData.userType === 'doctor' ? 'DOC' 
         : userData.userType === 'pharmacy' ? 'PHR' 
         : userData.userType === 'student' ? 'STU' 
         : 'CUST';
 
+      // Check if customer already exists
       const { data: existingCustomer } = await supabase
         .from('customers')
-        .select('id')
+        .select('id, email')
         .eq('email', userData.email)
         .maybeSingle();
 
-      if (!existingCustomer) {
-        const insertData: any = {
-          customer_id: `${customerIdPrefix}${Date.now().toString().slice(-6)}`,
-          name: `${userData.firstName} ${userData.lastName}`,
-          email: userData.email,
-          phone: userData.phone || '',
-          customer_type: userData.userType as 'customer' | 'doctor' | 'pharmacy' | 'student',
-          verification_status: verificationStatusValue,
-        };
-
-        // Add type-specific fields for doctors
-        if (userData.userType === 'doctor') {
-          insertData.medical_license = userData.medicalLicense;
-          insertData.specialization = userData.specialization;
-          insertData.clinic = userData.clinic;
-          insertData.years_of_practice = userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null;
-        }
-
-        // Add type-specific fields for pharmacies
-        if (userData.userType === 'pharmacy') {
-          insertData.pharmacy_license = userData.pharmacyLicense;
-          insertData.pharmacy_name = userData.pharmacyName;
-          insertData.gst_number = userData.gstNumber;
-          insertData.address = userData.address;
-        }
-
-        // Add type-specific fields for students
-        if (userData.userType === 'student') {
-          insertData.student_id = userData.studentId;
-          insertData.institution_name = userData.institutionName;
-          insertData.course = userData.course;
-          insertData.expected_graduation = userData.expectedGraduation;
-        }
-
-        const { error: insertError } = await supabase.from('customers').insert(insertData);
-
-        if (insertError) {
-          console.error('❌ Supabase customer creation failed:', insertError);
-          // Don't throw - Swell account is already created
-        } else {
-          console.log('✅ Supabase customer created');
-        }
+      if (existingCustomer) {
+        throw new Error('An account with this email already exists. Please try logging in instead.');
       }
 
-      // Step 3: Auto-login for regular customers, show pending message for others
+      // Build insert data
+      const insertData: any = {
+        customer_id: `${customerIdPrefix}${Date.now().toString().slice(-6)}`,
+        name: `${userData.firstName} ${userData.lastName}`,
+        email: userData.email,
+        phone: userData.phone || '',
+        customer_type: userData.userType as 'customer' | 'doctor' | 'pharmacy' | 'student',
+        verification_status: verificationStatusValue,
+      };
+
+      // Add type-specific fields for doctors
+      if (userData.userType === 'doctor') {
+        insertData.medical_license = userData.medicalLicense;
+        insertData.specialization = userData.specialization;
+        insertData.clinic = userData.clinic;
+        insertData.years_of_practice = userData.yearsOfPractice ? parseInt(userData.yearsOfPractice) : null;
+      }
+
+      // Add type-specific fields for pharmacies
+      if (userData.userType === 'pharmacy') {
+        insertData.pharmacy_license = userData.pharmacyLicense;
+        insertData.pharmacy_name = userData.pharmacyName;
+        insertData.gst_number = userData.gstNumber;
+        insertData.address = userData.address;
+      }
+
+      // Add type-specific fields for students
+      if (userData.userType === 'student') {
+        insertData.student_id = userData.studentId;
+        insertData.institution_name = userData.institutionName;
+        insertData.course = userData.course;
+        insertData.expected_graduation = userData.expectedGraduation;
+      }
+
+      console.log('Creating customer in Supabase:', insertData);
+      
+      const { error: insertError } = await supabase.from('customers').insert(insertData);
+
+      if (insertError) {
+        console.error('❌ Supabase customer creation failed:', insertError);
+        throw new Error('Failed to create account. Please try again.');
+      }
+      
+      console.log('✅ Customer created successfully');
+      
+      // Set local state for non-verified users
       if (!requiresVerification) {
-        console.log('Step 3: Auto-login for customer...');
-        await login(userData.email, userData.password);
-        console.log('✅ Auto-login successful');
+        setUser({
+          id: insertData.customer_id,
+          email: userData.email,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          name: `${userData.firstName} ${userData.lastName}`,
+          phone: userData.phone,
+          group: userData.userType,
+        });
+        setIsAuthenticated(true);
+        setCustomerType(userData.userType);
+        setVerificationStatus('approved');
       } else {
-        console.log(`✅ ${userData.userType} registration completed - pending verification`);
+        setVerificationStatus('pending');
       }
 
       console.log('=== REGISTRATION COMPLETED ===');
