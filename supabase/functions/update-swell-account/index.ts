@@ -79,7 +79,57 @@ serve(async (req) => {
     const accountId = searchResult.results[0].id;
     console.log('Found account ID:', accountId);
 
-    // Step 2: Update the account with new group and metadata
+    // Step 2: If group is provided, look up the actual group ID from account_groups
+    let groupId: string | undefined;
+    if (group) {
+      console.log('Looking up group:', group);
+      const groupsUrl = `https://api.swell.store/account_groups?where[slug]=${encodeURIComponent(group)}`;
+      const groupsResponse = await fetch(groupsUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (groupsResponse.ok) {
+        const groupsResult = await groupsResponse.json();
+        console.log('Groups search result:', JSON.stringify(groupsResult));
+        
+        if (groupsResult.results && groupsResult.results.length > 0) {
+          groupId = groupsResult.results[0].id;
+          console.log('Found group ID:', groupId);
+        } else {
+          // Try searching by name if slug didn't work
+          const groupsByNameUrl = `https://api.swell.store/account_groups?where[name]=${encodeURIComponent(group)}`;
+          const groupsByNameResponse = await fetch(groupsByNameUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': authHeader,
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (groupsByNameResponse.ok) {
+            const groupsByNameResult = await groupsByNameResponse.json();
+            console.log('Groups by name search result:', JSON.stringify(groupsByNameResult));
+            
+            if (groupsByNameResult.results && groupsByNameResult.results.length > 0) {
+              groupId = groupsByNameResult.results[0].id;
+              console.log('Found group ID by name:', groupId);
+            } else {
+              console.warn('Group not found, will use group slug directly:', group);
+              groupId = group; // Fallback to using the slug directly
+            }
+          }
+        }
+      } else {
+        console.warn('Failed to fetch groups, will use group slug directly:', group);
+        groupId = group;
+      }
+    }
+
+    // Step 3: Update the account with new group and metadata
     const updateUrl = `https://api.swell.store/accounts/${accountId}`;
     const updatePayload: Record<string, unknown> = {
       metadata: {
@@ -87,9 +137,9 @@ serve(async (req) => {
       },
     };
 
-    // Only set group if provided (for approved doctors)
-    if (group) {
-      updatePayload.group = group;
+    // Only set group if we found or have a group ID
+    if (groupId) {
+      updatePayload.group = groupId;
     }
 
     console.log('Updating account with payload:', JSON.stringify(updatePayload));
