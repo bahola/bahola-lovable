@@ -66,6 +66,7 @@ class SwellClient {
         ...options,
         headers,
         credentials: 'include',
+        mode: 'cors',
       });
 
       const responseText = await response.text();
@@ -88,8 +89,15 @@ class SwellClient {
         return JSON.parse(responseText);
       }
       return {};
-    } catch (error) {
+    } catch (error: any) {
       console.error('[Swell API] Request failed:', error);
+      
+      // Check if it's a CORS error
+      if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+        console.error('[Swell API] Possible CORS issue - the Swell store may not be configured or accessible');
+        throw new Error('Unable to connect to Swell. Please check if the store is properly configured.');
+      }
+      
       throw error;
     }
   }

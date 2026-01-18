@@ -153,16 +153,59 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
       const requiresVerification = REQUIRES_VERIFICATION.includes(userData.userType);
       const verificationStatusValue = requiresVerification ? 'pending' : 'approved';
 
-      // Generate customer ID prefix
+      // Build metadata based on user type
+      const metadata: Record<string, any> = {
+        userType: userData.userType,
+      };
+
+      if (userData.userType === 'doctor') {
+        metadata.medicalLicense = userData.medicalLicense;
+        metadata.specialization = userData.specialization;
+        metadata.clinic = userData.clinic;
+        metadata.yearsOfPractice = userData.yearsOfPractice;
+      } else if (userData.userType === 'pharmacy') {
+        metadata.pharmacyLicense = userData.pharmacyLicense;
+        metadata.pharmacyName = userData.pharmacyName;
+        metadata.gstNumber = userData.gstNumber;
+        metadata.address = userData.address;
+      } else if (userData.userType === 'student') {
+        metadata.studentId = userData.studentId;
+        metadata.institutionName = userData.institutionName;
+        metadata.course = userData.course;
+        metadata.expectedGraduation = userData.expectedGraduation;
+      }
+
+      // Step 1: Try to create Swell account
+      let swellAccountCreated = false;
+      try {
+        console.log('Step 1: Attempting to create Swell account...');
+        const swellAccount = await swell.account.create({
+          email: userData.email,
+          password: userData.password,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          phone: userData.phone,
+          group: CUSTOMER_GROUPS[userData.userType],
+          type: userData.userType,
+          metadata,
+        });
+        console.log('✅ Swell account created:', swellAccount.id);
+        swellAccountCreated = true;
+      } catch (swellError: any) {
+        console.warn('⚠️ Swell account creation failed, continuing with Supabase only:', swellError.message);
+        // Continue with Supabase-only registration
+      }
+
+      // Step 2: Store customer info in Supabase
+      console.log('Step 2: Creating Supabase customer record...');
       const customerIdPrefix = userData.userType === 'doctor' ? 'DOC' 
         : userData.userType === 'pharmacy' ? 'PHR' 
         : userData.userType === 'student' ? 'STU' 
         : 'CUST';
 
-      // Check if customer already exists
       const { data: existingCustomer } = await supabase
         .from('customers')
-        .select('id, email')
+        .select('id')
         .eq('email', userData.email)
         .maybeSingle();
 
@@ -170,7 +213,6 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
         throw new Error('An account with this email already exists. Please try logging in instead.');
       }
 
-      // Build insert data
       const insertData: any = {
         customer_id: `${customerIdPrefix}${Date.now().toString().slice(-6)}`,
         name: `${userData.firstName} ${userData.lastName}`,
@@ -204,32 +246,54 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
         insertData.expected_graduation = userData.expectedGraduation;
       }
 
-      console.log('Creating customer in Supabase:', insertData);
-      
       const { error: insertError } = await supabase.from('customers').insert(insertData);
 
       if (insertError) {
         console.error('❌ Supabase customer creation failed:', insertError);
         throw new Error('Failed to create account. Please try again.');
       }
-      
-      console.log('✅ Customer created successfully');
-      
-      // Set local state for non-verified users
+      console.log('✅ Supabase customer created');
+
+      // Step 3: Auto-login for regular customers
       if (!requiresVerification) {
-        setUser({
-          id: insertData.customer_id,
-          email: userData.email,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          name: `${userData.firstName} ${userData.lastName}`,
-          phone: userData.phone,
-          group: userData.userType,
-        });
-        setIsAuthenticated(true);
-        setCustomerType(userData.userType);
-        setVerificationStatus('approved');
+        if (swellAccountCreated) {
+          console.log('Step 3: Auto-login via Swell...');
+          try {
+            await login(userData.email, userData.password);
+            console.log('✅ Auto-login successful');
+          } catch (loginError) {
+            console.warn('⚠️ Swell auto-login failed, setting local state only');
+            // Set local state even if Swell login fails
+            setUser({
+              id: insertData.customer_id,
+              email: userData.email,
+              first_name: userData.firstName,
+              last_name: userData.lastName,
+              name: `${userData.firstName} ${userData.lastName}`,
+              phone: userData.phone,
+              group: userData.userType,
+            });
+            setIsAuthenticated(true);
+            setCustomerType(userData.userType);
+            setVerificationStatus('approved');
+          }
+        } else {
+          // Supabase-only: set local state
+          setUser({
+            id: insertData.customer_id,
+            email: userData.email,
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            name: `${userData.firstName} ${userData.lastName}`,
+            phone: userData.phone,
+            group: userData.userType,
+          });
+          setIsAuthenticated(true);
+          setCustomerType(userData.userType);
+          setVerificationStatus('approved');
+        }
       } else {
+        console.log(`✅ ${userData.userType} registration completed - pending verification`);
         setVerificationStatus('pending');
       }
 
