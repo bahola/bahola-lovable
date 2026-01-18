@@ -262,6 +262,17 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
         });
         console.log('✅ Swell account created:', swellAccount.id);
         swellAccountCreated = true;
+
+        // Step 1b: Update account with metadata (phone, customer type, type-specific data)
+        console.log('Step 1b: Updating Swell account with metadata...');
+        await swell.account.update({
+          phone: userData.phone,
+          metadata: {
+            ...metadata,
+            customer_type: userData.userType,
+          },
+        });
+        console.log('✅ Swell account metadata updated');
       } catch (swellError: any) {
         console.warn('⚠️ Swell account creation failed, continuing with Supabase only:', swellError.message);
         // Continue with Supabase-only registration
