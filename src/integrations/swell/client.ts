@@ -105,36 +105,34 @@ class SwellClient {
   // Account/Authentication methods
   account = {
     // Create a new customer account
-    // Note: Swell Frontend API doesn't allow setting 'group' or 'type' directly
-    // These fields require backend/admin API access. Store customer type in metadata instead.
+    // Swell Frontend API only supports: email, password, first_name, last_name, email_optin
     create: async (data: {
       email: string;
       password: string;
-      first_name: string;
-      last_name: string;
-      phone?: string;
-      group?: string;
-      type?: string;
-      metadata?: Record<string, any>;
+      first_name?: string;
+      last_name?: string;
+      email_optin?: boolean;
     }): Promise<SwellAccount> => {
-      // Remove protected fields that can't be set via Frontend API
-      const { group, type, ...allowedData } = data;
+      // Only send fields that Swell Frontend API accepts
+      const swellData: Record<string, any> = {
+        email: data.email,
+        password: data.password,
+      };
       
-      // Store customer type in metadata if not already there
-      if ((group || type) && allowedData.metadata) {
-        allowedData.metadata.customer_type = type || group;
-      }
+      if (data.first_name) swellData.first_name = data.first_name;
+      if (data.last_name) swellData.last_name = data.last_name;
+      if (data.email_optin !== undefined) swellData.email_optin = data.email_optin;
       
       console.log('[Swell API] Creating account with data:', {
-        email: allowedData.email,
-        first_name: allowedData.first_name,
-        last_name: allowedData.last_name,
-        metadata: allowedData.metadata,
+        email: swellData.email,
+        first_name: swellData.first_name,
+        last_name: swellData.last_name,
+        email_optin: swellData.email_optin,
       });
       
       const result = await this.request('/account', {
         method: 'POST',
-        body: JSON.stringify(allowedData),
+        body: JSON.stringify(swellData),
       });
       
       console.log('[Swell API] Account creation result:', result);
