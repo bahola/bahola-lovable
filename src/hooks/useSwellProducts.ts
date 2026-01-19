@@ -43,6 +43,7 @@ export interface SwellProductsResult {
 
 export const useSwellProducts = (options?: {
   category?: string;
+  subcategory?: string;
   limit?: number;
   page?: number;
   search?: string;
@@ -56,10 +57,11 @@ export const useSwellProducts = (options?: {
   // Memoize options to prevent infinite loops
   const memoizedOptions = useMemo(() => ({
     category: options?.category,
+    subcategory: options?.subcategory,
     limit: options?.limit,
     page: options?.page,
     search: options?.search,
-  }), [options?.category, options?.limit, options?.page, options?.search]);
+  }), [options?.category, options?.subcategory, options?.limit, options?.page, options?.search]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -89,9 +91,20 @@ export const useSwellProducts = (options?: {
         const result: any = await swell.products.list(params);
         console.log('Swell products result:', result);
         
-        setProducts(result?.results || []);
-        setCount(result?.count || 0);
-        setPages(result?.pages || 0);
+        let fetchedProducts = result?.results || [];
+        
+        // If subcategory is provided, filter products by first letter of name
+        if (memoizedOptions.subcategory) {
+          const letter = memoizedOptions.subcategory.toLowerCase();
+          fetchedProducts = fetchedProducts.filter((product: SwellProduct) => 
+            product.name.toLowerCase().startsWith(letter)
+          );
+          console.log(`Filtered by subcategory '${letter}':`, fetchedProducts.length, 'products');
+        }
+        
+        setProducts(fetchedProducts);
+        setCount(memoizedOptions.subcategory ? fetchedProducts.length : (result?.count || 0));
+        setPages(memoizedOptions.subcategory ? 1 : (result?.pages || 0));
       } catch (err) {
         console.error('Error fetching Swell products:', err);
         setError('Failed to load products');

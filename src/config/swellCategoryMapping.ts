@@ -1,0 +1,87 @@
+// Maps website category slugs to Swell category slugs
+export const SWELL_CATEGORY_MAP: Record<string, string> = {
+  'dilutions': 'homeopathic-dilutions',
+  'mother-tinctures': 'mother-tinctures',
+  'lm-potencies': 'lm-potencies',
+  'biochemic-medicines': 'biochemic-medicines',
+  'bach-flower-remedies': 'bach-flower-remedies',
+  'speciality-products': 'speciality-products',
+  'combo-products': 'combo-products',
+  'external-applications': 'external-applications',
+  'patent-medicines': 'patent-medicines',
+};
+
+// Maps website subcategory display format (e.g., 'dil-a' -> 'A')
+export const SUBCATEGORY_DISPLAY_MAP: Record<string, string> = {
+  'dil-a': 'Dil-A',
+  'dil-b': 'Dil-B',
+  'dil-c': 'Dil-C',
+  'dil-d': 'Dil-D',
+  'dil-e': 'Dil-E',
+  'dil-f': 'Dil-F',
+  'dil-g': 'Dil-G',
+  'dil-h': 'Dil-H',
+  'dil-i': 'Dil-I',
+  'dil-j': 'Dil-J',
+  'dil-k': 'Dil-K',
+  'dil-l': 'Dil-L',
+  'dil-m': 'Dil-M',
+  'dil-n': 'Dil-N',
+  'dil-o': 'Dil-O',
+  'dil-p': 'Dil-P',
+  'dil-q': 'Dil-Q',
+  'dil-r': 'Dil-R',
+  'dil-s': 'Dil-S',
+  'dil-t': 'Dil-T',
+  'dil-u': 'Dil-U',
+  'dil-v': 'Dil-V',
+  'dil-w': 'Dil-W',
+  'dil-x': 'Dil-X',
+  'dil-y': 'Dil-Y',
+  'dil-z': 'Dil-Z',
+  'a': 'A',
+  'b': 'B',
+  'c': 'C',
+  'd': 'D',
+  'e': 'E',
+  'f': 'F',
+  'g': 'G',
+  'h': 'H',
+  'i': 'I',
+  'j': 'J',
+  'k': 'K',
+  'l': 'L',
+  'm': 'M',
+  'n': 'N',
+  'o': 'O',
+  'p': 'P',
+  'q': 'Q',
+  'r': 'R',
+  's': 'S',
+  't': 'T',
+  'u': 'U',
+  'v': 'V',
+  'w': 'W',
+  'x': 'X',
+  'y': 'Y',
+  'z': 'Z',
+};
+
+// Extract the letter from subcategory slug for filtering
+// e.g., 'dil-a' -> 'a', 'a' -> 'a'
+export const getSubcategoryLetter = (subcategorySlug: string): string => {
+  if (subcategorySlug.startsWith('dil-')) {
+    return subcategorySlug.replace('dil-', '').toLowerCase();
+  }
+  return subcategorySlug.toLowerCase();
+};
+
+// Get Swell category slug from website category slug
+export const getSwellCategorySlug = (websiteSlug: string): string => {
+  return SWELL_CATEGORY_MAP[websiteSlug] || websiteSlug;
+};
+
+// Get display name for subcategory
+export const getSubcategoryDisplayName = (subcategorySlug: string): string => {
+  return SUBCATEGORY_DISPLAY_MAP[subcategorySlug.toLowerCase()] || subcategorySlug.toUpperCase();
+};
