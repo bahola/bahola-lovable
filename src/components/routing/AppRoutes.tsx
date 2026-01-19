@@ -98,7 +98,8 @@ const AppRoutes = () => {
         <Route path="/products" element={<CategoryPage />} />
         <Route path="/products/:categorySlug" element={<CategoryPage />} />
         <Route path="/categories" element={<CategoryOverview />} />
-        <Route path="/category/:categorySlug" element={<CategoryPage />} />
+        <Route path="/category/:categoryId" element={<CategoryPage />} />
+        <Route path="/category/:categoryId/:subcategoryId" element={<CategoryPage />} />
         <Route path="/product/:productSlug" element={<ProductPage />} />
         
         {/* Generic Product Pages for specific categories */}

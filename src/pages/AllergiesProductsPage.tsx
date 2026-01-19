@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { CategoryFilters } from '@/components/category/CategoryFilters';
 import { ProductGrid } from '@/components/category/ProductGrid';
 import { supabase } from '@/integrations/supabase/client';
+import { getCategoryFilterConfig } from '@/config/swellCategoryMapping';
 
 interface Product {
   id: string;
@@ -25,6 +25,10 @@ const AllergiesProductsPage = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [potencyFilter, setPotencyFilter] = useState<string[]>([]);
+  const [packSizeFilter, setPackSizeFilter] = useState<string[]>([]);
+  
+  const filterConfig = getCategoryFilterConfig('allergies');
 
   // Debounce search input
   useEffect(() => {
@@ -117,6 +121,8 @@ const AllergiesProductsPage = () => {
     setActiveFilters([]);
     setPriceRange([100, 5000]);
     setSearchQuery('');
+    setPotencyFilter([]);
+    setPackSizeFilter([]);
   };
 
   // Apply search filter
@@ -142,6 +148,11 @@ const AllergiesProductsPage = () => {
           setPriceRange={setPriceRange}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          potencyFilter={potencyFilter}
+          setPotencyFilter={setPotencyFilter}
+          packSizeFilter={packSizeFilter}
+          setPackSizeFilter={setPackSizeFilter}
+          filterConfig={filterConfig}
         />
         
         <div className="flex-1">

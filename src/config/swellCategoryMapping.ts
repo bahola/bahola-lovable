@@ -85,3 +85,61 @@ export const getSwellCategorySlug = (websiteSlug: string): string => {
 export const getSubcategoryDisplayName = (subcategorySlug: string): string => {
   return SUBCATEGORY_DISPLAY_MAP[subcategorySlug.toLowerCase()] || subcategorySlug.toUpperCase();
 };
+
+// Category-specific filter configuration
+export interface CategoryFilterConfig {
+  showPotency: boolean;
+  showPackSize: boolean;
+  showType: boolean;
+  potencyOptions: string[];
+  packSizeOptions: string[];
+}
+
+export const CATEGORY_FILTER_CONFIG: Record<string, CategoryFilterConfig> = {
+  'dilutions': {
+    showPotency: true,
+    showPackSize: true,
+    showType: false,
+    potencyOptions: ['6C', '12C', '30C', '200C', '1M', '10M', 'CM'],
+    packSizeOptions: ['10ml', '30ml', '100ml', '450ml']
+  },
+  'mother-tinctures': {
+    showPotency: false,
+    showPackSize: true,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: ['10ml', '30ml', '60ml', '100ml', '450ml']
+  },
+  'lm-potencies': {
+    showPotency: true,
+    showPackSize: true,
+    showType: false,
+    potencyOptions: ['LM1', 'LM2', 'LM3', 'LM6', 'LM12', 'LM18', 'LM24', 'LM30'],
+    packSizeOptions: ['10ml', '30ml']
+  },
+  'biochemic-medicines': {
+    showPotency: true,
+    showPackSize: true,
+    showType: false,
+    potencyOptions: ['3X', '6X', '12X', '30X', '200X'],
+    packSizeOptions: ['20g', '25g', '100g', '450g']
+  },
+  'bach-flower-remedies': {
+    showPotency: false,
+    showPackSize: true,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: ['10ml', '20ml', '30ml']
+  }
+};
+
+// Get filter config for a category
+export const getCategoryFilterConfig = (categorySlug: string): CategoryFilterConfig => {
+  return CATEGORY_FILTER_CONFIG[categorySlug] || {
+    showPotency: true,
+    showPackSize: true,
+    showType: true,
+    potencyOptions: ['6C', '12C', '30C', '200C', '1M', '10M'],
+    packSizeOptions: ['10ml', '30ml', '100ml']
+  };
+};

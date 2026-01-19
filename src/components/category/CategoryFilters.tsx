@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { X, Filter, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -12,6 +11,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { CategoryFilterConfig } from '@/config/swellCategoryMapping';
 
 interface CategoryFiltersProps {
   showFilters: boolean;
@@ -23,6 +23,12 @@ interface CategoryFiltersProps {
   setPriceRange: (range: number[]) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  // New filter props
+  potencyFilter: string[];
+  setPotencyFilter: (potencies: string[]) => void;
+  packSizeFilter: string[];
+  setPackSizeFilter: (sizes: string[]) => void;
+  filterConfig: CategoryFilterConfig;
 }
 
 export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
@@ -34,8 +40,32 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
   priceRange,
   setPriceRange,
   searchQuery,
-  setSearchQuery
+  setSearchQuery,
+  potencyFilter,
+  setPotencyFilter,
+  packSizeFilter,
+  setPackSizeFilter,
+  filterConfig
 }) => {
+  const togglePotency = (potency: string) => {
+    if (potencyFilter.includes(potency)) {
+      setPotencyFilter(potencyFilter.filter(p => p !== potency));
+    } else {
+      setPotencyFilter([...potencyFilter, potency]);
+    }
+  };
+
+  const togglePackSize = (size: string) => {
+    if (packSizeFilter.includes(size)) {
+      setPackSizeFilter(packSizeFilter.filter(s => s !== size));
+    } else {
+      setPackSizeFilter([...packSizeFilter, size]);
+    }
+  };
+
+  const totalActiveFilters = potencyFilter.length + packSizeFilter.length + 
+    (priceRange[0] > 100 || priceRange[1] < 5000 ? 1 : 0);
+
   return (
     <>
       {/* Mobile filters button */}
@@ -47,49 +77,61 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
         >
           <span className="flex items-center">
             <Filter className="mr-2 h-4 w-4" />
-            Filters
+            Filters {totalActiveFilters > 0 && `(${totalActiveFilters})`}
           </span>
           <span>{showFilters ? <X size={16} /> : <SlidersHorizontal size={16} />}</span>
         </Button>
         
-        {activeFilters.length > 0 && (
-          <div className="mt-2 flex items-center">
-            <span className="text-sm text-gray-500 mr-2">Applied filters:</span>
-            <div className="flex flex-wrap gap-1">
-              {activeFilters.map(filter => (
-                <span 
-                  key={filter} 
-                  className="bg-bahola-blue-100 text-bahola-blue-700 px-2 py-1 rounded-full text-xs flex items-center"
-                >
-                  {filter}
-                  <button 
-                    onClick={() => toggleFilter(filter)}
-                    className="ml-1 hover:text-bahola-blue-900"
-                  >
-                    <X size={12} />
-                  </button>
-                </span>
-              ))}
-              <button 
-                onClick={clearFilters}
-                className="text-xs text-bahola-blue-600 hover:text-bahola-blue-800 underline"
+        {totalActiveFilters > 0 && (
+          <div className="mt-2 flex items-center flex-wrap gap-1">
+            <span className="text-sm text-muted-foreground mr-2">Applied:</span>
+            {potencyFilter.map(potency => (
+              <span 
+                key={potency} 
+                className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs flex items-center"
               >
-                Clear all
-              </button>
-            </div>
+                {potency}
+                <button 
+                  onClick={() => togglePotency(potency)}
+                  className="ml-1 hover:text-primary/80"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            ))}
+            {packSizeFilter.map(size => (
+              <span 
+                key={size} 
+                className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs flex items-center"
+              >
+                {size}
+                <button 
+                  onClick={() => togglePackSize(size)}
+                  className="ml-1 hover:text-primary/80"
+                >
+                  <X size={12} />
+                </button>
+              </span>
+            ))}
+            <button 
+              onClick={clearFilters}
+              className="text-xs text-primary hover:text-primary/80 underline"
+            >
+              Clear all
+            </button>
           </div>
         )}
       </div>
       
       {/* Desktop sidebar filters */}
       <aside className={`w-full md:w-64 flex-shrink-0 ${showFilters ? 'block' : 'hidden md:block'}`}>
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+        <div className="bg-card p-4 rounded-lg shadow-sm mb-4 border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-medium">Filters</h3>
-            {activeFilters.length > 0 && (
+            {totalActiveFilters > 0 && (
               <button 
                 onClick={clearFilters}
-                className="text-xs text-bahola-blue-600 hover:text-bahola-blue-800"
+                className="text-xs text-primary hover:text-primary/80"
               >
                 Clear all
               </button>
@@ -105,78 +147,68 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
             />
           </div>
           
-          <Accordion type="multiple" className="w-full">
-            <AccordionItem value="potency">
-              <AccordionTrigger className="text-sm font-medium">Potency</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
-                  {['6C', '12C', '30C', '200C', '1M', '10M', 'LM1', 'LM2', 'LM3'].map(potency => (
-                    <div key={potency} className="flex items-center">
-                      <Checkbox 
-                        id={`potency-${potency}`} 
-                        checked={activeFilters.includes(`Potency: ${potency}`)}
-                        onCheckedChange={() => toggleFilter(`Potency: ${potency}`)}
-                      />
-                      <Label 
-                        htmlFor={`potency-${potency}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {potency}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+          <Accordion type="multiple" defaultValue={['potency', 'packSize', 'price']} className="w-full">
+            {/* Potency Filter - Only show for categories that have potency */}
+            {filterConfig.showPotency && filterConfig.potencyOptions.length > 0 && (
+              <AccordionItem value="potency">
+                <AccordionTrigger className="text-sm font-medium">
+                  Potency {potencyFilter.length > 0 && `(${potencyFilter.length})`}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {filterConfig.potencyOptions.map(potency => (
+                      <div key={potency} className="flex items-center">
+                        <Checkbox 
+                          id={`potency-${potency}`} 
+                          checked={potencyFilter.includes(potency)}
+                          onCheckedChange={() => togglePotency(potency)}
+                        />
+                        <Label 
+                          htmlFor={`potency-${potency}`}
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          {potency}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
             
-            <AccordionItem value="type">
-              <AccordionTrigger className="text-sm font-medium">Type</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
-                  {['Pills', 'Liquid', 'Mother Tincture', 'Trituration'].map(type => (
-                    <div key={type} className="flex items-center">
-                      <Checkbox 
-                        id={`type-${type}`} 
-                        checked={activeFilters.includes(`Type: ${type}`)}
-                        onCheckedChange={() => toggleFilter(`Type: ${type}`)}
-                      />
-                      <Label 
-                        htmlFor={`type-${type}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {type}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
+            {/* Pack Size Filter */}
+            {filterConfig.showPackSize && filterConfig.packSizeOptions.length > 0 && (
+              <AccordionItem value="packSize">
+                <AccordionTrigger className="text-sm font-medium">
+                  Pack Size {packSizeFilter.length > 0 && `(${packSizeFilter.length})`}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {filterConfig.packSizeOptions.map(size => (
+                      <div key={size} className="flex items-center">
+                        <Checkbox 
+                          id={`size-${size}`} 
+                          checked={packSizeFilter.includes(size)}
+                          onCheckedChange={() => togglePackSize(size)}
+                        />
+                        <Label 
+                          htmlFor={`size-${size}`}
+                          className="ml-2 text-sm cursor-pointer"
+                        >
+                          {size}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )}
             
-            <AccordionItem value="condition">
-              <AccordionTrigger className="text-sm font-medium">Health Condition</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
-                  {['Allergies', 'Digestive', 'Pain', 'Respiratory', 'Skin', 'Sleep', 'Stress'].map(condition => (
-                    <div key={condition} className="flex items-center">
-                      <Checkbox 
-                        id={`condition-${condition}`} 
-                        checked={activeFilters.includes(`Condition: ${condition}`)}
-                        onCheckedChange={() => toggleFilter(`Condition: ${condition}`)}
-                      />
-                      <Label 
-                        htmlFor={`condition-${condition}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {condition}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            
+            {/* Price Range Filter */}
             <AccordionItem value="price">
-              <AccordionTrigger className="text-sm font-medium">Price Range</AccordionTrigger>
+              <AccordionTrigger className="text-sm font-medium">
+                Price Range
+              </AccordionTrigger>
               <AccordionContent>
                 <div className="px-2 pt-2">
                   <Slider
@@ -187,33 +219,10 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
                     value={priceRange}
                     onValueChange={setPriceRange}
                   />
-                  <div className="flex justify-between mt-2 text-sm">
+                  <div className="flex justify-between mt-2 text-sm text-muted-foreground">
                     <span>₹{priceRange[0]}</span>
                     <span>₹{priceRange[1]}</span>
                   </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            
-            <AccordionItem value="brand">
-              <AccordionTrigger className="text-sm font-medium">Brand</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
-                  {['Bahola Labs', 'SBL', 'Dr. Reckeweg', 'Schwabe', 'Boiron'].map(brand => (
-                    <div key={brand} className="flex items-center">
-                      <Checkbox 
-                        id={`brand-${brand}`} 
-                        checked={activeFilters.includes(`Brand: ${brand}`)}
-                        onCheckedChange={() => toggleFilter(`Brand: ${brand}`)}
-                      />
-                      <Label 
-                        htmlFor={`brand-${brand}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {brand}
-                      </Label>
-                    </div>
-                  ))}
                 </div>
               </AccordionContent>
             </AccordionItem>
