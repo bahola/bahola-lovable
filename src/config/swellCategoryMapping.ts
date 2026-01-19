@@ -93,6 +93,40 @@ export interface SubcategoryLink {
   path: string;
 }
 
+// Main specialty category for cross-navigation
+export interface MainCategoryLink {
+  id: string;
+  name: string;
+  path: string;
+  icon: string;
+}
+
+// All main specialty categories for cross-navigation
+export const MAIN_SPECIALTY_CATEGORIES: MainCategoryLink[] = [
+  { id: 'allergies', name: 'Allergies', path: '/diseases-conditions/allergies', icon: '🤧' },
+  { id: 'cancer-support', name: 'Cancer Support', path: '/diseases-conditions/cancer-support', icon: '🎗️' },
+  { id: 'child-care', name: 'Child Care', path: '/diseases-conditions/child-care', icon: '👶' },
+  { id: 'ent-care', name: 'Ear Nose Throat', path: '/diseases-conditions/ent-care', icon: '👂' },
+  { id: 'eye-care', name: 'Eye Care', path: '/diseases-conditions/eye-care', icon: '👁️' },
+  { id: 'gut-health', name: 'Gut Health', path: '/diseases-conditions/gut-health', icon: '🌱' },
+  { id: 'hair-care', name: 'Hair Care', path: '/diseases-conditions/hair-care', icon: '💇' },
+  { id: 'heart-health', name: 'Heart Health', path: '/diseases-conditions/heart-health', icon: '❤️' },
+  { id: 'immune-boosters', name: 'Immune Boosters', path: '/diseases-conditions/immune-boosters', icon: '🛡️' },
+  { id: 'infection-care', name: 'Infection Care', path: '/diseases-conditions/infection-care', icon: '🦠' },
+  { id: 'lifestyle-care', name: 'Lifestyle Care', path: '/diseases-conditions/lifestyle-care', icon: '🌿' },
+  { id: 'mental-health', name: 'Mental Health', path: '/diseases-conditions/mental-health', icon: '🧠' },
+  { id: 'muscle-care', name: 'Muscle & Joint Care', path: '/diseases-conditions/muscle-care', icon: '💪' },
+  { id: 'nutritive-care', name: 'Nutritive Care', path: '/diseases-conditions/nutritive-care', icon: '🥗' },
+  { id: 'pain-care', name: 'Pain Care', path: '/diseases-conditions/pain-care', icon: '🩹' },
+  { id: 'reproductive-care', name: 'Reproductive Care', path: '/diseases-conditions/reproductive-care', icon: '🌺' },
+  { id: 'respiratory-care', name: 'Respiratory Care', path: '/diseases-conditions/respiratory-care', icon: '🫁' },
+  { id: 'skin-care', name: 'Skin Care', path: '/diseases-conditions/skin-care', icon: '✨' },
+  { id: 'specialty-care', name: 'Specialty Care', path: '/diseases-conditions/specialty-care', icon: '⭐' },
+  { id: 'tooth-care', name: 'Tooth Care', path: '/diseases-conditions/tooth-care', icon: '🦷' },
+  { id: 'urology-care', name: 'Urinary Care', path: '/diseases-conditions/urology-care', icon: '💧' },
+  { id: 'womens-health', name: "Women's Health", path: '/diseases-conditions/womens-health', icon: '🌸' }
+];
+
 // Category-specific filter configuration
 export interface CategoryFilterConfig {
   showPotency: boolean;
@@ -102,6 +136,7 @@ export interface CategoryFilterConfig {
   packSizeOptions: string[];
   showSubcategories?: boolean;
   subcategories?: SubcategoryLink[];
+  showMainCategories?: boolean;
 }
 
 export const CATEGORY_FILTER_CONFIG: Record<string, CategoryFilterConfig> = {

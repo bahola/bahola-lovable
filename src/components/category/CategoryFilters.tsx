@@ -12,7 +12,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { CategoryFilterConfig } from '@/config/swellCategoryMapping';
+import { CategoryFilterConfig, MAIN_SPECIALTY_CATEGORIES } from '@/config/swellCategoryMapping';
 
 interface CategoryFiltersProps {
   showFilters: boolean;
@@ -175,6 +175,38 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
                 })}
               </nav>
             </div>
+          )}
+          
+          {/* All Main Categories Navigation */}
+          {filterConfig.showSubcategories && filterConfig.showMainCategories !== false && (
+            <Accordion type="single" collapsible className="mb-4 border-none">
+              <AccordionItem value="all-categories" className="border-none">
+                <AccordionTrigger className="text-sm font-medium text-muted-foreground uppercase tracking-wide py-2 hover:no-underline">
+                  All Categories
+                </AccordionTrigger>
+                <AccordionContent>
+                  <nav className="space-y-1 max-h-64 overflow-y-auto pr-2">
+                    {MAIN_SPECIALTY_CATEGORIES.map((category) => {
+                      const isActive = location.pathname.startsWith(category.path);
+                      return (
+                        <Link
+                          key={category.id}
+                          to={category.path}
+                          className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
+                            isActive 
+                              ? 'bg-primary/10 text-primary font-medium' 
+                              : 'hover:bg-accent hover:text-accent-foreground'
+                          }`}
+                        >
+                          <span className="mr-2">{category.icon}</span>
+                          {category.name}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           )}
           
           <Accordion type="multiple" defaultValue={['potency', 'packSize', 'price']} className="w-full">
