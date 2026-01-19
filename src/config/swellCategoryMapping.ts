@@ -86,6 +86,13 @@ export const getSubcategoryDisplayName = (subcategorySlug: string): string => {
   return SUBCATEGORY_DISPLAY_MAP[subcategorySlug.toLowerCase()] || subcategorySlug.toUpperCase();
 };
 
+// Subcategory definition for navigation
+export interface SubcategoryLink {
+  id: string;
+  name: string;
+  path: string;
+}
+
 // Category-specific filter configuration
 export interface CategoryFilterConfig {
   showPotency: boolean;
@@ -93,6 +100,8 @@ export interface CategoryFilterConfig {
   showType: boolean;
   potencyOptions: string[];
   packSizeOptions: string[];
+  showSubcategories?: boolean;
+  subcategories?: SubcategoryLink[];
 }
 
 export const CATEGORY_FILTER_CONFIG: Record<string, CategoryFilterConfig> = {
@@ -130,6 +139,102 @@ export const CATEGORY_FILTER_CONFIG: Record<string, CategoryFilterConfig> = {
     showType: false,
     potencyOptions: [],
     packSizeOptions: ['10ml', '20ml', '30ml']
+  },
+  // Specialty categories with subcategory navigation
+  'allergies': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'seasonal-allergies', name: 'Seasonal Allergies', path: '/diseases-conditions/allergies/seasonal-allergies-hay-fever' },
+      { id: 'dust-allergy', name: 'Dust Allergy', path: '/diseases-conditions/allergies/dust-allergy' },
+      { id: 'food-allergies', name: 'Food Allergies', path: '/diseases-conditions/allergies/food-allergies' },
+      { id: 'skin-allergies', name: 'Skin Allergies', path: '/diseases-conditions/allergies/skin-allergies' },
+      { id: 'allergic-rhinitis', name: 'Allergic Rhinitis', path: '/diseases-conditions/allergies/allergic-rhinitis' },
+      { id: 'pet-dander-allergy', name: 'Pet Dander Allergy', path: '/diseases-conditions/allergies/pet-dander-allergy' },
+      { id: 'mold-allergy', name: 'Mold Allergy', path: '/diseases-conditions/allergies/mold-allergy' },
+      { id: 'drug-allergies', name: 'Drug Allergies', path: '/diseases-conditions/allergies/drug-allergies' },
+      { id: 'latex-allergy', name: 'Latex Allergy', path: '/diseases-conditions/allergies/latex-allergy' },
+      { id: 'sinus-allergy', name: 'Sinus Allergy', path: '/diseases-conditions/allergies/sinus-allergy' }
+    ]
+  },
+  'respiratory-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'cold-flu', name: 'Cold & Flu', path: '/diseases-conditions/respiratory-care/cold-flu' },
+      { id: 'cough', name: 'Cough', path: '/diseases-conditions/respiratory-care/cough' },
+      { id: 'asthma', name: 'Asthma', path: '/diseases-conditions/respiratory-care/asthma' },
+      { id: 'bronchitis', name: 'Bronchitis', path: '/diseases-conditions/respiratory-care/bronchitis' },
+      { id: 'sinusitis', name: 'Sinusitis', path: '/diseases-conditions/respiratory-care/sinusitis' },
+      { id: 'sore-throat', name: 'Sore Throat', path: '/diseases-conditions/respiratory-care/sore-throat' }
+    ]
+  },
+  'digestive-health': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'indigestion', name: 'Indigestion', path: '/diseases-conditions/digestive-health/indigestion' },
+      { id: 'gastritis', name: 'Gastritis', path: '/diseases-conditions/digestive-health/gastritis' },
+      { id: 'bloating', name: 'Bloating', path: '/diseases-conditions/digestive-health/bloating' },
+      { id: 'constipation', name: 'Constipation', path: '/diseases-conditions/digestive-health/constipation' },
+      { id: 'diarrhea', name: 'Diarrhea', path: '/diseases-conditions/digestive-health/diarrhea' },
+      { id: 'acidity', name: 'Acidity', path: '/diseases-conditions/digestive-health/acidity' }
+    ]
+  },
+  'skin-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'acne', name: 'Acne', path: '/diseases-conditions/skin-care/acne' },
+      { id: 'eczema', name: 'Eczema', path: '/diseases-conditions/skin-care/eczema' },
+      { id: 'psoriasis', name: 'Psoriasis', path: '/diseases-conditions/skin-care/psoriasis' },
+      { id: 'urticaria', name: 'Urticaria', path: '/diseases-conditions/skin-care/urticaria' },
+      { id: 'fungal-infections', name: 'Fungal Infections', path: '/diseases-conditions/skin-care/fungal-infections' }
+    ]
+  },
+  'mental-health': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'anxiety', name: 'Anxiety', path: '/diseases-conditions/mental-health/anxiety' },
+      { id: 'depression', name: 'Depression', path: '/diseases-conditions/mental-health/depression' },
+      { id: 'insomnia', name: 'Insomnia', path: '/diseases-conditions/mental-health/insomnia' },
+      { id: 'stress', name: 'Stress', path: '/diseases-conditions/mental-health/stress' }
+    ]
+  },
+  'womens-health': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'menstruation', name: 'Menstruation Issues', path: '/diseases-conditions/womens-health/menstruation' },
+      { id: 'menopause', name: 'Menopause', path: '/diseases-conditions/womens-health/menopause' },
+      { id: 'pcos', name: 'PCOS', path: '/diseases-conditions/womens-health/pcos' },
+      { id: 'leucorrhoea', name: 'Leucorrhoea', path: '/diseases-conditions/womens-health/leucorrhoea' }
+    ]
   }
 };
 
