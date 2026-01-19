@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { X, Filter, SlidersHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,8 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
   setPackSizeFilter,
   filterConfig
 }) => {
+  const location = useLocation();
+  
   const togglePotency = (potency: string) => {
     if (potencyFilter.includes(potency)) {
       setPotencyFilter(potencyFilter.filter(p => p !== potency));
@@ -146,6 +149,33 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
               className="w-full"
             />
           </div>
+          
+          {/* Subcategory Navigation for Specialty Categories */}
+          {filterConfig.showSubcategories && filterConfig.subcategories && filterConfig.subcategories.length > 0 && (
+            <div className="mb-4">
+              <h4 className="font-medium text-sm mb-2 text-muted-foreground uppercase tracking-wide">
+                Browse Categories
+              </h4>
+              <nav className="space-y-1 max-h-64 overflow-y-auto">
+                {filterConfig.subcategories.map((sub) => {
+                  const isActive = location.pathname === sub.path;
+                  return (
+                    <Link
+                      key={sub.id}
+                      to={sub.path}
+                      className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
+                        isActive 
+                          ? 'bg-primary text-primary-foreground' 
+                          : 'hover:bg-accent hover:text-accent-foreground'
+                      }`}
+                    >
+                      {sub.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          )}
           
           <Accordion type="multiple" defaultValue={['potency', 'packSize', 'price']} className="w-full">
             {/* Potency Filter - Only show for categories that have potency */}
