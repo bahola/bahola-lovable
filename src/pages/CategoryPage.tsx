@@ -6,7 +6,7 @@ import { CategoryFilters } from '@/components/category/CategoryFilters';
 import { ProductGrid } from '@/components/category/ProductGrid';
 import { formatName, getPageInfo } from '@/utils/productUtils';
 import { useSwellProducts, getSwellProductImage, getSwellDiscountPercentage } from '@/hooks/useSwellProducts';
-
+import { getSwellCategorySlug, getSubcategoryLetter } from '@/config/swellCategoryMapping';
 interface Product {
   id: string;
   title: string;
@@ -49,13 +49,18 @@ const CategoryPage = () => {
 
   // Build Swell query options
   const swellOptions = useMemo(() => {
-    const options: { category?: string; search?: string; limit?: number } = {
-      limit: 50
+    const options: { category?: string; subcategory?: string; search?: string; limit?: number } = {
+      limit: 100 // Increase limit to account for subcategory filtering
     };
     
-    // Map category/concern to Swell category if needed
+    // Map website category slug to Swell category slug
     if (categoryId && categoryId !== 'all-products') {
-      options.category = categoryId;
+      options.category = getSwellCategorySlug(categoryId);
+    }
+    
+    // Extract letter from subcategory for filtering (e.g., 'dil-a' -> 'a')
+    if (subcategoryId) {
+      options.subcategory = getSubcategoryLetter(subcategoryId);
     }
     
     if (debouncedSearchQuery) {
@@ -63,7 +68,7 @@ const CategoryPage = () => {
     }
     
     return options;
-  }, [categoryId, debouncedSearchQuery]);
+  }, [categoryId, subcategoryId, debouncedSearchQuery]);
 
   // Fetch products from Swell
   const { products: swellProducts, loading: isLoading, error } = useSwellProducts(swellOptions);
