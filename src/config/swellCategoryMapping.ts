@@ -270,6 +270,250 @@ export const CATEGORY_FILTER_CONFIG: Record<string, CategoryFilterConfig> = {
       { id: 'pcos', name: 'PCOS', path: '/diseases-conditions/womens-health/pcos' },
       { id: 'leucorrhoea', name: 'Leucorrhoea', path: '/diseases-conditions/womens-health/leucorrhoea' }
     ]
+  },
+  'cancer-support': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'chemotherapy-side-effects', name: 'Chemotherapy Side Effects', path: '/diseases-conditions/cancer-support/chemotherapy-side-effects' },
+      { id: 'radiation-skin-reactions', name: 'Radiation Skin Reactions', path: '/diseases-conditions/cancer-support/radiation-skin-reactions' },
+      { id: 'cancer-related-fatigue', name: 'Cancer-Related Fatigue', path: '/diseases-conditions/cancer-support/cancer-related-fatigue' },
+      { id: 'immune-weakness-cancer-patients', name: 'Immune Weakness', path: '/diseases-conditions/cancer-support/immune-weakness-cancer-patients' },
+      { id: 'loss-of-appetite-cancer', name: 'Loss of Appetite', path: '/diseases-conditions/cancer-support/loss-of-appetite-cancer' },
+      { id: 'mouth-ulcers-cancer-treatment', name: 'Mouth Ulcers', path: '/diseases-conditions/cancer-support/mouth-ulcers-cancer-treatment' },
+      { id: 'lymphedema-support', name: 'Lymphedema Support', path: '/diseases-conditions/cancer-support/lymphedema-support' },
+      { id: 'anxiety-sleep-disorders-cancer', name: 'Anxiety & Sleep Disorders', path: '/diseases-conditions/cancer-support/anxiety-sleep-disorders-cancer' }
+    ]
+  },
+  'heart-health': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'high-blood-pressure', name: 'High Blood Pressure', path: '/diseases-conditions/heart-health/high-blood-pressure' },
+      { id: 'high-cholesterol', name: 'High Cholesterol', path: '/diseases-conditions/heart-health/high-cholesterol' },
+      { id: 'palpitations', name: 'Palpitations', path: '/diseases-conditions/heart-health/palpitations' },
+      { id: 'angina-pectoris', name: 'Angina Pectoris', path: '/diseases-conditions/heart-health/angina-pectoris' },
+      { id: 'poor-circulation', name: 'Poor Circulation', path: '/diseases-conditions/heart-health/poor-circulation' },
+      { id: 'varicose-veins', name: 'Varicose Veins', path: '/diseases-conditions/heart-health/varicose-veins' },
+      { id: 'arrhythmias', name: 'Arrhythmias', path: '/diseases-conditions/heart-health/arrhythmias' },
+      { id: 'post-heart-attack-recovery', name: 'Post-Heart Attack Recovery', path: '/diseases-conditions/heart-health/post-heart-attack-recovery' }
+    ]
+  },
+  'child-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'teething-troubles', name: 'Teething Troubles', path: '/diseases-conditions/child-care/teething-troubles' },
+      { id: 'colic', name: 'Colic', path: '/diseases-conditions/child-care/colic' },
+      { id: 'diaper-rash', name: 'Diaper Rash', path: '/diseases-conditions/child-care/diaper-rash' },
+      { id: 'childhood-constipation', name: 'Childhood Constipation', path: '/diseases-conditions/child-care/childhood-constipation' },
+      { id: 'growth-appetite-issues', name: 'Growth & Appetite Issues', path: '/diseases-conditions/child-care/growth-appetite-issues' },
+      { id: 'bedwetting-enuresis', name: 'Bedwetting', path: '/diseases-conditions/child-care/bedwetting-enuresis' },
+      { id: 'childhood-allergies', name: 'Childhood Allergies', path: '/diseases-conditions/child-care/childhood-allergies' },
+      { id: 'recurrent-colds-cough-children', name: 'Recurrent Colds & Cough', path: '/diseases-conditions/child-care/recurrent-colds-cough-children' },
+      { id: 'worm-infestation', name: 'Worm Infestation', path: '/diseases-conditions/child-care/worm-infestation' },
+      { id: 'temper-tantrums-hyperactivity', name: 'Temper Tantrums / Hyperactivity', path: '/diseases-conditions/child-care/temper-tantrums-hyperactivity' }
+    ]
+  },
+  'ent-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'chronic-rhinitis', name: 'Chronic Rhinitis', path: '/diseases-conditions/ent-care/chronic-rhinitis' },
+      { id: 'earache-otitis-media', name: 'Earache / Otitis Media', path: '/diseases-conditions/ent-care/earache-otitis-media' },
+      { id: 'sinusitis', name: 'Sinusitis', path: '/diseases-conditions/ent-care/sinusitis' },
+      { id: 'tonsillitis', name: 'Tonsillitis', path: '/diseases-conditions/ent-care/tonsillitis' },
+      { id: 'sore-throat', name: 'Sore Throat', path: '/diseases-conditions/ent-care/sore-throat' },
+      { id: 'nasal-polyps', name: 'Nasal Polyps', path: '/diseases-conditions/ent-care/nasal-polyps' },
+      { id: 'nose-bleeds-epistaxis', name: 'Nose Bleeds', path: '/diseases-conditions/ent-care/nose-bleeds-epistaxis' },
+      { id: 'tinnitus', name: 'Tinnitus', path: '/diseases-conditions/ent-care/tinnitus' },
+      { id: 'loss-of-voice-laryngitis', name: 'Loss of Voice / Laryngitis', path: '/diseases-conditions/ent-care/loss-of-voice-laryngitis' }
+    ]
+  },
+  'eye-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'eye-strain-digital-fatigue', name: 'Eye Strain / Digital Fatigue', path: '/diseases-conditions/eye-care/eye-strain-digital-fatigue' },
+      { id: 'dry-eyes', name: 'Dry Eyes', path: '/diseases-conditions/eye-care/dry-eyes' },
+      { id: 'conjunctivitis', name: 'Conjunctivitis', path: '/diseases-conditions/eye-care/conjunctivitis' },
+      { id: 'eye-redness-itching', name: 'Redness & Itching', path: '/diseases-conditions/eye-care/eye-redness-itching' },
+      { id: 'stye-chalazion', name: 'Stye / Chalazion', path: '/diseases-conditions/eye-care/stye-chalazion' },
+      { id: 'vision-weakness', name: 'Vision Weakness', path: '/diseases-conditions/eye-care/vision-weakness' },
+      { id: 'watering-eyes', name: 'Watering Eyes', path: '/diseases-conditions/eye-care/watering-eyes' },
+      { id: 'light-sensitivity', name: 'Light Sensitivity', path: '/diseases-conditions/eye-care/light-sensitivity' }
+    ]
+  },
+  'gut-health': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'acidity-gerd', name: 'Acidity / GERD', path: '/diseases-conditions/gut-health/acidity-gerd' },
+      { id: 'constipation', name: 'Constipation', path: '/diseases-conditions/gut-health/constipation' },
+      { id: 'ibs', name: 'IBS', path: '/diseases-conditions/gut-health/ibs' },
+      { id: 'diarrhoea', name: 'Diarrhoea', path: '/diseases-conditions/gut-health/diarrhoea' },
+      { id: 'bloating-flatulence', name: 'Bloating / Flatulence', path: '/diseases-conditions/gut-health/bloating-flatulence' },
+      { id: 'indigestion', name: 'Indigestion', path: '/diseases-conditions/gut-health/indigestion' },
+      { id: 'gastritis', name: 'Gastritis', path: '/diseases-conditions/gut-health/gastritis' },
+      { id: 'nausea-vomiting', name: 'Nausea / Vomiting', path: '/diseases-conditions/gut-health/nausea-vomiting' },
+      { id: 'loss-of-appetite-gut', name: 'Loss of Appetite', path: '/diseases-conditions/gut-health/loss-of-appetite-gut' },
+      { id: 'worms-gut', name: 'Worms', path: '/diseases-conditions/gut-health/worms-gut' }
+    ]
+  },
+  'hair-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'hair-fall-loss', name: 'Hair Fall / Hair Loss', path: '/diseases-conditions/hair-care/hair-fall-loss' },
+      { id: 'dandruff', name: 'Dandruff', path: '/diseases-conditions/hair-care/dandruff' },
+      { id: 'premature-greying', name: 'Premature Greying', path: '/diseases-conditions/hair-care/premature-greying' },
+      { id: 'scalp-itching-infections', name: 'Scalp Itching / Infections', path: '/diseases-conditions/hair-care/scalp-itching-infections' },
+      { id: 'alopecia-areata', name: 'Alopecia Areata', path: '/diseases-conditions/hair-care/alopecia-areata' },
+      { id: 'thinning-hair', name: 'Thinning Hair', path: '/diseases-conditions/hair-care/thinning-hair' },
+      { id: 'postpartum-hair-fall', name: 'Postpartum Hair Fall', path: '/diseases-conditions/hair-care/postpartum-hair-fall' }
+    ]
+  },
+  'immune-boosters': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'recurrent-colds-cough', name: 'Recurrent Colds & Cough', path: '/diseases-conditions/immune-boosters/recurrent-colds-cough' },
+      { id: 'frequent-infections', name: 'Frequent Infections', path: '/diseases-conditions/immune-boosters/frequent-infections' },
+      { id: 'low-energy-levels', name: 'Low Energy Levels', path: '/diseases-conditions/immune-boosters/low-energy-levels' },
+      { id: 'post-illness-recovery', name: 'Post-Illness Recovery', path: '/diseases-conditions/immune-boosters/post-illness-recovery' },
+      { id: 'general-weakness', name: 'General Weakness', path: '/diseases-conditions/immune-boosters/general-weakness' },
+      { id: 'convalescence-remedies', name: 'Convalescence Remedies', path: '/diseases-conditions/immune-boosters/convalescence-remedies' },
+      { id: 'childrens-immunity-drops', name: "Children's Immunity", path: '/diseases-conditions/immune-boosters/childrens-immunity-drops' },
+      { id: 'elderly-immune-support', name: 'Elderly Immune Support', path: '/diseases-conditions/immune-boosters/elderly-immune-support' }
+    ]
+  },
+  'infection-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'bacterial-infections', name: 'Bacterial Infections', path: '/diseases-conditions/infection-care/bacterial-infections' },
+      { id: 'viral-infections', name: 'Viral Infections', path: '/diseases-conditions/infection-care/viral-infections' },
+      { id: 'fungal-infections', name: 'Fungal Infections', path: '/diseases-conditions/infection-care/fungal-infections' },
+      { id: 'skin-infections', name: 'Skin Infections', path: '/diseases-conditions/infection-care/skin-infections' },
+      { id: 'ear-sinus-infections', name: 'Ear & Sinus Infections', path: '/diseases-conditions/infection-care/ear-sinus-infections' },
+      { id: 'recurrent-fevers', name: 'Recurrent Fevers', path: '/diseases-conditions/infection-care/recurrent-fevers' },
+      { id: 'fever-with-chills', name: 'Fever with Chills', path: '/diseases-conditions/infection-care/fever-with-chills' }
+    ]
+  },
+  'lifestyle-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'general-weakness', name: 'General Weakness', path: '/diseases-conditions/lifestyle-care/general-weakness' },
+      { id: 'convalescence-remedies', name: 'Convalescence Remedies', path: '/diseases-conditions/lifestyle-care/convalescence-remedies' }
+    ]
+  },
+  'muscle-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'joint-pain-arthritis', name: 'Joint Pain & Arthritis', path: '/diseases-conditions/muscle-care/joint-pain-arthritis' }
+    ]
+  },
+  'nutritive-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'weight-management', name: 'Weight Management', path: '/diseases-conditions/nutritive-care/weight-management' }
+    ]
+  },
+  'pain-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'headaches-migraines', name: 'Headaches & Migraines', path: '/diseases-conditions/pain-care/headaches-migraines' }
+    ]
+  },
+  'reproductive-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'breast-tenderness', name: 'Breast Tenderness', path: '/diseases-conditions/reproductive-care/breast-tenderness' },
+      { id: 'fibroids-supportive', name: 'Fibroids Support', path: '/diseases-conditions/reproductive-care/fibroids-supportive' }
+    ]
+  },
+  'tooth-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'dental-problems', name: 'Dental Problems', path: '/diseases-conditions/tooth-care/dental-problems' }
+    ]
+  },
+  'urology-care': {
+    showPotency: false,
+    showPackSize: false,
+    showType: false,
+    potencyOptions: [],
+    packSizeOptions: [],
+    showSubcategories: true,
+    subcategories: [
+      { id: 'urinary-tract-infections', name: 'Urinary Tract Infections', path: '/diseases-conditions/urology-care/urinary-tract-infections' }
+    ]
   }
 };
 
