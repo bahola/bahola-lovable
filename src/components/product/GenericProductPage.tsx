@@ -371,6 +371,17 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                   <p className="text-lg italic text-[hsl(var(--generic-sage))] mt-2">{product.latinName}</p>
                 )}
                 
+                {/* Show "From ₹X" for Mother Tinctures */}
+                {shouldHidePotency && product.variations?.length > 0 && (() => {
+                  const prices = product.variations.map((v: Variation) => v.price).filter((p: number) => p > 0);
+                  const lowestPrice = prices.length > 0 ? Math.min(...prices) : 0;
+                  return lowestPrice > 0 ? (
+                    <p className="text-xl font-semibold text-[hsl(var(--generic-forest))] mt-2">
+                      From ₹{lowestPrice.toFixed(2)}
+                    </p>
+                  ) : null;
+                })()}
+                
                 {/* Rating */}
                 <div className="flex items-center gap-3 mt-3">
                   <div className="flex items-center gap-0.5">
