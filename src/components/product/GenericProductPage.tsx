@@ -110,12 +110,18 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
         ? swellProduct.categories[0]?.slug
         : (swellProduct.categories as any)?.results?.[0]?.slug || '',
       variations: getVariantsArray(swellProduct.variants).map((v: any) => {
-        const parts = v.name?.split(',').map((s: string) => s.trim()) || [];
+        const variantName = v.name || '';
+        // Check if variant name contains comma (potency, pack_size format)
+        const parts = variantName.split(',').map((s: string) => s.trim());
+        
+        // Determine if this is a pack-size-only variant (e.g., "30ml", "100ml")
+        const isPackSizeOnly = /^\d+\s*(ml|g|gm|kg|l|oz)$/i.test(variantName);
+        
         return {
           id: v.id,
-          potency: parts[0] || v.name,
-          pack_size: parts[1] || '',
-          price: v.price || swellProduct.price,
+          potency: isPackSizeOnly ? '' : (parts[0] || variantName),
+          pack_size: isPackSizeOnly ? variantName : (parts[1] || variantName),
+          price: v.price || swellProduct.price || 0,
           stock: v.stock_level ?? 100
         };
       }),
@@ -144,12 +150,27 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
   // Check if this category should hide potency
   const shouldHidePotency = useMemo(() => {
     if (!product) return false;
+    
+    // Check by category name/slug
     const rawCat = product.rawCategory?.toLowerCase() || '';
     const displayCat = product.category.toLowerCase();
     const slug = product.categorySlug?.toLowerCase() || '';
-    return POTENCY_EXCLUDED_CATEGORIES.some(c => 
+    const hasCategoryMatch = POTENCY_EXCLUDED_CATEGORIES.some(c => 
       rawCat.includes(c) || displayCat.includes(c) || slug.includes(c)
     );
+    
+    if (hasCategoryMatch) return true;
+    
+    // Also check if product name ends with "Q" (Mother Tincture indicator)
+    // or if all variations have no potency (only pack sizes)
+    const productName = product.name?.toLowerCase() || '';
+    const isMTByName = productName.endsWith(' q') || productName.includes(' q ');
+    
+    // Check if variations only have pack sizes (no potencies)
+    const hasOnlyPackSizes = product.variations?.length > 0 && 
+      product.variations.every((v: Variation) => !v.potency || v.potency.trim() === '');
+    
+    return isMTByName || hasOnlyPackSizes;
   }, [product]);
 
   // Extract unique potencies and pack sizes
@@ -395,19 +416,32 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                     Select Pack Size
                   </label>
                   <div className="flex flex-wrap gap-3">
-                    {packSizes.map((packSize) => (
-                      <button
-                        key={packSize}
-                        onClick={() => setSelectedPackSize(packSize)}
-                        className={`px-5 py-3 rounded-lg border-2 font-semibold text-sm transition-all duration-200 min-w-[80px] ${
-                          selectedPackSize === packSize
-                            ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
-                            : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
-                        }`}
-                      >
-                        {packSize}
-                      </button>
-                    ))}
+                    {packSizes.map((packSize) => {
+                      // Find the price for this pack size
+                      const packVariation = product?.variations?.find((v: Variation) => 
+                        v.pack_size === packSize && (shouldHidePotency || v.potency === selectedPotency)
+                      );
+                      const packPrice = packVariation?.price || 0;
+                      
+                      return (
+                        <button
+                          key={packSize}
+                          onClick={() => setSelectedPackSize(packSize)}
+                          className={`px-5 py-3 rounded-lg border-2 font-semibold text-sm transition-all duration-200 min-w-[100px] flex flex-col items-center ${
+                            selectedPackSize === packSize
+                              ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
+                              : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
+                          }`}
+                        >
+                          <span>{packSize}</span>
+                          {packPrice > 0 && (
+                            <span className={`text-xs mt-1 ${selectedPackSize === packSize ? 'text-white/80' : 'text-[hsl(var(--generic-sage))]'}`}>
+                              ₹{packPrice}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
