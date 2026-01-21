@@ -416,32 +416,19 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                     Select Pack Size
                   </label>
                   <div className="flex flex-wrap gap-3">
-                    {packSizes.map((packSize) => {
-                      // Find the price for this pack size
-                      const packVariation = product?.variations?.find((v: Variation) => 
-                        v.pack_size === packSize && (shouldHidePotency || v.potency === selectedPotency)
-                      );
-                      const packPrice = packVariation?.price || 0;
-                      
-                      return (
-                        <button
-                          key={packSize}
-                          onClick={() => setSelectedPackSize(packSize)}
-                          className={`px-5 py-3 rounded-lg border-2 font-semibold text-sm transition-all duration-200 min-w-[100px] flex flex-col items-center ${
-                            selectedPackSize === packSize
-                              ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white'
-                              : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
-                          }`}
-                        >
-                          <span>{packSize}</span>
-                          {packPrice > 0 && (
-                            <span className={`text-xs mt-1 ${selectedPackSize === packSize ? 'text-white/80' : 'text-[hsl(var(--generic-sage))]'}`}>
-                              ₹{packPrice}
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
+                    {packSizes.map((packSize) => (
+                      <button
+                        key={packSize}
+                        onClick={() => setSelectedPackSize(packSize)}
+                        className={`px-5 py-3 rounded-lg border-2 font-semibold text-sm transition-all duration-200 min-w-[80px] ${
+                          selectedPackSize === packSize
+                            ? 'bg-[hsl(var(--generic-forest))] border-[hsl(var(--generic-forest))] text-white ring-2 ring-[hsl(var(--generic-gold))] ring-offset-2'
+                            : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
+                        }`}
+                      >
+                        {packSize}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
