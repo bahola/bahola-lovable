@@ -67,7 +67,7 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
   };
 
   const totalActiveFilters = potencyFilter.length + packSizeFilter.length + 
-    (priceRange[0] > 100 || priceRange[1] < 5000 ? 1 : 0);
+    (priceRange[0] > 0 || priceRange[1] < 5000 ? 1 : 0);
 
   return (
     <>
@@ -274,9 +274,9 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({
               <AccordionContent>
                 <div className="px-2 pt-2">
                   <Slider
-                    defaultValue={[100, 5000]}
+                    defaultValue={[0, 5000]}
                     max={5000}
-                    min={100}
+                    min={0}
                     step={50}
                     value={priceRange}
                     onValueChange={setPriceRange}
