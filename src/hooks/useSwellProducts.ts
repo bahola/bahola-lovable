@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { swell } from '@/integrations/swell/client';
+import { getSwellSubcategorySlug, getSubcategoryLetter } from '@/config/swellCategoryMapping';
 
 export interface SwellProduct {
   id: string;
@@ -79,7 +80,16 @@ export const useSwellProducts = (options?: {
           params.page = String(memoizedOptions.page);
         }
 
-        if (memoizedOptions.category) {
+        // Check if we should use Swell subcategory directly
+        const swellSubcategory = memoizedOptions.category && memoizedOptions.subcategory 
+          ? getSwellSubcategorySlug(memoizedOptions.category, memoizedOptions.subcategory)
+          : null;
+        
+        if (swellSubcategory) {
+          // Use Swell subcategory directly (e.g., 'mt-a' for Mother Tinctures > A)
+          params.category = swellSubcategory;
+          console.log(`Using Swell subcategory: ${swellSubcategory}`);
+        } else if (memoizedOptions.category) {
           params.category = memoizedOptions.category;
         }
 
@@ -93,9 +103,9 @@ export const useSwellProducts = (options?: {
         
         let fetchedProducts = result?.results || [];
         
-        // If subcategory is provided, filter products by first letter of name
-        if (memoizedOptions.subcategory) {
-          const letter = memoizedOptions.subcategory.toLowerCase();
+        // If subcategory is provided but no Swell subcategory mapping exists, filter by first letter
+        if (memoizedOptions.subcategory && !swellSubcategory) {
+          const letter = getSubcategoryLetter(memoizedOptions.subcategory);
           fetchedProducts = fetchedProducts.filter((product: SwellProduct) => 
             product.name.toLowerCase().startsWith(letter)
           );

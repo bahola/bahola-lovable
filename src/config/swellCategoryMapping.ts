@@ -73,7 +73,80 @@ export const getSubcategoryLetter = (subcategorySlug: string): string => {
   if (subcategorySlug.startsWith('dil-')) {
     return subcategorySlug.replace('dil-', '').toLowerCase();
   }
+  if (subcategorySlug.startsWith('mt-')) {
+    return subcategorySlug.replace('mt-', '').toLowerCase();
+  }
   return subcategorySlug.toLowerCase();
+};
+
+// Maps website subcategory slugs to Swell subcategory slugs
+// For categories with alphabetical subcategories in Swell
+export const SWELL_SUBCATEGORY_MAP: Record<string, Record<string, string>> = {
+  'mother-tinctures': {
+    'a': 'mt-a',
+    'b': 'mt-b',
+    'c': 'mt-c',
+    'd': 'mt-d',
+    'e': 'mt-e',
+    'f': 'mt-f',
+    'g': 'mt-g',
+    'h': 'mt-h',
+    'i': 'mt-i',
+    'j': 'mt-j',
+    'k': 'mt-k',
+    'l': 'mt-l',
+    'm': 'mt-m',
+    'n': 'mt-n',
+    'o': 'mt-o',
+    'p': 'mt-p',
+    'q': 'mt-q',
+    'r': 'mt-r',
+    's': 'mt-s',
+    't': 'mt-t',
+    'u': 'mt-u',
+    'v': 'mt-v',
+    'w': 'mt-w',
+    'x': 'mt-x',
+    'y': 'mt-y',
+    'z': 'mt-z',
+  },
+  'dilutions': {
+    'a': 'dil-a',
+    'b': 'dil-b',
+    'c': 'dil-c',
+    'd': 'dil-d',
+    'e': 'dil-e',
+    'f': 'dil-f',
+    'g': 'dil-g',
+    'h': 'dil-h',
+    'i': 'dil-i',
+    'j': 'dil-j',
+    'k': 'dil-k',
+    'l': 'dil-l',
+    'm': 'dil-m',
+    'n': 'dil-n',
+    'o': 'dil-o',
+    'p': 'dil-p',
+    'q': 'dil-q',
+    'r': 'dil-r',
+    's': 'dil-s',
+    't': 'dil-t',
+    'u': 'dil-u',
+    'v': 'dil-v',
+    'w': 'dil-w',
+    'x': 'dil-x',
+    'y': 'dil-y',
+    'z': 'dil-z',
+  },
+};
+
+// Get Swell subcategory slug from website category and subcategory
+export const getSwellSubcategorySlug = (categorySlug: string, subcategorySlug: string): string | null => {
+  const categoryMap = SWELL_SUBCATEGORY_MAP[categorySlug];
+  if (categoryMap && categoryMap[subcategorySlug.toLowerCase()]) {
+    return categoryMap[subcategorySlug.toLowerCase()];
+  }
+  return null;
 };
 
 // Get Swell category slug from website category slug
