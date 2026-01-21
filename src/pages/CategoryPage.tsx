@@ -31,7 +31,7 @@ const CategoryPage = () => {
   
   const location = useLocation();
   const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
-  const [priceRange, setPriceRange] = React.useState([100, 5000]);
+  const [priceRange, setPriceRange] = React.useState([0, 5000]);
   const [showFilters, setShowFilters] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
@@ -59,7 +59,7 @@ const CategoryPage = () => {
   useEffect(() => {
     setPotencyFilter([]);
     setPackSizeFilter([]);
-    setPriceRange([100, 5000]);
+    setPriceRange([0, 5000]);
   }, [categoryId, subcategoryId]);
   
   // Determine if we're viewing a category or concern page
@@ -169,7 +169,7 @@ const CategoryPage = () => {
   // Clear all filters
   const clearFilters = () => {
     setActiveFilters([]);
-    setPriceRange([100, 5000]);
+    setPriceRange([0, 5000]);
     setSearchQuery('');
     setPotencyFilter([]);
     setPackSizeFilter([]);
