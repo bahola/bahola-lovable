@@ -85,10 +85,10 @@ export const useSwellProducts = (options?: {
           ? getSwellSubcategorySlug(memoizedOptions.category, memoizedOptions.subcategory)
           : null;
         
+        // First try with Swell subcategory if available
         if (swellSubcategory) {
-          // Use Swell subcategory directly (e.g., 'mt-a' for Mother Tinctures > A)
           params.category = swellSubcategory;
-          console.log(`Using Swell subcategory: ${swellSubcategory}`);
+          console.log(`Trying Swell subcategory: ${swellSubcategory}`);
         } else if (memoizedOptions.category) {
           params.category = memoizedOptions.category;
         }
@@ -98,10 +98,27 @@ export const useSwellProducts = (options?: {
         }
 
         console.log('Fetching Swell products with params:', params);
-        const result: any = await swell.products.list(params);
+        let result: any = await swell.products.list(params);
         console.log('Swell products result:', result);
         
         let fetchedProducts = result?.results || [];
+        
+        // If subcategory fetch returned 0 results, fall back to parent category + name filter
+        if (swellSubcategory && fetchedProducts.length === 0 && memoizedOptions.category) {
+          console.log(`Subcategory ${swellSubcategory} returned 0 results, falling back to parent category with name filter`);
+          params.category = memoizedOptions.category;
+          result = await swell.products.list(params);
+          fetchedProducts = result?.results || [];
+          
+          // Filter by first letter of product name
+          if (memoizedOptions.subcategory) {
+            const letter = getSubcategoryLetter(memoizedOptions.subcategory);
+            fetchedProducts = fetchedProducts.filter((product: SwellProduct) => 
+              product.name.toLowerCase().startsWith(letter)
+            );
+            console.log(`Filtered by first letter '${letter}':`, fetchedProducts.length, 'products');
+          }
+        }
         
         // If subcategory is provided but no Swell subcategory mapping exists, filter by first letter
         if (memoizedOptions.subcategory && !swellSubcategory) {
