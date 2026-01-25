@@ -14,9 +14,9 @@ interface CategoryProduct {
 
 const CATEGORY_CONFIG = [
   { key: 'mother-tinctures', label: 'Mother Tincture', swellCategory: 'mother-tinctures' },
-  { key: 'dilutions', label: 'Dilutions', swellCategory: 'dilutions' },
-  { key: 'bio-chemics', label: 'Bio Chemics', swellCategory: 'bio-combination' },
-  { key: 'specialty', label: 'Specialty', swellCategory: 'specialty' },
+  { key: 'dilutions', label: 'Dilutions', swellCategory: 'homeopathic-dilutions' },
+  { key: 'bio-chemics', label: 'Bio Chemics', swellCategory: 'biochemic-medicines' },
+  { key: 'specialty', label: 'Specialty', swellCategory: 'speciality-products' },
   { key: 'bach-flower', label: 'Bach Flower', swellCategory: 'bach-flower-remedies' },
 ];
 
