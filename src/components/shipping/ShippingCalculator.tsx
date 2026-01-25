@@ -93,37 +93,9 @@ const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({
 
         {shippingZone && shippingRate && checkPincode && !loading && !error && (
           <div className="space-y-2 bg-green-50 p-3 rounded">
-            <div className="flex justify-between text-sm">
-              <span className="text-bahola-neutral-600">Delivery Zone:</span>
-              <span className="font-medium">{shippingZone.name}</span>
-            </div>
-            
-            <div className="flex justify-between text-sm">
-              <span className="text-bahola-neutral-600">Total Weight:</span>
-              <span className="font-medium">{totalWeight}g</span>
-            </div>
-            
-            <div className="flex justify-between text-sm">
-              <span className="text-bahola-neutral-600">Base Rate ({shippingRate.base_weight_grams}g):</span>
-              <span className="font-medium">₹{shippingRate.base_price}</span>
-            </div>
-            
-            {totalWeight > shippingRate.base_weight_grams && (
-              <div className="flex justify-between text-sm">
-                <span className="text-bahola-neutral-600">
-                  Additional ({totalWeight - shippingRate.base_weight_grams}g):
-                </span>
-                <span className="font-medium">
-                  ₹{shippingCost - shippingRate.base_price}
-                </span>
-              </div>
-            )}
-            
-            <div className="border-t pt-2 mt-2">
-              <div className="flex justify-between font-semibold">
-                <span>Shipping Cost:</span>
-                <span className="text-bahola-blue-600">₹{shippingCost}</span>
-              </div>
+            <div className="flex justify-between font-semibold">
+              <span>Shipping Cost:</span>
+              <span className="text-bahola-blue-600">₹{shippingCost}</span>
             </div>
             
             <div className="text-xs text-bahola-neutral-500">
