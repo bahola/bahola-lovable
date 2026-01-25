@@ -48,8 +48,14 @@ const Checkout = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Contact Information */}
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-6 border-b">
+              <div className="p-6 border-b flex justify-between items-center">
                 <h2 className="text-xl font-bold">Contact Information</h2>
+                <p className="text-sm text-bahola-neutral-600">
+                  Already have an account?{' '}
+                  <Link to="/login" className="text-bahola-blue-500 hover:underline font-medium">
+                    Log in
+                  </Link>
+                </p>
               </div>
               
               <div className="p-6 space-y-4">
@@ -72,6 +78,26 @@ const Checkout = () => {
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input id="phone" required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="gstin" className="text-bahola-neutral-600">
+                    Have GSTIN Number? (optional)
+                  </Label>
+                  <Input 
+                    id="gstin" 
+                    placeholder="Enter 15-digit GSTIN"
+                    maxLength={15}
+                  />
+                </div>
+
+                <div className="pt-2">
+                  <Link 
+                    to="/promo-pocket" 
+                    className="text-bahola-blue-500 hover:underline text-sm flex items-center"
+                  >
+                    Have a coupon? Visit Promo Pocket →
+                  </Link>
                 </div>
               </div>
             </div>
