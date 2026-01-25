@@ -73,11 +73,19 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const addItem = async (productId: string, quantity: number = 1, options?: any) => {
     try {
-      await swell.cart.addItem({
+      console.log('[SwellCart] Adding item:', { productId, quantity, options });
+      
+      const itemPayload = {
         product_id: productId,
         quantity,
         ...options
-      });
+      };
+      
+      console.log('[SwellCart] Item payload:', itemPayload);
+      
+      const result = await swell.cart.addItem(itemPayload);
+      
+      console.log('[SwellCart] Add item result:', result);
       
       await refreshCart();
       
@@ -86,10 +94,10 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         description: 'Item added to cart'
       });
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error('[SwellCart] Error adding to cart:', error);
       toast({
         title: 'Error',
-        description: 'Failed to add item to cart',
+        description: error instanceof Error ? error.message : 'Failed to add item to cart',
         variant: 'destructive'
       });
     }
