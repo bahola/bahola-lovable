@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { ChevronRight, Heart, Share2 } from 'lucide-react';
+import { ChevronRight, Heart, Share2, Minus, Plus } from 'lucide-react';
 import { parseProductContent } from '@/utils/parseProductContent';
 import { PageLayout } from '@/components/PageLayout';
 import { useToast } from '@/hooks/use-toast';
@@ -493,6 +493,33 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                   ₹{currentPrice.toFixed(2)}
                 </div>
                 <p className="text-sm text-[hsl(var(--generic-sage))] mt-1">MRP inclusive of all taxes</p>
+              </div>
+
+              {/* Quantity Selector */}
+              <div>
+                <label className="block font-semibold text-sm text-[hsl(var(--generic-charcoal))] uppercase tracking-wide mb-3">
+                  Quantity
+                </label>
+                <div className="inline-flex items-center bg-white border-2 border-[hsl(var(--generic-sand))] rounded-lg">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                    className="p-3 hover:bg-[hsl(var(--generic-cream))] disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-l-lg"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus className="w-5 h-5 text-[hsl(var(--generic-charcoal))]" />
+                  </button>
+                  <span className="px-6 py-3 font-semibold text-lg text-[hsl(var(--generic-charcoal))] min-w-[60px] text-center border-x-2 border-[hsl(var(--generic-sand))]">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="p-3 hover:bg-[hsl(var(--generic-cream))] transition-colors rounded-r-lg"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus className="w-5 h-5 text-[hsl(var(--generic-charcoal))]" />
+                  </button>
+                </div>
               </div>
 
               {/* CTA Buttons */}
