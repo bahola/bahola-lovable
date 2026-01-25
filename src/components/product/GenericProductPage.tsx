@@ -269,11 +269,16 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
   // Use original HTML for description but strip Key Benefits section
   const safeDescription = useMemo(() => {
     if (!product?.description) return '';
-    // Remove Key Benefits section from HTML (table containing Key Benefits text)
-    const html = product.description;
-    const keyBenefitsPattern = /<table[^>]*>[\s\S]*?Key\s*Benefits[\s\S]*?<\/table>/gi;
-    const cleanedHtml = html.replace(keyBenefitsPattern, '').trim();
-    return DOMPurify.sanitize(cleanedHtml);
+    let html = product.description;
+    
+    // Remove the table that contains "Key Benefits" text
+    // Match table elements that specifically contain "Key Benefits" as header text
+    html = html.replace(/<table[^>]*>[\s\S]*?<td[^>]*>[\s\S]*?Key\s*Benefits[\s\S]*?<\/td>[\s\S]*?<\/table>/gi, '');
+    
+    // Also clean up any trailing &nbsp; or <br> tags
+    html = html.replace(/(&nbsp;|\s)*<br\s*\/?>\s*(&nbsp;|\s)*$/gi, '').trim();
+    
+    return DOMPurify.sanitize(html);
   }, [product?.description]);
 
   // Get benefits from parsed content with fallback
