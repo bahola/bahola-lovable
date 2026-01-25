@@ -207,6 +207,10 @@ class SwellClient {
     get: async () => {
       return this.request('/cart');
     },
+    recover: async (checkoutId: string) => {
+      // Recover a cart session using checkout_id
+      return this.request(`/cart?checkout_id=${checkoutId}`);
+    },
     addItem: async (item: any) => {
       return this.request('/cart/items', {
         method: 'POST',
