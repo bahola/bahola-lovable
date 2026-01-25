@@ -16,12 +16,11 @@ const Checkout = () => {
   const [shippingCost, setShippingCost] = useState(0);
   const [shippingZone, setShippingZone] = useState<string>('');
   const [pincode, setPincode] = useState('');
-  const { items, getSubtotal, getTotalTax } = useCart();
+  const { items, getSubtotal } = useCart();
   
-  // Calculate order summary using cart methods
+  // Calculate order summary - MRP is tax-inclusive
   const subtotal = getSubtotal();
-  const tax = getTotalTax();
-  const total = subtotal + shippingCost + tax;
+  const total = subtotal + shippingCost;
 
   const handleShippingUpdate = (cost: number, zone?: string) => {
     setShippingCost(cost);
@@ -219,14 +218,14 @@ const Checkout = () => {
                     <span>{shippingCost === 0 ? 'Calculate above' : `₹${shippingCost}`}</span>
                   </div>
                   
-                  <div className="flex justify-between">
-                    <span>Tax (GST)</span>
-                    <span>₹{Math.round(tax)}</span>
-                  </div>
-                  
-                  <div className="border-t pt-4 mt-4 flex justify-between font-bold">
-                    <span>Total</span>
-                    <span>₹{Math.round(total)}</span>
+                  <div className="border-t pt-4 mt-4">
+                    <div className="flex justify-between font-bold">
+                      <span>Total</span>
+                      <span>₹{Math.round(total)}</span>
+                    </div>
+                    <p className="text-bahola-neutral-500 text-xs mt-1">
+                      (MRP inclusive of GST{shippingCost > 0 ? ' + Shipping' : ''})
+                    </p>
                   </div>
                 </div>
               </div>
@@ -274,10 +273,6 @@ const Checkout = () => {
                   <span>{shippingCost === 0 ? 'Calculate above' : `₹${shippingCost}`}</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Tax (GST)</span>
-                  <span>₹{Math.round(tax)}</span>
-                </div>
               </div>
               
               <div className="border-t pt-4 mt-4">
@@ -285,6 +280,9 @@ const Checkout = () => {
                   <span>Total</span>
                   <span>₹{Math.round(total)}</span>
                 </div>
+                <p className="text-bahola-neutral-500 text-xs mt-1">
+                  (MRP inclusive of GST{shippingCost > 0 ? ' + Shipping' : ''})
+                </p>
               </div>
               
               <div className="mt-6 bg-green-50 p-4 rounded-lg flex items-start">

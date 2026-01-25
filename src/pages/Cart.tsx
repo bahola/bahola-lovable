@@ -8,13 +8,12 @@ import { useCart } from '@/contexts/CartAdapter';
 import ShippingCalculator from '@/components/shipping/ShippingCalculator';
 
 const Cart = () => {
-  const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice, getSubtotal, getTotalTax } = useCart();
+  const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice, getSubtotal } = useCart();
   const [shippingCost, setShippingCost] = useState(0);
   const [shippingZone, setShippingZone] = useState<string>('');
   
   const subtotal = getSubtotal();
-  const tax = getTotalTax();
-  const total = subtotal + shippingCost + tax;
+  const total = subtotal + shippingCost; // MRP is tax-inclusive
 
   const handleShippingUpdate = (cost: number, zone?: string) => {
     setShippingCost(cost);
@@ -149,18 +148,13 @@ const Cart = () => {
                   </span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Tax (GST)</span>
-                  <span className="font-medium">₹{Math.round(tax)}</span>
-                </div>
-                
                 <div className="border-t pt-4 mt-4">
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
                     <span>₹{Math.round(total)}</span>
                   </div>
                   <p className="text-bahola-neutral-500 text-xs mt-1">
-                    (Including GST {shippingCost > 0 ? '& Shipping' : ''})
+                    (MRP inclusive of GST{shippingCost > 0 ? ' + Shipping' : ''})
                   </p>
                 </div>
                 
