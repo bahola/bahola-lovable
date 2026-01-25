@@ -11,6 +11,9 @@ import ProductNotFound from '@/components/product/ProductNotFound';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Check, Award, Package, Star } from 'lucide-react';
+import YouMayAlsoNeed from '@/components/product/YouMayAlsoNeed';
+import RecentlyViewedSection from '@/components/product/RecentlyViewedSection';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 
 // Categories that should NOT show potency selection (only pack sizes)
 const POTENCY_EXCLUDED_CATEGORIES = [
@@ -63,6 +66,7 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
   const [selectedPackSize, setSelectedPackSize] = useState<string | null>(null);
   const { toast } = useToast();
   const { addToCart } = useCart();
+  const { addToRecentlyViewed } = useRecentlyViewed();
   
   // Only fetch if no product was passed
   const { product: fetchedProduct, loading, error } = useSwellProduct(passedProduct ? undefined : productSlug);
@@ -204,6 +208,20 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
       setSelectedPackSize(packSizes[0]);
     }
   }, [potencies, packSizes, selectedPotency, selectedPackSize, shouldHidePotency]);
+
+  // Track recently viewed products
+  useEffect(() => {
+    if (product) {
+      addToRecentlyViewed({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        slug: product.slug,
+        category: product.category
+      });
+    }
+  }, [product?.id]);
 
   // Find matching variation
   const selectedVariation = useMemo(() => {
@@ -548,6 +566,12 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
           </div>
         </div>
       </div>
+
+      {/* You May Also Need Section */}
+      <YouMayAlsoNeed currentProductId={product.id} />
+
+      {/* Recently Viewed Section */}
+      <RecentlyViewedSection currentProductId={product.id} />
     </PageLayout>
   );
 };
