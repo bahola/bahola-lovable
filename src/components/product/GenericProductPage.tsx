@@ -245,6 +245,19 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
     if (!product) return;
     
     try {
+      // If the product has variants, Swell requires a specific variant selection.
+      // We pass the Swell variant_id to ensure the selected potency/pack size is used.
+      const cartOptions = selectedVariation?.id ? { variant_id: selectedVariation.id } : undefined;
+
+      if (product.variations?.length > 0 && !cartOptions) {
+        toast({
+          title: 'Select an option',
+          description: 'Please select the pack size/potency before adding to cart.',
+          variant: 'destructive'
+        });
+        return;
+      }
+
       addToCart({
         id: String(product.id),
         name: displayProductName,
@@ -252,7 +265,7 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
         image: product.image || '/placeholder.svg',
         taxStatus: 'taxable',
         taxClass: '5'
-      }, quantity);
+      }, quantity, cartOptions);
       
       toast({
         title: "Added to cart",
