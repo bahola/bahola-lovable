@@ -91,12 +91,25 @@ const Checkout = () => {
                   />
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-2 space-y-2">
+                  <Label htmlFor="coupon" className="text-bahola-neutral-600">
+                    Have a coupon code?
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      id="coupon" 
+                      placeholder="Enter coupon code"
+                      className="flex-1"
+                    />
+                    <Button type="button" variant="outline" size="sm">
+                      Apply
+                    </Button>
+                  </div>
                   <Link 
                     to="/promo-pocket" 
-                    className="text-bahola-blue-500 hover:underline text-sm flex items-center"
+                    className="text-bahola-blue-500 hover:underline text-xs"
                   >
-                    Have a coupon? Visit Promo Pocket →
+                    Browse available coupons in Promo Pocket →
                   </Link>
                 </div>
               </div>
