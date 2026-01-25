@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { ChevronRight } from 'lucide-react';
+import { parseProductContent } from '@/utils/parseProductContent';
 import { PageLayout } from '@/components/PageLayout';
 import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/contexts/CartAdapter';
@@ -129,14 +130,8 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
           stock: v.stock_level ?? 100
         };
       }),
-      benefits: content?.benefits || [
-        'Effective relief from bruises, sprains, and muscle soreness',
-        'Reduces swelling and inflammation naturally',
-        'Accelerates healing of injuries and trauma',
-        'Relieves shock and trauma following accidents',
-        'Helps with post-surgical recovery',
-        'Safe for all age groups when used as directed'
-      ],
+      // Parse description to extract benefits
+      parsedContent: parseProductContent(swellProduct.description),
       dosage: content?.dosage || `Adults: 10-15 drops in water, 3 times daily or as directed by physician.\n\nChildren: 5-10 drops in water, 3 times daily or as directed by physician.\n\nTake 30 minutes before or after meals. For acute conditions, may be taken every 2-3 hours.`,
       safetyInfo: content?.safety_info || [
         'Read the label carefully before use',
@@ -271,11 +266,26 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
     }
   };
 
-  // Sanitize description
+  // Use parsed description for display
   const safeDescription = useMemo(() => {
-    if (!product?.description) return '';
-    return DOMPurify.sanitize(product.description);
-  }, [product?.description]);
+    if (!product?.parsedContent?.description) return '';
+    return DOMPurify.sanitize(product.parsedContent.description);
+  }, [product?.parsedContent?.description]);
+
+  // Get benefits from parsed content with fallback
+  const displayBenefits = useMemo(() => {
+    const parsed = product?.parsedContent?.benefits;
+    if (parsed && parsed.length > 0) return parsed;
+    // Fallback if no benefits parsed
+    return [
+      'Effective relief from bruises, sprains, and muscle soreness',
+      'Reduces swelling and inflammation naturally',
+      'Accelerates healing of injuries and trauma',
+      'Relieves shock and trauma following accidents',
+      'Helps with post-surgical recovery',
+      'Safe for all age groups when used as directed'
+    ];
+  }, [product?.parsedContent?.benefits]);
 
   // Loading state
   if (isLoading) {
@@ -518,7 +528,7 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                     </AccordionTrigger>
                     <AccordionContent>
                       <ul className="space-y-3 pt-2">
-                        {product.benefits.map((benefit: string, index: number) => (
+                        {displayBenefits.map((benefit: string, index: number) => (
                           <li key={index} className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-[hsl(var(--generic-gold))] flex-shrink-0 mt-0.5" />
                             <span className="text-[hsl(var(--generic-charcoal))]">{benefit}</span>
