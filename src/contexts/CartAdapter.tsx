@@ -50,10 +50,10 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
   // Transform Swell items to match the old cart format
   const items: CartItem[] = swellItems.map(item => ({
     id: item.product_id,
-    name: item.product.name,
+    name: item.product?.name || 'Unknown Product',
     price: item.price,
     quantity: item.quantity,
-    image: item.product.image || '/placeholder.svg',
+    image: item.product?.image || '/placeholder.svg',
     originalPrice: undefined,
     discountPercentage: undefined,
     taxStatus: 'taxable' as const,
