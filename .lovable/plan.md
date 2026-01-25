@@ -1,140 +1,267 @@
 
-
-## Fix Key Benefits Parsing and Column Width
+## Set Up Add to Cart and Wishlist Functionality with Swell Integration
 
 ### Overview
 
-Two issues need to be fixed:
-1. **Key Benefits not parsing correctly** - Swell returns HTML content, not plain text. The current parser looks for `#Key Benefits` but Swell has `Key Benefits` inside a table cell with HTML entities.
-2. **Column width too narrow** - Swell's HTML contains inline `width="64"` on table elements causing narrow text rendering.
+This implementation will:
+1. **Fix Add to Cart** - Ensure variant selection is properly passed to Swell's cart API
+2. **Create Wishlist functionality** - Store Swell product IDs in Supabase and display on Wishlist page
+3. **Add Wishlist button** - Add "Add to Wishlist" and "Share" buttons to the product page
+4. **Update "My List" link** - Ensure the TopBar "My List" link navigates to the wishlist
 
 ---
 
-### Root Cause Analysis
+### Current State Analysis
 
-**Swell returns HTML like this:**
-```html
-<table width="64">
-  <td>Abelmoschus esculentus Mother Tincture delivers...</td>
-</table>
-<br>
-<table width="64">
-  <td>Key Benefits<br>
-    &bull; Classical support for digestive support...
-    <br>&bull; Natural properties support...
-  </td>
-</table>
-```
+| Component | Current Status | Issue |
+|-----------|---------------|-------|
+| **Cart** | Working via `SwellCartContext` → `CartAdapter` | Minor - needs variant ID support |
+| **Wishlist Table** | Supabase `wishlist` with UUID `product_id` | Incompatible - Swell IDs are strings |
+| **Wishlist Page** | Fetches from Supabase `products` table | Wrong - needs to fetch from Swell |
+| **TopBar "My List"** | Links to `/my-list` → `Wishlist` page | Working - routes exist |
+| **Product Page** | No wishlist button | Missing functionality |
 
-**Current parser expects:**
-```
-Description text here...
+---
 
-#Key Benefits
-• Benefit 1
-• Benefit 2
+### Database Change Required
+
+The current `wishlist.product_id` column is UUID type, but Swell product IDs are strings like `"6970e051b00d0400114eca0d"`. We need to:
+
+1. **Create a new `swell_wishlist` table** (cleaner than altering the existing table used by Supabase products)
+
+```sql
+CREATE TABLE public.swell_wishlist (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,  -- Swell customer ID or email
+  product_id TEXT NOT NULL,  -- Swell product ID
+  product_name TEXT,  -- Cached for display
+  product_image TEXT,  -- Cached for display  
+  product_price NUMERIC(10,2),  -- Cached for display
+  added_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, product_id)
+);
+
+-- RLS Policies
+ALTER TABLE public.swell_wishlist ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own wishlist"
+  ON public.swell_wishlist FOR SELECT
+  USING (true);  -- We'll filter by user_id in the app since auth is Swell-based
+
+CREATE POLICY "Users can add to their wishlist"
+  ON public.swell_wishlist FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "Users can remove from their wishlist"
+  ON public.swell_wishlist FOR DELETE
+  USING (true);
 ```
 
 ---
 
-### Solution
+### Implementation Plan
 
-#### Step 1: Update the Parser Utility
+#### Step 1: Create Swell Wishlist Hook
 
-Modify `src/utils/parseProductContent.ts` to:
-- Strip HTML tags before parsing
-- Look for "Key Benefits" marker (without the `#` prefix)
-- Handle HTML entities like `&bull;` as bullet points
-- Handle `<br>` tags as line separators
+**New File:** `src/hooks/useSwellWishlist.ts`
 
-#### Step 2: Fix Column Width
+This hook will:
+- Add/remove products to/from the `swell_wishlist` table
+- Check if a product is in the wishlist
+- Fetch all wishlist items for the current user
 
-Modify `src/components/product/GenericProductPage.tsx` to:
-- Add CSS to override inline table widths from Swell HTML
-- Add `[&_table]:!w-full [&_table_td]:!w-full` to the description container
-
----
-
-### Technical Implementation
-
-**File 1: `src/utils/parseProductContent.ts`**
-
-Update the parser to handle HTML content:
 ```typescript
-export function parseProductContent(rawDescription: string | undefined | null): ParsedProductContent {
-  if (!rawDescription || typeof rawDescription !== 'string') {
-    return { description: '', benefits: [] };
-  }
+export const useSwellWishlist = () => {
+  const { user, isAuthenticated } = useSwellAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Convert HTML to plain text for parsing
-  // Replace <br> tags with newlines
-  let plainText = rawDescription
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/&bull;/g, '•')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&mdash;/g, '—')
-    .replace(/<[^>]*>/g, '')  // Strip all HTML tags
-    .trim();
+  const userId = user?.email || user?.id;
 
-  // Split on "Key Benefits" marker (case-insensitive, with or without #)
-  const keyBenefitsMarker = /#?\s*Key\s*Benefits/i;
-  const parts = plainText.split(keyBenefitsMarker);
-  
-  // Main description is everything before Key Benefits
-  const descriptionPart = parts[0]?.trim() || '';
-  
-  // Benefits are everything after Key Benefits
-  const benefitsPart = parts[1] || '';
-  
-  // Extract bullet points
-  const benefits = benefitsPart
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line.startsWith('•') || line.startsWith('-') || line.startsWith('*'))
-    .map(line => line.replace(/^[•\-*]\s*/, '').trim())
-    .filter(line => line.length > 0);
+  // Query wishlist items
+  const { data: wishlistItems, isLoading } = useQuery({
+    queryKey: ['swell-wishlist', userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data } = await supabase
+        .from('swell_wishlist')
+        .select('*')
+        .eq('user_id', userId)
+        .order('added_at', { ascending: false });
+      return data || [];
+    },
+    enabled: !!userId
+  });
 
-  return { description: descriptionPart, benefits };
-}
+  // Add to wishlist
+  const addToWishlist = async (product: SwellProduct) => {
+    if (!isAuthenticated || !userId) {
+      toast({ title: "Please login", description: "..." });
+      return false;
+    }
+    // Check if already in wishlist, then insert
+    // Invalidate query cache on success
+  };
+
+  // Remove from wishlist
+  const removeFromWishlist = async (productId: string) => { ... };
+
+  // Check if in wishlist
+  const isInWishlist = (productId: string) => {
+    return wishlistItems?.some(item => item.product_id === productId) || false;
+  };
+
+  return { wishlistItems, isLoading, addToWishlist, removeFromWishlist, isInWishlist };
+};
 ```
 
-**File 2: `src/components/product/GenericProductPage.tsx`**
+#### Step 2: Add Wishlist Button to Product Page
 
-Fix the description container to override inline widths:
+**File:** `src/components/product/GenericProductPage.tsx`
+
+Add secondary action buttons below the CTA buttons:
+
 ```tsx
-<div 
-  className="text-[hsl(var(--generic-charcoal))] leading-relaxed prose prose-sm max-w-none [&_table]:!w-full [&_table]:!table-auto [&_td]:!w-auto"
-  dangerouslySetInnerHTML={{ __html: safeDescription }}
-/>
+{/* CTA Buttons */}
+<div className="flex gap-4">
+  <button onClick={handleAddToCart}>Add to Cart</button>
+  <button onClick={handleBuyNow}>Buy Now</button>
+</div>
+
+{/* Secondary Actions - NEW */}
+<div className="flex gap-4 pt-4">
+  <button onClick={handleAddToWishlist} className="...">
+    <Heart className={isInWishlist ? "fill-current" : ""} />
+    {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
+  </button>
+  <button onClick={handleShare} className="...">
+    <Share2 />
+    Share
+  </button>
+</div>
 ```
 
-Also update `safeDescription` to use the original HTML (for formatting) but strip the Key Benefits section:
-```typescript
-const safeDescription = useMemo(() => {
-  if (!product?.description) return '';
-  // Remove Key Benefits section from the HTML
-  const html = product.description;
-  const keyBenefitsPattern = /<table[^>]*>.*?Key\s*Benefits.*?<\/table>/is;
-  const cleanedHtml = html.replace(keyBenefitsPattern, '').trim();
-  return DOMPurify.sanitize(cleanedHtml);
-}, [product?.description]);
+#### Step 3: Rewrite Wishlist Page for Swell Products
+
+**File:** `src/pages/Wishlist.tsx`
+
+The page will:
+1. Use `useSwellWishlist` hook to get wishlist items
+2. Display cached product info from `swell_wishlist` table
+3. Optionally refresh product details from Swell API
+4. Use `useCart` hook (Swell cart) for Add to Cart
+
+```tsx
+const WishlistPage = () => {
+  const { wishlistItems, isLoading, removeFromWishlist } = useSwellWishlist();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (item: WishlistItem) => {
+    addToCart({
+      id: item.product_id,
+      name: item.product_name,
+      price: item.product_price,
+      image: item.product_image || '/placeholder.svg'
+    }, 1);
+    toast({ title: "Added to cart" });
+  };
+
+  // Render wishlist grid with cached product info
+};
 ```
+
+#### Step 4: Verify TopBar "My List" Link
+
+**File:** `src/components/header/TopBar.tsx`
+
+The existing link is correct:
+```tsx
+<Link to="/my-list" className="top-menu-item flex items-center space-x-1">
+  <Heart size={14} />
+  <span>My List</span>
+</Link>
+```
+
+The route `/my-list` correctly maps to the Wishlist page in `AppRoutes.tsx`.
 
 ---
+
+### Files to Create
+
+| File | Purpose |
+|------|---------|
+| `src/hooks/useSwellWishlist.ts` | Wishlist CRUD operations using Supabase + Swell auth |
 
 ### Files to Modify
 
 | File | Changes |
 |------|---------|
-| `src/utils/parseProductContent.ts` | Handle HTML content, convert entities, strip tags |
-| `src/components/product/GenericProductPage.tsx` | Override table widths, clean HTML for description display |
+| `src/components/product/GenericProductPage.tsx` | Add wishlist + share buttons, import hook |
+| `src/pages/Wishlist.tsx` | Rewrite to use `useSwellWishlist` and `useCart` |
+| `src/contexts/CartAdapter.tsx` | Add variant options support to `addToCart` |
+
+### Database Changes
+
+| Table | Action |
+|-------|--------|
+| `swell_wishlist` | CREATE new table for Swell product wishlist |
 
 ---
 
-### Expected Result
+### Data Flow
 
-After implementation:
-- **Product Description**: Shows only the main description paragraph (no Key Benefits section)
-- **Key Benefits Accordion**: Shows parsed bullet points from Swell data
-- **Layout**: Full-width text, no narrow columns from Swell's inline styles
+```text
+PRODUCT PAGE                           WISHLIST PAGE
+┌─────────────────────┐                ┌─────────────────────┐
+│  Add to Wishlist    │                │  My List            │
+│         │           │                │         │           │
+└─────────┼───────────┘                └─────────┼───────────┘
+          │                                      │
+          ▼                                      ▼
+┌─────────────────────┐                ┌─────────────────────┐
+│  useSwellWishlist   │◄──────────────►│  useSwellWishlist   │
+│  • addToWishlist()  │                │  • wishlistItems    │
+│  • isInWishlist()   │                │  • removeFromWishlist│
+└─────────┼───────────┘                └─────────┼───────────┘
+          │                                      │
+          ▼                                      ▼
+┌─────────────────────┐                ┌─────────────────────┐
+│  Supabase           │                │  useCart (Swell)    │
+│  swell_wishlist     │                │  • addToCart()      │
+│  table              │                │                     │
+└─────────────────────┘                └─────────────────────┘
+```
 
+---
+
+### Technical Notes
+
+**Why a new `swell_wishlist` table?**
+- The existing `wishlist` table uses UUID for `product_id` (linked to Supabase products)
+- Swell product IDs are 24-character strings
+- A separate table avoids breaking existing functionality and allows caching product info
+
+**Cart Variant Support:**
+The `CartAdapter.addToCart` will pass variant options through to Swell:
+```typescript
+// Current signature
+addToCart(item, quantity)
+
+// Updated to support options
+addToCart(item, quantity, options)
+// Where options = { variant_id: "selected-variant-id" }
+```
+
+**Share Functionality:**
+Uses the Web Share API with fallback to clipboard:
+```typescript
+const handleShare = async () => {
+  if (navigator.share) {
+    await navigator.share({ title, text, url });
+  } else {
+    await navigator.clipboard.writeText(url);
+    toast({ title: "Link copied!" });
+  }
+};
+```
