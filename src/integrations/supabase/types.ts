@@ -720,6 +720,36 @@ export type Database = {
         }
         Relationships: []
       }
+      swell_wishlist: {
+        Row: {
+          added_at: string | null
+          id: string
+          product_id: string
+          product_image: string | null
+          product_name: string | null
+          product_price: number | null
+          user_id: string
+        }
+        Insert: {
+          added_at?: string | null
+          id?: string
+          product_id: string
+          product_image?: string | null
+          product_name?: string | null
+          product_price?: number | null
+          user_id: string
+        }
+        Update: {
+          added_at?: string | null
+          id?: string
+          product_id?: string
+          product_image?: string | null
+          product_name?: string | null
+          product_price?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       website_pages: {
         Row: {
           content: string
