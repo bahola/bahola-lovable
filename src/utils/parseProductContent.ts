@@ -24,14 +24,25 @@ export function parseProductContent(rawDescription: string | undefined | null): 
     };
   }
 
-  // Split on #Key Benefits marker (case-insensitive)
-  const keyBenefitsMarker = /#Key\s*Benefits/i;
-  const parts = rawDescription.split(keyBenefitsMarker);
+  // Convert HTML to plain text for parsing
+  // Replace <br> tags with newlines
+  let plainText = rawDescription
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/&bull;/g, '•')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&mdash;/g, '—')
+    .replace(/&amp;/g, '&')
+    .replace(/<[^>]*>/g, '')  // Strip all HTML tags
+    .trim();
+
+  // Split on "Key Benefits" marker (case-insensitive, with or without #)
+  const keyBenefitsMarker = /#?\s*Key\s*Benefits/i;
+  const parts = plainText.split(keyBenefitsMarker);
   
-  // Main description is everything before #Key Benefits
+  // Main description is everything before Key Benefits
   const descriptionPart = parts[0]?.trim() || '';
   
-  // Benefits are everything after #Key Benefits
+  // Benefits are everything after Key Benefits
   const benefitsPart = parts[1] || '';
   
   // Extract bullet points from benefits section

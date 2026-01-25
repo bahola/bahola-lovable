@@ -266,11 +266,15 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
     }
   };
 
-  // Use parsed description for display
+  // Use original HTML for description but strip Key Benefits section
   const safeDescription = useMemo(() => {
-    if (!product?.parsedContent?.description) return '';
-    return DOMPurify.sanitize(product.parsedContent.description);
-  }, [product?.parsedContent?.description]);
+    if (!product?.description) return '';
+    // Remove Key Benefits section from HTML (table containing Key Benefits text)
+    const html = product.description;
+    const keyBenefitsPattern = /<table[^>]*>[\s\S]*?Key\s*Benefits[\s\S]*?<\/table>/gi;
+    const cleanedHtml = html.replace(keyBenefitsPattern, '').trim();
+    return DOMPurify.sanitize(cleanedHtml);
+  }, [product?.description]);
 
   // Get benefits from parsed content with fallback
   const displayBenefits = useMemo(() => {
@@ -509,7 +513,7 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                   </h2>
                   {safeDescription ? (
                     <div 
-                      className="text-[hsl(var(--generic-charcoal))] leading-relaxed prose prose-sm max-w-none"
+                      className="text-[hsl(var(--generic-charcoal))] leading-relaxed prose prose-sm max-w-none [&_table]:!w-full [&_table]:!table-auto [&_td]:!w-auto"
                       dangerouslySetInnerHTML={{ __html: safeDescription }}
                     />
                   ) : (
