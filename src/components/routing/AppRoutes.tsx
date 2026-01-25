@@ -38,6 +38,7 @@ import {
   HealthConcerns,
   Sitemap,
   Cart,
+  Checkout,
   Wishlist,
   OrderTracking,
   Reviews,
@@ -142,6 +143,7 @@ const AppRoutes = () => {
         
         {/* Cart and user-related pages */}
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/my-list" element={<Wishlist />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/track-order" element={<OrderTracking />} />

@@ -37,6 +37,7 @@ export const DoctorSchedule = React.lazy(() => import('@/pages/DoctorSchedule'))
 export const HealthConcerns = React.lazy(() => import('@/pages/HealthConcerns'));
 export const Sitemap = React.lazy(() => import('@/pages/Sitemap'));
 export const Cart = React.lazy(() => import('@/pages/Cart'));
+export const Checkout = React.lazy(() => import('@/pages/Checkout'));
 export const Wishlist = React.lazy(() => import('@/pages/Wishlist'));
 export const OrderTracking = React.lazy(() => import('@/pages/OrderTracking'));
 export const Reviews = React.lazy(() => import('@/pages/Reviews'));
