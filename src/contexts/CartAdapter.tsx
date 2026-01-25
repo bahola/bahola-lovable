@@ -17,7 +17,15 @@ interface CartContextType {
   items: CartItem[];
   itemCount: number;
   totalAmount: number;
-  addToCart: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
+  addToCart: (
+    item: Omit<CartItem, 'quantity'>,
+    quantity?: number,
+    options?: {
+      variant_id?: string;
+      option_value_ids?: string[];
+      options?: Record<string, any>;
+    }
+  ) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
@@ -52,12 +60,31 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
     taxClass: '5' as const
   }));
 
-  const addToCart = (item: Omit<CartItem, 'quantity'>, quantity: number = 1) => {
-    addItem(item.id, quantity, {
-      name: item.name,
-      price: item.price,
-      image: item.image
-    });
+  // Swell Frontend API is strict about what can be sent when adding cart items.
+  // Do NOT send custom fields like name/price/image or Swell will reject the request.
+  const sanitizeCartOptions = (options?: {
+    variant_id?: string;
+    option_value_ids?: string[];
+    options?: Record<string, any>;
+  }) => {
+    if (!options) return undefined;
+    const cleaned: Record<string, any> = {};
+    if (typeof options.variant_id === 'string') cleaned.variant_id = options.variant_id;
+    if (Array.isArray(options.option_value_ids)) cleaned.option_value_ids = options.option_value_ids;
+    if (options.options && typeof options.options === 'object') cleaned.options = options.options;
+    return Object.keys(cleaned).length ? cleaned : undefined;
+  };
+
+  const addToCart = (
+    item: Omit<CartItem, 'quantity'>,
+    quantity: number = 1,
+    options?: {
+      variant_id?: string;
+      option_value_ids?: string[];
+      options?: Record<string, any>;
+    }
+  ) => {
+    addItem(item.id, quantity, sanitizeCartOptions(options));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
