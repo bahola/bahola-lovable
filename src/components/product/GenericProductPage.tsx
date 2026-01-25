@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Heart, Share2 } from 'lucide-react';
 import { parseProductContent } from '@/utils/parseProductContent';
 import { PageLayout } from '@/components/PageLayout';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +15,7 @@ import { Check, Award, Package, Star } from 'lucide-react';
 import YouMayAlsoNeed from '@/components/product/YouMayAlsoNeed';
 import RecentlyViewedSection from '@/components/product/RecentlyViewedSection';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
+import { useSwellWishlist } from '@/hooks/useSwellWishlist';
 
 // Categories that should NOT show potency selection (only pack sizes)
 const POTENCY_EXCLUDED_CATEGORIES = [
@@ -68,6 +69,7 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
   const { toast } = useToast();
   const { addToCart } = useCart();
   const { addToRecentlyViewed } = useRecentlyViewed();
+  const { isInWishlist, toggleWishlist } = useSwellWishlist();
   
   // Only fetch if no product was passed
   const { product: fetchedProduct, loading, error } = useSwellProduct(passedProduct ? undefined : productSlug);
@@ -496,6 +498,61 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                   className="flex-1 bg-white text-[hsl(var(--generic-forest))] py-4 px-6 rounded-lg font-semibold uppercase tracking-wide text-sm border-2 border-[hsl(var(--generic-forest))] transition-all duration-200 hover:bg-[hsl(var(--generic-cream))]"
                 >
                   Buy Now
+                </button>
+              </div>
+
+              {/* Secondary Actions - Wishlist & Share */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    if (product) {
+                      toggleWishlist({
+                        id: product.id,
+                        name: product.name,
+                        price: currentPrice,
+                        image: product.image
+                      });
+                    }
+                  }}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium text-sm transition-all duration-200 border-2 ${
+                    product && isInWishlist(product.id)
+                      ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
+                      : 'bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))]'
+                  }`}
+                >
+                  <Heart 
+                    size={18} 
+                    className={product && isInWishlist(product.id) ? 'fill-current' : ''} 
+                  />
+                  {product && isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
+                </button>
+                <button
+                  onClick={async () => {
+                    const shareData = {
+                      title: product?.name || 'Check out this product',
+                      text: `Check out ${product?.name} at Bahola Labs`,
+                      url: window.location.href
+                    };
+                    
+                    try {
+                      if (navigator.share) {
+                        await navigator.share(shareData);
+                      } else {
+                        await navigator.clipboard.writeText(window.location.href);
+                        toast({
+                          title: "Link copied!",
+                          description: "Product link has been copied to clipboard."
+                        });
+                      }
+                    } catch (error) {
+                      // User cancelled share or error occurred
+                      console.log('Share cancelled or failed');
+                    }
+                  }}
+                  className="flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium text-sm border-2 bg-white border-[hsl(var(--generic-sand))] text-[hsl(var(--generic-charcoal))] hover:border-[hsl(var(--generic-sage))] hover:bg-[hsl(var(--generic-cream))] transition-all duration-200"
+                >
+                  <Share2 size={18} />
+                  Share
                 </button>
               </div>
 

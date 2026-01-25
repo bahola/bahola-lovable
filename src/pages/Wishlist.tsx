@@ -1,124 +1,42 @@
-
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Trash2, ShoppingCart } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Trash2, ShoppingCart, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSwellWishlist, WishlistItem } from '@/hooks/useSwellWishlist';
+import { useCart } from '@/contexts/CartAdapter';
+import { useSwellAuth } from '@/contexts/SwellAuthContext';
 
 const WishlistPage = () => {
-  const [wishlistItems, setWishlistItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { wishlistItems, isLoading, removeFromWishlist } = useSwellWishlist();
+  const { addToCart } = useCart();
+  const { isAuthenticated } = useSwellAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/login', { state: { from: '/wishlist', message: 'Please login to view your wishlist' } });
-        return;
-      }
-      setUser(session.user);
-    };
-    
-    checkUser();
-  }, [navigate]);
-
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      if (!user) return;
-      
-      try {
-        setLoading(true);
-        
-        const { data, error } = await supabase
-          .from('wishlist')
-          .select(`
-            *,
-            products(
-              id, name, price, image, type,
-              product_variations(*)
-            )
-          `)
-          .eq('user_id', user.id);
-          
-        if (error) {
-          throw error;
-        }
-        
-        console.log('Fetched wishlist data:', data);
-        setWishlistItems(data || []);
-      } catch (error) {
-        console.error('Error fetching wishlist:', error);
-        toast({
-          title: "Failed to load wishlist",
-          description: "There was an error loading your wishlist items.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    if (user) {
-      fetchWishlist();
-    }
-  }, [user, toast]);
-
-  const handleRemoveFromWishlist = async (productId: string) => {
-    try {
-      const { error } = await supabase
-        .from('wishlist')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('product_id', productId);
-        
-      if (error) throw error;
-      
-      setWishlistItems(wishlistItems.filter(item => item.product_id !== productId));
-      
-      toast({
-        title: "Item removed",
-        description: "The item has been removed from your wishlist.",
-      });
-    } catch (error) {
-      console.error('Error removing item from wishlist:', error);
-      toast({
-        title: "Error",
-        description: "Failed to remove the item from your wishlist.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleAddToCart = (product: any) => {
-    const currentCart = JSON.parse(localStorage.getItem('bahola_cart') || '[]');
-    const existingItem = currentCart.find((item: any) => item.id === product.id);
-    
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      currentCart.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: 1
-      });
-    }
-    
-    localStorage.setItem('bahola_cart', JSON.stringify(currentCart));
+  const handleAddToCart = (item: WishlistItem) => {
+    addToCart({
+      id: item.product_id,
+      name: item.product_name || 'Product',
+      price: item.product_price || 0,
+      image: item.product_image || '/placeholder.svg',
+      taxStatus: 'taxable',
+      taxClass: '5'
+    }, 1);
     
     toast({
       title: "Added to cart",
-      description: `${product.name} has been added to your cart.`
+      description: `${item.product_name} has been added to your cart.`
     });
   };
 
-  if (loading) {
+  const handleRemove = async (productId: string) => {
+    await removeFromWishlist(productId);
+  };
+
+  // Loading state
+  if (isLoading) {
     return (
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-6">My Wishlist</h1>
@@ -139,8 +57,22 @@ const WishlistPage = () => {
     );
   }
 
-  if (!user) {
-    return null;
+  // Not logged in
+  if (!isAuthenticated) {
+    return (
+      <div className="container py-8">
+        <div className="text-center py-12">
+          <Heart className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+          <h1 className="text-3xl font-bold mb-4">My Wishlist</h1>
+          <p className="text-lg text-muted-foreground mb-6">
+            Please log in to view your wishlist
+          </p>
+          <Button onClick={() => navigate('/login', { state: { from: '/my-list' } })}>
+            Log In
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -149,52 +81,58 @@ const WishlistPage = () => {
       
       {wishlistItems.length === 0 ? (
         <div className="text-center py-12">
+          <Heart className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
           <p className="text-lg text-muted-foreground mb-4">Your wishlist is empty</p>
-          <Button onClick={() => navigate('/')}>Continue Shopping</Button>
+          <Button onClick={() => navigate('/shop')}>Continue Shopping</Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {wishlistItems.map(item => {
-            const product = item.products;
-            return (
-              <div key={item.id} className="border rounded-lg overflow-hidden">
-                <div className="relative">
+          {wishlistItems.map(item => (
+            <div key={item.id} className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+              <Link to={`/product/${item.product_id}`} className="block">
+                <div className="relative aspect-square bg-gray-50">
                   <img 
-                    src={product.image || '/placeholder.svg'} 
-                    alt={product.name} 
-                    className="w-full h-48 object-contain p-4"
+                    src={item.product_image || '/placeholder.svg'} 
+                    alt={item.product_name || 'Product'} 
+                    className="w-full h-full object-contain p-4"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-medium text-lg mb-1">{product.name}</h3>
-                  <p className="text-bahola-blue-600 font-bold mb-4">₹{product.price}</p>
+              </Link>
+              <div className="p-4">
+                <Link to={`/product/${item.product_id}`}>
+                  <h3 className="font-medium text-lg mb-1 hover:text-primary transition-colors line-clamp-2">
+                    {item.product_name || 'Product'}
+                  </h3>
+                </Link>
+                <p className="text-primary font-bold mb-4">
+                  ₹{(item.product_price || 0).toFixed(2)}
+                </p>
+                
+                <div className="flex justify-between gap-2">
+                  <Button 
+                    variant="default" 
+                    className="flex-1 flex items-center justify-center gap-2"
+                    onClick={() => handleAddToCart(item)}
+                  >
+                    <ShoppingCart size={16} />
+                    Add to Cart
+                  </Button>
                   
-                  <div className="flex justify-between">
-                    <Button 
-                      variant="default" 
-                      className="flex items-center gap-2"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      <ShoppingCart size={16} />
-                      Add to Cart
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="text-red-500"
-                      onClick={() => handleRemoveFromWishlist(product.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => handleRemove(item.product_id)}
+                  >
+                    <Trash2 size={16} />
+                  </Button>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>
