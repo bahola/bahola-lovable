@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useCart } from '@/contexts/CartContext';
+import { useCart } from '@/contexts/CartAdapter';
 import { shippingService, ShippingZone, ShippingRate } from '@/services/shippingService';
 
 export const useShippingCalculation = (pincode?: string) => {
