@@ -1,59 +1,115 @@
 
 
-## Fix "You May Also Need" and "Recently Viewed" Sections on Product Page
+## Parse Product Description into Accordion Sections
 
-### Problem Identified
+### Overview
 
-The "You May Also Need" section is stuck showing loading skeletons because the Swell category slugs used in the component don't match the actual category slugs in the Swell store.
-
-**Current slugs in `YouMayAlsoNeed.tsx`:**
-- `dilutions` → Should be `homeopathic-dilutions`
-- `bio-combination` → Should be `biochemic-medicines`  
-- `specialty` → Should be `speciality-products`
-
-**The "Recently Viewed" section is working correctly** - it doesn't appear on the first product viewed because there's no history yet. It will show products once you've browsed multiple items.
+Your Swell Description field contains combined content that needs to be split into separate UI sections. We'll parse the `#Key Benefits` section from the description while **keeping the Dosage & Directions unchanged** (using the current default text).
 
 ---
 
-### Solution
+### Current Data Flow
 
-#### Step 1: Update Category Slugs in YouMayAlsoNeed Component
-
-Update `src/components/product/YouMayAlsoNeed.tsx` to use the correct Swell category slugs from the mapping file:
-
-```javascript
-const CATEGORY_CONFIG = [
-  { key: 'mother-tinctures', label: 'Mother Tincture', swellCategory: 'mother-tinctures' },
-  { key: 'dilutions', label: 'Dilutions', swellCategory: 'homeopathic-dilutions' },
-  { key: 'bio-chemics', label: 'Bio Chemics', swellCategory: 'biochemic-medicines' },
-  { key: 'specialty', label: 'Specialty', swellCategory: 'speciality-products' },
-  { key: 'bach-flower', label: 'Bach Flower', swellCategory: 'bach-flower-remedies' },
-];
+```text
+SWELL DESCRIPTION FIELD
+┌─────────────────────────────────────────────────────────────────┐
+│  "Abelmoschus esculentus Mother Tincture delivers..."          │
+│  "...Dosage: 5-10 drops in water, 2-3 times daily..."          │
+│                                                                 │
+│  #Key Benefits                                                  │
+│  • Classical support for digestive support                      │
+│  • Natural properties support mucilage properties relief        │
+│  • Supports digestive system health and balance                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │  PARSE LOGIC    │
+                    └─────────────────┘
+                              │
+          ┌───────────────────┴───────────────────┐
+          ▼                                       ▼
+┌─────────────────────────┐          ┌─────────────────────────┐
+│  DESCRIPTION SECTION    │          │  KEY BENEFITS ACCORDION │
+│                         │          │                         │
+│  Text before "#Key      │          │  • Bullet 1             │
+│  Benefits" marker       │          │  • Bullet 2             │
+│                         │          │  • Bullet 3             │
+└─────────────────────────┘          └─────────────────────────┘
+                                      
+        ┌─────────────────────────┐
+        │  DOSAGE ACCORDION       │
+        │  (NO CHANGE)            │
+        │                         │
+        │  Current default text:  │
+        │  "Adults: 10-15 drops   │
+        │   in water..."          │
+        └─────────────────────────┘
 ```
 
-#### Step 2: Add Error Handling and Loading Timeout
+---
 
-Improve the component to handle cases where some categories might be empty or the API takes too long:
+### What Will Be Parsed
 
-- Add a timeout to prevent infinite loading states
-- Show partial results even if some categories fail to load
-- Add console logging for debugging API responses
+| Content | Source | Action |
+|---------|--------|--------|
+| **Description** | Text before `#Key Benefits` | Extract and display |
+| **Key Benefits** | Bullet points after `#Key Benefits` | Extract into array |
+| **Dosage & Directions** | Current default | **Keep as-is (no change)** |
+| **Safety Information** | Current default | Keep as-is |
+
+---
+
+### Implementation Steps
+
+#### Step 1: Create Content Parser Utility
+
+Create `src/utils/parseProductContent.ts` with a function that:
+- Splits the description by the `#Key Benefits` marker
+- Extracts the main description (text before the marker)
+- Parses bullet points (lines starting with `•` or `-`) into an array
+- Returns structured data with `description` and `benefits`
+
+#### Step 2: Update GenericProductPage Component
+
+Modify `src/components/product/GenericProductPage.tsx` to:
+- Import and call the parser on `swellProduct.description`
+- Use parsed description for the Product Description section
+- Use parsed benefits array for the Key Benefits accordion
+- **Keep current fallback for Dosage & Directions** (lines 140-141)
 
 ---
 
 ### Technical Details
 
+**Files to create:**
+- `src/utils/parseProductContent.ts`
+
 **Files to modify:**
-- `src/components/product/YouMayAlsoNeed.tsx` - Fix category slugs and improve error handling
+- `src/components/product/GenericProductPage.tsx`
 
-**How it works:**
-1. The Swell API expects specific category slugs like `homeopathic-dilutions` not `dilutions`
-2. When the wrong slug is used, Swell returns empty results
-3. Currently, if all 5 category fetches return empty, the component shows loading skeletons indefinitely
-4. After the fix, products will load correctly from each category
+**Parser Logic:**
+```javascript
+// Split on #Key Benefits marker
+const [descriptionPart, benefitsPart] = description.split('#Key Benefits');
 
-**Expected behavior after fix:**
-- "You May Also Need" shows 1 product from each of the 5 categories
-- "Recently Viewed" appears after viewing 2+ products (excluding current product)
-- Both sections appear above the footer on all generic category product pages
+// Extract bullets from benefits section
+const benefits = benefitsPart
+  .split('\n')
+  .filter(line => line.trim().startsWith('•') || line.trim().startsWith('-'))
+  .map(line => line.replace(/^[•-]\s*/, '').trim());
+```
+
+---
+
+### Expected Result
+
+After implementation:
+- **Description section**: Shows the paragraph text about the product (before `#Key Benefits`)
+- **Key Benefits accordion**: Shows parsed bullet points from your Swell data
+- **Dosage accordion**: Continues showing the current default text:
+  > "Adults: 10-15 drops in water, 3 times daily..."
+- **Safety Information**: Continues showing the current default list
+
+This allows you to customize the description and benefits per product while maintaining consistent dosage instructions across all Mother Tinctures.
 
