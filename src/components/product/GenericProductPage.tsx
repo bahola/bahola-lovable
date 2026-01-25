@@ -266,20 +266,11 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
     }
   };
 
-  // Use original HTML for description but strip Key Benefits section
+  // Render Product Description from parsed plain-text (more reliable than Swell's pasted HTML tables)
   const safeDescription = useMemo(() => {
-    if (!product?.description) return '';
-    let html = product.description;
-    
-    // Remove the table that contains "Key Benefits" text
-    // Match table elements that specifically contain "Key Benefits" as header text
-    html = html.replace(/<table[^>]*>[\s\S]*?<td[^>]*>[\s\S]*?Key\s*Benefits[\s\S]*?<\/td>[\s\S]*?<\/table>/gi, '');
-    
-    // Also clean up any trailing &nbsp; or <br> tags
-    html = html.replace(/(&nbsp;|\s)*<br\s*\/?>\s*(&nbsp;|\s)*$/gi, '').trim();
-    
-    return DOMPurify.sanitize(html);
-  }, [product?.description]);
+    const text = product?.parsedContent?.description || '';
+    return DOMPurify.sanitize(text).trim();
+  }, [product?.parsedContent?.description]);
 
   // Get benefits from parsed content with fallback
   const displayBenefits = useMemo(() => {
@@ -517,10 +508,9 @@ const GenericProductPage: React.FC<GenericProductPageProps> = ({ swellProduct: p
                     Product Description
                   </h2>
                   {safeDescription ? (
-                    <div 
-                      className="text-[hsl(var(--generic-charcoal))] leading-relaxed prose prose-sm max-w-none [&_table]:!w-full [&_table]:!table-auto [&_td]:!w-auto"
-                      dangerouslySetInnerHTML={{ __html: safeDescription }}
-                    />
+                    <p className="text-[hsl(var(--generic-charcoal))] leading-relaxed whitespace-pre-line">
+                      {safeDescription}
+                    </p>
                   ) : (
                     <p className="text-[hsl(var(--generic-charcoal))] leading-relaxed">
                       {product.name} is a premier homeopathic remedy trusted by families for generations. Bahola's formulation delivers consistent results in managing various health conditions naturally.
