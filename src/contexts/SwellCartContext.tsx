@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { swell } from '@/integrations/swell/client';
+import { CART_SESSION_KEY } from '@/integrations/swell/cartSession';
 import { useToast } from '@/hooks/use-toast';
-
-const CART_SESSION_KEY = 'swell_checkout_id';
 
 interface CartItem {
   id: string;

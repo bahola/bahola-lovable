@@ -1,4 +1,6 @@
 // Swell API client wrapper with enhanced error handling
+import { withCheckoutId } from './cartSession';
+
 const SWELL_STORE_ID = 'baholalabs';
 const SWELL_PUBLIC_KEY = 'pk_7r06gV1fCa7kPbg1mSFTtetIZTI6qaC7';
 const SWELL_API_URL = `https://${SWELL_STORE_ID}.swell.store/api`;
@@ -205,59 +207,60 @@ class SwellClient {
 
   cart = {
     get: async () => {
-      return this.request('/cart');
+      // Prefer using checkout_id when browsers block 3rd-party cookies
+      return this.request(withCheckoutId('/cart'));
     },
     recover: async (checkoutId: string) => {
       // Recover a cart session using checkout_id
-      return this.request(`/cart?checkout_id=${checkoutId}`);
+      return this.request(withCheckoutId('/cart', checkoutId));
     },
     addItem: async (item: any) => {
-      return this.request('/cart/items', {
+      return this.request(withCheckoutId('/cart/items'), {
         method: 'POST',
         body: JSON.stringify(item),
       });
     },
     updateItem: async (itemId: string, item: any) => {
-      return this.request(`/cart/items/${itemId}`, {
+      return this.request(withCheckoutId(`/cart/items/${itemId}`), {
         method: 'PUT',
         body: JSON.stringify(item),
       });
     },
     removeItem: async (itemId: string) => {
-      return this.request(`/cart/items/${itemId}`, {
+      return this.request(withCheckoutId(`/cart/items/${itemId}`), {
         method: 'DELETE',
       });
     },
     setItems: async (items: any[]) => {
-      return this.request('/cart/items', {
+      return this.request(withCheckoutId('/cart/items'), {
         method: 'PUT',
         body: JSON.stringify({ items }),
       });
     },
     // Update cart with data (customer info, coupon, etc.)
     update: async (data: any) => {
-      return this.request('/cart', {
+      return this.request(withCheckoutId('/cart'), {
         method: 'PUT',
         body: JSON.stringify(data),
       });
     },
     // Apply a coupon code to the cart
     applyCoupon: async (code: string) => {
-      return this.request('/cart', {
+      return this.request(withCheckoutId('/cart'), {
         method: 'PUT',
         body: JSON.stringify({ coupon_code: code }),
       });
     },
     // Remove applied coupon from cart
     removeCoupon: async () => {
-      return this.request('/cart', {
+      return this.request(withCheckoutId('/cart'), {
         method: 'PUT',
         body: JSON.stringify({ coupon_code: null }),
       });
     },
     // Submit order (for COD or after payment)
     submitOrder: async () => {
-      return this.request('/cart/order', {
+      return this.request(withCheckoutId('/cart/order'), {
         method: 'POST',
       });
     },
