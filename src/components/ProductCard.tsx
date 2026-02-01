@@ -16,6 +16,7 @@ interface ProductProps {
     originalPrice?: number;
     discountPercentage?: number;
     slug?: string; // Support Swell slug for product URLs
+    hasVariants?: boolean; // Whether product has multiple variant prices
   }
 }
 
@@ -163,7 +164,9 @@ export const ProductCard: React.FC<ProductProps | ProductCardProps> = (props) =>
           
           <div className="flex justify-between items-center mt-4">
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-bahola-blue-600">₹{Math.round(discountPrice)}</span>
+              <span className="text-lg font-bold text-bahola-blue-600">
+                {product.hasVariants ? 'From ' : ''}₹{Math.round(discountPrice)}
+              </span>
               {product.originalPrice && product.discountPercentage && (
                 <span className="text-sm text-bahola-neutral-500 line-through">₹{product.originalPrice}</span>
               )}

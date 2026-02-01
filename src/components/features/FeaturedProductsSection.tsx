@@ -17,6 +17,7 @@ export const FeaturedProductsSection = () => {
   const transformedProducts = products.map(product => {
     // Use effective price which handles variant-based pricing
     const effectivePrice = getSwellEffectivePrice(product);
+    const hasVariants = product.variants && product.variants.length > 1;
     
     return {
       id: product.id,
@@ -29,6 +30,7 @@ export const FeaturedProductsSection = () => {
       discountPercentage: product.sale_price && product.price 
         ? Math.round(((product.price - product.sale_price) / product.price) * 100) 
         : undefined,
+      hasVariants,
     };
   });
   
