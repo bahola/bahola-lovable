@@ -228,7 +228,9 @@ class SwellClient {
       return this.request(withCheckoutId('/cart', checkoutId));
     },
     addItem: async (item: any) => {
-      return this.request(withCheckoutId('/cart/items'), {
+      // Note: Swell Frontend API does NOT accept checkout_id for addItem
+      // Cart session is managed via cookies; if cookies are blocked, a new cart may be created
+      return this.request('/cart/items', {
         method: 'POST',
         body: JSON.stringify(item),
       });
