@@ -207,14 +207,33 @@ export const getSwellDiscountPercentage = (product: SwellProduct): number => {
   return 0;
 };
 
+// Helper to get variant results array from Swell product
+// Swell returns variants as { results: [...] } object or directly as array
+const getVariantsArray = (product: SwellProduct): Array<{ price: number }> => {
+  if (!product.variants) return [];
+  
+  // Handle case where variants is an object with results array
+  if ('results' in (product.variants as any)) {
+    return (product.variants as any).results || [];
+  }
+  
+  // Handle case where variants is already an array
+  if (Array.isArray(product.variants)) {
+    return product.variants;
+  }
+  
+  return [];
+};
+
 // Helper to get effective price (sale price if available, otherwise regular price)
 // For products with variants, returns the minimum variant price if base price is 0
 export const getSwellEffectivePrice = (product: SwellProduct): number => {
   const basePrice = product.sale_price || product.price || 0;
+  const variantsArray = getVariantsArray(product);
   
   // If base price is 0 and product has variants, find minimum variant price
-  if (basePrice === 0 && product.variants && product.variants.length > 0) {
-    const variantPrices = product.variants
+  if (basePrice === 0 && variantsArray.length > 0) {
+    const variantPrices = variantsArray
       .map(v => v.price)
       .filter(p => p != null && p > 0);
     
@@ -226,13 +245,21 @@ export const getSwellEffectivePrice = (product: SwellProduct): number => {
   return basePrice;
 };
 
+// Helper to check if product has multiple variants
+export const hasMultipleVariants = (product: SwellProduct): boolean => {
+  const variantsArray = getVariantsArray(product);
+  return variantsArray.length > 1;
+};
+
 // Helper to get minimum price from variants (for "From ₹X" display)
 export const getSwellMinVariantPrice = (product: SwellProduct): number | null => {
-  if (!product.variants || product.variants.length === 0) {
+  const variantsArray = getVariantsArray(product);
+  
+  if (variantsArray.length === 0) {
     return null;
   }
   
-  const variantPrices = product.variants
+  const variantPrices = variantsArray
     .map(v => v.price)
     .filter(p => p != null && p > 0);
   
