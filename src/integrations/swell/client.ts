@@ -197,11 +197,24 @@ class SwellClient {
 
   products = {
     list: async (params?: any) => {
-      const queryParams = new URLSearchParams(params).toString();
-      return this.request(`/products${queryParams ? `?${queryParams}` : ''}`);
+      // Always expand variants to get variant prices
+      const expandedParams = { ...params, expand: ['variants'] };
+      const queryParams = new URLSearchParams();
+      
+      for (const [key, value] of Object.entries(expandedParams)) {
+        if (Array.isArray(value)) {
+          value.forEach(v => queryParams.append(key, v));
+        } else if (value !== undefined && value !== null) {
+          queryParams.append(key, String(value));
+        }
+      }
+      
+      const queryString = queryParams.toString();
+      return this.request(`/products${queryString ? `?${queryString}` : ''}`);
     },
     get: async (id: string) => {
-      return this.request(`/products/${id}`);
+      // Expand variants when fetching single product too
+      return this.request(`/products/${id}?expand=variants`);
     },
   };
 
