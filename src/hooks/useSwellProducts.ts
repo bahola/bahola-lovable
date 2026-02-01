@@ -208,6 +208,37 @@ export const getSwellDiscountPercentage = (product: SwellProduct): number => {
 };
 
 // Helper to get effective price (sale price if available, otherwise regular price)
+// For products with variants, returns the minimum variant price if base price is 0
 export const getSwellEffectivePrice = (product: SwellProduct): number => {
-  return product.sale_price || product.price || 0;
+  const basePrice = product.sale_price || product.price || 0;
+  
+  // If base price is 0 and product has variants, find minimum variant price
+  if (basePrice === 0 && product.variants && product.variants.length > 0) {
+    const variantPrices = product.variants
+      .map(v => v.price)
+      .filter(p => p != null && p > 0);
+    
+    if (variantPrices.length > 0) {
+      return Math.min(...variantPrices);
+    }
+  }
+  
+  return basePrice;
+};
+
+// Helper to get minimum price from variants (for "From ₹X" display)
+export const getSwellMinVariantPrice = (product: SwellProduct): number | null => {
+  if (!product.variants || product.variants.length === 0) {
+    return null;
+  }
+  
+  const variantPrices = product.variants
+    .map(v => v.price)
+    .filter(p => p != null && p > 0);
+  
+  if (variantPrices.length === 0) {
+    return null;
+  }
+  
+  return Math.min(...variantPrices);
 };

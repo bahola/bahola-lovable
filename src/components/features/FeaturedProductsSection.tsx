@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from '@/components/ProductCard';
 import { Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSwellProducts, getSwellProductImage } from '@/hooks/useSwellProducts';
+import { useSwellProducts, getSwellProductImage, getSwellEffectivePrice } from '@/hooks/useSwellProducts';
 
 export const FeaturedProductsSection = () => {
   const navigate = useNavigate();
@@ -14,17 +14,23 @@ export const FeaturedProductsSection = () => {
   };
 
   // Transform Swell products to ProductCard format
-  const transformedProducts = products.map(product => ({
-    id: product.id,
-    name: product.name,
-    price: product.sale_price || product.price,
-    rating: 4.7, // Swell doesn't have ratings by default
-    image: getSwellProductImage(product),
-    originalPrice: product.sale_price ? product.price : undefined,
-    discountPercentage: product.sale_price && product.price 
-      ? Math.round(((product.price - product.sale_price) / product.price) * 100) 
-      : undefined,
-  }));
+  const transformedProducts = products.map(product => {
+    // Use effective price which handles variant-based pricing
+    const effectivePrice = getSwellEffectivePrice(product);
+    
+    return {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: effectivePrice,
+      rating: 4.7, // Swell doesn't have ratings by default
+      image: getSwellProductImage(product),
+      originalPrice: product.sale_price && product.price ? product.price : undefined,
+      discountPercentage: product.sale_price && product.price 
+        ? Math.round(((product.price - product.sale_price) / product.price) * 100) 
+        : undefined,
+    };
+  });
   
   return (
     <section className="py-16 bg-white">
