@@ -386,6 +386,78 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          coupon_code: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          discount_amount: number | null
+          gstin: string | null
+          id: string
+          items: Json
+          notes: string | null
+          order_number: string
+          order_status: string
+          payment_id: string | null
+          payment_method: string
+          payment_status: string
+          shipping_address: Json
+          shipping_cost: number | null
+          subtotal: number
+          swell_order_id: string | null
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          coupon_code?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          discount_amount?: number | null
+          gstin?: string | null
+          id?: string
+          items: Json
+          notes?: string | null
+          order_number: string
+          order_status?: string
+          payment_id?: string | null
+          payment_method?: string
+          payment_status?: string
+          shipping_address: Json
+          shipping_cost?: number | null
+          subtotal?: number
+          swell_order_id?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          coupon_code?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          discount_amount?: number | null
+          gstin?: string | null
+          id?: string
+          items?: Json
+          notes?: string | null
+          order_number?: string
+          order_status?: string
+          payment_id?: string | null
+          payment_method?: string
+          payment_status?: string
+          shipping_address?: Json
+          shipping_cost?: number | null
+          subtotal?: number
+          swell_order_id?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_categories: {
         Row: {
           created_at: string

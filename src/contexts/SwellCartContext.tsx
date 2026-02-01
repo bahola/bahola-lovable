@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { swell } from '@/integrations/swell/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -15,22 +15,41 @@ interface CartItem {
   };
 }
 
+interface AppliedCoupon {
+  code: string;
+  discountTotal: number;
+}
+
 interface SwellCartContextType {
   items: CartItem[];
   totalItems: number;
   totalPrice: number;
+  subtotal: number;
+  discountTotal: number;
+  appliedCoupon: AppliedCoupon | null;
   loading: boolean;
   addItem: (productId: string, quantity?: number, options?: any) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
   refreshCart: () => Promise<void>;
+  applyCoupon: (code: string) => Promise<void>;
+  removeCoupon: () => Promise<void>;
+  updateCart: (data: any) => Promise<any>;
+  submitOrder: () => Promise<any>;
 }
 
 const SwellCartContext = createContext<SwellCartContextType | undefined>(undefined);
 
 // Helper to update state from cart data
-const parseCartData = (cart: any): { items: CartItem[]; totalItems: number; totalPrice: number } => {
+const parseCartData = (cart: any): { 
+  items: CartItem[]; 
+  totalItems: number; 
+  totalPrice: number;
+  subtotal: number;
+  discountTotal: number;
+  appliedCoupon: AppliedCoupon | null;
+} => {
   if (cart && cart.items) {
     const formattedItems: CartItem[] = cart.items.map((item: any) => ({
       id: item.id,
@@ -42,23 +61,51 @@ const parseCartData = (cart: any): { items: CartItem[]; totalItems: number; tota
         image: item.product?.images?.[0]?.file?.url
       }
     }));
+    
+    // Extract coupon info from cart
+    const appliedCoupon: AppliedCoupon | null = cart.coupon_code ? {
+      code: cart.coupon_code,
+      discountTotal: cart.discount_total || 0
+    } : null;
+    
     return {
       items: formattedItems,
       totalItems: cart.item_quantity || 0,
-      totalPrice: cart.grand_total || 0
+      totalPrice: cart.grand_total || 0,
+      subtotal: cart.sub_total || 0,
+      discountTotal: cart.discount_total || 0,
+      appliedCoupon
     };
   }
-  return { items: [], totalItems: 0, totalPrice: 0 };
+  return { items: [], totalItems: 0, totalPrice: 0, subtotal: 0, discountTotal: 0, appliedCoupon: null };
 };
 
 export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [discountTotal, setDiscountTotal] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const refreshCart = async () => {
+  const updateStateFromCart = useCallback((cart: any) => {
+    const parsed = parseCartData(cart);
+    setItems(parsed.items);
+    setTotalItems(parsed.totalItems);
+    setTotalPrice(parsed.totalPrice);
+    setSubtotal(parsed.subtotal);
+    setDiscountTotal(parsed.discountTotal);
+    setAppliedCoupon(parsed.appliedCoupon);
+    
+    // Store checkout_id for future recovery
+    if (cart?.checkout_id) {
+      localStorage.setItem(CART_SESSION_KEY, cart.checkout_id);
+    }
+  }, []);
+
+  const refreshCart = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -74,15 +121,7 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         }
       }
       
-      // Store checkout_id for future recovery
-      if (cart?.checkout_id) {
-        localStorage.setItem(CART_SESSION_KEY, cart.checkout_id);
-      }
-      
-      const parsed = parseCartData(cart);
-      setItems(parsed.items);
-      setTotalItems(parsed.totalItems);
-      setTotalPrice(parsed.totalPrice);
+      updateStateFromCart(cart);
     } catch (error) {
       console.error('Error fetching cart:', error);
       toast({
@@ -93,9 +132,9 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast, updateStateFromCart]);
 
-  const addItem = async (productId: string, quantity: number = 1, options?: any) => {
+  const addItem = useCallback(async (productId: string, quantity: number = 1, options?: any) => {
     try {
       console.log('[SwellCart] Adding item:', { productId, quantity, options });
       
@@ -105,22 +144,10 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         ...options
       };
       
-      console.log('[SwellCart] Item payload:', itemPayload);
-      
       const result = await swell.cart.addItem(itemPayload);
-      
       console.log('[SwellCart] Add item result:', result);
       
-      // Store checkout_id immediately after adding item
-      if (result?.checkout_id) {
-        localStorage.setItem(CART_SESSION_KEY, result.checkout_id);
-      }
-      
-      // Update state directly from the result instead of refetching
-      const parsed = parseCartData(result);
-      setItems(parsed.items);
-      setTotalItems(parsed.totalItems);
-      setTotalPrice(parsed.totalPrice);
+      updateStateFromCart(result);
       
       toast({
         title: 'Success',
@@ -134,12 +161,12 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         variant: 'destructive'
       });
     }
-  };
+  }, [toast, updateStateFromCart]);
 
-  const updateQuantity = async (itemId: string, quantity: number) => {
+  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
     try {
-      await swell.cart.updateItem(itemId, { quantity });
-      await refreshCart();
+      const result = await swell.cart.updateItem(itemId, { quantity });
+      updateStateFromCart(result);
     } catch (error) {
       console.error('Error updating quantity:', error);
       toast({
@@ -148,12 +175,12 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         variant: 'destructive'
       });
     }
-  };
+  }, [toast, updateStateFromCart]);
 
-  const removeItem = async (itemId: string) => {
+  const removeItem = useCallback(async (itemId: string) => {
     try {
-      await swell.cart.removeItem(itemId);
-      await refreshCart();
+      const result = await swell.cart.removeItem(itemId);
+      updateStateFromCart(result);
       
       toast({
         title: 'Success',
@@ -167,23 +194,80 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         variant: 'destructive'
       });
     }
-  };
+  }, [toast, updateStateFromCart]);
 
-  const clearCart = async () => {
+  const clearCart = useCallback(async () => {
     try {
       await swell.cart.setItems([]);
       localStorage.removeItem(CART_SESSION_KEY);
       setItems([]);
       setTotalItems(0);
       setTotalPrice(0);
+      setSubtotal(0);
+      setDiscountTotal(0);
+      setAppliedCoupon(null);
     } catch (error) {
       console.error('Error clearing cart:', error);
     }
-  };
+  }, []);
+
+  const applyCoupon = useCallback(async (code: string) => {
+    try {
+      console.log('[SwellCart] Applying coupon:', code);
+      const result = await swell.cart.applyCoupon(code);
+      console.log('[SwellCart] Apply coupon result:', result);
+      
+      if (!result.coupon_code) {
+        throw new Error('Invalid coupon code');
+      }
+      
+      updateStateFromCart(result);
+    } catch (error) {
+      console.error('[SwellCart] Error applying coupon:', error);
+      throw error;
+    }
+  }, [updateStateFromCart]);
+
+  const removeCoupon = useCallback(async () => {
+    try {
+      console.log('[SwellCart] Removing coupon');
+      const result = await swell.cart.removeCoupon();
+      console.log('[SwellCart] Remove coupon result:', result);
+      updateStateFromCart(result);
+    } catch (error) {
+      console.error('[SwellCart] Error removing coupon:', error);
+      throw error;
+    }
+  }, [updateStateFromCart]);
+
+  const updateCart = useCallback(async (data: any) => {
+    try {
+      console.log('[SwellCart] Updating cart:', data);
+      const result = await swell.cart.update(data);
+      console.log('[SwellCart] Update cart result:', result);
+      updateStateFromCart(result);
+      return result;
+    } catch (error) {
+      console.error('[SwellCart] Error updating cart:', error);
+      throw error;
+    }
+  }, [updateStateFromCart]);
+
+  const submitOrder = useCallback(async () => {
+    try {
+      console.log('[SwellCart] Submitting order');
+      const result = await swell.cart.submitOrder();
+      console.log('[SwellCart] Submit order result:', result);
+      return result;
+    } catch (error) {
+      console.error('[SwellCart] Error submitting order:', error);
+      throw error;
+    }
+  }, []);
 
   useEffect(() => {
     refreshCart();
-  }, []);
+  }, [refreshCart]);
 
   return (
     <SwellCartContext.Provider
@@ -191,12 +275,19 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         items,
         totalItems,
         totalPrice,
+        subtotal,
+        discountTotal,
+        appliedCoupon,
         loading,
         addItem,
         updateQuantity,
         removeItem,
         clearCart,
-        refreshCart
+        refreshCart,
+        applyCoupon,
+        removeCoupon,
+        updateCart,
+        submitOrder,
       }}
     >
       {children}

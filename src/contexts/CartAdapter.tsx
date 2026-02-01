@@ -13,10 +13,18 @@ interface CartItem {
   taxClass?: '0' | '5' | '12';
 }
 
+interface AppliedCoupon {
+  code: string;
+  discountTotal: number;
+}
+
 interface CartContextType {
   items: CartItem[];
   itemCount: number;
   totalAmount: number;
+  subtotal: number;
+  discountTotal: number;
+  appliedCoupon: AppliedCoupon | null;
   addToCart: (
     item: Omit<CartItem, 'quantity'>,
     quantity?: number,
@@ -32,6 +40,10 @@ interface CartContextType {
   getDiscountedPrice: (item: CartItem) => number;
   getSubtotal: () => number;
   getTotalTax: () => number;
+  applyCoupon: (code: string) => Promise<void>;
+  removeCoupon: () => Promise<void>;
+  updateCart: (data: any) => Promise<any>;
+  submitOrder: () => Promise<any>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -41,10 +53,17 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
     items: swellItems, 
     totalItems, 
     totalPrice,
+    subtotal: swellSubtotal,
+    discountTotal,
+    appliedCoupon,
     addItem,
     updateQuantity: swellUpdateQuantity,
     removeItem,
-    clearCart: swellClearCart
+    clearCart: swellClearCart,
+    applyCoupon: swellApplyCoupon,
+    removeCoupon: swellRemoveCoupon,
+    updateCart: swellUpdateCart,
+    submitOrder: swellSubmitOrder,
   } = useSwellCart();
 
   // Transform Swell items to match the old cart format
@@ -109,6 +128,8 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
   };
 
   const getSubtotal = (): number => {
+    // Use Swell's subtotal if available, otherwise calculate
+    if (swellSubtotal > 0) return swellSubtotal;
     return items.reduce((sum, item) => sum + (getDiscountedPrice(item) * item.quantity), 0);
   };
 
@@ -127,13 +148,20 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
         items,
         itemCount: totalItems,
         totalAmount: totalPrice,
+        subtotal: swellSubtotal || getSubtotal(),
+        discountTotal,
+        appliedCoupon,
         addToCart,
         updateQuantity,
         removeFromCart,
         clearCart: swellClearCart,
         getDiscountedPrice,
         getSubtotal,
-        getTotalTax
+        getTotalTax,
+        applyCoupon: swellApplyCoupon,
+        removeCoupon: swellRemoveCoupon,
+        updateCart: swellUpdateCart,
+        submitOrder: swellSubmitOrder,
       }}
     >
       {children}

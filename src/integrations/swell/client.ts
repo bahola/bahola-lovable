@@ -234,6 +234,33 @@ class SwellClient {
         body: JSON.stringify({ items }),
       });
     },
+    // Update cart with data (customer info, coupon, etc.)
+    update: async (data: any) => {
+      return this.request('/cart', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+    // Apply a coupon code to the cart
+    applyCoupon: async (code: string) => {
+      return this.request('/cart', {
+        method: 'PUT',
+        body: JSON.stringify({ coupon_code: code }),
+      });
+    },
+    // Remove applied coupon from cart
+    removeCoupon: async () => {
+      return this.request('/cart', {
+        method: 'PUT',
+        body: JSON.stringify({ coupon_code: null }),
+      });
+    },
+    // Submit order (for COD or after payment)
+    submitOrder: async () => {
+      return this.request('/cart/order', {
+        method: 'POST',
+      });
+    },
   };
 
   categories = {
