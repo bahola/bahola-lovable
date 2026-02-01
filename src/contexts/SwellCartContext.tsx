@@ -214,6 +214,15 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
   const applyCoupon = useCallback(async (code: string) => {
     try {
       console.log('[SwellCart] Applying coupon:', code);
+      
+      // First, ensure we have the current cart session by recovering it
+      const storedCheckoutId = localStorage.getItem(CART_SESSION_KEY);
+      if (storedCheckoutId) {
+        console.log('[SwellCart] Recovering cart before applying coupon:', storedCheckoutId);
+        await swell.cart.recover(storedCheckoutId);
+      }
+      
+      // Now apply the coupon to the recovered cart
       const result = await swell.cart.applyCoupon(code);
       console.log('[SwellCart] Apply coupon result:', result);
       
