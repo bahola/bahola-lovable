@@ -1,267 +1,282 @@
 
-## Set Up Add to Cart and Wishlist Functionality with Swell Integration
+# Coupon System & COD Checkout Implementation Plan
 
-### Overview
-
-This implementation will:
-1. **Fix Add to Cart** - Ensure variant selection is properly passed to Swell's cart API
-2. **Create Wishlist functionality** - Store Swell product IDs in Supabase and display on Wishlist page
-3. **Add Wishlist button** - Add "Add to Wishlist" and "Share" buttons to the product page
-4. **Update "My List" link** - Ensure the TopBar "My List" link navigates to the wishlist
+## Overview
+This plan implements coupon code functionality from Swell, adds Cash on Delivery (COD) payment option for testing, enhances the order confirmation page, and ensures proper cart syncing with Swell after order completion.
 
 ---
 
-### Current State Analysis
+## Phase 1: Swell Coupon Integration
 
-| Component | Current Status | Issue |
-|-----------|---------------|-------|
-| **Cart** | Working via `SwellCartContext` → `CartAdapter` | Minor - needs variant ID support |
-| **Wishlist Table** | Supabase `wishlist` with UUID `product_id` | Incompatible - Swell IDs are strings |
-| **Wishlist Page** | Fetches from Supabase `products` table | Wrong - needs to fetch from Swell |
-| **TopBar "My List"** | Links to `/my-list` → `Wishlist` page | Working - routes exist |
-| **Product Page** | No wishlist button | Missing functionality |
+### 1.1 Extend Swell Client with Coupon Methods
+**File: `src/integrations/swell/client.ts`**
 
----
-
-### Database Change Required
-
-The current `wishlist.product_id` column is UUID type, but Swell product IDs are strings like `"6970e051b00d0400114eca0d"`. We need to:
-
-1. **Create a new `swell_wishlist` table** (cleaner than altering the existing table used by Supabase products)
-
-```sql
-CREATE TABLE public.swell_wishlist (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL,  -- Swell customer ID or email
-  product_id TEXT NOT NULL,  -- Swell product ID
-  product_name TEXT,  -- Cached for display
-  product_image TEXT,  -- Cached for display  
-  product_price NUMERIC(10,2),  -- Cached for display
-  added_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(user_id, product_id)
-);
-
--- RLS Policies
-ALTER TABLE public.swell_wishlist ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view their own wishlist"
-  ON public.swell_wishlist FOR SELECT
-  USING (true);  -- We'll filter by user_id in the app since auth is Swell-based
-
-CREATE POLICY "Users can add to their wishlist"
-  ON public.swell_wishlist FOR INSERT
-  WITH CHECK (true);
-
-CREATE POLICY "Users can remove from their wishlist"
-  ON public.swell_wishlist FOR DELETE
-  USING (true);
-```
-
----
-
-### Implementation Plan
-
-#### Step 1: Create Swell Wishlist Hook
-
-**New File:** `src/hooks/useSwellWishlist.ts`
-
-This hook will:
-- Add/remove products to/from the `swell_wishlist` table
-- Check if a product is in the wishlist
-- Fetch all wishlist items for the current user
+Add a new `cart.applyCoupon()` method to the Swell client that updates the cart with a coupon code:
 
 ```typescript
-export const useSwellWishlist = () => {
-  const { user, isAuthenticated } = useSwellAuth();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-
-  const userId = user?.email || user?.id;
-
-  // Query wishlist items
-  const { data: wishlistItems, isLoading } = useQuery({
-    queryKey: ['swell-wishlist', userId],
-    queryFn: async () => {
-      if (!userId) return [];
-      const { data } = await supabase
-        .from('swell_wishlist')
-        .select('*')
-        .eq('user_id', userId)
-        .order('added_at', { ascending: false });
-      return data || [];
-    },
-    enabled: !!userId
-  });
-
-  // Add to wishlist
-  const addToWishlist = async (product: SwellProduct) => {
-    if (!isAuthenticated || !userId) {
-      toast({ title: "Please login", description: "..." });
-      return false;
-    }
-    // Check if already in wishlist, then insert
-    // Invalidate query cache on success
-  };
-
-  // Remove from wishlist
-  const removeFromWishlist = async (productId: string) => { ... };
-
-  // Check if in wishlist
-  const isInWishlist = (productId: string) => {
-    return wishlistItems?.some(item => item.product_id === productId) || false;
-  };
-
-  return { wishlistItems, isLoading, addToWishlist, removeFromWishlist, isInWishlist };
+cart = {
+  // ... existing methods ...
+  
+  applyCoupon: async (code: string) => {
+    return this.request('/cart', {
+      method: 'PUT',
+      body: JSON.stringify({ coupon_code: code }),
+    });
+  },
+  
+  removeCoupon: async () => {
+    return this.request('/cart', {
+      method: 'PUT',
+      body: JSON.stringify({ coupon_code: null }),
+    });
+  },
+  
+  update: async (data: any) => {
+    return this.request('/cart', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
 };
 ```
 
-#### Step 2: Add Wishlist Button to Product Page
+### 1.2 Update SwellCartContext
+**File: `src/contexts/SwellCartContext.tsx`**
 
-**File:** `src/components/product/GenericProductPage.tsx`
+Add coupon-related state and methods:
+- `appliedCoupon`: stores coupon details (code, discount amount)
+- `discountTotal`: tracks the discount applied
+- `applyCoupon(code)`: applies a coupon code via Swell API
+- `removeCoupon()`: removes applied coupon
+- Update `parseCartData` to extract coupon and discount info from Swell cart response
 
-Add secondary action buttons below the CTA buttons:
+The Swell cart response includes:
+- `coupon_code`: applied coupon code
+- `discount_total`: total discount amount
+- `discounts`: array of discount details
 
-```tsx
-{/* CTA Buttons */}
-<div className="flex gap-4">
-  <button onClick={handleAddToCart}>Add to Cart</button>
-  <button onClick={handleBuyNow}>Buy Now</button>
-</div>
+### 1.3 Update CartAdapter
+**File: `src/contexts/CartAdapter.tsx`**
 
-{/* Secondary Actions - NEW */}
-<div className="flex gap-4 pt-4">
-  <button onClick={handleAddToWishlist} className="...">
-    <Heart className={isInWishlist ? "fill-current" : ""} />
-    {isInWishlist ? "In Wishlist" : "Add to Wishlist"}
-  </button>
-  <button onClick={handleShare} className="...">
-    <Share2 />
-    Share
-  </button>
-</div>
-```
+Expose coupon functionality to consuming components:
+- Pass through `applyCoupon`, `removeCoupon`, `appliedCoupon`, and `discountTotal`
+- Update `CartContextType` interface
 
-#### Step 3: Rewrite Wishlist Page for Swell Products
+### 1.4 Create Coupon Input Hook
+**New File: `src/hooks/useCouponCode.ts`**
 
-**File:** `src/pages/Wishlist.tsx`
-
-The page will:
-1. Use `useSwellWishlist` hook to get wishlist items
-2. Display cached product info from `swell_wishlist` table
-3. Optionally refresh product details from Swell API
-4. Use `useCart` hook (Swell cart) for Add to Cart
-
-```tsx
-const WishlistPage = () => {
-  const { wishlistItems, isLoading, removeFromWishlist } = useSwellWishlist();
-  const { addToCart } = useCart();
-  const navigate = useNavigate();
-
-  const handleAddToCart = (item: WishlistItem) => {
-    addToCart({
-      id: item.product_id,
-      name: item.product_name,
-      price: item.product_price,
-      image: item.product_image || '/placeholder.svg'
-    }, 1);
-    toast({ title: "Added to cart" });
-  };
-
-  // Render wishlist grid with cached product info
-};
-```
-
-#### Step 4: Verify TopBar "My List" Link
-
-**File:** `src/components/header/TopBar.tsx`
-
-The existing link is correct:
-```tsx
-<Link to="/my-list" className="top-menu-item flex items-center space-x-1">
-  <Heart size={14} />
-  <span>My List</span>
-</Link>
-```
-
-The route `/my-list` correctly maps to the Wishlist page in `AppRoutes.tsx`.
+Create a dedicated hook for coupon validation and application:
+- Manages coupon code input state
+- Handles loading state during API calls
+- Displays success/error feedback via toast
+- Returns applied discount information
 
 ---
 
-### Files to Create
+## Phase 2: Checkout Page Updates
 
-| File | Purpose |
-|------|---------|
-| `src/hooks/useSwellWishlist.ts` | Wishlist CRUD operations using Supabase + Swell auth |
+### 2.1 Integrate Coupon Functionality
+**File: `src/pages/Checkout.tsx`**
 
-### Files to Modify
+Updates needed:
+- Import and use `useCouponCode` hook
+- Wire "Apply" button to `applyCoupon` function
+- Display applied coupon with discount amount
+- Add "Remove" option for applied coupons
+- Update order summary to show discount line
 
-| File | Changes |
-|------|---------|
-| `src/components/product/GenericProductPage.tsx` | Add wishlist + share buttons, import hook |
-| `src/pages/Wishlist.tsx` | Rewrite to use `useSwellWishlist` and `useCart` |
-| `src/contexts/CartAdapter.tsx` | Add variant options support to `addToCart` |
+### 2.2 Add Form State Management
+**File: `src/pages/Checkout.tsx`**
 
-### Database Changes
+Implement controlled form inputs for:
+- Customer details (firstName, lastName, email, phone)
+- Shipping address (address1, address2, city, state, pincode)
+- GSTIN (optional)
+- Payment method selection (Razorpay/COD)
 
-| Table | Action |
-|-------|--------|
-| `swell_wishlist` | CREATE new table for Swell product wishlist |
+### 2.3 Implement COD Order Submission
+**File: `src/pages/Checkout.tsx`**
+
+When COD is selected:
+1. Validate all required form fields
+2. Update Swell cart with customer info via `swell.cart.update()`
+3. Submit order via `swell.cart.submitOrder()`
+4. Store order details in localStorage for confirmation page
+5. Redirect to `/thank-you` with order reference
+
+### 2.4 Update Order Summary Display
+**File: `src/pages/Checkout.tsx`**
+
+Add discount row to order summary:
+```text
+Subtotal:     ₹1,500
+Discount:     -₹150 (SUMMER25)
+Shipping:     ₹70
+-----------------------
+Total:        ₹1,420
+```
 
 ---
 
-### Data Flow
+## Phase 3: Order Confirmation Page
+
+### 3.1 Create Orders Table in Supabase
+**Database Migration**
+
+New `orders` table to store completed orders:
+- `id` (UUID, primary key)
+- `order_number` (text, unique) - from Swell order
+- `swell_order_id` (text) - Swell's order ID
+- `customer_name`, `customer_email`, `customer_phone`
+- `shipping_address` (JSONB)
+- `items` (JSONB) - snapshot of ordered items
+- `subtotal`, `discount_amount`, `shipping_cost`, `total` (numeric)
+- `coupon_code` (text, nullable)
+- `gstin` (text, nullable)
+- `payment_method` (text) - 'cod' or 'razorpay'
+- `payment_status` (text) - 'pending', 'completed', 'failed'
+- `order_status` (text) - 'processing', 'shipped', 'delivered'
+- `created_at`, `updated_at` (timestamptz)
+
+RLS Policies:
+- Public INSERT for order creation (guest checkout support)
+- SELECT by order_number for confirmation page access
+
+### 3.2 Update ThankYou Page
+**File: `src/pages/ThankYou.tsx`**
+
+Replace static data with dynamic order details:
+- Read order reference from URL params or localStorage
+- Fetch order details from Supabase or Swell
+- Display actual order information:
+  - Order number and date
+  - Items purchased with quantities and prices
+  - Applied discount (if any)
+  - Shipping cost
+  - Total amount
+  - Payment method
+  - Shipping address
+  - Estimated delivery
+
+### 3.3 Add Order Saving Logic
+**New File: `src/utils/orderService.ts`**
+
+Create order service functions:
+- `saveOrder(orderData)`: saves order to Supabase
+- `getOrderByNumber(orderNumber)`: retrieves order for confirmation page
+- `generateOrderNumber()`: creates unique order number (e.g., BL20250201001)
+
+---
+
+## Phase 4: Cart Sync & Clearing
+
+### 4.1 Post-Order Cart Clearing
+**File: `src/contexts/SwellCartContext.tsx`**
+
+Ensure `clearCart()` properly:
+- Calls `swell.cart.setItems([])` to clear Swell cart
+- Removes `swell_checkout_id` from localStorage
+- Resets all local state (items, totals, coupon)
+
+### 4.2 Update Checkout Flow
+**File: `src/pages/Checkout.tsx`**
+
+After successful order submission:
+1. Call `clearCart()` from context
+2. Verify cart is emptied
+3. Handle any clearing errors gracefully
+
+### 4.3 Cart Recovery Cleanup
+**File: `src/contexts/SwellCartContext.tsx`**
+
+Add logic to handle cart state after order:
+- If cart recovery returns an already-submitted cart, treat as empty
+- Clear stale checkout_id if cart is no longer valid
+
+---
+
+## File Change Summary
+
+| File | Action | Description |
+|------|--------|-------------|
+| `src/integrations/swell/client.ts` | Modify | Add `cart.applyCoupon()`, `cart.removeCoupon()`, `cart.update()` methods |
+| `src/contexts/SwellCartContext.tsx` | Modify | Add coupon state, discount tracking, apply/remove coupon methods |
+| `src/contexts/CartAdapter.tsx` | Modify | Expose coupon functionality to components |
+| `src/hooks/useCouponCode.ts` | Create | Coupon input management hook |
+| `src/pages/Checkout.tsx` | Modify | Form state, coupon UI, COD submission, order summary updates |
+| `src/pages/ThankYou.tsx` | Modify | Dynamic order display from URL/storage |
+| `src/utils/orderService.ts` | Create | Order saving and retrieval functions |
+| Database migration | Create | Add `orders` table with RLS policies |
+
+---
+
+## Technical Details
+
+### Swell Cart Update for Coupon
+Based on Swell documentation, coupons are applied via cart update:
+```typescript
+await swell.cart.update({ coupon_code: 'SUMMER25' });
+```
+
+The response includes:
+- `coupon_code`: the applied code
+- `discount_total`: calculated discount
+- `discounts`: array of applied discount details
+
+### Swell Order Submission
+For COD orders:
+```typescript
+// First update cart with customer/shipping info
+await swell.cart.update({
+  account: { email, ... },
+  shipping: { name, address1, ... },
+  billing: { ... }
+});
+
+// Then submit the order
+const order = await swell.cart.submitOrder();
+```
+
+### Order Number Format
+Generate readable order numbers: `BL` + `YYYYMMDD` + `sequence`
+Example: `BL20250201001`
+
+---
+
+## User Flow
 
 ```text
-PRODUCT PAGE                           WISHLIST PAGE
-┌─────────────────────┐                ┌─────────────────────┐
-│  Add to Wishlist    │                │  My List            │
-│         │           │                │         │           │
-└─────────┼───────────┘                └─────────┼───────────┘
-          │                                      │
-          ▼                                      ▼
-┌─────────────────────┐                ┌─────────────────────┐
-│  useSwellWishlist   │◄──────────────►│  useSwellWishlist   │
-│  • addToWishlist()  │                │  • wishlistItems    │
-│  • isInWishlist()   │                │  • removeFromWishlist│
-└─────────┼───────────┘                └─────────┼───────────┘
-          │                                      │
-          ▼                                      ▼
-┌─────────────────────┐                ┌─────────────────────┐
-│  Supabase           │                │  useCart (Swell)    │
-│  swell_wishlist     │                │  • addToCart()      │
-│  table              │                │                     │
-└─────────────────────┘                └─────────────────────┘
+1. User adds items to cart
+          ↓
+2. User navigates to /checkout
+          ↓
+3. User fills contact & shipping info
+          ↓
+4. User enters coupon code (optional)
+   └→ Click "Apply" → Swell validates & applies discount
+   └→ Order summary updates with discount
+          ↓
+5. User selects payment method (COD for now)
+          ↓
+6. User clicks "Place Order"
+          ↓
+7. System updates Swell cart with all info
+          ↓
+8. System submits order to Swell
+          ↓
+9. System saves order to Supabase
+          ↓
+10. System clears cart (local + Swell)
+          ↓
+11. User redirected to /thank-you with order details
 ```
 
 ---
 
-### Technical Notes
-
-**Why a new `swell_wishlist` table?**
-- The existing `wishlist` table uses UUID for `product_id` (linked to Supabase products)
-- Swell product IDs are 24-character strings
-- A separate table avoids breaking existing functionality and allows caching product info
-
-**Cart Variant Support:**
-The `CartAdapter.addToCart` will pass variant options through to Swell:
-```typescript
-// Current signature
-addToCart(item, quantity)
-
-// Updated to support options
-addToCart(item, quantity, options)
-// Where options = { variant_id: "selected-variant-id" }
-```
-
-**Share Functionality:**
-Uses the Web Share API with fallback to clipboard:
-```typescript
-const handleShare = async () => {
-  if (navigator.share) {
-    await navigator.share({ title, text, url });
-  } else {
-    await navigator.clipboard.writeText(url);
-    toast({ title: "Link copied!" });
-  }
-};
-```
+## Testing Considerations
+- Test coupon application with valid/invalid codes
+- Verify discount calculations display correctly
+- Test COD order submission flow end-to-end
+- Confirm cart clears properly after order
+- Verify order confirmation page shows correct data
+- Test with both logged-in and guest users
