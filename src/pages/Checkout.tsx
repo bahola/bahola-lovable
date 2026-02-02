@@ -484,8 +484,9 @@ const Checkout = () => {
               
               <div className="p-6">
                 <div className="space-y-4">
-                  <div 
-                    className={`border rounded-lg p-4 cursor-pointer ${paymentMethod === 'cod' ? 'border-bahola-blue-500 bg-bahola-blue-50' : 'border-gray-300'}`}
+                  <button 
+                    type="button"
+                    className={`w-full border rounded-lg p-4 cursor-pointer text-left ${paymentMethod === 'cod' ? 'border-bahola-blue-500 bg-bahola-blue-50' : 'border-gray-300'}`}
                     onClick={() => setPaymentMethod('cod')}
                   >
                     <div className="flex items-center">
@@ -498,10 +499,11 @@ const Checkout = () => {
                       </div>
                       <ShoppingBag className="h-6 w-6 text-bahola-neutral-500" />
                     </div>
-                  </div>
+                  </button>
                   
-                  <div 
-                    className={`border rounded-lg p-4 cursor-pointer ${paymentMethod === 'razorpay' ? 'border-bahola-blue-500 bg-bahola-blue-50' : 'border-gray-300'}`}
+                  <button 
+                    type="button"
+                    className={`w-full border rounded-lg p-4 cursor-pointer text-left ${paymentMethod === 'razorpay' ? 'border-bahola-blue-500 bg-bahola-blue-50' : 'border-gray-300'}`}
                     onClick={() => setPaymentMethod('razorpay')}
                   >
                     <div className="flex items-center">
@@ -514,7 +516,7 @@ const Checkout = () => {
                       </div>
                       <CreditCard className="h-6 w-6 text-bahola-neutral-500" />
                     </div>
-                  </div>
+                  </button>
                 </div>
                 
                 <div className="mt-6 flex items-center">
