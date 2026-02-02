@@ -3,7 +3,7 @@ import { PageLayout } from '@/components/PageLayout';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, ShoppingBag, Home, Phone, Package, Loader2 } from 'lucide-react';
-import { getLocalOrder, getOrderByNumber, OrderData, clearLocalOrder } from '@/utils/orderService';
+import { getLocalOrder, getOrderByNumberSecure, OrderData, clearLocalOrder } from '@/utils/orderService';
 
 const ThankYou = () => {
   const [searchParams] = useSearchParams();
@@ -13,6 +13,7 @@ const ThankYou = () => {
   useEffect(() => {
     const loadOrder = async () => {
       const orderNumber = searchParams.get('order');
+      const email = searchParams.get('email');
       
       // First try to get from localStorage (fastest)
       const localOrder = getLocalOrder();
@@ -24,9 +25,9 @@ const ThankYou = () => {
         return;
       }
       
-      // If we have an order number, try to fetch from database
-      if (orderNumber) {
-        const dbOrder = await getOrderByNumber(orderNumber);
+      // If we have order number AND email, fetch via secure edge function
+      if (orderNumber && email) {
+        const dbOrder = await getOrderByNumberSecure(orderNumber, email);
         if (dbOrder) {
           setOrderData(dbOrder);
         }

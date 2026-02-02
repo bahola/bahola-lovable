@@ -231,8 +231,8 @@ const Checkout = () => {
         // Clear cart
         await clearCart();
         
-        // Redirect to thank you page
-        navigate(`/thank-you?order=${orderNumber}`);
+        // Redirect to thank you page with email for secure lookup
+        navigate(`/thank-you?order=${orderNumber}&email=${encodeURIComponent(formData.email)}`);
       } else {
         // Razorpay - to be implemented
         toast({

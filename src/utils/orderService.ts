@@ -49,36 +49,21 @@ export const generateOrderNumber = (): string => {
   return `BL${year}${month}${day}${random}`;
 };
 
-// Save order to Supabase
+// Save order via secure edge function
 export const saveOrder = async (orderData: OrderData): Promise<{ success: boolean; error?: string }> => {
   try {
-    // Type cast is necessary because Supabase types may not be updated yet
-    const insertData = {
-      order_number: orderData.orderNumber,
-      swell_order_id: orderData.swellOrderId || null,
-      customer_name: orderData.customerName,
-      customer_email: orderData.customerEmail,
-      customer_phone: orderData.customerPhone,
-      shipping_address: orderData.shippingAddress,
-      items: orderData.items,
-      subtotal: orderData.subtotal,
-      discount_amount: orderData.discountAmount,
-      shipping_cost: orderData.shippingCost,
-      total: orderData.total,
-      coupon_code: orderData.couponCode || null,
-      gstin: orderData.gstin || null,
-      payment_method: orderData.paymentMethod,
-      payment_status: orderData.paymentStatus,
-      order_status: orderData.orderStatus,
-      notes: orderData.notes || null,
-    };
+    const response = await fetch(
+      `https://vjkhsdwavbswcoyfgyvg.supabase.co/functions/v1/create-order`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      }
+    );
 
-    // Use type assertion since the types file may not be updated yet
-    const { error } = await (supabase.from('orders') as any).insert(insertData);
-
-    if (error) {
-      console.error('[OrderService] Error saving order:', error);
-      return { success: false, error: error.message };
+    if (!response.ok) {
+      const { error } = await response.json();
+      return { success: false, error: error || 'Failed to save order' };
     }
 
     console.log('[OrderService] Order saved successfully:', orderData.orderNumber);
@@ -89,41 +74,53 @@ export const saveOrder = async (orderData: OrderData): Promise<{ success: boolea
   }
 };
 
-// Retrieve order by order number
+// Retrieve order by order number (legacy - direct DB access)
 export const getOrderByNumber = async (orderNumber: string): Promise<OrderData | null> => {
-  try {
-    // Use type assertion since the types file may not be updated yet
-    const { data, error } = await (supabase.from('orders') as any)
-      .select('*')
-      .eq('order_number', orderNumber)
-      .single();
+  console.warn('[OrderService] getOrderByNumber is deprecated, use getOrderByNumberSecure');
+  return null;
+};
 
-    if (error || !data) {
-      console.error('[OrderService] Error fetching order:', error);
-      return null;
-    }
+// Retrieve order securely via edge function (requires email verification)
+export const getOrderByNumberSecure = async (
+  orderNumber: string,
+  email: string
+): Promise<OrderData | null> => {
+  try {
+    const response = await fetch(
+      `https://vjkhsdwavbswcoyfgyvg.supabase.co/functions/v1/get-order`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNumber, email }),
+      }
+    );
+
+    if (!response.ok) return null;
+
+    const { order } = await response.json();
+    if (!order) return null;
 
     return {
-      orderNumber: data.order_number,
-      swellOrderId: data.swell_order_id ?? undefined,
-      customerName: data.customer_name,
-      customerEmail: data.customer_email,
-      customerPhone: data.customer_phone,
-      shippingAddress: data.shipping_address as ShippingAddress,
-      items: data.items as OrderItem[],
-      subtotal: Number(data.subtotal),
-      discountAmount: Number(data.discount_amount),
-      shippingCost: Number(data.shipping_cost),
-      total: Number(data.total),
-      couponCode: data.coupon_code ?? undefined,
-      gstin: data.gstin ?? undefined,
-      paymentMethod: data.payment_method as 'cod' | 'razorpay',
-      paymentStatus: data.payment_status as 'pending' | 'completed' | 'failed',
-      orderStatus: data.order_status as 'processing' | 'shipped' | 'delivered',
-      notes: data.notes ?? undefined,
+      orderNumber: order.order_number,
+      swellOrderId: order.swell_order_id ?? undefined,
+      customerName: order.customer_name,
+      customerEmail: order.customer_email,
+      customerPhone: order.customer_phone,
+      shippingAddress: order.shipping_address as ShippingAddress,
+      items: order.items as OrderItem[],
+      subtotal: Number(order.subtotal),
+      discountAmount: Number(order.discount_amount),
+      shippingCost: Number(order.shipping_cost),
+      total: Number(order.total),
+      couponCode: order.coupon_code ?? undefined,
+      gstin: order.gstin ?? undefined,
+      paymentMethod: order.payment_method as 'cod' | 'razorpay',
+      paymentStatus: order.payment_status as 'pending' | 'completed' | 'failed',
+      orderStatus: order.order_status as 'processing' | 'shipped' | 'delivered',
+      notes: order.notes ?? undefined,
     };
   } catch (err) {
-    console.error('[OrderService] Exception fetching order:', err);
+    console.error('[OrderService] Error fetching order securely:', err);
     return null;
   }
 };

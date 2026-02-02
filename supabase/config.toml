@@ -9,3 +9,12 @@ verify_jwt = false
 [functions.swell-admin]
 verify_jwt = false
 
+[functions.get-order]
+verify_jwt = false
+
+[functions.create-order]
+verify_jwt = false
+
+[functions.get-customer-orders]
+verify_jwt = false
+
