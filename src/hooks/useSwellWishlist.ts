@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { useSwellAuth } from '@/contexts/SwellAuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +20,34 @@ interface SwellProduct {
   image?: string;
 }
 
+const WISHLIST_API_URL = 'https://vjkhsdwavbswcoyfgyvg.supabase.co/functions/v1/wishlist-operations';
+
+// Helper to call wishlist edge function
+async function callWishlistApi(
+  action: string,
+  userEmail: string,
+  data?: { product?: SwellProduct; productId?: string }
+): Promise<{ success?: boolean; items?: WishlistItem[]; error?: string; alreadyExists?: boolean; inWishlist?: boolean }> {
+  const response = await fetch(WISHLIST_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', // Include cookies for Swell session verification
+    body: JSON.stringify({
+      action,
+      userEmail,
+      ...data,
+    }),
+  });
+
+  const result = await response.json();
+  
+  if (!response.ok && response.status !== 409) {
+    throw new Error(result.error || 'Wishlist operation failed');
+  }
+  
+  return result;
+}
+
 export const useSwellWishlist = () => {
   const { user, isAuthenticated } = useSwellAuth();
   const { toast } = useToast();
@@ -29,30 +56,28 @@ export const useSwellWishlist = () => {
 
   // Use email as user identifier since Swell auth is separate from Supabase
   const userId = user?.email || user?.id;
+  const userEmail = user?.email;
 
-  // Query wishlist items
+  // Query wishlist items via edge function
   const { data: wishlistItems = [], isLoading } = useQuery({
     queryKey: ['swell-wishlist', userId],
     queryFn: async () => {
-      if (!userId) return [];
-      const { data, error } = await supabase
-        .from('swell_wishlist')
-        .select('*')
-        .eq('user_id', userId)
-        .order('added_at', { ascending: false });
-      
-      if (error) {
+      if (!userId || !userEmail) return [];
+
+      try {
+        const result = await callWishlistApi('list', userEmail);
+        return (result.items || []) as WishlistItem[];
+      } catch (error) {
         console.error('Error fetching wishlist:', error);
         return [];
       }
-      return (data || []) as WishlistItem[];
     },
-    enabled: !!userId
+    enabled: !!userId && !!isAuthenticated && !!userEmail
   });
 
   // Add to wishlist
   const addToWishlist = async (product: SwellProduct) => {
-    if (!isAuthenticated || !userId) {
+    if (!isAuthenticated || !userId || !userEmail) {
       toast({
         title: "Please login",
         description: "You need to be logged in to add items to your wishlist.",
@@ -62,28 +87,16 @@ export const useSwellWishlist = () => {
       return false;
     }
 
-    // Check if already in wishlist
-    const existing = wishlistItems.find(item => item.product_id === product.id);
-    if (existing) {
-      toast({
-        title: "Already in wishlist",
-        description: `${product.name} is already in your wishlist.`,
-      });
-      return false;
-    }
-
     try {
-      const { error } = await supabase
-        .from('swell_wishlist')
-        .insert({
-          user_id: userId,
-          product_id: product.id,
-          product_name: product.name,
-          product_image: product.image || null,
-          product_price: product.price || null
+      const result = await callWishlistApi('add', userEmail, { product });
+      
+      if (result.alreadyExists) {
+        toast({
+          title: "Already in wishlist",
+          description: `${product.name} is already in your wishlist.`,
         });
-
-      if (error) throw error;
+        return false;
+      }
 
       // Invalidate cache to refresh wishlist
       queryClient.invalidateQueries({ queryKey: ['swell-wishlist', userId] });
@@ -106,16 +119,10 @@ export const useSwellWishlist = () => {
 
   // Remove from wishlist
   const removeFromWishlist = async (productId: string) => {
-    if (!userId) return false;
+    if (!userId || !userEmail) return false;
 
     try {
-      const { error } = await supabase
-        .from('swell_wishlist')
-        .delete()
-        .eq('user_id', userId)
-        .eq('product_id', productId);
-
-      if (error) throw error;
+      await callWishlistApi('remove', userEmail, { productId });
 
       // Invalidate cache to refresh wishlist
       queryClient.invalidateQueries({ queryKey: ['swell-wishlist', userId] });
@@ -136,7 +143,7 @@ export const useSwellWishlist = () => {
     }
   };
 
-  // Check if product is in wishlist
+  // Check if product is in wishlist (uses local cache)
   const isInWishlist = (productId: string): boolean => {
     return wishlistItems.some(item => item.product_id === productId);
   };
