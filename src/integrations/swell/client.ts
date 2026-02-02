@@ -279,6 +279,17 @@ class SwellClient {
         method: 'POST',
       });
     },
+    // Get shipping rates for the cart
+    getShippingRates: async () => {
+      return this.request(withCheckoutId('/cart/shipment-rating'));
+    },
+    // Set shipping service on the cart
+    setShippingService: async (serviceId: string) => {
+      return this.request(withCheckoutId('/cart'), {
+        method: 'PUT',
+        body: JSON.stringify({ shipping: { service: serviceId } }),
+      });
+    },
   };
 
   categories = {

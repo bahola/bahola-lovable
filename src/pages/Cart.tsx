@@ -1,19 +1,43 @@
-
 import React, { useState } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Trash2, Plus, Minus, ShoppingCart, ArrowRight, Tag, X, Loader2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartAdapter';
+import { useCouponCode } from '@/hooks/useCouponCode';
 import ShippingCalculator from '@/components/shipping/ShippingCalculator';
 
 const Cart = () => {
-  const { items, updateQuantity, removeFromCart, clearCart, getDiscountedPrice, getSubtotal } = useCart();
+  const { 
+    items, 
+    updateQuantity, 
+    removeFromCart, 
+    clearCart, 
+    getDiscountedPrice, 
+    getSubtotal,
+    discountTotal,
+    appliedCoupon,
+    shippingTotal,
+  } = useCart();
+  
+  const {
+    couponCode,
+    setCouponCode,
+    isApplying,
+    isRemoving,
+    applyCoupon,
+    removeCoupon,
+  } = useCouponCode();
+  
   const [shippingCost, setShippingCost] = useState(0);
   const [shippingZone, setShippingZone] = useState<string>('');
   
   const subtotal = getSubtotal();
-  const total = subtotal + shippingCost; // MRP is tax-inclusive
+  const discount = discountTotal || 0;
+  // Use Swell shipping if available, otherwise local calculation
+  const effectiveShippingCost = shippingTotal > 0 ? shippingTotal : shippingCost;
+  const total = subtotal - discount + effectiveShippingCost;
 
   const handleShippingUpdate = (cost: number, zone?: string) => {
     setShippingCost(cost);
@@ -134,18 +158,89 @@ const Cart = () => {
               </div>
               
               <div className="p-6 space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">Subtotal</span>
-                  <span className="font-medium">₹{Math.round(subtotal)}</span>
+                {/* Coupon Code Section */}
+                <div className="space-y-2">
+                  <label className="text-sm text-bahola-neutral-600 font-medium">
+                    Have a coupon code?
+                  </label>
+                  
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <Tag className="h-4 w-4 text-green-600" />
+                        <span className="font-medium text-green-700">{appliedCoupon.code}</span>
+                        <span className="text-green-600 text-sm">
+                          (-₹{Math.round(appliedCoupon.discountTotal)})
+                        </span>
+                      </div>
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={removeCoupon}
+                        disabled={isRemoving}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
+                      >
+                        {isRemoving ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Input 
+                        placeholder="Enter coupon code"
+                        className="flex-1"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                      />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={applyCoupon}
+                        disabled={isApplying || !couponCode.trim()}
+                      >
+                        {isApplying ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Apply'}
+                      </Button>
+                    </div>
+                  )}
+                  
+                  <Link 
+                    to="/promo-pocket" 
+                    className="text-bahola-blue-500 hover:underline text-xs"
+                  >
+                    Browse available coupons in Promo Pocket →
+                  </Link>
                 </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-bahola-neutral-600">
-                    Shipping {shippingZone && `(${shippingZone})`}
-                  </span>
-                  <span className="font-medium">
-                    {shippingCost === 0 ? 'Calculate above' : `₹${shippingCost}`}
-                  </span>
+
+                <div className="border-t pt-4 space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-bahola-neutral-600">Subtotal</span>
+                    <span className="font-medium">₹{Math.round(subtotal)}</span>
+                  </div>
+                  
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount {appliedCoupon && `(${appliedCoupon.code})`}</span>
+                      <span>-₹{Math.round(discount)}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between">
+                    <span className="text-bahola-neutral-600">
+                      Shipping {shippingZone && `(${shippingZone})`}
+                    </span>
+                    <span className="font-medium">
+                      {effectiveShippingCost === 0 ? (
+                        shippingTotal === 0 && subtotal >= 500 ? (
+                          <span className="text-green-600">FREE</span>
+                        ) : (
+                          'Calculate above'
+                        )
+                      ) : (
+                        `₹${effectiveShippingCost}`
+                      )}
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="border-t pt-4 mt-4">
@@ -154,7 +249,7 @@ const Cart = () => {
                     <span>₹{Math.round(total)}</span>
                   </div>
                   <p className="text-bahola-neutral-500 text-xs mt-1">
-                    (MRP inclusive of GST{shippingCost > 0 ? ' + Shipping' : ''})
+                    (MRP inclusive of GST{effectiveShippingCost > 0 ? ' + Shipping' : ''})
                   </p>
                 </div>
                 

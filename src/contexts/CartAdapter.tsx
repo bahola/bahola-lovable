@@ -24,6 +24,7 @@ interface CartContextType {
   totalAmount: number;
   subtotal: number;
   discountTotal: number;
+  shippingTotal: number;
   appliedCoupon: AppliedCoupon | null;
   addToCart: (
     item: Omit<CartItem, 'quantity'>,
@@ -44,6 +45,8 @@ interface CartContextType {
   removeCoupon: () => Promise<void>;
   updateCart: (data: any) => Promise<any>;
   submitOrder: () => Promise<any>;
+  getShippingRates: () => Promise<any[]>;
+  setShippingService: (serviceId: string) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -55,6 +58,7 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
     totalPrice,
     subtotal: swellSubtotal,
     discountTotal,
+    shippingTotal,
     appliedCoupon,
     addItem,
     updateQuantity: swellUpdateQuantity,
@@ -64,6 +68,8 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
     removeCoupon: swellRemoveCoupon,
     updateCart: swellUpdateCart,
     submitOrder: swellSubmitOrder,
+    getShippingRates: swellGetShippingRates,
+    setShippingService: swellSetShippingService,
   } = useSwellCart();
 
   // Transform Swell items to match the old cart format
@@ -150,6 +156,7 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
         totalAmount: totalPrice,
         subtotal: swellSubtotal || getSubtotal(),
         discountTotal,
+        shippingTotal,
         appliedCoupon,
         addToCart,
         updateQuantity,
@@ -162,6 +169,8 @@ export const CartAdapterProvider: React.FC<{ children: ReactNode }> = ({ childre
         removeCoupon: swellRemoveCoupon,
         updateCart: swellUpdateCart,
         submitOrder: swellSubmitOrder,
+        getShippingRates: swellGetShippingRates,
+        setShippingService: swellSetShippingService,
       }}
     >
       {children}

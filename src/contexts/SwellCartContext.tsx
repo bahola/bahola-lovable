@@ -19,13 +19,23 @@ interface AppliedCoupon {
   discountTotal: number;
 }
 
+interface ShippingService {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+}
+
 interface SwellCartContextType {
   items: CartItem[];
   totalItems: number;
   totalPrice: number;
   subtotal: number;
   discountTotal: number;
+  shippingTotal: number;
   appliedCoupon: AppliedCoupon | null;
+  shippingServices: ShippingService[];
+  selectedShippingService: string | null;
   loading: boolean;
   addItem: (productId: string, quantity?: number, options?: any) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
@@ -36,6 +46,8 @@ interface SwellCartContextType {
   removeCoupon: () => Promise<void>;
   updateCart: (data: any) => Promise<any>;
   submitOrder: () => Promise<any>;
+  getShippingRates: () => Promise<ShippingService[]>;
+  setShippingService: (serviceId: string) => Promise<void>;
 }
 
 const SwellCartContext = createContext<SwellCartContextType | undefined>(undefined);
@@ -47,7 +59,9 @@ const parseCartData = (cart: any): {
   totalPrice: number;
   subtotal: number;
   discountTotal: number;
+  shippingTotal: number;
   appliedCoupon: AppliedCoupon | null;
+  selectedShippingService: string | null;
 } => {
   if (cart && cart.items) {
     const formattedItems: CartItem[] = cart.items.map((item: any) => ({
@@ -73,10 +87,21 @@ const parseCartData = (cart: any): {
       totalPrice: cart.grand_total || 0,
       subtotal: cart.sub_total || 0,
       discountTotal: cart.discount_total || 0,
-      appliedCoupon
+      shippingTotal: cart.shipment_total || cart.shipping?.price || 0,
+      appliedCoupon,
+      selectedShippingService: cart.shipping?.service || null
     };
   }
-  return { items: [], totalItems: 0, totalPrice: 0, subtotal: 0, discountTotal: 0, appliedCoupon: null };
+  return { 
+    items: [], 
+    totalItems: 0, 
+    totalPrice: 0, 
+    subtotal: 0, 
+    discountTotal: 0, 
+    shippingTotal: 0, 
+    appliedCoupon: null,
+    selectedShippingService: null 
+  };
 };
 
 export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -85,7 +110,10 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [totalPrice, setTotalPrice] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
   const [discountTotal, setDiscountTotal] = useState(0);
+  const [shippingTotal, setShippingTotal] = useState(0);
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [shippingServices, setShippingServices] = useState<ShippingService[]>([]);
+  const [selectedShippingService, setSelectedShippingService] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -96,7 +124,9 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
     setTotalPrice(parsed.totalPrice);
     setSubtotal(parsed.subtotal);
     setDiscountTotal(parsed.discountTotal);
+    setShippingTotal(parsed.shippingTotal);
     setAppliedCoupon(parsed.appliedCoupon);
+    setSelectedShippingService(parsed.selectedShippingService);
     
     // Store checkout_id for future recovery
     if (cart?.checkout_id) {
@@ -273,6 +303,40 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   }, []);
 
+  const getShippingRates = useCallback(async (): Promise<ShippingService[]> => {
+    try {
+      console.log('[SwellCart] Getting shipping rates');
+      const result = await swell.cart.getShippingRates();
+      console.log('[SwellCart] Shipping rates result:', result);
+      
+      // Parse shipping services from response
+      const services: ShippingService[] = (result?.services || []).map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        price: s.price || 0,
+        description: s.description,
+      }));
+      
+      setShippingServices(services);
+      return services;
+    } catch (error) {
+      console.error('[SwellCart] Error getting shipping rates:', error);
+      return [];
+    }
+  }, []);
+
+  const setShippingServiceFn = useCallback(async (serviceId: string): Promise<void> => {
+    try {
+      console.log('[SwellCart] Setting shipping service:', serviceId);
+      const result = await swell.cart.setShippingService(serviceId);
+      console.log('[SwellCart] Set shipping service result:', result);
+      updateStateFromCart(result);
+    } catch (error) {
+      console.error('[SwellCart] Error setting shipping service:', error);
+      throw error;
+    }
+  }, [updateStateFromCart]);
+
   useEffect(() => {
     refreshCart();
   }, [refreshCart]);
@@ -285,7 +349,10 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         totalPrice,
         subtotal,
         discountTotal,
+        shippingTotal,
         appliedCoupon,
+        shippingServices,
+        selectedShippingService,
         loading,
         addItem,
         updateQuantity,
@@ -296,6 +363,8 @@ export const SwellCartProvider: React.FC<{ children: ReactNode }> = ({ children 
         removeCoupon,
         updateCart,
         submitOrder,
+        getShippingRates,
+        setShippingService: setShippingServiceFn,
       }}
     >
       {children}
