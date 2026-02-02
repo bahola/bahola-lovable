@@ -2,6 +2,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedDoctorRoute } from '@/components/auth/ProtectedDoctorRoute';
+import { ProtectedAdminRoute } from '@/components/auth/ProtectedAdminRoute';
 
 // Import all page components
 import {
@@ -76,6 +77,7 @@ import {
 
 // Import admin components
 import ProductsManagement from '@/pages/admin/ProductsManagement';
+import AdminLogin from '@/pages/admin/AdminLogin';
 
 // Import route functions
 import { getHealthConcernRoutes } from './HealthConcernRoutes';
@@ -201,7 +203,12 @@ const AppRoutes = () => {
         <Route path="/professional/materia-medica/gelsemium-baptisia" element={<GelsemiumBaptisia />} />
         
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminDashboard />}>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={
+          <ProtectedAdminRoute>
+            <AdminDashboard />
+          </ProtectedAdminRoute>
+        }>
           <Route index element={<AdminHome />} />
           <Route path="products" element={<ProductsManagement />} />
           <Route path="pages" element={<PagesManagement />} />
