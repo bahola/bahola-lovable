@@ -1,39 +1,48 @@
 
 
-# Expand Approval Card to Handle Doctors, Pharmacy & Students
+# Fix Checkout "Log In" Link + Pre-fill Form After Login
 
-## What Changes
-The approval card currently only shows doctor applications. It will be updated to fetch and display all three professional types (Doctor, Pharmacy, Student), show type-specific details for each, and assign the correct Swell customer group on approval.
+## Problem
+The "Log in" link on the checkout page has two issues:
+1. It navigates to `/login` without a return URL, so after logging in the user lands on the homepage instead of back at checkout
+2. When the user navigates away to login and comes back, all form data is lost
 
-## Changes
+## Solution
 
-### File: `src/components/admin/DoctorApprovalCard.tsx`
+### Change 1: Add return URL to the checkout login link
+**File:** `src/pages/Checkout.tsx`
+- Change `<Link to="/login">` to `<Link to="/login?returnUrl=/checkout">` so users are redirected back to checkout after logging in
 
-**1. Update the data interface** to include `customer_type` and all type-specific fields:
-- `customer_type`: `'doctor' | 'pharmacy' | 'student'`
-- Pharmacy fields: `pharmacy_license`, `pharmacy_name`, `gst_number`
-- Student fields: `student_id`, `institution_name`, `course`, `expected_graduation`
-- Make `medical_license` and `specialization` optional (only doctors have them)
+### Change 2: Auto-fill checkout form when user is logged in
+**File:** `src/pages/Checkout.tsx`
+- Import `useSwellAuth` from the auth context
+- Add a `useEffect` that watches for authentication state changes
+- When the user is authenticated, pre-fill the form fields (firstName, lastName, email, phone) from their account data
+- This way, when they return from login, the contact information is already filled in
 
-**2. Update the Supabase query** to fetch all three types:
-- Change `.eq('customer_type', 'doctor')` to `.in('customer_type', ['doctor', 'pharmacy', 'student'])`
-- Add pharmacy/student columns to the select
-- Remove the filter that requires `medical_license` and `specialization` (pharmacy/students won't have these)
+### Technical Details
 
-**3. Fix the Swell group assignment** to use the actual `customer_type` instead of hardcoded `'doctor'`:
-- Change `group: 'doctor'` to `group: professional.customer_type`
+```text
+Checkout page loads
+  |
+  +--> User clicks "Log in" link
+  |      |
+  |      +--> Navigates to /login?returnUrl=/checkout
+  |      |
+  |      +--> User logs in successfully
+  |      |
+  |      +--> Redirected back to /checkout
+  |
+  +--> useEffect detects isAuthenticated = true
+  |
+  +--> Pre-fills firstName, lastName, email, phone from user data
+```
 
-**4. Update the UI** to show type-specific details per card:
-- Add a colored badge showing the type (Doctor / Pharmacy / Student)
-- Conditionally render fields based on `customer_type`:
-  - **Doctor**: Medical License, Specialization, Clinic, Years of Practice
-  - **Pharmacy**: Pharmacy License, Pharmacy Name, GST Number
-  - **Student**: Student ID, Institution, Course, Expected Graduation
+### Files to Modify
 
-**5. Update labels and messages**:
-- Title: "Pending Professional Approvals"
-- Empty state: "No pending professional applications"
-- Toast messages: dynamically use the customer type (e.g., "Pharmacy approved")
+| File | Change |
+|------|--------|
+| `src/pages/Checkout.tsx` | Add `returnUrl=/checkout` to login link; import `useSwellAuth`; add useEffect to pre-fill form from user data |
 
-## No Other Files Need Changes
-The edge function already accepts any group value and looks it up dynamically in Swell. The registration flow already skips Swell creation for all three types.
+No other files need changes. The Login page already supports `returnUrl` via search params.
+
