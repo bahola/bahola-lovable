@@ -147,15 +147,25 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
         const result = await swell.account.login(email, password);
         console.log('Swell login result:', result);
 
-        const account = await swell.account.get();
-        if (account && account.email) {
-          // Persist to localStorage as backup
-          localStorage.setItem('bahola_user_session', JSON.stringify(account));
-          setUser(account);
+        // Use login result directly (account.get() may fail due to cookie issues)
+        if (result && result.email) {
+          localStorage.setItem('bahola_user_session', JSON.stringify(result));
+          setUser(result);
           setIsAuthenticated(true);
-          setCustomerType((account.group as SwellCustomerType) || 'customer');
+          setCustomerType((result.group as SwellCustomerType) || 'customer');
           await fetchVerificationStatus(email);
           swellLoginSuccess = true;
+        } else {
+          // Fallback: try account.get()
+          const account = await swell.account.get();
+          if (account && account.email) {
+            localStorage.setItem('bahola_user_session', JSON.stringify(account));
+            setUser(account);
+            setIsAuthenticated(true);
+            setCustomerType((account.group as SwellCustomerType) || 'customer');
+            await fetchVerificationStatus(email);
+            swellLoginSuccess = true;
+          }
         }
       } catch (swellError) {
         console.warn('Swell login failed, trying Supabase fallback:', swellError);
