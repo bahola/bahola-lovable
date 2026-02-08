@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Package, 
@@ -12,13 +12,21 @@ import {
   ChevronRight,
   Truck,
   FileText,
-  HelpCircle
+  HelpCircle,
+  LogOut
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/admin/login');
+  };
   
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
@@ -48,7 +56,7 @@ const AdminDashboard = () => {
       <div className="flex">
         {/* Sidebar */}
         <aside className="w-64 bg-white border-r border-gray-200 h-[calc(100vh-64px)] shadow-sm">
-          <nav className="py-4">
+          <nav className="py-4 flex flex-col justify-between h-full">
             <ul className="space-y-1">
               {navItems.map((item) => (
                 <li key={item.path}>
@@ -66,6 +74,15 @@ const AdminDashboard = () => {
                 </li>
               ))}
             </ul>
+            <div className="border-t border-gray-200 pt-2 px-3">
+              <button
+                onClick={handleSignOut}
+                className="flex items-center w-full px-3 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-md transition-colors"
+              >
+                <LogOut className="h-5 w-5 mr-3" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </nav>
         </aside>
 
