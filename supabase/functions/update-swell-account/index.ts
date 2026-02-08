@@ -9,10 +9,12 @@ interface UpdateSwellRequest {
   email: string;
   group?: string;
   verification_status: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -29,7 +31,7 @@ serve(async (req) => {
       );
     }
 
-    const { email, group, verification_status }: UpdateSwellRequest = await req.json();
+    const { email, group, verification_status, first_name, last_name, phone }: UpdateSwellRequest = await req.json();
 
     if (!email || !verification_status) {
       return new Response(
@@ -40,7 +42,6 @@ serve(async (req) => {
 
     console.log(`Updating Swell account for email: ${email}, group: ${group}, status: ${verification_status}`);
 
-    // Create Basic Auth header for Swell Backend API
     const authString = `${SWELL_STORE_ID}:${SWELL_SECRET_KEY}`;
     const authHeader = `Basic ${btoa(authString)}`;
 
@@ -50,10 +51,7 @@ serve(async (req) => {
 
     const searchResponse = await fetch(searchUrl, {
       method: 'GET',
-      headers: {
-        'Authorization': authHeader,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
     });
 
     if (!searchResponse.ok) {
@@ -66,78 +64,94 @@ serve(async (req) => {
     }
 
     const searchResult = await searchResponse.json();
-    console.log('Search result:', JSON.stringify(searchResult));
+    console.log('Search result count:', searchResult.results?.length || 0);
+
+    let accountId: string;
 
     if (!searchResult.results || searchResult.results.length === 0) {
-      console.error('No Swell account found for email:', email);
+      // Account not found - create if approving, skip if rejecting
+      if (verification_status !== 'approved') {
+        console.log('No Swell account found and status is not approved - skipping');
+        return new Response(
+          JSON.stringify({ success: true, message: 'No Swell account to update for rejection', skipped: true }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      console.log('No Swell account found - creating new account...');
+      const createPayload: Record<string, unknown> = {
+        email,
+        first_name: first_name || '',
+        last_name: last_name || '',
+        phone: phone || '',
+        email_optin: true,
+        metadata: {
+          verification_status: 'approved',
+        },
+      };
+
+      if (group) {
+        createPayload.group = group;
+      }
+
+      console.log('Creating account with payload:', JSON.stringify(createPayload));
+
+      const createResponse = await fetch('https://api.swell.store/accounts', {
+        method: 'POST',
+        headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
+        body: JSON.stringify(createPayload),
+      });
+
+      if (!createResponse.ok) {
+        const errorText = await createResponse.text();
+        console.error('Failed to create Swell account:', errorText);
+        return new Response(
+          JSON.stringify({ error: 'Failed to create Swell account', details: errorText }),
+          { status: createResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const createdAccount = await createResponse.json();
+      console.log('Account created successfully:', createdAccount.id);
+      accountId = createdAccount.id;
+
+      // If group was set during creation, we may still need to look up and assign the group ID
+      if (group) {
+        await assignGroup(accountId, group, authHeader);
+      }
+
       return new Response(
-        JSON.stringify({ error: 'No Swell account found for this email' }),
-        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({
+          success: true,
+          message: 'Swell account created and configured',
+          created: true,
+          account: {
+            id: createdAccount.id,
+            email: createdAccount.email,
+            group: createdAccount.group,
+            verification_status: createdAccount.metadata?.verification_status,
+          }
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const accountId = searchResult.results[0].id;
+    // Account exists - update it
+    accountId = searchResult.results[0].id;
     console.log('Found account ID:', accountId);
 
-    // Step 2: If group is provided, look up the actual group ID from account_groups
+    // Look up group ID if needed
     let groupId: string | undefined;
     if (group) {
-      console.log('Looking up group:', group);
-      const groupsUrl = `https://api.swell.store/account_groups?where[slug]=${encodeURIComponent(group)}`;
-      const groupsResponse = await fetch(groupsUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (groupsResponse.ok) {
-        const groupsResult = await groupsResponse.json();
-        console.log('Groups search result:', JSON.stringify(groupsResult));
-        
-        if (groupsResult.results && groupsResult.results.length > 0) {
-          groupId = groupsResult.results[0].id;
-          console.log('Found group ID:', groupId);
-        } else {
-          // Try searching by name if slug didn't work
-          const groupsByNameUrl = `https://api.swell.store/account_groups?where[name]=${encodeURIComponent(group)}`;
-          const groupsByNameResponse = await fetch(groupsByNameUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': authHeader,
-              'Content-Type': 'application/json',
-            },
-          });
-          
-          if (groupsByNameResponse.ok) {
-            const groupsByNameResult = await groupsByNameResponse.json();
-            console.log('Groups by name search result:', JSON.stringify(groupsByNameResult));
-            
-            if (groupsByNameResult.results && groupsByNameResult.results.length > 0) {
-              groupId = groupsByNameResult.results[0].id;
-              console.log('Found group ID by name:', groupId);
-            } else {
-              console.warn('Group not found, will use group slug directly:', group);
-              groupId = group; // Fallback to using the slug directly
-            }
-          }
-        }
-      } else {
-        console.warn('Failed to fetch groups, will use group slug directly:', group);
-        groupId = group;
-      }
+      groupId = await lookupGroupId(group, authHeader);
     }
 
-    // Step 3: Update the account with new group and metadata
+    // Update the account
     const updateUrl = `https://api.swell.store/accounts/${accountId}`;
     const updatePayload: Record<string, unknown> = {
-      metadata: {
-        verification_status: verification_status,
-      },
+      metadata: { verification_status },
     };
 
-    // Only set group if we found or have a group ID
     if (groupId) {
       updatePayload.group = groupId;
     }
@@ -146,10 +160,7 @@ serve(async (req) => {
 
     const updateResponse = await fetch(updateUrl, {
       method: 'PUT',
-      headers: {
-        'Authorization': authHeader,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
       body: JSON.stringify(updatePayload),
     });
 
@@ -163,11 +174,11 @@ serve(async (req) => {
     }
 
     const updatedAccount = await updateResponse.json();
-    console.log('Account updated successfully:', JSON.stringify(updatedAccount));
+    console.log('Account updated successfully:', updatedAccount.id);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: 'Swell account updated successfully',
         account: {
           id: updatedAccount.id,
@@ -187,3 +198,60 @@ serve(async (req) => {
     );
   }
 });
+
+async function lookupGroupId(group: string, authHeader: string): Promise<string | undefined> {
+  try {
+    // Try by slug first
+    const slugUrl = `https://api.swell.store/account_groups?where[slug]=${encodeURIComponent(group)}`;
+    const slugRes = await fetch(slugUrl, {
+      method: 'GET',
+      headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
+    });
+
+    if (slugRes.ok) {
+      const slugResult = await slugRes.json();
+      if (slugResult.results?.length > 0) {
+        console.log('Found group ID by slug:', slugResult.results[0].id);
+        return slugResult.results[0].id;
+      }
+    }
+
+    // Try by name
+    const nameUrl = `https://api.swell.store/account_groups?where[name]=${encodeURIComponent(group)}`;
+    const nameRes = await fetch(nameUrl, {
+      method: 'GET',
+      headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
+    });
+
+    if (nameRes.ok) {
+      const nameResult = await nameRes.json();
+      if (nameResult.results?.length > 0) {
+        console.log('Found group ID by name:', nameResult.results[0].id);
+        return nameResult.results[0].id;
+      }
+    }
+
+    console.warn('Group not found, using slug directly:', group);
+    return group;
+  } catch (error) {
+    console.warn('Error looking up group:', error);
+    return group;
+  }
+}
+
+async function assignGroup(accountId: string, group: string, authHeader: string): Promise<void> {
+  const groupId = await lookupGroupId(group, authHeader);
+  if (groupId) {
+    const updateUrl = `https://api.swell.store/accounts/${accountId}`;
+    const res = await fetch(updateUrl, {
+      method: 'PUT',
+      headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ group: groupId }),
+    });
+    if (res.ok) {
+      console.log('Group assigned successfully');
+    } else {
+      console.warn('Failed to assign group:', await res.text());
+    }
+  }
+}

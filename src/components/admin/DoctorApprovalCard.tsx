@@ -73,14 +73,18 @@ export const DoctorApprovalCard: React.FC = () => {
     }
   };
 
-  const updateSwellAccount = async (email: string, status: 'approved' | 'rejected') => {
-    console.log(`Updating Swell account for ${email} with status: ${status}`);
+  const updateSwellAccount = async (doctor: PendingDoctor, status: 'approved' | 'rejected') => {
+    console.log(`Updating Swell account for ${doctor.email} with status: ${status}`);
     
+    const nameParts = doctor.name.split(' ');
     const { data, error } = await supabase.functions.invoke('update-swell-account', {
       body: {
-        email,
+        email: doctor.email,
         group: status === 'approved' ? 'doctor' : undefined,
-        verification_status: status
+        verification_status: status,
+        first_name: nameParts[0],
+        last_name: nameParts.slice(1).join(' ') || '',
+        phone: doctor.phone,
       }
     });
 
@@ -125,24 +129,22 @@ export const DoctorApprovalCard: React.FC = () => {
         return;
       }
 
-      // Update Swell account first
+      // Update Swell account first (creates account if it doesn't exist)
       if (status === 'approved') {
-        console.log('Approving doctor - updating Swell account...');
+        console.log('Approving doctor - creating/updating Swell account...');
         try {
-          await updateSwellAccount(doctor.email, 'approved');
-          toast.success('Swell account updated to doctor group');
+          await updateSwellAccount(doctor, 'approved');
+          toast.success('Swell account created/updated with doctor group');
         } catch (error) {
           console.error('Failed to update Swell account:', error);
           toast.error('Failed to update Swell account. Please try again.');
           return;
         }
       } else {
-        // For rejection, also update Swell to mark as rejected
         try {
-          await updateSwellAccount(doctor.email, 'rejected');
+          await updateSwellAccount(doctor, 'rejected');
         } catch (error) {
           console.warn('Failed to update Swell account for rejection:', error);
-          // Continue with Supabase update even if Swell update fails for rejection
         }
       }
 
