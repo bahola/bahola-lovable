@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+  Card, CardContent, CardDescription, CardHeader, CardTitle 
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,168 +8,131 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { CheckCircle, XCircle, Clock, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { ProfessionalDetailsFields } from './ProfessionalDetailsFields';
 
-interface PendingDoctor {
+interface PendingProfessional {
   id: string;
   name: string;
   email: string;
   phone: string;
-  medical_license: string;
-  specialization: string;
+  customer_type: 'doctor' | 'pharmacy' | 'student';
+  medical_license?: string;
+  specialization?: string;
   clinic?: string;
   years_of_practice?: number;
+  pharmacy_license?: string;
+  pharmacy_name?: string;
+  gst_number?: string;
+  student_id?: string;
+  institution_name?: string;
+  course?: string;
+  expected_graduation?: string;
   created_at: string;
 }
 
+const TYPE_LABELS: Record<string, string> = {
+  doctor: 'Doctor',
+  pharmacy: 'Pharmacy',
+  student: 'Student',
+};
+
+const TYPE_COLORS: Record<string, string> = {
+  doctor: 'bg-blue-100 text-blue-800',
+  pharmacy: 'bg-green-100 text-green-800',
+  student: 'bg-purple-100 text-purple-800',
+};
+
 export const DoctorApprovalCard: React.FC = () => {
-  const [pendingDoctors, setPendingDoctors] = useState<PendingDoctor[]>([]);
+  const [pending, setPending] = useState<PendingProfessional[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchPendingDoctors();
-  }, []);
+  useEffect(() => { fetchPending(); }, []);
 
-  const fetchPendingDoctors = async () => {
+  const fetchPending = async () => {
     try {
       const { data, error } = await supabase
         .from('customers')
-        .select('id, name, email, phone, medical_license, specialization, clinic, years_of_practice, created_at')
-        .eq('customer_type', 'doctor')
+        .select('id, name, email, phone, customer_type, medical_license, specialization, clinic, years_of_practice, pharmacy_license, pharmacy_name, gst_number, student_id, institution_name, course, expected_graduation, created_at')
+        .in('customer_type', ['doctor', 'pharmacy', 'student'])
         .eq('verification_status', 'pending')
         .order('created_at', { ascending: true });
 
       if (error) {
-        console.error('Error fetching pending doctors:', error);
-        toast.error('Failed to load pending doctor applications');
+        console.error('Error fetching pending professionals:', error);
+        toast.error('Failed to load pending applications');
         return;
       }
 
-      // Filter and map data to ensure required fields exist
-      const validDoctors = (data || [])
-        .filter(doc => doc.medical_license && doc.specialization)
-        .map(doc => ({
-          id: doc.id,
-          name: doc.name,
-          email: doc.email,
-          phone: doc.phone,
-          medical_license: doc.medical_license!,
-          specialization: doc.specialization!,
-          clinic: doc.clinic,
-          years_of_practice: doc.years_of_practice,
-          created_at: doc.created_at,
-        }));
-
-      setPendingDoctors(validDoctors);
+      setPending((data || []) as PendingProfessional[]);
     } catch (error) {
-      console.error('Error fetching pending doctors:', error);
-      toast.error('Failed to load pending doctor applications');
+      console.error('Error fetching pending professionals:', error);
+      toast.error('Failed to load pending applications');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateSwellAccount = async (doctor: PendingDoctor, status: 'approved' | 'rejected') => {
-    console.log(`Updating Swell account for ${doctor.email} with status: ${status}`);
-    
-    const nameParts = doctor.name.split(' ');
+  const updateSwellAccount = async (prof: PendingProfessional, status: 'approved' | 'rejected') => {
+    const nameParts = prof.name.split(' ');
     const { data, error } = await supabase.functions.invoke('update-swell-account', {
       body: {
-        email: doctor.email,
-        group: status === 'approved' ? 'doctor' : undefined,
+        email: prof.email,
+        group: status === 'approved' ? prof.customer_type : undefined,
         verification_status: status,
         first_name: nameParts[0],
         last_name: nameParts.slice(1).join(' ') || '',
-        phone: doctor.phone,
+        phone: prof.phone,
       }
     });
-
-    if (error) {
-      console.error('Swell account update error:', error);
-      throw new Error(`Failed to update Swell account: ${error.message}`);
-    }
-
-    console.log('Swell account update response:', data);
+    if (error) throw new Error(`Failed to update Swell account: ${error.message}`);
     return data;
   };
 
-  const sendNotificationEmail = async (doctorEmail: string, doctorName: string, status: 'approved' | 'rejected') => {
-    console.log(`Sending ${status} notification email to ${doctorEmail}`);
-    
+  const sendNotificationEmail = async (email: string, name: string, status: 'approved' | 'rejected') => {
     const { data, error } = await supabase.functions.invoke('send-doctor-notification', {
-      body: {
-        doctorEmail,
-        doctorName,
-        status,
-        adminEmail: 'admin@baholalabs.in' // Admin notification recipient
-      }
+      body: { doctorEmail: email, doctorName: name, status, adminEmail: 'admin@baholalabs.in' }
     });
-
-    if (error) {
-      console.error('Email notification error:', error);
-      // Don't throw - email failure shouldn't block the approval flow
-      return null;
-    }
-
-    console.log('Email notification response:', data);
+    if (error) { console.error('Email notification error:', error); return null; }
     return data;
   };
 
-  const handleApproval = async (doctorId: string, status: 'approved' | 'rejected') => {
-    setProcessingId(doctorId);
-    
+  const handleApproval = async (id: string, status: 'approved' | 'rejected') => {
+    setProcessingId(id);
     try {
-      const doctor = pendingDoctors.find(d => d.id === doctorId);
-      if (!doctor) {
-        toast.error('Doctor not found');
-        return;
-      }
+      const prof = pending.find(p => p.id === id);
+      if (!prof) { toast.error('Application not found'); return; }
+      const label = TYPE_LABELS[prof.customer_type] || prof.customer_type;
 
-      // Update Swell account first (creates account if it doesn't exist)
       if (status === 'approved') {
-        console.log('Approving doctor - creating/updating Swell account...');
         try {
-          await updateSwellAccount(doctor, 'approved');
-          toast.success('Swell account created/updated with doctor group');
+          await updateSwellAccount(prof, 'approved');
+          toast.success(`Swell account created/updated with ${label} group`);
         } catch (error) {
           console.error('Failed to update Swell account:', error);
           toast.error('Failed to update Swell account. Please try again.');
           return;
         }
       } else {
-        try {
-          await updateSwellAccount(doctor, 'rejected');
-        } catch (error) {
-          console.warn('Failed to update Swell account for rejection:', error);
-        }
+        try { await updateSwellAccount(prof, 'rejected'); } catch (e) { console.warn('Swell update for rejection failed:', e); }
       }
 
-      // Update the status in Supabase
       const { error } = await supabase
         .from('customers')
         .update({ verification_status: status })
-        .eq('id', doctorId);
+        .eq('id', id);
 
-      if (error) {
-        console.error('Error updating doctor status:', error);
-        toast.error('Failed to update doctor status in database');
-        return;
-      }
+      if (error) { toast.error('Failed to update status in database'); return; }
 
-      // Send notification email
       try {
-        await sendNotificationEmail(doctor.email, doctor.name, status);
-        toast.success(`Doctor ${status === 'approved' ? 'approved' : 'rejected'} and notification email sent`);
-      } catch (emailError) {
-        console.warn('Email notification failed:', emailError);
-        toast.success(`Doctor ${status === 'approved' ? 'approved' : 'rejected'} (email notification failed)`);
-      }
-      
-      // Remove the doctor from the pending list
-      setPendingDoctors(prev => prev.filter(doc => doc.id !== doctorId));
+        await sendNotificationEmail(prof.email, prof.name, status);
+        toast.success(`${label} ${status} and notification sent`);
+      } catch { toast.success(`${label} ${status} (email notification failed)`); }
+
+      setPending(prev => prev.filter(p => p.id !== id));
     } catch (error) {
-      console.error('Error updating doctor status:', error);
-      toast.error('Failed to update doctor status');
+      console.error('Error updating status:', error);
+      toast.error('Failed to update status');
     } finally {
       setProcessingId(null);
     }
@@ -183,18 +142,11 @@ export const DoctorApprovalCard: React.FC = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Pending Doctor Approvals
-          </CardTitle>
-          <CardDescription>Review and approve healthcare professional applications</CardDescription>
+          <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5" />Pending Professional Approvals</CardTitle>
+          <CardDescription>Review and approve professional applications</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-32 w-full" />
-            ))}
-          </div>
+          <div className="space-y-4">{[1, 2, 3].map(i => <Skeleton key={i} className="h-32 w-full" />)}</div>
         </CardContent>
       </Card>
     );
@@ -205,73 +157,45 @@ export const DoctorApprovalCard: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Clock className="h-5 w-5" />
-          Pending Doctor Approvals
-          <Badge variant="secondary">{pendingDoctors.length}</Badge>
+          Pending Professional Approvals
+          <Badge variant="secondary">{pending.length}</Badge>
         </CardTitle>
-        <CardDescription>Review and approve healthcare professional applications</CardDescription>
+        <CardDescription>Review and approve professional applications</CardDescription>
       </CardHeader>
       <CardContent>
-        {pendingDoctors.length === 0 ? (
+        {pending.length === 0 ? (
           <div className="text-center py-8">
             <User className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">No pending doctor applications</p>
+            <p className="text-muted-foreground">No pending professional applications</p>
           </div>
         ) : (
           <div className="space-y-6">
-            {pendingDoctors.map((doctor) => (
-              <div key={doctor.id} className="border rounded-lg p-4 space-y-4">
+            {pending.map((prof) => (
+              <div key={prof.id} className="border rounded-lg p-4 space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
-                    <h4 className="font-medium">{doctor.name}</h4>
-                    <p className="text-sm text-muted-foreground">{doctor.email}</p>
-                    <p className="text-sm text-muted-foreground">{doctor.phone}</p>
+                    <h4 className="font-medium">{prof.name}</h4>
+                    <p className="text-sm text-muted-foreground">{prof.email}</p>
+                    <p className="text-sm text-muted-foreground">{prof.phone}</p>
                   </div>
-                  <Badge variant="outline">
-                    Applied {new Date(doctor.created_at).toLocaleDateString()}
-                  </Badge>
+                  <div className="flex gap-2">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${TYPE_COLORS[prof.customer_type] || ''}`}>
+                      {TYPE_LABELS[prof.customer_type] || prof.customer_type}
+                    </span>
+                    <Badge variant="outline">
+                      Applied {new Date(prof.created_at).toLocaleDateString()}
+                    </Badge>
+                  </div>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium">Medical License:</span>
-                    <p className="text-muted-foreground">{doctor.medical_license}</p>
-                  </div>
-                  <div>
-                    <span className="font-medium">Specialization:</span>
-                    <p className="text-muted-foreground">{doctor.specialization}</p>
-                  </div>
-                  {doctor.clinic && (
-                    <div>
-                      <span className="font-medium">Clinic/Hospital:</span>
-                      <p className="text-muted-foreground">{doctor.clinic}</p>
-                    </div>
-                  )}
-                  {doctor.years_of_practice && (
-                    <div>
-                      <span className="font-medium">Years of Practice:</span>
-                      <p className="text-muted-foreground">{doctor.years_of_practice}</p>
-                    </div>
-                  )}
-                </div>
-                
+
+                <ProfessionalDetailsFields professional={prof} />
+
                 <div className="flex gap-2 pt-2">
-                  <Button
-                    size="sm"
-                    onClick={() => handleApproval(doctor.id, 'approved')}
-                    disabled={processingId === doctor.id}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                    Approve
+                  <Button size="sm" onClick={() => handleApproval(prof.id, 'approved')} disabled={processingId === prof.id} className="bg-green-600 hover:bg-green-700">
+                    <CheckCircle className="h-4 w-4 mr-1" />Approve
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleApproval(doctor.id, 'rejected')}
-                    disabled={processingId === doctor.id}
-                  >
-                    <XCircle className="h-4 w-4 mr-1" />
-                    Reject
+                  <Button size="sm" variant="destructive" onClick={() => handleApproval(prof.id, 'rejected')} disabled={processingId === prof.id}>
+                    <XCircle className="h-4 w-4 mr-1" />Reject
                   </Button>
                 </div>
               </div>
