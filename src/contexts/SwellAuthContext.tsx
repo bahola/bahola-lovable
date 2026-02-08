@@ -248,34 +248,37 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
         metadata.expectedGraduation = userData.expectedGraduation;
       }
 
-      // Step 1: Try to create Swell account
+      // Step 1: Try to create Swell account (skip for doctor/pharmacy - created on approval)
       let swellAccountCreated = false;
-      try {
-        console.log('Step 1: Attempting to create Swell account...');
-        // Swell Frontend API only accepts: email, password, first_name, last_name, email_optin
-        const swellAccount = await swell.account.create({
-          email: userData.email,
-          password: userData.password,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          email_optin: true,
-        });
-        console.log('✅ Swell account created:', swellAccount.id);
-        swellAccountCreated = true;
+      const shouldCreateSwellNow = !['doctor', 'pharmacy'].includes(userData.userType);
 
-        // Step 1b: Update account with metadata (phone, customer type, type-specific data)
-        console.log('Step 1b: Updating Swell account with metadata...');
-        await swell.account.update({
-          phone: userData.phone,
-          metadata: {
-            ...metadata,
-            customer_type: userData.userType,
-          },
-        });
-        console.log('✅ Swell account metadata updated');
-      } catch (swellError: any) {
-        console.warn('⚠️ Swell account creation failed, continuing with Supabase only:', swellError.message);
-        // Continue with Supabase-only registration
+      if (shouldCreateSwellNow) {
+        try {
+          console.log('Step 1: Attempting to create Swell account...');
+          const swellAccount = await swell.account.create({
+            email: userData.email,
+            password: userData.password,
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            email_optin: true,
+          });
+          console.log('✅ Swell account created:', swellAccount.id);
+          swellAccountCreated = true;
+
+          console.log('Step 1b: Updating Swell account with metadata...');
+          await swell.account.update({
+            phone: userData.phone,
+            metadata: {
+              ...metadata,
+              customer_type: userData.userType,
+            },
+          });
+          console.log('✅ Swell account metadata updated');
+        } catch (swellError: any) {
+          console.warn('⚠️ Swell account creation failed, continuing with Supabase only:', swellError.message);
+        }
+      } else {
+        console.log(`Step 1: Skipping Swell account creation for ${userData.userType} - will be created on approval`);
       }
 
       // Step 2: Store customer info in Supabase
