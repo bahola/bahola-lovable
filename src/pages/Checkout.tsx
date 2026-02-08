@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageLayout } from '@/components/PageLayout';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSwellAuth } from '@/contexts/SwellAuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,6 +29,7 @@ interface FormData {
 const Checkout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useSwellAuth();
   const [addressType, setAddressType] = useState<'home' | 'work'>('home');
   const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'cod'>('cod');
   const [shippingCost, setShippingCost] = useState(0);
@@ -46,6 +48,19 @@ const Checkout = () => {
     pincode: '',
   });
   
+  // Auto-fill form when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: prev.firstName || user.first_name || '',
+        lastName: prev.lastName || user.last_name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+      }));
+    }
+  }, [isAuthenticated, user]);
+
   const { 
     items, 
     getSubtotal, 
@@ -264,7 +279,7 @@ const Checkout = () => {
                 <h2 className="text-xl font-bold">Contact Information</h2>
                 <p className="text-sm text-bahola-neutral-600">
                   Already have an account?{' '}
-                  <Link to="/login" className="text-bahola-blue-500 hover:underline font-medium">
+                  <Link to="/login?returnUrl=/checkout" className="text-bahola-blue-500 hover:underline font-medium">
                     Log in
                   </Link>
                 </p>
