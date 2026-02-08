@@ -250,7 +250,7 @@ export const SwellAuthProvider: React.FC<SwellAuthProviderProps> = ({ children }
 
       // Step 1: Try to create Swell account (skip for doctor/pharmacy - created on approval)
       let swellAccountCreated = false;
-      const shouldCreateSwellNow = !['doctor', 'pharmacy'].includes(userData.userType);
+      const shouldCreateSwellNow = !['doctor', 'pharmacy', 'student'].includes(userData.userType);
 
       if (shouldCreateSwellNow) {
         try {
